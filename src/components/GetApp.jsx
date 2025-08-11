@@ -3,8 +3,8 @@ import img from "../assets/img/order.png";
 
 const GetApp = () => {
   return (
-    <section className=" dark:bg-black py-10 transition-colors duration-300">
-      <div className=" bg-orange-100 dark:bg-[#1F1D2B] py-16 px-6 lg:px-20 rounded-3xl mx-4 lg:mx-16">
+    <section className="dark:bg-black py-10 transition-colors duration-300">
+      <div className="bg-orange-100 dark:bg-[#1F1D2B] py-16 px-6 lg:px-20 rounded-3xl mx-4 lg:mx-16">
         <div className="grid md:grid-cols-2 items-center gap-10">
           {/* Left Text */}
           <div>
@@ -18,9 +18,33 @@ const GetApp = () => {
               Discover food wherever and whenever and get your food delivered
               quickly.
             </p>
-            <button className="bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow hover:bg-orange-600 transition">
-              Get the app
-            </button>
+
+            {/* App Store Buttons with Coming Soon Badges */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative">
+                <button
+                  disabled
+                  className="bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                >
+                  Get on Google Play
+                </button>
+                <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                  Coming Soon
+                </span>
+              </div>
+
+              <div className="relative">
+                <button
+                  disabled
+                  className="bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                >
+                  Get on App Store
+                </button>
+                <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                  Coming Soon
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* Right Image */}
@@ -38,3 +62,4 @@ const GetApp = () => {
 };
 
 export default GetApp;
+
