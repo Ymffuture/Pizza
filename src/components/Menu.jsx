@@ -1,63 +1,25 @@
 import React from "react";
 import MenuCard from "../layouts/MenuCard";
 
+// Import images
+import menu1 from "../assets/img/menu1.png";
+import menu2 from "../assets/img/menu2.png";
+import menu3 from "../assets/img/menu3.png";
+import menu4 from "../assets/img/menu4.png";
+import menu5 from "../assets/img/menu5.png";
+import menu6 from "../assets/img/menu6.png";
+import menu7 from "../assets/img/menu7.png";
+import menu8 from "../assets/img/menu8.png";
+
 const dishes = [
-  {
-    id: 1,
-    name: "Chicken Burger",
-    price: "$5.99",
-    tag: "Hot",
-    image: "src/assets/img/menu1.png",
-  },
-  {
-    id: 2,
-    name: "Peri Peri Pizza",
-    price: "$8.49",
-    tag: "New",
-    image: "src/assets/img/menu2.png",
-  },
-  {
-    id: 3,
-    name: "Sushi Deluxe",
-    price: "$6.25",
-    tag: "",
-    image: "src/assets/img/menu3.png",
-  },
-  {
-    id: 4,
-    name: "Paneer Poppers",
-    price: "$7.80",
-    tag: "Hot",
-    image: "src/assets/img/menu4.png",
-  },
-  {
-    id: 5,
-    name: "Club Sandwich",
-    price: "$3.20",
-    tag: "",
-    image: "src/assets/img/menu5.png",
-  },
-  {
-    id: 6,
-    name: "Mocktail Mojito",
-    price: "$4.75",
-    tag: "New",
-    image: "src/assets/img/menu6.png",
-  },
-  {
-    id: 7,
-    name: "Nacho Fiesta",
-    price: "$7.80",
-    tag: "Hot",
-    image: "src/assets/img/menu7.png",
-  },
-  {
-    id: 8,
-    name: "Biryani Bowl",
-    price: "$3.20",
-    tag: "",
-    image: "src/assets/img/menu8.png",
-  },
+  { id: 1, name: "Chicken Burger", price: "R89.99", tag: "Hot", image: menu1 },
+  { id: 2, name: "Peri Peri Pizza", price: "R149.49", tag: "New", image: menu2 },
+  { id: 3, name: "Sushi Deluxe", price: "R120.25", tag: "", image: menu3 },
+  { id: 4, name: "Paneer Poppers", price: "R79.80", tag: "Hot", image: menu4 },
+  { id: 5, name: "Club Sandwich", price: "R59.20", tag: "", image: menu5 },
+  { id: 6, name: "Mocktail Mojito", price: "R45.75", tag: "New", image: menu6 },
+  { id: 7, name: "Nacho Fiesta", price: "R99.80", tag: "Hot", image: menu7 },
+  { id: 8, name: "Biryani Bowl", price: "R89.20", tag: "", image: menu8 },
 ];
 
 const Menu = () => {
@@ -72,7 +34,7 @@ const Menu = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
         {dishes.map((dish) => (
-          <MenuCard key={dish.id} {...dish} /> // JS This is Spread Operator or in react props spread syntax
+          <MenuCard key={dish.id} {...dish} />
         ))}
       </div>
     </section>
@@ -80,3 +42,4 @@ const Menu = () => {
 };
 
 export default Menu;
+ 
