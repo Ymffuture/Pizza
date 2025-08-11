@@ -12,16 +12,42 @@ const Footer = () => {
       <div className="grid md:grid-cols-4 gap-10">
         {/* Logo & Description */}
         <div>
-          <h2 className="text-2xl font-bold text-orange-500 mb-4">BiteHub</h2>
+          <h2 className="text-2xl font-bold text-orange-500 mb-4">
+            Future Dev
+          </h2>
           <p className="text-gray-700 dark:text-gray-300">
-            Your BiteHub app for delicious and fast food delivery. Taste the joy
-            at your doorstep.
+            Building modern web solutions with React, Node.js, and MERN stack.
+            Passionate about coding, mathematics, and science.
           </p>
           <div className="flex gap-4 mt-4 text-orange-500">
-            <FaFacebookF className="hover:text-orange-600 cursor-pointer" />
-            <FaInstagram className="hover:text-orange-600 cursor-pointer" />
-            <FaTwitter className="hover:text-orange-600 cursor-pointer" />
-            <FaLinkedinIn className="hover:text-orange-600 cursor-pointer" />
+            <a
+              href="https://www.facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaFacebookF className="hover:text-orange-600 cursor-pointer" />
+            </a>
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaInstagram className="hover:text-orange-600 cursor-pointer" />
+            </a>
+            <a
+              href="https://twitter.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaTwitter className="hover:text-orange-600 cursor-pointer" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/kgomotsonkosi-l"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaLinkedinIn className="hover:text-orange-600 cursor-pointer" />
+            </a>
           </div>
         </div>
 
@@ -31,12 +57,12 @@ const Footer = () => {
           <ul className="space-y-2 text-gray-700 dark:text-gray-300">
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                About Us
+                About Me
               </a>
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Careers
+                Projects
               </a>
             </li>
             <li>
@@ -46,7 +72,7 @@ const Footer = () => {
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Press
+                Services
               </a>
             </li>
           </ul>
@@ -63,12 +89,12 @@ const Footer = () => {
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Safety Center
+                FAQs
               </a>
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                FAQs
+                Tutorials
               </a>
             </li>
             <li>
@@ -84,13 +110,30 @@ const Footer = () => {
           <h3 className="text-lg font-semibold mb-4">Contact</h3>
           <ul className="space-y-2 text-gray-700 dark:text-gray-300">
             <li className="hover:text-orange-400 transition">
-              Email: support@BiteHub.com
+              Email:{" "}
+              <a
+                href="mailto:futurekgomotso@gmail.com"
+                className="underline"
+              >
+                futurekgomotso@gmail.com
+              </a>
             </li>
             <li className="hover:text-orange-400 transition">
-              Phone: +91 98765 43210
+              Phone:{" "}
+              <a href="tel:+27634414863" className="underline">
+                +27 63 441 4863
+              </a>
             </li>
             <li className="hover:text-orange-400 transition">
-              Location: San Francisco, USA
+              Website:{" "}
+              <a
+                href="https://yourwebsite.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                yourwebsite.com
+              </a>
             </li>
           </ul>
         </div>
@@ -98,10 +141,12 @@ const Footer = () => {
 
       {/* Bottom line */}
       <div className="text-center text-sm text-gray-500 border-t mt-4 pt-4">
-        @copyright developed by champion programmers | All rights reserved
+        © {new Date().getFullYear()} Developed by Future (Kgomotso Nkosi) | All
+        rights reserved
       </div>
     </footer>
   );
 };
 
 export default Footer;
+
