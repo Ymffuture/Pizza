@@ -13,11 +13,11 @@ const Footer = () => {
         {/* Logo & Description */}
         <div>
           <h2 className="text-2xl font-bold text-orange-500 mb-4">
-            Future Dev
+            Lailas Pizza & Pies
           </h2>
           <p className="text-gray-700 dark:text-gray-300">
-            Building modern web solutions with React, Node.js, and MERN stack.
-            Passionate about coding, mathematics, and science.
+            Serving delicious, handcrafted pizzas and pies made fresh daily.
+            Taste the tradition and passion in every bite.
           </p>
           <div className="flex gap-4 mt-4 text-orange-500">
             <a
@@ -57,22 +57,22 @@ const Footer = () => {
           <ul className="space-y-2 text-gray-700 dark:text-gray-300">
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                About Me
+                About Us
               </a>
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Projects
+                Menu
               </a>
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Blog
+                Locations
               </a>
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Services
+                Careers
               </a>
             </li>
           </ul>
@@ -84,7 +84,7 @@ const Footer = () => {
           <ul className="space-y-2 text-gray-700 dark:text-gray-300">
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Help Center
+                Contact Us
               </a>
             </li>
             <li>
@@ -94,12 +94,12 @@ const Footer = () => {
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Tutorials
+                Order Help
               </a>
             </li>
             <li>
               <a href="/" className="hover:text-orange-400 transition">
-                Contact Support
+                Privacy Policy
               </a>
             </li>
           </ul>
@@ -127,12 +127,12 @@ const Footer = () => {
             <li className="hover:text-orange-400 transition">
               Website:{" "}
               <a
-                href="https://yourwebsite.com"
+                href="https://quorvexinstitute.vercel.app "
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline"
               >
-                yourwebsite.com
+                Quorvex Institute
               </a>
             </li>
           </ul>
@@ -141,7 +141,7 @@ const Footer = () => {
 
       {/* Bottom line */}
       <div className="text-center text-sm text-gray-500 border-t mt-4 pt-4">
-        © {new Date().getFullYear()} Developed by Future (Kgomotso Nkosi) | All
+        © {new Date().getFullYear()} Developed by Future_ | All
         rights reserved
       </div>
     </footer>
