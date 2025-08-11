@@ -1,0 +1,144 @@
+- Navbar
+BiteHub
+Home, Restaurants , Foods , Offers , Service
+Register Now
+
+- Home 
+People trust us
+
+Fastest Food
+
+Delivery Service
+
+Enter your location to get your nearest restaurants or get deliver
+foods & enjoy. Happy foodie life
+
+- process
+
+const processSteps = [
+  {
+    img: img1,
+    title: "Easy To Order",
+    desc: "You only need a few steps in ordering food.",
+  },
+  {
+    img: img2,
+    title: "Fastest Delivery",
+    desc: "Delivery that is always on time even faster.",
+  },
+  {
+    img: img3,
+    title: "Best Quality",
+    desc: "Not only fast for us, quality is also number one.",
+  },
+];
+
+
+- menu 
+
+const dishes = [
+  {
+    id: 1,
+    name: "Chicken Burger",
+    price: "$5.99",
+    tag: "Hot",
+    image: "src/assets/img/menu1.png",
+  },
+  {
+    id: 2,
+    name: "Peri Peri Pizza",
+    price: "$8.49",
+    tag: "New",
+    image: "src/assets/img/menu2.png",
+  },
+  {
+    id: 3,
+    name: "Sushi Deluxe",
+    price: "$6.25",
+    tag: "",
+    image: "src/assets/img/menu3.png",
+  },
+  {
+    id: 4,
+    name: "Paneer Poppers",
+    price: "$7.80",
+    tag: "Hot",
+    image: "src/assets/img/menu4.png",
+  },
+  {
+    id: 5,
+    name: "Club Sandwich",
+    price: "$3.20",
+    tag: "",
+    image: "src/assets/img/menu5.png",
+  },
+  {
+    id: 6,
+    name: "Mocktail Mojito",
+    price: "$4.75",
+    tag: "New",
+    image: "src/assets/img/menu6.png",
+  },
+  {
+    id: 7,
+    name: "Nacho Fiesta",
+    price: "$7.80",
+    tag: "Hot",
+    image: "src/assets/img/menu7.png",
+  },
+  {
+    id: 8,
+    name: "Biryani Bowl",
+    price: "$3.20",
+    tag: "",
+    image: "src/assets/img/menu8.png",
+  },
+];
+
+
+- GetApp
+
+Simple Way To Order Your Food
+Discover food wherever and whenever and get your food delivered
+quickly.
+
+- Testimonial
+
+const testimonials = [
+  {
+    id: 1,
+    name: "Guy Hawkins",
+    text: "Foody is the best. Besides the many and delicious meals, it always delivers super fast and always fresh. I love it!",
+    rating: 5,
+    avatar: "src/assets/img/review1.jpg",
+  },
+  {
+    id: 2,
+    name: "Jane Doe",
+    text: "The meals are absolutely delicious and always arrive hot and on time. Highly recommend Foody!",
+    rating: 4,
+    avatar: "src/assets/img/review2.jpg",
+  },
+  {
+    id: 3,
+    name: "Mark Smith",
+    text: "Great service, fantastic food. Love the design and ease of the app too!",
+    rating: 5,
+    avatar: "src/assets/img/review3.jpg",
+  },
+];
+
+
+- Newsletter
+Get the Latest Updates
+Subscribe to our newsletter and never miss any update or special offer!
+
+- Footer
+Your BiteHub app for delicious and fast food delivery. Taste the joy
+at your doorstep.
+
+ Email: support@BiteHub.com
+ Phone: +91 98765 43210
+ Location: San Francisco, USA
+
+@copyright developed by champion programmers | All rights reserved
