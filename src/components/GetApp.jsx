@@ -1,10 +1,14 @@
 import React from "react";
 import img from "../assets/img/order.png";
 
+// Official app store icons URLs
+const googlePlayIcon = "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg";
+const appStoreIcon = "https://upload.wikimedia.org/wikipedia/commons/6/67/App_Store_%28iOS%29.svg";
+
 const GetApp = () => {
   return (
     <section className="dark:bg-black py-10 transition-colors duration-300">
-      <div className="bg-orange-100 dark:bg-[#1F1D2B] py-16 px-6 lg:px-20 rounded-3xl mx-4 lg:mx-16">
+      <div className="bg-blue-800 dark:bg-[#1F1D2B] py-16 px-6 lg:px-20 rounded-3xl mx-4 lg:mx-16">
         <div className="grid md:grid-cols-2 items-center gap-10">
           {/* Left Text */}
           <div>
@@ -15,17 +19,18 @@ const GetApp = () => {
               Simple Way To Order Your Food
             </h2>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
-              Discover food wherever and whenever and get your food delivered
-              quickly.
+              Discover food wherever and whenever and get your food delivered quickly.
             </p>
 
-            {/* App Store Buttons with Coming Soon Badges */}
+            {/* App Store Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <div className="relative">
+              {/* Google Play */}
+              <div className="relative w-full sm:w-auto">
                 <button
                   disabled
-                  className="bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
+                  <img src={googlePlayIcon} alt="Google Play" className="h-6 sm:h-8 object-contain" />
                   Get on Google Play
                 </button>
                 <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
@@ -33,11 +38,13 @@ const GetApp = () => {
                 </span>
               </div>
 
-              <div className="relative">
+              {/* App Store */}
+              <div className="relative w-full sm:w-auto">
                 <button
                   disabled
-                  className="bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
+                  <img src={appStoreIcon} alt="App Store" className="h-6 sm:h-8 object-contain" />
                   Get on App Store
                 </button>
                 <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
@@ -52,7 +59,7 @@ const GetApp = () => {
             <img
               src={img}
               alt="App Preview"
-              className="w-[280px] md:w-[320px] drop-shadow-2xl"
+              className="w-[280px] sm:w-[320px] md:w-[400px] lg:w-[480px] drop-shadow-2xl rounded-xl"
             />
           </div>
         </div>
@@ -62,4 +69,3 @@ const GetApp = () => {
 };
 
 export default GetApp;
-
