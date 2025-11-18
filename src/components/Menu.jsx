@@ -6,12 +6,12 @@ import MenuCard from "../layouts/MenuCard";
 const keywords = [
   "ecommerce website",
   "html css website",
-  "reactjs",
-  "nextjs",
-  "portfolio website",
-  "business website",
-  "landing page design",
-  "web application",
+  "reactjs logo",
+  "nextjs logo",
+  "portfolio website design",
+  "business website themes",
+  "landing page design in react ",
+  "web application react js",
 ];
 
 const services = [
