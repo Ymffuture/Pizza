@@ -127,11 +127,11 @@ const Navbar = () => {
       {/* MOBILE MENU / BOTTOM DRAWER */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40"
+          className="fixed inset-0 z-40 backdrop-blur-xl bg-white/50"
           onClick={() => setMenuOpen(false)}
         >
           <div
-            className="fixed bottom-0 left-0 w-full bg-white dark:bg-[#0b1220] rounded-t-3xl p-6 z-50"
+            className="fixed bottom-0 left-0 w-full dark:bg-[#0b1220] rounded-t-3xl p-6 z-50"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
@@ -139,7 +139,7 @@ const Navbar = () => {
                 <div className="bg-[#1877f2] text-white rounded-full p-2">
                   <Home size={16} />
                 </div>
-                <div className="font-bold text-blue-500">Swift<span className="text-gray">Meta</span></div>
+                <div className="text-blue-300">Swift<span className="text-gray bold shadow-lg">Meta</span></div>
               </div>
               <button onClick={() => setMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -148,9 +148,9 @@ const Navbar = () => {
               </button>
             </div>
 
-            <nav className="flex flex-col gap-3 mb-4">
+            <nav className="flex flex-col gap-3 mb-4 backdrop-blur-xl bg-gray/50">
               {navLinks.map((link) => (
-                <a key={link.name} href={link.href} onClick={() => setMenuOpen(false)} className="py-3 px-4 rounded-lg hover:bg-gray-100 transition">
+                <a key={link.name} href={link.href} onClick={() => setMenuOpen(false)} className="py-3 px-4 rounded-lg hover:bg-gray-100 transition text-gray">
                   {link.name}
                 </a>
               ))}
