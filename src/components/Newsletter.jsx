@@ -1,39 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
+import { Form, Input, Button, message as antdMessage } from "antd";
+import emailjs from "@emailjs/browser";
 
 const Newsletter = () => {
-  const phoneNumber = "27634414863"; // Your WhatsApp number (no +, just country code + number)
-  const message = "Hello! I’d like to get the latest updates from your website."; // Pre-filled message
+  const [loading, setLoading] = useState(false);
 
-  const handleWhatsAppRedirect = () => {
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    try {
+      await emailjs.send(
+        "YOUR_SERVICE_ID", // replace with your EmailJS service ID
+        "YOUR_TEMPLATE_ID", // replace with your EmailJS template ID
+        {
+          from_name: values.name,
+          from_email: values.email,
+        },
+        "YOUR_PUBLIC_KEY" // replace with your EmailJS public key
+      );
+      antdMessage.success("Thank you! You are now subscribed.");
+    } catch (error) {
+      console.error(error);
+      antdMessage.error("Oops! Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section className="dark:bg-black py-10 transition-colors duration-300">
-      <div className="bg-orange-100 dark:bg-[#1F1D2B] py-16 px-6 lg:px-20 mx-4 lg:mx-16 rounded-3xl">
-        <div className="max-w-2xl mx-auto text-center">
-          <h4 className="text-orange-500 font-semibold uppercase mb-2">
-            WhatsApp Updates
+    <section className="dark:bg-black py-16 transition-colors duration-300">
+      <div className="max-w-2xl mx-auto px-6 lg:px-20 rounded-3xl border border-gray-300 dark:border-gray-700 py-12">
+        <div className="text-center mb-8">
+          <h4 className="text-blue-400 font-semibold uppercase mb-2">
+            Newsletter
           </h4>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Get the Latest Updates
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 mb-6">
-            Tap below to chat with us on WhatsApp and never miss any update or special offer!
+          <p className="text-gray-600 dark:text-gray-300">
+            Subscribe to our newsletter to receive updates, offers, and news directly to your inbox.
           </p>
-
-          <button
-            onClick={handleWhatsAppRedirect}
-            className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-6 py-3 rounded-full transition"
-          >
-            Chat on WhatsApp
-          </button>
         </div>
+
+        <Form
+          layout="vertical"
+          onFinish={handleSubmit}
+          className="space-y-4"
+        >
+          <Form.Item
+            name="name"
+            label="Full Name"
+            rules={[{ required: true, message: "Please enter your name" }]}
+          >
+            <Input placeholder="Your Name" className="border-gray-300 focus:border-blue-400 focus:ring-blue-400" />
+          </Form.Item>
+
+          <Form.Item
+            name="email"
+            label="Email Address"
+            rules={[
+              { required: true, message: "Please enter your email" },
+              { type: "email", message: "Please enter a valid email" },
+            ]}
+          >
+            <Input placeholder="you@example.com" className="border-gray-300 focus:border-blue-400 focus:ring-blue-400" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="bg-blue-400 hover:bg-blue-500 w-full"
+              loading={loading}
+            >
+              Subscribe
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
     </section>
   );
 };
 
 export default Newsletter;
-
