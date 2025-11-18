@@ -8,45 +8,47 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-orange-100 dark:bg-[#1F1D2B] text-black dark:text-white pt-16 pb-10 px-6 lg:px-20 transition-colors duration-300">
-      <div className="grid md:grid-cols-4 gap-10">
-        {/* Logo & Description */}
+    <footer className="bg-white dark:bg-[#0A0A0D] text-gray-900 dark:text-gray-300 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto py-16 px-6 lg:px-20 grid md:grid-cols-4 gap-10">
+        {/* Brand */}
         <div>
-          <h2 className="text-2xl font-bold text-orange-500 mb-4">
-            Lailas Pizza & Pies
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300">
-            Serving delicious, handcrafted pizzas and pies made fresh daily.
-            Taste the tradition and passion in every bite.
+          <h2 className="text-2xl font-bold text-blue-600 mb-4">Future Web Studio</h2>
+          <p className="text-gray-700 dark:text-gray-400">
+            Building modern, responsive websites that elevate your brand and
+            engage your audience. Design meets technology for a seamless digital presence.
           </p>
-          <div className="flex gap-4 mt-4 text-orange-500">
+          <div className="flex gap-4 mt-6 text-gray-700 dark:text-gray-400">
             <a
               href="https://www.facebook.com/"
               target="_blank"
               rel="noopener noreferrer"
+              className="hover:text-blue-500 transition"
             >
-              <FaFacebookF className="hover:text-orange-600 cursor-pointer" />
+              <FaFacebookF />
             </a>
             <a
               href="https://www.instagram.com/"
               target="_blank"
               rel="noopener noreferrer"
+              className="hover:text-pink-500 transition"
             >
-              <FaInstagram className="hover:text-orange-600 cursor-pointer" />
+              <FaInstagram />
             </a>
             <a
               href="https://twitter.com/"
               target="_blank"
               rel="noopener noreferrer"
+              className="hover:text-blue-400 transition"
             >
-              <FaTwitter className="hover:text-orange-600 cursor-pointer" />
+              <FaTwitter />
             </a>
             <a
               href="https://www.linkedin.com/in/kgomotsonkosi-l"
               target="_blank"
               rel="noopener noreferrer"
+              className="hover:text-blue-600 transition"
             >
-              <FaLinkedinIn className="hover:text-orange-600 cursor-pointer" />
+              <FaLinkedinIn />
             </a>
           </div>
         </div>
@@ -54,25 +56,25 @@ const Footer = () => {
         {/* Company Links */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Company</h3>
-          <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+          <ul className="space-y-2">
             <li>
-              <a href="/" className="hover:text-orange-400 transition">
+              <a href="/" className="hover:text-blue-500 transition">
                 About Us
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-orange-400 transition">
-                Menu
+              <a href="/#services" className="hover:text-blue-500 transition">
+                Services
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-orange-400 transition">
-                Locations
+              <a href="/#portfolio" className="hover:text-blue-500 transition">
+                Portfolio
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-orange-400 transition">
-                Careers
+              <a href="/#contact" className="hover:text-blue-500 transition">
+                Contact
               </a>
             </li>
           </ul>
@@ -81,72 +83,47 @@ const Footer = () => {
         {/* Support Links */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Support</h3>
-          <ul className="space-y-2 text-gray-700 dark:text-gray-300">
+          <ul className="space-y-2">
             <li>
-              <a href="/" className="hover:text-orange-400 transition">
-                Contact Us
-              </a>
-            </li>
-            <li>
-              <a href="/" className="hover:text-orange-400 transition">
+              <a href="/#faq" className="hover:text-blue-500 transition">
                 FAQs
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-orange-400 transition">
-                Order Help
+              <a href="/#help" className="hover:text-blue-500 transition">
+                Help Center
               </a>
             </li>
             <li>
-              <a href="/" className="hover:text-orange-400 transition">
+              <a href="/#privacy" className="hover:text-blue-500 transition">
                 Privacy Policy
+              </a>
+            </li>
+            <li>
+              <a href="/#terms" className="hover:text-blue-500 transition">
+                Terms of Service
               </a>
             </li>
           </ul>
         </div>
 
-        {/* Contact Info */}
+        {/* Contact */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Contact</h3>
-          <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-            <li className="hover:text-orange-400 transition">
-              Email:{" "}
-              <a
-                href="mailto:futurekgomotso@gmail.com"
-                className="underline"
-              >
-                futurekgomotso@gmail.com
-              </a>
-            </li>
-            <li className="hover:text-orange-400 transition">
-              Phone:{" "}
-              <a href="tel:+27634414863" className="underline">
-                +27 63 441 4863
-              </a>
-            </li>
-            <li className="hover:text-orange-400 transition">
-              Website:{" "}
-              <a
-                href="https://quorvexinstitute.vercel.app "
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline"
-              >
-                Quorvex Institute
-              </a>
-            </li>
+          <ul className="space-y-2">
+            <li>Email: <a href="mailto:futurekgomotso@gmail.com" className="underline hover:text-blue-500 transition">futurekgomotso@gmail.com</a></li>
+            <li>Phone: <a href="tel:+27634414863" className="underline hover:text-blue-500 transition">+27 63 441 4863</a></li>
+            <li>Website: <a href="https://quorvexinstitute.vercel.app" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-500 transition">Quorvex Institute</a></li>
           </ul>
         </div>
       </div>
 
       {/* Bottom line */}
-      <div className="text-center text-sm text-gray-500 border-t mt-4 pt-4">
-        © {new Date().getFullYear()} Developed by Future_ | All
-        rights reserved
+      <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
+        © {new Date().getFullYear()} Future Web Studio | All rights reserved
       </div>
     </footer>
   );
 };
 
 export default Footer;
-
