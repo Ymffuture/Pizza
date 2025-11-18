@@ -10,14 +10,14 @@ import {
   Facebook,
   Instagram,
   Twitter,
-  Linkedin,
-  Whatsapp
+  Linkedin
 } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import { MessageCircle as WhatsAppIcon } from "lucide-react"; // Fallback: use MessageCircle as WhatsApp
 
 const Navbar = () => {
   const phoneNumber = "27634414863";
-  const message = "Hello! I’m interested in building a website with SwiftMeta.";
+  const message = "Hello! I'm interested in building a website with SwiftMeta.";
 
   const handleWhatsApp = () => {
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
@@ -74,7 +74,7 @@ const Navbar = () => {
             onClick={handleWhatsApp}
             className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl transition transform hover:scale-110"
           >
-            <Whatsapp className="w-7 h-7" />
+            <WhatsAppIcon className="w-7 h-7" />
           </button>
 
           {/* Social Icons */}
