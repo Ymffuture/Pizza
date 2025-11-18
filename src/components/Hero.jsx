@@ -84,7 +84,7 @@ const Hero = () => {
         <motion.img
           src={heroImg}
           alt="Web Design"
-          className="rounded-3xl w-[80%] max-w-[430px] object-cover shadow-2xl relative z-10"
+          className="rounded-3xl w-[80%] max-w-[430px] object-cover shadow-2xl relative z-3"
           animate={{
             y: [0, -10, 0],
           }}
@@ -98,7 +98,7 @@ const Hero = () => {
         {/* BADGES */}
         <motion.div
           className="absolute top-6 right-8 bg-white dark:bg-gray-900 text-black dark:text-white 
-          text-sm px-3 py-1 rounded-full flex items-center shadow-lg"
+          text-sm px-3 py-1 rounded-full flex items-center shadow-lg z-6"
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
@@ -108,7 +108,7 @@ const Hero = () => {
 
         <motion.div
           className="absolute bottom-16 left-5 bg-white dark:bg-gray-900 text-black dark:text-white 
-          text-sm px-3 py-1 rounded-full flex items-center shadow-lg"
+          text-sm px-3 py-1 rounded-full flex items-center shadow-lg z-7"
           initial={{ opacity: 0, x: -15 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.9 }}
@@ -118,7 +118,7 @@ const Hero = () => {
 
         <motion.div
           className="absolute bottom-5 right-5 bg-white dark:bg-gray-900 text-black dark:text-white 
-          text-sm px-3 py-1 rounded-full flex items-center shadow-lg"
+          text-sm px-3 py-1 rounded-full flex items-center shadow-lg z-9"
           initial={{ opacity: 0, x: 15 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1.1 }}
