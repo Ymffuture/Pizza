@@ -35,16 +35,12 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#1877f2] text-white shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-2">
           {/* LEFT: Logo */}
           <div className="flex items-center gap-3">
-            <div className="bg-white/90 text-[#1877f2] rounded-full p-1.5 flex items-center justify-center">
-              <Home size={18} strokeWidth={1.8} />
-            </div>
-            <div className="font-semibold text-lg leading-none">
-              <span className="block">Swift<span className="text-white/90 font-light">Meta</span></span>
-            </div>
+            
+<div className="flex items-center gap-2 text-2xl font-bold text-blue-600"> <span>Swift<span className="text-gray-600" >Meta</span></span> </div>
           </div>
 
           {/* CENTER: Search (desktop) */}
@@ -121,7 +117,7 @@ const Navbar = () => {
               aria-label="Open menu"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.6} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
           </div>
@@ -143,7 +139,7 @@ const Navbar = () => {
                 <div className="bg-[#1877f2] text-white rounded-full p-2">
                   <Home size={16} />
                 </div>
-                <div className="font-semibold">SwiftMeta</div>
+                <div className="font-bold text-blue-500">Swift<span className="text-gray">Meta</span></div>
               </div>
               <button onClick={() => setMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,7 +160,7 @@ const Navbar = () => {
               <button onClick={handleWhatsAppRedirect} className="flex-1 bg-[#25D366] text-white py-2 rounded-full flex items-center justify-center gap-2">
                 <FaWhatsapp /> WhatsApp
               </button>
-              <button className="p-3 bg-gray-100 rounded-full" aria-label="Toggle theme">
+              <button className="p-3 rounded-full" aria-label="Toggle theme">
                 <ThemeToggle />
               </button>
             </div>
