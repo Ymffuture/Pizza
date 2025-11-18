@@ -8,11 +8,11 @@ const appStoreIcon = "https://upload.wikimedia.org/wikipedia/commons/6/67/App_St
 const GetApp = () => {
   return (
     <section className="dark:bg-black py-10 transition-colors duration-300">
-      <div className="bg-blue-800 dark:bg-[#1F1D2B] py-16 px-6 lg:px-20 rounded-3xl mx-4 lg:mx-16">
+      <div className="dark:bg-[#1F1D2B] py-16 px-6 lg:px-20 rounded-3xl mx-4 lg:mx-16">
         <div className="grid md:grid-cols-2 items-center gap-10">
           {/* Left Text */}
           <div>
-            <h4 className="text-orange-500 font-semibold uppercase mb-2">
+            <h4 className="text-gray-500 font-semibold uppercase mb-2">
               Our Application
             </h4>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -30,10 +30,10 @@ const GetApp = () => {
                   disabled
                   className="flex items-center justify-center gap-2 w-full sm:w-auto bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
-                  <img src={googlePlayIcon} alt="Google Play" className="h-6 sm:h-8 object-contain" />
+                  <img src={googlePlayIcon} alt="Google Play" className="h-12 sm:h-8 object-contain" />
                   Get on Google Play
                 </button>
-                <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                <span className="absolute -top-3 -right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
                   Coming Soon
                 </span>
               </div>
@@ -44,10 +44,10 @@ const GetApp = () => {
                   disabled
                   className="flex items-center justify-center gap-2 w-full sm:w-auto bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
-                  <img src={appStoreIcon} alt="App Store" className="h-6 sm:h-8 object-contain" />
+                  <img src={appStoreIcon} alt="App Store" className="h-12 sm:h-8 object-contain" />
                   Get on App Store
                 </button>
-                <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                <span className="absolute -top-3 -right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
                   Coming Soon
                 </span>
               </div>
