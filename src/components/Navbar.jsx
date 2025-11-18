@@ -1,114 +1,134 @@
 import React, { useState } from "react";
 import {
-  FaLaptopCode,
-  FaPalette,
-  FaBars,
-  FaTimes,
-  FaWhatsapp,
-} from "react-icons/fa";
-import ThemeToggle from "./ThemeToggle";
+  Home,
+  Briefcase,
+  Image,
+  User,
+  MessageCircle,
+  X,
+  Menu,
+  Sun,
+  Moon,
+  Whatsapp,
+  Instagram,
+  Linkedin,
+  Twitter,
+  Globe,
+} from "lucide-react";
+import { useTheme } from "next-themes";
 
-const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+const BottomNav = () => {
+  const [open, setOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+
   const phoneNumber = "27634414863";
-  const message = "Hello! I’m interested in building a website with you.";
+  const message = "Hello! I’m interested in building a website with SwiftMeta.";
 
-  const handleWhatsAppRedirect = () => {
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(url, "_blank");
-  };
+  const navItems = [
+    { icon: Home, label: "Home", href: "/" },
+    { icon: Briefcase, label: "Services", href: "/#services" },
+    { icon: Image, label: "Portfolio", href: "/#portfolio" },
+    { icon: User, label: "About", href: "/#about" },
+    { icon: MessageCircle, label: "Contact", href: "/#contact" },
+  ];
 
-  const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Services", href: "/#services" },
-    { name: "Portfolio", href: "/#portfolio" },
-    { name: "About", href: "/#about" },
-    { name: "Contact", href: "/#contact" },
+  const socialLinks = [
+    { icon: Whatsapp, href: `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, color: "text-green-500" },
+    { icon: Instagram, href: "https://instagram.com/swiftmeta", color: "text-pink-500" },
+    { icon: Linkedin, href: "https://linkedin.com/company/swiftmeta", color: "text-blue-700" },
+    { icon: Twitter, href: "https://twitter.com/swiftmeta", color: "text-sky-500" },
+    { icon: Globe, href: "https://swiftmeta.vercel.app", color: "text-blue-500" },
   ];
 
   return (
     <>
-      {/* TOP NAVBAR */}
-      <header className="bg-white dark:bg-[#1C1A27] text-black dark:text-white py-4 px-5 lg:px-14 flex items-center justify-between transition-colors duration-300 shadow-md">
-        {/* LOGO */}
-        <div className="flex items-center gap-2 text-2xl font-bold text-blue-600">
-        
-          <span>Swift<span className="text-gray-600" >Meta</span></span>
-        </div>
-
-        {/* DESKTOP NAV */}
-        <nav className="hidden md:flex space-x-8 font-medium">
-          {navLinks.map((link) => (
+      {/* Fixed Bottom Bar (Facebook-style) */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 z-50">
+        <div className="flex justify-around items-center py-2">
+          {navItems.map((item) => (
             <a
-              key={link.name}
-              href={link.href}
-              className="hover:text-blue-400 transition"
+              key={item.label}
+              href={item.href}
+              className="flex flex-col items-center gap-1 p-3 text-gray-600 dark:text-gray-400 hover:text-blue-500 transition"
             >
-              {link.name}
+              <item.icon className="w-6 h-6" />
+              <span className="text-xs">{item.label}</span>
             </a>
           ))}
-        </nav>
-
-        {/* ACTIONS */}
-        <div className="flex items-center space-x-4">
-          <ThemeToggle />
-          <button
-            onClick={handleWhatsAppRedirect}
-            className="hidden md:flex bg-green-500 hover:bg-green-600 transition text-white items-center gap-2 py-2 px-4 rounded-full text-sm font-medium"
-          >
-            <FaWhatsapp className="text-lg" /> Get a Quote
-          </button>
-
-          {/* MOBILE HAMBURGER */}
-          <button
-            className="md:hidden text-2xl text-blue-600"
-            onClick={() => setMenuOpen(true)}
-          >
-            <FaBars />
-          </button>
         </div>
-      </header>
+      </div>
 
-      {/* MOBILE MENU */}
-      {menuOpen && (
+      {/* Floating Action Button (FAB) */}
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed bottom-20 right-6 bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-lg z-40 transition-transform hover:scale-110"
+      >
+        <Menu className="w-7 h-7" />
+      </button>
+
+      {/* Bottom Sheet Menu */}
+      {open && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setMenuOpen(false)}
+          className="fixed inset-0 bg-black bg-opacity-60 z-50"
+          onClick={() => setOpen(false)}
         >
           <div
-            className="fixed bottom-0 left-0 w-full bg-white dark:bg-[#1C1A27] rounded-t-3xl p-6 z-50 transform transition-transform duration-300"
+            className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-900 rounded-t-3xl p-6 pb-8 max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Handle + Close */}
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-bold text-blue-600">Menu</h2>
+              <div className="w-12 h-1 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto" />
               <button
-                onClick={() => setMenuOpen(false)}
-                className="text-2xl text-gray-500"
+                onClick={() => setOpen(false)}
+                className="absolute top-4 right-4 text-gray-500"
               >
-                <FaTimes />
+                <X className="w-7 h-7" />
               </button>
             </div>
 
-            <nav className="flex flex-col space-y-4 text-lg font-medium">
-              {navLinks.map((link) => (
+            {/* Logo */}
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold">
+                Swift<span className="text-blue-500">Meta</span>
+              </h2>
+              <p className="text-sm text-gray-500 mt-1">Your website in seconds</p>
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="flex justify-center mb-8">
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-3 bg-gray-100 dark:bg-gray-800 rounded-full"
+              >
+                {theme === "dark" ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+              </button>
+            </div>
+
+            {/* Social Icons */}
+            <div className="flex justify-center gap-6 mb-8">
+              {socialLinks.map((social, i) => (
                 <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
+                  key={i}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-3xl ${social.color} hover:scale-110 transition`}
                 >
-                  {link.name}
+                  <social.icon className="w-8 h-8" />
                 </a>
               ))}
-            </nav>
+            </div>
 
-            <button
-              onClick={handleWhatsAppRedirect}
-              className="mt-6 w-full bg-green-500 hover:bg-green-600 transition text-white flex items-center justify-center gap-2 py-3 rounded-full text-lg font-medium"
+            {/* WhatsApp CTA */}
+            <a
+              href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full bg-green-500 hover:bg-green-600 text-white text-center py-4 rounded-full font-semibold text-lg transition"
             >
-              <FaWhatsapp /> Get a Quote
-            </button>
+              Get a Quote on WhatsApp
+            </a>
           </div>
         </div>
       )}
@@ -116,4 +136,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default BottomNav;
