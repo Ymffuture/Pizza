@@ -27,7 +27,7 @@ const Process = () => {
   return (
     <section className="bg-white dark:bg-black text-black dark:text-white py-16 px-5 lg:px-14 transition-colors duration-300">
       <div className="text-center mb-14">
-        <p className="text-orange-500 font-semibold uppercase tracking-wider mb-2">
+        <p className="text-gray-500 font-semibold uppercase tracking-wider mb-2">
           Our Process
         </p>
         <h2 className="text-3xl md:text-4xl font-bold leading-tight">
