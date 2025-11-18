@@ -1,1 +1,18 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="80" fill="#0B0E17" stroke="#00FFEA" stroke-width="3"/>
 
+  <!-- Inner circle (static) -->
+  <circle cx="100" cy="100" r="20" fill="#00FFEA"/>
+
+  <!-- Left arc (static) -->
+  <path d="M100 100 Q70 70 70 100 Q70 130 100 130" 
+        fill="none" 
+        stroke="#00FFEA" 
+        stroke-width="8"/>
+
+  <!-- Right arc (static) -->
+  <path d="M100 100 Q130 70 130 100 Q130 130 100 130" 
+        fill="none" 
+        stroke="#00FFEA" 
+        stroke-width="8"/>
+</svg>
