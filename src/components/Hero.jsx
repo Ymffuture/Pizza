@@ -58,12 +58,12 @@ const Hero = () => {
       </div>
 
       {/* RIGHT CONTENT */}
-      <div className="lg:w-1/2 w-full relative flex justify-center mb-4 lg:mb-0">
+      <div className="lg:w-1/2 w-full relative flex justify-center m-4 lg:m-5">
         <div className="relative">
           <img
             src={heroImg}
             alt="Web Design"
-            className="rounded-3xl w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[420px] md:h-[420px] object-cover shadow-xl"
+            className="rounded-3xl w-[400px] h-[400px] sm:w-[350px] sm:h-[350px] md:w-[430px] md:h-[430px] object-cover shadow-xl"
           />
         </div>
 
