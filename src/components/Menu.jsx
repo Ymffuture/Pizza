@@ -1,25 +1,67 @@
 import React from "react";
 import MenuCard from "../layouts/MenuCard";
 
-// Import images
-import menu1 from "../assets/img/menu1.png";
-import menu2 from "../assets/img/menu2.png";
-import menu3 from "../assets/img/menu3.png";
-import menu4 from "../assets/img/menu4.png";
-import menu5 from "../assets/img/menu5.png";
-import menu6 from "../assets/img/menu6.png";
-import menu7 from "../assets/img/menu7.png";
-import menu8 from "../assets/img/menu8.png";
+// Generate random Unsplash images per service type
+const unsplash = (keyword) =>
+  `https://source.unsplash.com/random/600x400/?${keyword},website,design,ui`;
 
-const dishes = [
-  { id: 1, name: "Chicken Burger", price: "R89.99", tag: "Hot", image: menu1 },
-  { id: 2, name: "Peri Peri Pizza", price: "R149.49", tag: "New", image: menu2 },
-  { id: 3, name: "Sushi Deluxe", price: "R120.25", tag: "", image: menu3 },
-  { id: 4, name: "Paneer Poppers", price: "R79.80", tag: "Hot", image: menu4 },
-  { id: 5, name: "Club Sandwich", price: "R59.20", tag: "", image: menu5 },
-  { id: 6, name: "Mocktail Mojito", price: "R45.75", tag: "New", image: menu6 },
-  { id: 7, name: "Nacho Fiesta", price: "R99.80", tag: "Hot", image: menu7 },
-  { id: 8, name: "Biryani Bowl", price: "R89.20", tag: "", image: menu8 },
+const services = [
+  {
+    id: 1,
+    name: "E-Commerce Website",
+    tag: "Popular",
+    price: "From R1499",
+    image: unsplash("ecommerce"),
+  },
+  {
+    id: 2,
+    name: "HTML & CSS Website",
+    tag: "New",
+    price: "From R899",
+    image: unsplash("html css"),
+  },
+  {
+    id: 3,
+    name: "React Website",
+    tag: "Hot",
+    price: "From R1999",
+    image: unsplash("reactjs"),
+  },
+  {
+    id: 4,
+    name: "Next.js Website",
+    tag: "",
+    price: "From R2499",
+    image: unsplash("nextjs"),
+  },
+  {
+    id: 5,
+    name: "Portfolio Website",
+    tag: "Popular",
+    price: "From R799",
+    image: unsplash("portfolio website"),
+  },
+  {
+    id: 6,
+    name: "Business Website",
+    tag: "New",
+    price: "From R1299",
+    image: unsplash("business website"),
+  },
+  {
+    id: 7,
+    name: "Landing Page Design",
+    tag: "",
+    price: "From R499",
+    image: unsplash("landing page design"),
+  },
+  {
+    id: 8,
+    name: "Custom Web Application",
+    tag: "Hot",
+    price: "From R2999",
+    image: unsplash("web application"),
+  },
 ];
 
 const Menu = () => {
@@ -27,14 +69,14 @@ const Menu = () => {
     <section className="bg-white dark:bg-black text-black dark:text-white py-16 px-5 lg:px-14 transition-colors duration-300">
       <div className="text-center mb-12">
         <p className="text-orange-500 font-medium uppercase tracking-wider mb-2">
-          Our Menu
+          Our Services
         </p>
-        <h2 className="text-3xl md:text-4xl font-bold">Top Picks For You</h2>
+        <h2 className="text-3xl md:text-4xl font-bold">Websites We Build</h2>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
-        {dishes.map((dish) => (
-          <MenuCard key={dish.id} {...dish} />
+        {services.map((service) => (
+          <MenuCard key={service.id} {...service} />
         ))}
       </div>
     </section>
@@ -42,4 +84,3 @@ const Menu = () => {
 };
 
 export default Menu;
- 
