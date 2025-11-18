@@ -12,7 +12,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto py-16 px-6 lg:px-20 grid md:grid-cols-4 gap-10">
         {/* Brand */}
         <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">SwiftMeta </h2>
+          <h2 className="text-2xl font-bold text-blue-400 mb-4">SwiftMeta </h2>
           <p className="text-gray-700 dark:text-gray-400">
             Building modern, responsive websites that elevate your brand and
             engage your audience. Design meets technology for a seamless digital presence.
@@ -112,7 +112,7 @@ const Footer = () => {
       </div>
       {/* Bottom line */}
       <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
-        © {new Date().getFullYear()} Future Web Studio | All rights reserved
+        © {new Date().getFullYear()} SwiftMeta | All rights reserved
       </div>
     </footer>
   );
