@@ -1,102 +1,122 @@
-// Navbar.jsx
-import React from "react";
-import { 
-  Home, 
-  Palette, 
-  Briefcase, 
-  User, 
-  MessageCircle, 
-  X,
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin
-} from "lucide-react";
+import React, { useState } from "react";
+import { Sun, Moon, Phone, Github, Linkedin, Instagram, Twitter } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import { MessageCircle as WhatsAppIcon } from "lucide-react"; // Fallback: use MessageCircle as WhatsApp
 
 const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const phoneNumber = "27634414863";
-  const message = "Hello! I'm interested in building a website with SwiftMeta.";
+  const message = "Hello! I’m interested in building a website with you.";
 
-  const handleWhatsApp = () => {
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
+  const handleWhatsAppRedirect = () => {
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
   };
 
-  const navItems = [
-    { icon: Home, label: "Home", href: "/" },
-    { icon: Palette, label: "Services", href: "/#services" },
-    { icon: Briefcase, label: "Portfolio", href: "/#portfolio" },
-    { icon: User, label: "About", href: "/#about" },
-    { icon: MessageCircle, label: "Contact", href: "/#contact" },
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Services", href: "/#services" },
+    { name: "Portfolio", href: "/#portfolio" },
+    { name: "About", href: "/#about" },
+    { name: "Contact", href: "/#contact" },
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: "https://facebook.com/swiftmeta", color: "hover:text-blue-600" },
-    { icon: Instagram, href: "https://instagram.com/swiftmeta", color: "hover:text-pink-600" },
-    { icon: Twitter, href: "https://twitter.com/swiftmeta", color: "hover:text-sky-500" },
-    { icon: Linkedin, href: "https://linkedin.com/company/swiftmeta", color: "hover:text-blue-700" },
+    { icon: <Github />, href: "https://github.com/" },
+    { icon: <Linkedin />, href: "https://linkedin.com/in/kgomotsonkosi-l" },
+    { icon: <Instagram />, href: "https://instagram.com/" },
+    { icon: <Twitter />, href: "https://twitter.com/" },
   ];
 
   return (
     <>
-      {/* Top slim bar - logo only on mobile */}
-      <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#1C1A27] z-40 shadow-lg">
-        <div className="flex items-center justify-center py-4">
-          <h1 className="text-2xl font-bold">
-            Swift<span className="text-blue-500">Meta</span>
-          </h1>
+      {/* TOP NAVBAR */}
+      <header className="bg-white dark:bg-[#1C1A27] text-black dark:text-white py-4 px-5 lg:px-14 flex items-center justify-between transition-colors duration-300 shadow-md">
+        {/* LOGO */}
+        <div className="flex items-center gap-2 text-2xl font-bold text-blue-600">
+          <span>Swift<span className="text-gray-600">Meta</span></span>
+        </div>
+
+        {/* DESKTOP NAV */}
+        <nav className="hidden md:flex space-x-8 font-medium">
+          {navLinks.map((link) => (
+            <a key={link.name} href={link.href} className="hover:text-blue-400 transition">
+              {link.name}
+            </a>
+          ))}
+        </nav>
+
+        {/* ACTIONS */}
+        <div className="flex items-center space-x-4">
+          <ThemeToggle />
+          <button
+            onClick={handleWhatsAppRedirect}
+            className="hidden md:flex bg-green-500 hover:bg-green-600 transition text-white items-center gap-2 py-2 px-4 rounded-full text-sm font-medium"
+          >
+            <Phone className="w-5 h-5" /> Get a Quote
+          </button>
+
+          {/* MOBILE HAMBURGER */}
+          <button
+            className="md:hidden text-2xl text-blue-600"
+            onClick={() => setMenuOpen(true)}
+          >
+            <Sun className="w-6 h-6" />
+          </button>
         </div>
       </header>
 
-      {/* Facebook-style Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#1C1A27] border-t border-gray-200 dark:border-gray-800 z-50">
-        <div className="flex items-center justify-around py-2">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                className="flex flex-col items-center gap-1 py-2 px-4 text-gray-600 dark:text-gray-400 hover:text-blue-500 transition"
-              >
-                <Icon className="w-6 h-6" />
-                <span className="text-xs font-medium">{item.label}</span>
-              </a>
-            );
-          })}
-        </div>
-
-        {/* Floating WhatsApp + Socials */}
-        <div className="absolute -top-12 left-1/2 -translate-x-1/2 flex gap-3">
-          {/* WhatsApp FAB */}
-          <button
-            onClick={handleWhatsApp}
-            className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl transition transform hover:scale-110"
+      {/* MOBILE MENU */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setMenuOpen(false)}
+        >
+          <div
+            className="fixed bottom-0 left-0 w-full bg-white dark:bg-[#1C1A27] rounded-t-3xl p-6 z-50 transform transition-transform duration-300"
+            onClick={(e) => e.stopPropagation()}
           >
-            <WhatsAppIcon className="w-7 h-7" />
-          </button>
-
-          {/* Social Icons */}
-          {socialLinks.map((social, i) => {
-            const Icon = social.icon;
-            return (
-              <a
-                key={i}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`bg-white dark:bg-gray-800 p-3 rounded-full shadow-xl transition transform hover:scale-110 ${social.color}`}
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-bold text-blue-600">Menu</h2>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="text-2xl text-gray-500"
               >
-                <Icon className="w-5 h-5" />
-              </a>
-            );
-          })}
-        </div>
-      </div>
+                <Moon className="w-6 h-6" />
+              </button>
+            </div>
 
-      {/* Extra bottom padding so content isn't hidden */}
-      <div className="pb-24" />
+            <nav className="flex flex-col space-y-4 text-lg font-medium">
+              {navLinks.map((link) => (
+                <a key={link.name} href={link.href} onClick={() => setMenuOpen(false)}>
+                  {link.name}
+                </a>
+              ))}
+            </nav>
+
+            <button
+              onClick={handleWhatsAppRedirect}
+              className="mt-6 w-full bg-green-500 hover:bg-green-600 transition text-white flex items-center justify-center gap-2 py-3 rounded-full text-lg font-medium"
+            >
+              <Phone className="w-5 h-5" /> Get a Quote
+            </button>
+
+            {/* SOCIAL MEDIA */}
+            <div className="mt-6 flex justify-center gap-6 text-gray-600 dark:text-gray-300">
+              {socialLinks.map((social, idx) => (
+                <a
+                  key={idx}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-500 transition"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
