@@ -1,6 +1,16 @@
 import React, { useState } from "react";
-import { Sun, Moon, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
-import { FaBars, FaTimes, FaWhatsapp } from "react-icons/fa";
+import {
+  Home,
+  Users,
+  Search,
+  MessageSquare,
+  Bell,
+  ShoppingCart,
+  Twitter,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
@@ -9,7 +19,9 @@ const Navbar = () => {
   const message = "Hello! I’m interested in building a website with you.";
 
   const handleWhatsAppRedirect = () => {
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
     window.open(url, "_blank");
   };
 
@@ -21,124 +33,152 @@ const Navbar = () => {
     { name: "Contact", href: "/#contact" },
   ];
 
-  const socialLinks = [
-    { icon: <Facebook />, href: "https://facebook.com" },
-    { icon: <Instagram />, href: "https://instagram.com" },
-    { icon: <Twitter />, href: "https://twitter.com" },
-    { icon: <Linkedin />, href: "https://linkedin.com" },
-  ];
-
   return (
     <>
-      {/* TOP NAVBAR */}
-      <header className="bg-white dark:bg-[#1C1A27] text-black dark:text-white py-4 px-5 lg:px-14 flex items-center justify-between transition-colors duration-300 shadow-md">
-        {/* LOGO */}
-        <div className="flex items-center gap-2 text-2xl font-bold text-blue-600">
-          <span>
-            Swift<span className="text-gray-600">Meta</span>
-          </span>
-        </div>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#1877f2] text-white shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-2">
+          {/* LEFT: Logo */}
+          <div className="flex items-center gap-3">
+            <div className="bg-white/90 text-[#1877f2] rounded-full p-1.5 flex items-center justify-center">
+              <Home size={18} strokeWidth={1.8} />
+            </div>
+            <div className="font-semibold text-lg leading-none">
+              <span className="block">Swift<span className="text-white/90 font-light">Meta</span></span>
+            </div>
+          </div>
 
-        {/* DESKTOP NAV */}
-        <nav className="hidden md:flex space-x-8 font-medium">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="hover:text-blue-400 transition"
-            >
-              {link.name}
-            </a>
-          ))}
-        </nav>
+          {/* CENTER: Search (desktop) */}
+          <div className="hidden md:flex flex-1 justify-center px-6">
+            <div className="w-full max-w-xl">
+              <label className="relative block">
+                <span className="sr-only">Search</span>
+                <div className="flex items-center bg-white rounded-full px-3 py-2 shadow-sm">
+                  <Search className="text-gray-400" size={16} />
+                  <input
+                    type="search"
+                    placeholder="Search SwiftMeta"
+                    className="ml-3 w-full bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
+                    aria-label="Search"
+                  />
+                </div>
+              </label>
+            </div>
+          </div>
 
-        {/* ACTIONS */}
-        <div className="hidden md:flex items-center space-x-4">
-          <ThemeToggle />
-          <button
-            onClick={handleWhatsAppRedirect}
-            className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-2 py-2 px-4 rounded-full transition font-medium"
-          >
-            <FaWhatsapp className="text-lg" /> Get a Quote
-          </button>
+          {/* RIGHT: Actions */}
+          <div className="flex items-center gap-3">
+            {/* nav icons (desktop) */}
+            <nav className="hidden md:flex items-center gap-4">
+              <button aria-label="Home" className="p-2 rounded-full hover:bg-white/10 transition">
+                <Home size={18} />
+              </button>
+              <button aria-label="Network" className="p-2 rounded-full hover:bg-white/10 transition">
+                <Users size={18} />
+              </button>
+              <button aria-label="Messages" className="p-2 rounded-full hover:bg-white/10 transition">
+                <MessageSquare size={18} />
+              </button>
+              <button aria-label="Notifications" className="p-2 rounded-full hover:bg-white/10 transition">
+                <Bell size={18} />
+              </button>
+              <button aria-label="Cart" className="p-2 rounded-full hover:bg-white/10 transition">
+                <ShoppingCart size={18} />
+              </button>
+            </nav>
 
-          {/* SOCIAL ICONS */}
-          <div className="flex items-center gap-3 ml-4">
-            {socialLinks.map((link, idx) => (
-              <a
-                key={idx}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-500 hover:text-blue-500 transition"
-              >
-                {link.icon}
+            {/* Social icons (desktop) */}
+            <div className="hidden md:flex items-center gap-3">
+              <a href="https://twitter.com/" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-white/10 transition">
+                <Twitter size={16} />
               </a>
-            ))}
+              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-white/10 transition">
+                <Instagram size={16} />
+              </a>
+              <a href="https://www.linkedin.com/in/kgomotsonkosi-l" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-white/10 transition">
+                <Linkedin size={16} />
+              </a>
+            </div>
+
+            {/* Theme toggle */}
+            <div className="hidden md:block">
+              <ThemeToggle />
+            </div>
+
+            {/* WhatsApp CTA (desktop) */}
+            <button
+              onClick={handleWhatsAppRedirect}
+              className="hidden md:flex items-center gap-2 bg-white text-[#1877f2] rounded-full px-3 py-1.5 text-sm font-medium hover:opacity-95 transition"
+              aria-label="Get a Quote via WhatsApp"
+            >
+              <FaWhatsapp />
+              <span>Get a Quote</span>
+            </button>
+
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden p-2 rounded-full hover:bg-white/10 transition"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
-
-        {/* MOBILE HAMBURGER */}
-        <button
-          className="md:hidden text-2xl text-blue-600"
-          onClick={() => setMenuOpen(true)}
-        >
-          <FaBars />
-        </button>
       </header>
 
-      {/* MOBILE MENU */}
+      {/* MOBILE MENU / BOTTOM DRAWER */}
       {menuOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="fixed inset-0 z-40 bg-black/40"
           onClick={() => setMenuOpen(false)}
         >
           <div
-            className="fixed bottom-0 left-0 w-full bg-white dark:bg-[#1C1A27] rounded-t-3xl p-6 z-50 transform transition-transform duration-300"
+            className="fixed bottom-0 left-0 w-full bg-white dark:bg-[#0b1220] rounded-t-3xl p-6 z-50"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-bold text-blue-600">Menu</h2>
-              <button
-                onClick={() => setMenuOpen(false)}
-                className="text-2xl text-gray-500"
-              >
-                <FaTimes />
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="bg-[#1877f2] text-white rounded-full p-2">
+                  <Home size={16} />
+                </div>
+                <div className="font-semibold">SwiftMeta</div>
+              </div>
+              <button onClick={() => setMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
-            <nav className="flex flex-col space-y-4 text-lg font-medium mb-4">
+            <nav className="flex flex-col gap-3 mb-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                >
+                <a key={link.name} href={link.href} onClick={() => setMenuOpen(false)} className="py-3 px-4 rounded-lg hover:bg-gray-100 transition">
                   {link.name}
                 </a>
               ))}
             </nav>
 
-            <button
-              onClick={handleWhatsAppRedirect}
-              className="w-full bg-green-500 hover:bg-green-600 transition text-white flex items-center justify-center gap-2 py-3 rounded-full text-lg font-medium mb-4"
-            >
-              <FaWhatsapp /> Get a Quote
-            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <button onClick={handleWhatsAppRedirect} className="flex-1 bg-[#25D366] text-white py-2 rounded-full flex items-center justify-center gap-2">
+                <FaWhatsapp /> WhatsApp
+              </button>
+              <button className="p-3 bg-gray-100 rounded-full" aria-label="Toggle theme">
+                <ThemeToggle />
+              </button>
+            </div>
 
-            {/* SOCIAL ICONS MOBILE */}
-            <div className="flex justify-center gap-6">
-              {socialLinks.map((link, idx) => (
-                <a
-                  key={idx}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-500 hover:text-blue-500 transition text-xl"
-                >
-                  {link.icon}
-                </a>
-              ))}
+            <div className="flex items-center gap-4 justify-center">
+              <a href="https://twitter.com/" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-gray-100">
+                <Twitter size={18} />
+              </a>
+              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-gray-100">
+                <Instagram size={18} />
+              </a>
+              <a href="https://www.linkedin.com/in/kgomotsonkosi-l" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-gray-100">
+                <Linkedin size={18} />
+              </a>
             </div>
           </div>
         </div>
