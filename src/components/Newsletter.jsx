@@ -27,7 +27,7 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="dark:bg-black py-16 transition-colors duration-300">
+    <section className="dark:bg-black-300 py-16 transition-colors duration-300">
       <div className="max-w-2xl mx-auto px-6 lg:px-20 rounded-3xl border border-gray-300 dark:border-gray-700 py-12">
         <div className="text-center mb-8">
           <h4 className="text-blue-400 font-semibold uppercase mb-2">
