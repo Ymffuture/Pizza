@@ -24,7 +24,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="bg-white dark:bg-black text-black dark:text-white min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center md:justify-between px-5 lg:px-14 gap-8 pt-5 md:pt-0 transition-colors duration-300">
+    <section className="bg-white dark:bg-black text-black dark:text-white min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center md:justify-between px-3 lg:px-14 gap-4 pt-2 md:pt-0 transition-colors duration-300">
 
       {/* LEFT CONTENT */}
       <div className="lg:w-1/2 w-full text-center lg:text-left">
@@ -58,7 +58,7 @@ const Hero = () => {
       </div>
 
       {/* RIGHT CONTENT */}
-      <div className="lg:w-1/2 w-full relative flex justify-center mb-10 lg:mb-0">
+      <div className="lg:w-1/2 w-full relative flex justify-center mb-4 lg:mb-0">
         <div className="relative">
           <img
             src={heroImg}
