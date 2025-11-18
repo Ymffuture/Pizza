@@ -35,7 +35,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50">
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/50">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-2">
           {/* LEFT: Logo */}
           <div className="flex items-center gap-3">
