@@ -53,7 +53,7 @@ const Menu = () => {
   }, []);
 
   return (
-    <section className="bg-white dark:bg-black text-gray dark:text-white py-16 px-5 lg:px-14 transition-colors duration-300">
+    <section className="dark:bg-black text-gray dark:text-white py-16 px-5 lg:px-14 transition-colors duration-300">
       <div className="text-center mb-12">
         <p className="text-gray-500 font-medium uppercase tracking-wider mb-2">
           Our Services
