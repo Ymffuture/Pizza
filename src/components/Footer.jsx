@@ -12,7 +12,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto py-16 px-6 lg:px-20 grid md:grid-cols-4 gap-10">
         {/* Brand */}
         <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">Future Web Studio</h2>
+          <h2 className="text-2xl font-bold text-blue-600 mb-4">SwiftMeta </h2>
           <p className="text-gray-700 dark:text-gray-400">
             Building modern, responsive websites that elevate your brand and
             engage your audience. Design meets technology for a seamless digital presence.
@@ -108,15 +108,7 @@ const Footer = () => {
         </div>
 
         {/* Contact */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Contact</h3>
-          <ul className="space-y-2">
-            <li>Email: <a href="mailto:futurekgomotso@gmail.com" className="underline hover:text-blue-500 transition">futurekgomotso@gmail.com</a></li>
-            <li>Phone: <a href="tel:+27634414863" className="underline hover:text-blue-500 transition">+27 63 441 4863</a></li>
-            <li>Website: <a href="https://quorvexinstitute.vercel.app" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-500 transition">Quorvex Institute</a></li>
-          </ul>
-        </div>
-      </div>
+      
 
       {/* Bottom line */}
       <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
