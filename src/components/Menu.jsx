@@ -6,11 +6,11 @@ import MenuCard from "../layouts/MenuCard";
 const keywords = [
   "ecommerce website",
   "html css website",
-  "reactjs logo",
-  "nextjs logo",
-  "portfolio website design",
-  "business website themes",
-  "landing page design in react ",
+  "reactjs",
+  "nextjs",
+  "portfolio website",
+  "business website",
+  "landing page design",
   "web application react js",
 ];
 
@@ -53,9 +53,9 @@ const Menu = () => {
   }, []);
 
   return (
-    <section className="bg-white dark:bg-black text-black dark:text-white py-16 px-5 lg:px-14 transition-colors duration-300">
+    <section className="bg-white dark:bg-black text-gray dark:text-white py-16 px-5 lg:px-14 transition-colors duration-300">
       <div className="text-center mb-12">
-        <p className="text-orange-500 font-medium uppercase tracking-wider mb-2">
+        <p className="text-gray-500 font-medium uppercase tracking-wider mb-2">
           Our Services
         </p>
         <h2 className="text-3xl md:text-4xl font-bold">Websites We Build</h2>
