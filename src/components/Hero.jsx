@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { FaCode, FaPalette } from "react-icons/fa";
 import { MdDevices } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
@@ -24,62 +25,107 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="bg-white dark:bg-black text-black dark:text-white min-h-screen flex flex-col-reverse lg:flex-row items-center justify-center md:justify-between px-3 lg:px-14 gap-4 pt-2 md:pt-0 transition-colors duration-300">
+    <section className="bg-white dark:bg-black text-black dark:text-white
+    min-h-[90vh] flex flex-col-reverse lg:flex-row items-center justify-center
+    px-4 md:px-10 lg:px-16 gap-14 pt-24 transition-colors duration-300">
 
-      {/* LEFT CONTENT */}
-      <div className="lg:w-1/2 w-full text-center lg:text-left">
+      {/* LEFT SIDE */}
+      <motion.div
+        className="lg:w-1/2 w-full text-center lg:text-left"
+        initial={{ opacity: 0, x: -50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.7 }}
+      >
         <div className="inline-flex items-center mb-4 text-blue-500 font-medium justify-center lg:justify-start">
           <BsPatchCheckFill className="mr-2" /> Professional Web Services
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-          Modern{" "}
-          <span className="text-blue-600">Website Design</span>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+          Elevate Your{" "}
+          <span className="text-blue-600">Online Presence</span>
           <br />
-          & <span className="text-blue-600">Web Development</span>
+          with Modern <span className="text-blue-600">Web Design</span>
         </h1>
 
         <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-xl mx-auto lg:mx-0">
-          Build fast, responsive, beautiful websites for your business. From
-          HTML, CSS, React.js, to Next.js — we design and develop everything you
-          need to stand out online.
+          Fast, responsive, visually stunning websites built with cutting-edge
+          technologies like React, Next.js, Tailwind, and advanced UI/UX design.
         </p>
 
-        {/* CTA BUTTONS */}
-        <div className="mt-6 flex flex-col sm:flex-row items-center gap-6 max-w-xl mx-auto lg:mx-0">
-          <button className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold rounded-full px-6 py-3 w-full sm:w-auto">
+        <div className="mt-8 flex flex-col sm:flex-row items-center gap-6 max-w-xl mx-auto lg:mx-0">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold rounded-full px-7 py-3 shadow-lg shadow-blue-500/20 w-full sm:w-auto"
+          >
             Get A Website
-          </button>
+          </motion.button>
 
-          <button className="border border-blue-600 hover:bg-blue-600 hover:text-white transition text-blue-600 font-semibold rounded-full px-6 py-3 w-full sm:w-auto">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="border border-blue-600 hover:bg-blue-600 hover:text-white transition text-blue-600 font-semibold rounded-full px-7 py-3 w-full sm:w-auto"
+          >
             View Portfolio
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* RIGHT CONTENT */}
-      <div className="lg:w-1/2 w-full relative flex justify-center m-4 lg:m-5">
-        <div className="relative">
-          <img
-            src={heroImg}
-            alt="Web Design"
-            className="rounded-3xl w-[400px] h-[400px] sm:w-[350px] sm:h-[350px] md:w-[430px] md:h-[430px] object-cover shadow-xl"
-          />
-        </div>
+      {/* RIGHT SIDE */}
+      <motion.div
+        className="lg:w-1/2 w-full flex justify-center relative"
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.9 }}
+      >
+        {/* Gradient Glow */}
+        <div className="absolute w-[350px] h-[350px] md:w-[450px] md:h-[450px] rounded-full 
+        bg-blue-500/20 blur-3xl top-10 md:top-5"></div>
+
+        {/* Floating Image */}
+        <motion.img
+          src={heroImg}
+          alt="Web Design"
+          className="rounded-3xl w-[80%] max-w-[430px] object-cover shadow-2xl relative z-10"
+          animate={{
+            y: [0, -10, 0],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
 
         {/* BADGES */}
-        <div className="absolute top-5 right-2 md:right-10 bg-white text-black text-sm px-3 py-1 rounded-full flex items-center shadow-lg">
+        <motion.div
+          className="absolute top-6 right-8 bg-white dark:bg-gray-900 text-black dark:text-white 
+          text-sm px-3 py-1 rounded-full flex items-center shadow-lg"
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
           <FaCode className="text-blue-600 mr-2" /> Clean Code
-        </div>
+        </motion.div>
 
-        <div className="absolute bottom-10 left-0 md:left-12 bg-white text-black text-sm px-3 py-1 rounded-full flex items-center shadow-lg">
+        <motion.div
+          className="absolute bottom-16 left-5 bg-white dark:bg-gray-900 text-black dark:text-white 
+          text-sm px-3 py-1 rounded-full flex items-center shadow-lg"
+          initial={{ opacity: 0, x: -15 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.9 }}
+        >
           <FaPalette className="text-purple-600 mr-2" /> UI/UX Design
-        </div>
+        </motion.div>
 
-        <div className="absolute bottom-6 right-0 md:right-10 bg-white text-black text-sm px-3 py-1 rounded-full flex items-center shadow-lg">
-          <MdDevices className="text-green-600 mr-2" /> Fully Responsive
-        </div>
-      </div>
+        <motion.div
+          className="absolute bottom-5 right-5 bg-white dark:bg-gray-900 text-black dark:text-white 
+          text-sm px-3 py-1 rounded-full flex items-center shadow-lg"
+          initial={{ opacity: 0, x: 15 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.1 }}
+        >
+          <MdDevices className="text-green-600 mr-2" /> Responsive
+        </motion.div>
+      </motion.div>
     </section>
   );
 };
