@@ -127,11 +127,11 @@ const Navbar = () => {
       {/* MOBILE MENU / BOTTOM DRAWER */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 backdrop-blur-xl bg-white/50"
+          className="fixed inset-0 z-40"
           onClick={() => setMenuOpen(false)}
         >
           <div
-            className="fixed bottom-0 left-0 w-full dark:bg-[#0b1220] rounded-t-3xl p-6 z-50"
+            className="fixed bottom-0 left-0 w-full dark:backdrop-blur-xl dark:bg-white/50 rounded-t-3xl p-6 z-50"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
