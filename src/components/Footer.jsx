@@ -109,7 +109,7 @@ const Footer = () => {
 
         {/* Contact */}
       
-
+      </div>
       {/* Bottom line */}
       <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
         © {new Date().getFullYear()} Future Web Studio | All rights reserved
