@@ -35,7 +35,7 @@ const Menu = () => {
           axios.get(
             `https://api.unsplash.com/photos/random?query=${encodeURIComponent(
               kw
-            )}&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw`
+            )}&client_id=NMOrL66p9sugBje0v9wI9mkfWBqiuXewfOZkBtziwQE`
           )
         );
 
