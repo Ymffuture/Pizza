@@ -10,13 +10,13 @@ const Newsletter = () => {
     setLoading(true);
     try {
       await emailjs.send(
-        "YOUR_SERVICE_ID", // replace with your EmailJS service ID
-        "YOUR_TEMPLATE_ID", // replace with your EmailJS template ID
+        "service_kw38oux", // replace with your EmailJS service ID
+        "template_etyg50k", // replace with your EmailJS template ID
         {
           from_name: values.name,
           from_email: values.email,
         },
-        "YOUR_PUBLIC_KEY" // replace with your EmailJS public key
+        "IolitXztFVvhZg6PX" // replace with your EmailJS public key
       );
       toast.success("Thank you! You are now subscribed.");
     } catch (error) {
