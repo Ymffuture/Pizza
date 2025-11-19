@@ -15,7 +15,7 @@ const GeminiAssistant = () => {
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
   const chatEndRef = useRef(null);
-  const connectionStrength = useConnectionStrength();
+
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -68,6 +68,7 @@ const useConnectionStrength = () => {
   return strength;
 };
 
+ const connectionStrength = useConnectionStrength();
   
   const sendMessage = async () => {
     if (!msg.trim()) return;
