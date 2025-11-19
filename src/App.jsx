@@ -8,7 +8,7 @@ import Testimonial from "./components/Testimonial";
 import GetApp from "./components/GetApp";
 import Newsletter from "./components/Newsletter";
 import Footer from "./components/Footer";
-import GeminiAssistant from "./layouts/GeminiAssistant" 
+//import GeminiAssistant from "./layouts/GeminiAssistant" 
 // Lazy loading wrapper
 const LazyLoadOnView = ({ children }) => {
   const ref = React.useRef();
@@ -54,7 +54,7 @@ const App = () => {
   return (
     <>
       {/* Navbar Skeleton */}
-      {navbarLoading ? <Skeleton active paragraph={false} /> : <Navbar />}
+      {navbarLoading ? <Skeleton active paragraph={false} style={{ width: "100%", height: 200 }}/> : <Navbar />}
 
       <LazyLoadOnView>
         <Hero />
@@ -83,7 +83,7 @@ const App = () => {
         <Testimonial />
         <GetApp />
         <Newsletter />
-        <GeminiAssistant/>
+        
       </LazyLoadOnView>
 
       <Footer />
