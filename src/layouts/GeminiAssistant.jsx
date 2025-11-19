@@ -48,7 +48,7 @@ const GeminiAssistant = () => {
             shape="circle"
             size="large"
             icon={<MessageCircle size={28} />}
-            className="fixed bottom-0 right-[40%] z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
+            className="fixed bottom-0 right-[10%] z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
             onClick={() => setOpen(true)}
           />
         </Tooltip>
