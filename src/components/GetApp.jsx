@@ -28,10 +28,10 @@ const GetApp = () => {
               <div className="relative w-full sm:w-auto">
                 <button
                   disabled
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto bg-black text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
                   <img src={googlePlayIcon} alt="Google Play" className="h-12 sm:h-10 object-contain" />
-                  Get on Google Play
+                  
                 </button>
                 <span className="absolute -top-3 -right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
                   Coming Soon
@@ -42,10 +42,10 @@ const GetApp = () => {
               <div className="relative w-full sm:w-auto">
                 <button
                   disabled
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto bg-black text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
                   <img src={appStoreIcon} alt="App Store" className="h-12 sm:h-10 object-contain" />
-                  Get on App Store
+                  
                 </button>
                 <span className="absolute -top-3 -right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
                   Coming Soon
