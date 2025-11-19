@@ -35,12 +35,12 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-white/20">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-2">
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/60 dark:bg-white-400">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
           {/* LEFT: Logo */}
           <div className="flex items-center gap-3">
             
-<div className="flex items-center gap-2 text-2xl font-bold text-blue-600"> <span>Swift<span className="text-gray-600" >Meta</span></span> </div>
+<div className="flex items-center gap-2 text-2xl font-bold text-blue-600"> <span>Swift<span className="text-gray-600 dark:text-gray-300" >Meta</span></span> </div>
           </div>
 
           {/* CENTER: Search (desktop) */}
@@ -136,10 +136,10 @@ const Navbar = () => {
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="bg-[#1877f2] text-white rounded-full p-2">
+                <div className="bg-[#1877f2] text-blue-500 rounded-full p-2">
                   <Home size={16} />
                 </div>
-                <div className="text-blue-300">Swift<span className="text-gray bold shadow-lg">Meta</span></div>
+                <div className="">Swift<span className="text-gray bold shadow-lg">Meta</span></div>
               </div>
               <button onClick={() => setMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -148,7 +148,7 @@ const Navbar = () => {
               </button>
             </div>
 
-            <nav className="flex flex-col gap-3 mb-4 backdrop-blur-xl bg-gray/50">
+            <nav className="flex flex-col gap-3 mb-4 backdrop-blur-xl bg-gray/50 rounded">
               {navLinks.map((link) => (
                 <a key={link.name} href={link.href} onClick={() => setMenuOpen(false)} className="py-3 px-4 rounded-lg hover:bg-gray-100 transition text-gray">
                   {link.name}
