@@ -18,6 +18,8 @@
     "slick-carousel": "^1.8.1",
     "axios": "^1.7.7", 
       "framer-motion": "^11.2.6",
+    "react-markdown": "^8.0.7",
+    "remark-gfm": "^3.0.1",
     "lucide-react": "^0.447.0", 
     "antd": "^5.10.0",
     "@emailjs/browser": "^3.2.0", 
