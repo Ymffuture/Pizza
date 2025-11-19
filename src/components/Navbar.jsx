@@ -132,16 +132,16 @@ const Navbar = () => {
           onClick={() => setMenuOpen(false)}
         >
           <div
-            className="fixed bottom-0 left-0 w-full dark:backdrop-blur-xl dark:bg-white/50 rounded-t-3xl p-6 z-50"
+            className="fixed bottom-0 left-0 w-full dark:backdrop-blur-xl dark:bg-white/50 rounded-t-3xl p-6 z-50 backdrop-blur-xl bg-blue-200"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="bg-[#1877f2] text-blue-500 rounded-full p-2">
-                  <Home size={16} />
+                  
                 </div>
                 <Ai className="bg-green-600" />
-                <div className="">Swift<span className="text-gray bold shadow-lg">Meta</span></div>
+                <div className="">Swift<span className="text-gray bold shadow-lg">Meta AI</span></div>
               </div>
               <button onClick={() => setMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
