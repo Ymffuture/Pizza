@@ -48,7 +48,7 @@ const GeminiAssistant = () => {
             shape="circle"
             size="large"
             icon={<MessageCircle size={28} />}
-            className="fixed bottom-4 right-4 z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
+            className="fixed bottom-0 right-[40%] z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
             onClick={() => setOpen(true)}
           />
         </Tooltip>
@@ -61,7 +61,7 @@ const GeminiAssistant = () => {
         footer={null}
         closeIcon={<X size={20} />}
         width={400}
-        style={{ top: 20, right: 20, position: "fixed", margin: 0, paddingBottom: 0 }}
+        style={{ top: 20, right: 23, position: "fixed", margin: 0, paddingBottom: 0 }}
         bodyStyle={{ height: "600px", padding: "16px", display: "flex", flexDirection: "column", backgroundColor: "#f7f7f8" }}
         title={
           <div className="flex justify-between items-center">
@@ -73,9 +73,31 @@ const GeminiAssistant = () => {
       >
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto pr-2 space-y-3">
-          {messages.length === 0 && (
-            <div className="text-center text-gray-400 mt-10 italic">Ask me anything!</div>
-          )}
+          
+{messages.length === 0 && (
+  <div className="grid grid-cols-2 gap-3 mt-6 px-2">
+    {[
+      "Explain React hooks",
+      "Generate a website idea",
+      "Write a Python snippet",
+      "Tips for learning AI"
+    ].map((prompt, idx) => (
+      <div
+        key={idx}
+        onClick={() => {
+          setMsg(prompt);
+          setTimeout(() => sendMessage(), 100); // slight delay to update input
+        }}
+        className="cursor-pointer bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow hover:shadow-lg transition hover:bg-blue-50 dark:hover:bg-gray-700"
+      >
+        <p className="text-gray-700 dark:text-gray-100 font-medium text-sm text-center">{prompt}</p>
+      </div>
+    ))}
+  </div>
+)}
+
+
+          
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
               <div
@@ -104,12 +126,12 @@ const GeminiAssistant = () => {
         </div>
 
         {/* Input Area */}
-        <div className="flex gap-2 mt-4 border-t pt-4">
+        <div className="flex gap-2 mt-4 pt-4">
           <TextArea
             value={msg}
             onChange={(e) => setMsg(e.target.value)}
             placeholder="Type your message..."
-            autoSize={{ minRows: 1, maxRows: 5 }}
+            autoSize={{ minRows: 3, maxRows: 5 }}
             onPressEnter={(e) => !e.shiftKey && (e.preventDefault(), sendMessage())}
             className="rounded-lg border-gray-300 dark:border-gray-700"
           />
