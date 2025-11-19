@@ -136,9 +136,9 @@ const Hero = () => {
             ease: "easeInOut",
           }}
         />) : (
-          {/* SVG loader (accessible) */}
+          
 <div className="flex flex-col items-center justify-center h-[400px]">
-  {/* rotating ring */}
+  
   <svg
     role="img"
     aria-label="Loading image"
@@ -161,8 +161,6 @@ const Hero = () => {
       d="M25 5a20 20 0 1 1-14.142 34.142"
     />
   </svg>
-
-  {/* subtle loading text (visible) */}
   <span className="mt-3 text-sm text-gray-500">Loading image…</span>
 </div>
 
