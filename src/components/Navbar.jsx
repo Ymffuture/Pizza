@@ -37,8 +37,8 @@ const Navbar = () => {
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/60 dark:bg-gray-900/60 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
           {/* Logo */}
-          <div className="flex items-center gap-2 text-2xl text-blue-500">
-            Swift<span className="text-gray-600 dark:text-gray-300">Meta</span>
+          <div className="flex items-center text-2xl text-blue-500">
+            Swift<span className="text-gray-600 dark:text-gray-300">Meta™</span>
           </div>
 
           {/* Search (desktop) */}
