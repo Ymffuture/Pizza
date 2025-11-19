@@ -6,13 +6,12 @@ import {
   MessageSquare,
   Bell,
   ShoppingCart,
-  Twitter,
-  Instagram,
-  Linkedin,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { Twitter, Instagram, Linkedin } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import Ai from "../layouts/GeminiAssistant"  
+import GeminiAssistant from "../layouts/GeminiAssistant";
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const phoneNumber = "27634414863";
@@ -27,160 +26,171 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Services", href: "/#services" },
-    { name: "Portfolio", href: "/#portfolio" },
-    { name: "About", href: "/#about" },
-    { name: "Contact", href: "/#contact" },
+    { name: "Small Projects", href: "/small-projects" },
+    { name: "Large Projects", href: "/large-projects" },
+    { name: "Server/API", href: "/server-api" },
   ];
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/60 dark:bg-white-400">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
-          {/* LEFT: Logo */}
-          <div className="flex items-center gap-3">
-            
-<div className="flex items-center gap-2 text-2xl font-bold text-blue-600"> <span>Swift<span className="text-gray-600 dark:text-gray-300" >Meta</span></span> </div>
+      {/* Desktop Navbar */}
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/60 dark:bg-gray-900/60 shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+          {/* Logo */}
+          <div className="flex items-center gap-2 text-2xl font-bold text-blue-600">
+            Swift
+            <span className="text-gray-600 dark:text-gray-300">Meta</span>
           </div>
 
-          {/* CENTER: Search (desktop) */}
+          {/* Search (desktop) */}
           <div className="hidden md:flex flex-1 justify-center px-6">
             <div className="w-full max-w-xl">
-              <label className="relative block">
-                <span className="sr-only">Search</span>
-                <div className="flex items-center bg-white rounded-full px-3 py-2 shadow-sm">
-                  <Search className="text-gray-400" size={16} />
-                  <input
-                    type="search"
-                    placeholder="Search SwiftMeta"
-                    className="ml-3 w-full bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
-                    aria-label="Search"
-                  />
-                </div>
-              </label>
+              <div className="flex items-center bg-white dark:bg-gray-800 rounded-full px-3 py-2 shadow-sm">
+                <Search className="text-gray-400" size={16} />
+                <input
+                  type="search"
+                  placeholder="Search SwiftMeta"
+                  className="ml-3 w-full bg-transparent text-sm text-gray-700 dark:text-gray-100 placeholder-gray-400 outline-none"
+                />
+              </div>
             </div>
           </div>
 
-          {/* RIGHT: Actions */}
+          {/* Right actions */}
           <div className="flex items-center gap-3">
-            {/* nav icons (desktop) */}
+            {/* Desktop nav icons */}
             <nav className="hidden md:flex items-center gap-4">
-              <button aria-label="Home" className="p-2 rounded-full hover:bg-white/10 transition">
-                <Home size={18} />
-              </button>
-              <button aria-label="Network" className="p-2 rounded-full hover:bg-white/10 transition">
-                <Users size={18} />
-              </button>
-              <button aria-label="Messages" className="p-2 rounded-full hover:bg-white/10 transition">
-                <MessageSquare size={18} />
-              </button>
-              <button aria-label="Notifications" className="p-2 rounded-full hover:bg-white/10 transition">
-                <Bell size={18} />
-              </button>
-              <button aria-label="Cart" className="p-2 rounded-full hover:bg-white/10 transition">
-                <ShoppingCart size={18} />
-              </button>
+              <Home className="cursor-pointer hover:text-blue-600" size={18} />
+              <Users className="cursor-pointer hover:text-blue-600" size={18} />
+              <MessageSquare
+                className="cursor-pointer hover:text-blue-600"
+                size={18}
+              />
+              <Bell className="cursor-pointer hover:text-blue-600" size={18} />
+              <ShoppingCart
+                className="cursor-pointer hover:text-blue-600"
+                size={18}
+              />
             </nav>
 
-            {/* Social icons (desktop) */}
+            {/* Social (desktop) */}
             <div className="hidden md:flex items-center gap-3">
-              <a href="https://twitter.com/" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-white/10 transition">
-                <Twitter size={16} />
-              </a>
-              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-white/10 transition">
-                <Instagram size={16} />
-              </a>
-              <a href="https://www.linkedin.com/in/kgomotsonkosi-l" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-white/10 transition">
-                <Linkedin size={16} />
-              </a>
+              <Twitter className="cursor-pointer hover:text-blue-500" size={16} />
+              <Instagram className="cursor-pointer hover:text-pink-500" size={16} />
+              <Linkedin className="cursor-pointer hover:text-blue-700" size={16} />
             </div>
+
+            {/* WhatsApp CTA */}
+            <button
+              onClick={handleWhatsAppRedirect}
+              className="hidden md:flex items-center gap-2 bg-green-500 text-white rounded-full px-3 py-1.5 text-sm font-medium hover:opacity-95 transition"
+            >
+              <FaWhatsapp />
+              Get a Quote
+            </button>
 
             {/* Theme toggle */}
             <div className="hidden md:block">
               <ThemeToggle />
             </div>
 
-            {/* WhatsApp CTA (desktop) */}
-            <button
-              onClick={handleWhatsAppRedirect}
-              className="hidden md:flex items-center gap-2 bg-white text-[#1877f2] rounded-full px-3 py-1.5 text-sm font-medium hover:opacity-95 transition"
-              aria-label="Get a Quote via WhatsApp"
-            >
-              <FaWhatsapp />
-              <span>Get a Quote</span>
-            </button>
-
             {/* Mobile hamburger */}
             <button
-              className="md:hidden p-2 rounded-full hover:bg-white/10 transition"
+              className="md:hidden p-2 rounded-full hover:bg-gray-200 transition"
               onClick={() => setMenuOpen(true)}
-              aria-label="Open menu"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.6} d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
           </div>
         </div>
-        
       </header>
 
-      {/* MOBILE MENU / BOTTOM DRAWER */}
+      {/* Mobile Menu Drawer */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40"
+          className="fixed inset-0 z-40 bg-black/30"
           onClick={() => setMenuOpen(false)}
         >
           <div
-            className="fixed bottom-0 left-0 w-full dark:backdrop-blur-xl dark:bg-white/50 rounded-t-3xl p-6 z-50 backdrop-blur-xl bg-blue-200"
+            className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 rounded-t-3xl p-6 shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Close header */}
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="bg-[#1877f2] text-blue-500 rounded-full p-2">
-                  
-                </div>
-                <Ai className="bg-green-600" />
-                <div className="">Swift<span className="text-gray bold shadow-lg">Meta AI</span></div>
-              </div>
-              <button onClick={() => setMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <GeminiAssistant />
+              <div className="text-lg font-bold text-blue-600">SwiftMeta AI</div>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="p-2 rounded-full hover:bg-gray-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
-            <nav className="flex flex-col gap-3 mb-4 backdrop-blur-xl bg-gray/50 rounded">
+            {/* Mobile nav links */}
+            <nav className="flex flex-col gap-3 mb-4">
               {navLinks.map((link) => (
-                <a key={link.name} href={link.href} onClick={() => setMenuOpen(false)} className="py-3 px-4 rounded-lg hover:bg-gray-100 transition text-gray">
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-gray-700 dark:text-gray-200 text-center"
+                >
                   {link.name}
                 </a>
               ))}
             </nav>
 
+            {/* WhatsApp & Theme */}
             <div className="flex items-center gap-3 mb-4">
-              <button onClick={handleWhatsAppRedirect} className="flex-1 bg-[#25D366] text-white py-2 rounded-full flex items-center justify-center gap-2">
-                <FaWhatsapp /> WhatsApp
+              <button
+                onClick={handleWhatsAppRedirect}
+                className="flex-1 bg-green-500 text-white py-2 rounded-full flex items-center justify-center gap-2"
+              >
+                <FaWhatsapp />
+                WhatsApp
               </button>
-              <button className="p-3 rounded-full" aria-label="Toggle theme">
-                <ThemeToggle />
-              </button>
+              <ThemeToggle />
             </div>
 
+            {/* Social */}
             <div className="flex items-center gap-4 justify-center">
-              <a href="https://twitter.com/" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-gray-100">
-                <Twitter size={18} />
-              </a>
-              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-gray-100">
-                <Instagram size={18} />
-              </a>
-              <a href="https://www.linkedin.com/in/kgomotsonkosi-l" target="_blank" rel="noreferrer" className="p-2 rounded-full hover:bg-gray-100">
-                <Linkedin size={18} />
-              </a>
+              <Twitter className="cursor-pointer hover:text-blue-500" size={18} />
+              <Instagram className="cursor-pointer hover:text-pink-500" size={18} />
+              <Linkedin className="cursor-pointer hover:text-blue-700" size={18} />
             </div>
           </div>
         </div>
       )}
+
+      {/* Floating AI Chat */}
+      
     </>
   );
 };
