@@ -37,9 +37,8 @@ const Navbar = () => {
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/60 dark:bg-gray-900/60 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
           {/* Logo */}
-          <div className="flex items-center gap-2 text-2xl font-bold text-blue-600">
-            Swift
-            <span className="text-gray-600 dark:text-gray-300">Meta</span>
+          <div className="flex items-center gap-2 text-2xl text-blue-500">
+            Swift<span className="text-gray-600 dark:text-gray-300">Meta</span>
           </div>
 
           {/* Search (desktop) */}
@@ -138,7 +137,7 @@ const Navbar = () => {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-600"
+                  className="h-7 w-6 text-gray-600 dark:text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -146,7 +145,7 @@ const Navbar = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={1.3}
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
@@ -176,9 +175,9 @@ const Navbar = () => {
             {/* Social */}
             <div className="flex items-center gap-4 justify-center">
               <Twitter className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
-              <Instagram className="cursor-pointer hover:text-pink-500 dark:text-white" size={18} />
-              <Linkedin className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
-              <FaWhatsapp className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} onClick={handleWhatsAppRedirect} />
+              <Instagram className="cursor-pointer hover:text-pink-500 dark:text-red-100" size={18} />
+              <Linkedin className="cursor-pointer hover:text-blue-500 dark:text-blue-100" size={18} />
+              <FaWhatsapp className="cursor-pointer hover:text-blue-500 dark:text-green-600" size={18} onClick={handleWhatsAppRedirect} />
             </div>
           </div>
         </div>
