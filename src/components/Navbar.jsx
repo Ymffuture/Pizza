@@ -6,14 +6,19 @@ import {
   MessageSquare,
   Bell,
   ShoppingCart,
+  Twitter,
+  Instagram,
+  Linkedin,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { Twitter, Instagram, Linkedin } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import GeminiAssistant from "../layouts/GeminiAssistant";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { pathname } = useLocation();
+
   const phoneNumber = "27634414863";
   const message = "Hello! I’m interested in building a website with you.";
 
@@ -31,6 +36,8 @@ const Navbar = () => {
     { name: "Server/API", href: "/server-api" },
   ];
 
+  const isActive = (href) => pathname === href;
+
   return (
     <>
       {/* Desktop Navbar */}
@@ -38,8 +45,7 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
           {/* Logo */}
           <div className="flex items-center gap-2 text-2xl font-bold text-blue-600">
-            Swift
-            <span className="text-gray-600 dark:text-gray-300">Meta</span>
+            Swift <span className="text-gray-600 dark:text-gray-300">Meta</span>
           </div>
 
           {/* Search (desktop) */}
@@ -56,70 +62,62 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-3">
-            {/* Desktop nav icons */}
-            <nav className="hidden md:flex items-center gap-4">
-              <div className="space-x-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.href}
-              className={`text-sm font-medium transition ${
-                isActive(link.href)
-                  ? "text-blue-600 border-b-2 border-blue-600 pb-1"
-                  : "text-gray-600 hover:text-blue-600"
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
+          {/* Right side */}
+          <div className="flex items-center gap-4">
+
+            {/* NavLinks Desktop */}
+            <nav className="hidden md:flex items-center gap-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`text-sm font-medium transition ${
+                    isActive(link.href)
+                      ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+                      : "text-gray-600 hover:text-blue-600"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
             </nav>
-<div/>
-            {/* Social (desktop) */}
-            
- {/* Desktop social icons */}
-  <div className="hidden md:flex items-center gap-3">
-    <a
-      href="https://x.com/FutureFBG96"
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Twitter"
-      className="hover:text-blue-500 dark:text-white transition"
-    >
-      <Twitter size={16} />
-    </a>
 
-    <a
-      href="https://www.instagram.com/"
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Instagram"
-      className="hover:text-pink-500 dark:text-white transition"
-    >
-      <Instagram size={16} />
-    </a>
+            {/* Social Icons Desktop */}
+            <div className="hidden md:flex items-center gap-3">
+              <a
+                href="https://x.com/FutureFBG96"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-blue-500 dark:text-white transition"
+              >
+                <Twitter size={16} />
+              </a>
 
-    <a
-      href="https://www.linkedin.com/in/kgomotsonkosi-l"
-      target="_blank"
-      rel="noreferrer"
-      aria-label="LinkedIn"
-      className="hover:text-blue-500 dark:text-white transition"
-    >
-      <Linkedin size={16} />
-    </a>
+              <a
+                href="https://www.instagram.com/"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-pink-500 dark:text-white transition"
+              >
+                <Instagram size={16} />
+              </a>
 
-    <button
-      onClick={handleWhatsAppRedirect}
-      aria-label="WhatsApp"
-      className="hover:text-green-500 dark:text-white transition"
-    >
-      <FaWhatsapp size={18} />
-    </button>
-  </div>
-</div>
+              <a
+                href="https://www.linkedin.com/in/kgomotsonkosi-l"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-blue-500 dark:text-white transition"
+              >
+                <Linkedin size={16} />
+              </a>
+
+              <button
+                onClick={handleWhatsAppRedirect}
+                className="hover:text-green-500 dark:text-white transition"
+              >
+                <FaWhatsapp size={18} />
+              </button>
+            </div>
 
             {/* WhatsApp CTA */}
             <button
@@ -130,7 +128,7 @@ const Navbar = () => {
               Get a Quote
             </button>
 
-            {/* Theme toggle */}
+            {/* Theme Toggle */}
             <div className="hidden md:block">
               <ThemeToggle />
             </div>
@@ -159,7 +157,7 @@ const Navbar = () => {
         </div>
       </header>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Drawer */}
       {menuOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/30"
@@ -169,7 +167,7 @@ const Navbar = () => {
             className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 rounded-t-3xl p-6 shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close header */}
+            {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <GeminiAssistant />
               <div className="text-lg font-bold text-blue-600">SwiftMeta AI</div>
@@ -177,56 +175,46 @@ const Navbar = () => {
                 onClick={() => setMenuOpen(false)}
                 className="p-2 rounded-full hover:bg-gray-200"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                ✕
               </button>
             </div>
 
-            {/* Mobile nav links */}
+            {/* Nav Links */}
             <nav className="flex flex-col gap-3 mb-4">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-gray-700 dark:text-gray-200 text-center"
+                  className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-center"
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
             </nav>
 
-            {/* WhatsApp & Theme */}
+            {/* Theme */}
             <div className="flex items-center gap-3 mb-4">
               <ThemeToggle />
-              Change the thame
+              <span className="text-gray-700 dark:text-gray-200">
+                Change the theme
+              </span>
             </div>
 
-            {/* Social */}
+            {/* Social Icons */}
             <div className="flex items-center gap-4 justify-center">
-              <Twitter className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
-              <Instagram className="cursor-pointer hover:text-pink-500 dark:text-white" size={18} />
-              <Linkedin className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
-              <FaWhatsapp className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} onClick={handleWhatsAppRedirect} />
+              <Twitter size={18} className="cursor-pointer hover:text-blue-500" />
+              <Instagram size={18} className="cursor-pointer hover:text-pink-500" />
+              <Linkedin size={18} className="cursor-pointer hover:text-blue-500" />
+              <FaWhatsapp
+                size={18}
+                onClick={handleWhatsAppRedirect}
+                className="cursor-pointer hover:text-green-500"
+              />
             </div>
           </div>
         </div>
       )}
-
-      {/* Floating AI Chat */}
-      
     </>
   );
 };
