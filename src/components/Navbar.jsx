@@ -122,7 +122,7 @@ const Navbar = () => {
             </button>
           </div>
         </div>
-        <Ai/>
+        
       </header>
 
       {/* MOBILE MENU / BOTTOM DRAWER */}
@@ -140,6 +140,7 @@ const Navbar = () => {
                 <div className="bg-[#1877f2] text-blue-500 rounded-full p-2">
                   <Home size={16} />
                 </div>
+                <Ai className="bg-green-600" />
                 <div className="">Swift<span className="text-gray bold shadow-lg">Meta</span></div>
               </div>
               <button onClick={() => setMenuOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
