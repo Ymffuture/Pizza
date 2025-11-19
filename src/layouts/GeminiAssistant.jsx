@@ -42,13 +42,14 @@ const GeminiAssistant = () => {
     <>
       {/* Floating Button */}
       <Button
-        type="primary"
-        shape="circle"
-        size="large"
-        icon={<MessageCircle size={28} />}
-        className="fixed bottom-6 right-6 z-50 shadow-2xl hover:scale-110 transition"
-        onClick={() => setOpen(true)}
-      />
+  type="primary"
+  shape="circle"
+  size="large"
+  icon={<MessageCircle size={28} />}
+  className="fixed bottom-4 right-4 z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
+  onClick={() => setOpen(true)}
+/>
+
 
       {/* AntD Modal - Bottom Right */}
       <Modal
@@ -57,7 +58,7 @@ const GeminiAssistant = () => {
         footer={null}
         closeIcon={<X size={20} />}
         width={420}
-        style={{ top: 20, right: 20, position: "fixed", margin: 0, paddingBottom: 0 }}
+        style={{ top: 20, right: 23, position: "fixed", margin: 0, paddingBottom: 0 }}
         bodyStyle={{ height: "560px", padding: "16px", display: "flex", flexDirection: "column" }}
         title={<span className="font-bold text-blue-600">SwiftMeta AI Assistant</span>}
       >
