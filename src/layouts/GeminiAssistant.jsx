@@ -50,7 +50,7 @@ const GeminiAssistant = () => {
             shape="circle"
             size="large"
             icon={<MessageCircle size={28} />}
-            className="sticky bottom-4 right-[-4%] z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
+            className="absolute bottom-1 right-[-6%] z-20 shadow-2xl hover:scale-110 transition-transform duration-200"
             onClick={() => setOpen(true)}
           />
         </Tooltip>
@@ -62,8 +62,8 @@ const GeminiAssistant = () => {
         onCancel={() => setOpen(false)}
         footer={null}
         closeIcon={<X size={20} />}
-        width={600}
-        style={{ top: 20, right: 16, position: "fixed", margin: 0, paddingBottom: 0 }}
+        width={700}
+        style={{ top: 20, right: 12, position: "fixed", margin: 0, paddingBottom: 0 }}
         bodyStyle={{ height: "600px", padding: "16px", display: "flex", flexDirection: "column" }}
         title={
           <div className="flex justify-between items-center">
@@ -105,7 +105,7 @@ const GeminiAssistant = () => {
               <div
                 className={`max-w-[100%] rounded-2xl px-4 py-3 shadow ${
                   m.sender === "user"
-                    ? "bg-blue-600 text-white"
+                    ? "bg-blue-300 text-white"
                     : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
                 }`}
               >
@@ -123,7 +123,7 @@ const GeminiAssistant = () => {
           PreTag="div"
           customStyle={{
             borderRadius: "10px",
-            padding: "14px",
+            padding: "18px",
             fontSize: "0.85rem",
           }}
           {...props}
@@ -146,7 +146,7 @@ const GeminiAssistant = () => {
           ))}
 
           {loading && (
-            <div className="flex justify-start">
+            <div className="flex justify-start animation-fade">
               <div className="bg-white dark:bg-gray-800 rounded-2xl px-4 py-2 shadow-sm flex items-center gap-2">
                 <Spin size="small" />
                 <span className="text-gray-500 dark:text-gray-300 text-sm animation-pulse">Thinking...</span>
