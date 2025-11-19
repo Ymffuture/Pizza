@@ -4,6 +4,8 @@ import { Modal, Input, Button, Spin, Tooltip } from "antd";
 import { MessageCircle, Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const { TextArea } = Input;
 
@@ -107,9 +109,38 @@ const GeminiAssistant = () => {
                     : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
                 }`}
               >
-                <ReactMarkdown remarkPlugins={[remarkGfm]} className="prose prose-sm max-w-none dark:prose-invert break-words">
-                  {m.text}
-                </ReactMarkdown>
+                <ReactMarkdown
+  remarkPlugins={[remarkGfm]}
+  className="prose prose-sm max-w-none dark:prose-invert break-words"
+  components={{
+    code({ inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || "");
+
+      return !inline && match ? (
+        <SyntaxHighlighter
+          style={coldarkCold}
+          language={match[1]}
+          PreTag="div"
+          customStyle={{
+            borderRadius: "10px",
+            padding: "14px",
+            fontSize: "0.85rem",
+          }}
+          {...props}
+        >
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
+      ) : (
+        <code className="bg-gray-200 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm" {...props}>
+          {children}
+        </code>
+      );
+    },
+  }}
+>
+  {m.text}
+</ReactMarkdown>
+
               </div>
             </div>
           ))}
