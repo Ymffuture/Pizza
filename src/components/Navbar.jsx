@@ -101,7 +101,7 @@ const Navbar = () => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-6 w-6 dark:text-white"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -109,7 +109,7 @@ const Navbar = () => {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2.5}
+                  strokeWidth={4}
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
@@ -171,10 +171,10 @@ const Navbar = () => {
             <div className="flex items-center gap-3 mb-4">
               <button
                 onClick={handleWhatsAppRedirect}
-                className="flex-1 bg-green-500 text-white py-2 rounded-full flex items-center justify-center gap-2"
+                className="flex-1 text-green-500 flex items-center justify-center"
               >
                 <FaWhatsapp />
-                WhatsApp
+                
               </button>
               <ThemeToggle />
             </div>
