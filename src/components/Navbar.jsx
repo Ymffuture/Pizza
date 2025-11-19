@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import ThemeToggle from "./ThemeToggle";
-
+import Ai from "./layouts/GeminiAssistant" 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const phoneNumber = "27634414863";
@@ -122,6 +122,7 @@ const Navbar = () => {
             </button>
           </div>
         </div>
+        <Ai/>
       </header>
 
       {/* MOBILE MENU / BOTTOM DRAWER */}
