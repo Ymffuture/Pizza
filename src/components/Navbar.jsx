@@ -60,25 +60,66 @@ const Navbar = () => {
           <div className="flex items-center gap-3">
             {/* Desktop nav icons */}
             <nav className="hidden md:flex items-center gap-4">
-              <Home className="cursor-pointer hover:text-blue-600" size={18} />
-              <Users className="cursor-pointer hover:text-blue-600" size={18} />
-              <MessageSquare
-                className="cursor-pointer hover:text-blue-600"
-                size={18}
-              />
-              <Bell className="cursor-pointer hover:text-blue-600" size={18} />
-              <ShoppingCart
-                className="cursor-pointer hover:text-blue-600"
-                size={18}
-              />
+              <div className="space-x-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.href}
+              className={`text-sm font-medium transition ${
+                isActive(link.href)
+                  ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+                  : "text-gray-600 hover:text-blue-600"
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+        </div>
             </nav>
 
             {/* Social (desktop) */}
-            <div className="hidden md:flex items-center gap-3">
-              <Twitter className="cursor-pointer hover:text-blue-500" size={16} />
-              <Instagram className="cursor-pointer hover:text-pink-500" size={16} />
-              <Linkedin className="cursor-pointer hover:text-blue-700" size={16} />
-            </div>
+            
+ {/* Desktop social icons */}
+  <div className="hidden md:flex items-center gap-3">
+    <a
+      href="https://x.com/FutureFBG96"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="Twitter"
+      className="hover:text-blue-500 dark:text-white transition"
+    >
+      <Twitter size={16} />
+    </a>
+
+    <a
+      href="https://www.instagram.com/"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="Instagram"
+      className="hover:text-pink-500 dark:text-white transition"
+    >
+      <Instagram size={16} />
+    </a>
+
+    <a
+      href="https://www.linkedin.com/in/kgomotsonkosi-l"
+      target="_blank"
+      rel="noreferrer"
+      aria-label="LinkedIn"
+      className="hover:text-blue-500 dark:text-white transition"
+    >
+      <Linkedin size={16} />
+    </a>
+
+    <button
+      onClick={handleWhatsAppRedirect}
+      aria-label="WhatsApp"
+      className="hover:text-green-500 dark:text-white transition"
+    >
+      <FaWhatsapp size={18} />
+    </button>
+  </div>
+</div>
 
             {/* WhatsApp CTA */}
             <button
@@ -109,7 +150,7 @@ const Navbar = () => {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={4}
+                  strokeWidth={1.3}
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
@@ -170,6 +211,7 @@ const Navbar = () => {
             {/* WhatsApp & Theme */}
             <div className="flex items-center gap-3 mb-4">
               <ThemeToggle />
+              Change the thame
             </div>
 
             {/* Social */}
