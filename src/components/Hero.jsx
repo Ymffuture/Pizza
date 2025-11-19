@@ -64,7 +64,7 @@ const Hero = () => {
             whileHover={{ scale: 1.05 }}
             className="border border-blue-600 hover:bg-blue-600 hover:text-white transition text-blue-600 font-semibold rounded-full px-7 py-3 w-full sm:w-auto"
           >
-            View Portfolio
+           <a href="https://futurecv.vercel.app" >View Portfolio</a>
           </motion.button>
         </div>
       </motion.div>
@@ -84,7 +84,7 @@ const Hero = () => {
         <motion.img
           src={heroImg}
           alt="Web Design"
-          className="rounded-3xl w-[80%] max-w-[430px] object-cover shadow-2xl relative z-3"
+          className="rounded-3xl w-[90%] max-w-[450px] object-cover shadow-2xl relative z-3"
           animate={{
             y: [0, -10, 0],
           }}
