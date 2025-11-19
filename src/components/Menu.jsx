@@ -16,41 +16,65 @@ const keywords = [
 
 const services = [
   { id: 1, name: "E-Commerce Website", tag: "Popular", price: "From R1499" },
-  { id: 2, name: "HTML & CSS Website", tag: "New", price: "From R899" },
-  { id: 3, name: "React Website", tag: "Hot", price: "From R1999" },
-  { id: 4, name: "Next.js Website", tag: "", price: "From R2499" },
-  { id: 5, name: "Portfolio Website", tag: "Popular", price: "From R799" },
+  { id: 2, name: "HTML & CSS Website", tag: "New", price: "From R499" },
+  { id: 3, name: "React Website", tag: "Hot", price: "From R799" },
+  { id: 4, name: "Next.js Website", tag: "", price: "From R899" },
+  { id: 5, name: "Portfolio Website", tag: "Popular", price: "From R399" },
   { id: 6, name: "Business Website", tag: "New", price: "From R1299" },
-  { id: 7, name: "Landing Page Design", tag: "", price: "From R499" },
-  { id: 8, name: "Custom Web Application", tag: "Hot", price: "From R2999" },
+  { id: 7, name: "Landing Page Design", tag: "", price: "From R299" },
+  { id: 8, name: "Custom Web Application", tag: "Hot", price: "From R999" },
 ];
 
 const Menu = () => {
   const [images, setImages] = useState(Array(8).fill(null));
 
   useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const requests = keywords.map((kw) =>
-          axios.get(
-            `https://api.unsplash.com/photos/random?query=${encodeURIComponent(
-              kw
-            )}&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw`
-          )
-        );
+  const fetchImages = async () => {
+    try {
+      const requests = keywords.map((kw) =>
+        axios.get(
+          `https://api.unsplash.com/photos/random?query=${encodeURIComponent(
+            kw
+          )}&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw`
+        )
+      );
 
-        const responses = await Promise.all(requests);
+      const responses = await Promise.all(requests);
+      const imgList = responses.map((res) => res.data.urls.regular);
 
-        const imgList = responses.map((res) => res.data.urls.regular);
+      // Save cached images + timestamp
+      localStorage.setItem("cachedImages", JSON.stringify(imgList));
+      localStorage.setItem("lastFetchTime", Date.now().toString());
 
-        setImages(imgList);
-      } catch (error) {
-        console.error("Error fetching Unsplash images:", error);
+      setImages(imgList);
+    } catch (error) {
+      console.error("Error fetching Unsplash images:", error);
+    }
+  };
+
+  const checkAndFetch = () => {
+    const lastFetch = localStorage.getItem("lastFetchTime");
+    const cachedImages = localStorage.getItem("cachedImages");
+
+    const threeDays = 3 * 24 * 60 * 60 * 1000;
+
+    if (lastFetch && cachedImages) {
+      const elapsed = Date.now() - parseInt(lastFetch);
+
+      if (elapsed < threeDays) {
+        // Load cached images (FAST)
+        setImages(JSON.parse(cachedImages));
+        return;
       }
-    };
+    }
 
+    // Otherwise fetch new images
     fetchImages();
-  }, []);
+  };
+
+  checkAndFetch();
+}, []);
+
 
   return (
     <section className="dark:bg-white text-gray dark:text-black py-16 px-5 lg:px-14 transition-colors duration-200 rounded">
