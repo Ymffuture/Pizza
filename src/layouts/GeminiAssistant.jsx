@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import { Tooltip, Button, Input, Spin, Card } from "antd";
 import { MessageCircle, Send, X } from "lucide-react";
-import { Input, Button, Tooltip, Spin, Typography } from "antd";
-import { toast, Toaster } from "react-hot-toast";
 
 const { TextArea } = Input;
-const { Text } = Typography;
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -14,12 +12,14 @@ const GeminiAssistant = () => {
   const [messages, setMessages] = useState([]);
   const chatEndRef = useRef(null);
 
-  useEffect(() => {
+  const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  };
+
+  useEffect(scrollToBottom, [messages, loading]);
 
   const sendMessage = async () => {
-    if (!msg.trim()) return toast.error("Please enter a message!");
+    if (!msg.trim()) return;
 
     const userMsg = { sender: "user", text: msg };
     setMessages((prev) => [...prev, userMsg]);
@@ -27,66 +27,58 @@ const GeminiAssistant = () => {
     setMsg("");
 
     try {
-      const res = await axios.post("/api/gemini", { prompt: msg });
-
+      const res = await axios.post("https://swiftmeta.onrender.com/api/gemini", { prompt: msg });
       const aiMsg = { sender: "ai", text: res.data.reply };
       setMessages((prev) => [...prev, aiMsg]);
     } catch (err) {
       console.error(err);
-      toast.error("AI request failed!");
-    } finally {
-      setLoading(false);
+      const errorMsg = { sender: "ai", text: "Oops! Something went wrong." };
+      setMessages((prev) => [...prev, errorMsg]);
     }
-  };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
+    setLoading(false);
   };
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
-
       {/* Floating Button */}
       {!open && (
-        <Tooltip title="Open SwiftMeta Assistant" placement="left">
+        <Tooltip title="Chat with SwiftMeta AI">
           <Button
             type="primary"
             shape="circle"
             size="large"
-            icon={<MessageCircle />}
-            className="fixed bottom-6 right-6 shadow-lg"
+            className="fixed bottom-6 right-6 z-50 shadow-lg flex items-center justify-center"
             onClick={() => setOpen(true)}
-          />
+          >
+            <MessageCircle size={24} />
+          </Button>
         </Tooltip>
       )}
 
       {/* Chat Window */}
       {open && (
-        <div className="fixed bottom-6 right-6 w-96 bg-white dark:bg-gray-900 shadow-2xl rounded-xl border dark:border-gray-700 flex flex-col h-[24rem]">
-          {/* Header */}
-          <div className="flex justify-between items-center px-4 py-2 border-b dark:border-gray-700">
-            <Text strong className="text-blue-600">
-              SwiftMeta Assistant
-            </Text>
-            <Button
-              type="text"
-              icon={<X />}
-              onClick={() => setOpen(false)}
-            />
-          </div>
-
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        <Card
+          className="fixed bottom-6 right-6 w-96 h-[480px] flex flex-col z-50 shadow-xl rounded-xl overflow-hidden"
+          bodyStyle={{ padding: "12px", display: "flex", flexDirection: "column", height: "100%" }}
+          title={
+            <div className="flex justify-between items-center">
+              <span className="text-blue-500 font-bold">SwiftMeta Assistant</span>
+              <Button
+                type="text"
+                icon={<X />}
+                onClick={() => setOpen(false)}
+              />
+            </div>
+          }
+        >
+          <div className="flex-1 overflow-y-auto space-y-3 mb-3 px-1">
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`p-2 rounded-lg max-w-[80%] break-words ${
+                className={`p-3 rounded-lg max-w-[80%] break-words ${
                   m.sender === "user"
-                    ? "bg-blue-600 text-white ml-auto"
+                    ? "bg-blue-500 text-white ml-auto"
                     : "bg-gray-100 dark:bg-gray-700 text-black dark:text-white"
                 }`}
               >
@@ -95,35 +87,36 @@ const GeminiAssistant = () => {
             ))}
 
             {loading && (
-              <div className="flex justify-start items-center space-x-2 text-gray-500">
-                <Spin size="small" />
-                <Text type="secondary">Thinking...</Text>
+              <div className="flex justify-start">
+                <Spin size="small" tip="Thinking..." />
               </div>
             )}
-
-            <div ref={chatEndRef} />
+            <div ref={chatEndRef}></div>
           </div>
 
-          {/* Input */}
-          <div className="px-4 py-3 border-t dark:border-gray-700 flex gap-2 items-end">
+          <div className="flex gap-2">
             <TextArea
-              autoSize={{ minRows: 1, maxRows: 4 }}
               value={msg}
               onChange={(e) => setMsg(e.target.value)}
-              onKeyDown={handleKeyDown}
               placeholder="Ask me anything..."
-              className="dark:bg-gray-800 dark:text-white rounded-md"
+              autoSize={{ minRows: 1, maxRows: 4 }}
+              onPressEnter={(e) => {
+                if (!e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
             />
-            <Tooltip title="Send Message">
+            <Tooltip title="Send">
               <Button
                 type="primary"
-                icon={<Send />}
+                icon={<Send size={18} />}
                 onClick={sendMessage}
                 loading={loading}
               />
             </Tooltip>
           </div>
-        </div>
+        </Card>
       )}
     </>
   );
