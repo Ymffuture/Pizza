@@ -135,7 +135,7 @@ const Hero = () => {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-        /> : (
+        />) : (
           {/* SVG loader (accessible) */}
 <div className="flex flex-col items-center justify-center h-[400px]">
   {/* rotating ring */}
