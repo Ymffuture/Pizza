@@ -16,10 +16,10 @@ const GetApp = () => {
               Our Application
             </h4>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Simple Way To Order Your Food
+              Simple Way To get in touch with the developer. 
             </h2>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
-              Discover food wherever and whenever and get your food delivered quickly.
+              Discover more ideas in one chat. 
             </p>
 
             {/* App Store Buttons */}
@@ -28,9 +28,9 @@ const GetApp = () => {
               <div className="relative w-full sm:w-auto">
                 <button
                   disabled
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto bg-black text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
-                  <img src={googlePlayIcon} alt="Google Play" className="h-12 sm:h-8 object-contain" />
+                  <img src={googlePlayIcon} alt="Google Play" className="h-12 sm:h-10 object-contain" />
                   Get on Google Play
                 </button>
                 <span className="absolute -top-3 -right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
@@ -42,9 +42,9 @@ const GetApp = () => {
               <div className="relative w-full sm:w-auto">
                 <button
                   disabled
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto bg-orange-500 text-white font-medium px-6 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 w-full sm:w-auto bg-black text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
-                  <img src={appStoreIcon} alt="App Store" className="h-12 sm:h-8 object-contain" />
+                  <img src={appStoreIcon} alt="App Store" className="h-12 sm:h-10 object-contain" />
                   Get on App Store
                 </button>
                 <span className="absolute -top-3 -right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
@@ -59,7 +59,7 @@ const GetApp = () => {
             <img
               src={img}
               alt="App Preview"
-              className="w-[280px] sm:w-[320px] md:w-[400px] lg:w-[480px] drop-shadow-2xl rounded-xl"
+              className="w-[280px] sm:w-[320px] md:w-[400px] lg:w-[480px] drop-shadow-2xl rounded-xl dark:grayscale"
             />
           </div>
         </div>
