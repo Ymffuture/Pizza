@@ -62,8 +62,8 @@ const GeminiAssistant = () => {
         onCancel={() => setOpen(false)}
         footer={null}
         closeIcon={<X size={20} />}
-        width={500}
-        style={{ top: 20, right: 20, position: "fixed", margin: 0, paddingBottom: 0 }}
+        width={600}
+        style={{ top: 20, right: 16, position: "fixed", margin: 0, paddingBottom: 0 }}
         bodyStyle={{ height: "600px", padding: "16px", display: "flex", flexDirection: "column" }}
         title={
           <div className="flex justify-between items-center">
@@ -103,7 +103,7 @@ const GeminiAssistant = () => {
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[90%] rounded-2xl px-4 py-3 shadow ${
+                className={`max-w-[100%] rounded-2xl px-4 py-3 shadow ${
                   m.sender === "user"
                     ? "bg-blue-600 text-white"
                     : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
