@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { FaCode, FaPalette } from "react-icons/fa";
 import { MdDevices } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
-
+import Ai from "./layouts/GeminiAssistant" 
 const Hero = () => {
   const [heroImg, setHeroImg] = useState("");
 
@@ -126,6 +126,7 @@ const Hero = () => {
           <MdDevices className="text-green-600 mr-2" /> Responsive
         </motion.div>
       </motion.div>
+      <Ai/>
     </section>
   );
 };
