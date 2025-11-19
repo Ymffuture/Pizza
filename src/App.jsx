@@ -8,7 +8,7 @@ import Testimonial from "./components/Testimonial";
 import GetApp from "./components/GetApp";
 import Newsletter from "./components/Newsletter";
 import Footer from "./components/Footer";
-
+import GeminiAssistant from "./layout/GeminiAssistant" 
 // Lazy loading wrapper
 const LazyLoadOnView = ({ children }) => {
   const ref = React.useRef();
@@ -83,6 +83,7 @@ const App = () => {
         <Testimonial />
         <GetApp />
         <Newsletter />
+        <GeminiAssistant/>
       </LazyLoadOnView>
 
       <Footer />
