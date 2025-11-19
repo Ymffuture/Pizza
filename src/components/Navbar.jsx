@@ -76,7 +76,7 @@ const Navbar = () => {
           ))}
         </div>
             </nav>
-
+<div/>
             {/* Social (desktop) */}
             
  {/* Desktop social icons */}
