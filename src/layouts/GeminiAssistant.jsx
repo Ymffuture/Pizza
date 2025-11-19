@@ -98,7 +98,7 @@ const useConnectionStrength = () => {
             shape="circle"
             size="large"
             icon={<MessageCircle size={28} />}
-            className="absolute bottom-1 right-[-6%] z-20 shadow-2xl hover:scale-110 transition-transform duration-200"
+            className="flex top-0 right-[-2%] z-20 shadow-2xl hover:scale-110 transition-transform duration-200"
             onClick={() => setOpen(true)}
           />
         </Tooltip>
