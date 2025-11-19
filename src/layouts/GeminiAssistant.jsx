@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { Modal, Input, Button, Spin } from "antd";
+import { Modal, Input, Button, Spin, Tooltip } from "antd";
 import { MessageCircle, Send, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -40,47 +40,53 @@ const GeminiAssistant = () => {
 
   return (
     <>
-      {/* Floating Button */}
-      <Button
-  type="primary"
-  shape="circle"
-  size="large"
-  icon={<MessageCircle size={28} />}
-  className="fixed bottom-4 right-4 z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
-  onClick={() => setOpen(true)}
-/>
+      {/* Floating Chat Button */}
+      {!open && (
+        <Tooltip title="Chat with SwiftMeta AI">
+          <Button
+            type="primary"
+            shape="circle"
+            size="large"
+            icon={<MessageCircle size={28} />}
+            className="fixed bottom-4 right-4 z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
+            onClick={() => setOpen(true)}
+          />
+        </Tooltip>
+      )}
 
-
-      {/* AntD Modal - Bottom Right */}
+      {/* Chat Modal */}
       <Modal
         open={open}
         onCancel={() => setOpen(false)}
         footer={null}
         closeIcon={<X size={20} />}
-        width={420}
-        style={{ top: 20, right: 23, position: "fixed", margin: 0, paddingBottom: 0 }}
-        bodyStyle={{ height: "560px", padding: "16px", display: "flex", flexDirection: "column" }}
-        title={<span className="font-bold text-blue-600">SwiftMeta AI Assistant</span>}
+        width={400}
+        style={{ top: 20, right: 20, position: "fixed", margin: 0, paddingBottom: 0 }}
+        bodyStyle={{ height: "600px", padding: "16px", display: "flex", flexDirection: "column", backgroundColor: "#f7f7f8" }}
+        title={
+          <div className="flex justify-between items-center">
+            <span className="font-bold text-blue-600 text-lg">SwiftMeta AI</span>
+            <Button type="text" icon={<X />} onClick={() => setOpen(false)} />
+          </div>
+        }
+        className="rounded-xl overflow-hidden"
       >
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+        <div className="flex-1 overflow-y-auto pr-2 space-y-3">
           {messages.length === 0 && (
-            <div className="text-center text-gray-500 mt-10">Ask me anything!</div>
+            <div className="text-center text-gray-400 mt-10 italic">Ask me anything!</div>
           )}
           {messages.map((m, i) => (
-            <div
-              key={i}
-              className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}
-            >
+            <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-sm ${
+                className={`max-w-[80%] rounded-2xl px-4 py-3 shadow ${
                   m.sender === "user"
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
                 }`}
               >
-                <ReactMarkdown remarkPlugins={[remarkGfm]} className="prose prose-sm max-w-none dark:prose-invert">
-                  {m.sender === "ai" ? m.text.replace(/\*\*/g, "**") : m.text}
+                <ReactMarkdown remarkPlugins={[remarkGfm]} className="prose prose-sm max-w-none dark:prose-invert break-words">
+                  {m.text}
                 </ReactMarkdown>
               </div>
             </div>
@@ -88,8 +94,9 @@ const GeminiAssistant = () => {
 
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3">
-                <Spin size="small" /> Thinking...
+              <div className="bg-white dark:bg-gray-800 rounded-2xl px-4 py-2 shadow-sm flex items-center gap-2">
+                <Spin size="small" />
+                <span className="text-gray-500 dark:text-gray-300 text-sm">Thinking...</span>
               </div>
             </div>
           )}
@@ -102,17 +109,20 @@ const GeminiAssistant = () => {
             value={msg}
             onChange={(e) => setMsg(e.target.value)}
             placeholder="Type your message..."
-            autoSize={{ minRows: 1, maxRows: 4 }}
+            autoSize={{ minRows: 1, maxRows: 5 }}
             onPressEnter={(e) => !e.shiftKey && (e.preventDefault(), sendMessage())}
+            className="rounded-lg border-gray-300 dark:border-gray-700"
           />
-          <Button
-            type="primary"
-            shape="circle"
-            icon={<Send size={18} />}
-            onClick={sendMessage}
-            loading={loading}
-            size="large"
-          />
+          <Tooltip title="Send Message">
+            <Button
+              type="primary"
+              shape="circle"
+              icon={<Send size={18} />}
+              onClick={sendMessage}
+              loading={loading}
+              size="large"
+            />
+          </Tooltip>
         </div>
       </Modal>
     </>
