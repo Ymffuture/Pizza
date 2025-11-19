@@ -63,10 +63,7 @@
     
     "react-router-dom": "^7.6.3",
     "react-toastify": "^11.0.5",
-    "socket.io-client": "^4.8.1", 
-    "@react-three/drei": "^9.104.7",
-    "@react-three/fiber": "^8.16.4",
-    "three": "^0.164.1" 
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
