@@ -7,22 +7,63 @@ import { BsPatchCheckFill } from "react-icons/bs";
 const Hero = () => {
   const [heroImg, setHeroImg] = useState("");
 
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const url =
-          "https://api.unsplash.com/photos/random?query=web+design&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw";
+  
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const QUERIES = [
+          "web design",
+          "frontend development",
+          "javascript programming",
+          "reactjs developer",
+          "python coding",
+          "UI UX design"
+        ];
 
-        const response = await fetch(url);
-        const data = await response.json();
-        setHeroImg(data.urls.regular);
-      } catch (error) {
-        console.log("Image fetch failed:", error);
-      }
-    };
+        const randomQuery = QUERIES[Math.floor(Math.random() * QUERIES.length)];
 
-    fetchImage();
-  }, []);
+        const url = `https://api.unsplash.com/photos/random?query=${encodeURIComponent(
+          randomQuery
+        )}&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data?.urls?.regular) {
+          setHeroImg(data.urls.regular);
+
+          // Save to localStorage
+          localStorage.setItem(
+            "hero_cache",
+            JSON.stringify({
+              img: data.urls.regular,
+              fetchedAt: Date.now()
+            })
+          );
+        }
+      } catch (error) {
+        console.log("Image fetch failed:", error);
+      }
+    };
+
+    // Check localStorage first
+    const cache = localStorage.getItem("hero_cache");
+
+    if (cache) {
+      const { img, fetchedAt } = JSON.parse(cache);
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+      if (Date.now() - fetchedAt < sevenDays) {
+        // Use cached image
+        setHeroImg(img);
+        return; // Don't fetch
+      }
+    }
+
+    // Cache expired → fetch new image
+    fetchImage();
+  }, []);
+
 
   return (
     <section className="bg-white dark:bg-black text-black dark:text-white
@@ -81,6 +122,7 @@ const Hero = () => {
         bg-blue-500/20 blur-3xl top-10 md:top-5"></div>
 
         {/* Floating Image */}
+        {heroImg? (
         <motion.img
           src={heroImg}
           alt="Web Design"
@@ -93,8 +135,38 @@ const Hero = () => {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-        />
+        /> : (
+          {/* SVG loader (accessible) */}
+<div className="flex flex-col items-center justify-center h-[400px]">
+  {/* rotating ring */}
+  <svg
+    role="img"
+    aria-label="Loading image"
+    className="w-16 h-16 animate-spin text-blue-500"
+    viewBox="0 0 50 50"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      className="opacity-20"
+      cx="25"
+      cy="25"
+      r="20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="5"
+    />
+    <path
+      className="opacity-90"
+      fill="currentColor"
+      d="M25 5a20 20 0 1 1-14.142 34.142"
+    />
+  </svg>
 
+  {/* subtle loading text (visible) */}
+  <span className="mt-3 text-sm text-gray-500">Loading image…</span>
+</div>
+
+)} 
         {/* BADGES */}
         <motion.div
           className="absolute top-6 right-8 bg-white dark:bg-gray-900 text-black dark:text-white 
