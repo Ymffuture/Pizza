@@ -33,9 +33,7 @@ const GetApp = () => {
                   <img src={googlePlayIcon} alt="Google Play" className="h-12 sm:h-10 object-contain" />
                   
                 </button>
-                <span className="absolute -top-3 -right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
-                  Coming Soon
-                </span>
+                
               </div>
 
               {/* App Store */}
@@ -47,9 +45,7 @@ const GetApp = () => {
                   <img src={appStoreIcon} alt="App Store" className="h-12 sm:h-10 object-contain" />
                   
                 </button>
-                <span className="absolute -top-3 -right-3 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
-                  Coming Soon
-                </span>
+                
               </div>
             </div>
           </div>
