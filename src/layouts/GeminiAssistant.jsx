@@ -48,7 +48,7 @@ const GeminiAssistant = () => {
             shape="circle"
             size="large"
             icon={<MessageCircle size={28} />}
-            className="absolute bottom-4 right-[1%] z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
+            className="sticky bottom-4 right-[-4%] z-50 shadow-2xl hover:scale-110 transition-transform duration-200"
             onClick={() => setOpen(true)}
           />
         </Tooltip>
@@ -60,12 +60,12 @@ const GeminiAssistant = () => {
         onCancel={() => setOpen(false)}
         footer={null}
         closeIcon={<X size={20} />}
-        width={400}
-        style={{ top: 20, right: 23, position: "fixed", margin: 0, paddingBottom: 0 }}
-        bodyStyle={{ height: "600px", padding: "16px", display: "flex", flexDirection: "column", backgroundColor: "#f7f7f8" }}
+        width={500}
+        style={{ top: 20, right: 20, position: "fixed", margin: 0, paddingBottom: 0 }}
+        bodyStyle={{ height: "600px", padding: "16px", display: "flex", flexDirection: "column" }}
         title={
           <div className="flex justify-between items-center">
-            <span className="font-bold text-blue-600 text-lg">SwiftMeta AI</span>
+            <span className="text-blue-300 text-sm">SwiftMeta AI-Powered</span>
             <Button type="text" icon={<X />} onClick={() => setOpen(false)} />
           </div>
         }
@@ -86,7 +86,7 @@ const GeminiAssistant = () => {
         key={idx}
         onClick={() => {
           setMsg(prompt);
-          setTimeout(() => sendMessage(), 100); // slight delay to update input
+          setTimeout(() => sendMessage(), 300); // slight delay to update input
         }}
         className="cursor-pointer bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow hover:shadow-lg transition hover:bg-blue-50 dark:hover:bg-gray-700"
       >
@@ -101,7 +101,7 @@ const GeminiAssistant = () => {
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[80%] rounded-2xl px-4 py-3 shadow ${
+                className={`max-w-[90%] rounded-2xl px-4 py-3 shadow ${
                   m.sender === "user"
                     ? "bg-blue-600 text-white"
                     : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
@@ -118,7 +118,7 @@ const GeminiAssistant = () => {
             <div className="flex justify-start">
               <div className="bg-white dark:bg-gray-800 rounded-2xl px-4 py-2 shadow-sm flex items-center gap-2">
                 <Spin size="small" />
-                <span className="text-gray-500 dark:text-gray-300 text-sm">Thinking...</span>
+                <span className="text-gray-500 dark:text-gray-300 text-sm animation-pulse">Thinking...</span>
               </div>
             </div>
           )}
@@ -130,7 +130,7 @@ const GeminiAssistant = () => {
           <TextArea
             value={msg}
             onChange={(e) => setMsg(e.target.value)}
-            placeholder="Type your message..."
+            placeholder="Ask anything"
             autoSize={{ minRows: 3, maxRows: 5 }}
             onPressEnter={(e) => !e.shiftKey && (e.preventDefault(), sendMessage())}
             className="rounded-lg border-gray-300 dark:border-gray-700"
