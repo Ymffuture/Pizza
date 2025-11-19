@@ -8,7 +8,7 @@ import Testimonial from "./components/Testimonial";
 import GetApp from "./components/GetApp";
 import Newsletter from "./components/Newsletter";
 import Footer from "./components/Footer";
-import GeminiAssistant from "./layout/GeminiAssistant" 
+import GeminiAssistant from "./layouts/GeminiAssistant" 
 // Lazy loading wrapper
 const LazyLoadOnView = ({ children }) => {
   const ref = React.useRef();
