@@ -169,21 +169,15 @@ const Navbar = () => {
 
             {/* WhatsApp & Theme */}
             <div className="flex items-center gap-3 mb-4">
-              <button
-                onClick={handleWhatsAppRedirect}
-                className="flex-1 text-green-500 flex items-center justify-center"
-              >
-                <FaWhatsapp />
-                
-              </button>
               <ThemeToggle />
             </div>
 
             {/* Social */}
             <div className="flex items-center gap-4 justify-center">
-              <Twitter className="cursor-pointer hover:text-blue-500" size={18} />
-              <Instagram className="cursor-pointer hover:text-pink-500" size={18} />
-              <Linkedin className="cursor-pointer hover:text-blue-700" size={18} />
+              <Twitter className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
+              <Instagram className="cursor-pointer hover:text-pink-500 dark:text-white" size={18} />
+              <Linkedin className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
+              <FaWhatsapp className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} onClick={handleWhatsAppRedirect} />
             </div>
           </div>
         </div>
