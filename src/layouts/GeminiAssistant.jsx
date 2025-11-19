@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
-
+import { Toaster, toast} from "react-hot-toast";
 const { TextArea } = Input;
 
 const GeminiAssistant = () => {
@@ -15,6 +15,7 @@ const GeminiAssistant = () => {
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
   const chatEndRef = useRef(null);
+  const connectionStrength = useConnectionStrength();
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -22,6 +23,52 @@ const GeminiAssistant = () => {
 
   useEffect(scrollToBottom, [messages, loading]);
 
+
+const useConnectionStrength = () => {
+  const [strength, setStrength] = useState("Checking...");
+
+  useEffect(() => {
+    const conn =
+      navigator.connection ||
+      navigator.webkitConnection ||
+      navigator.mozConnection;
+
+    if (!conn) {
+      setStrength("Unknown");
+      return;
+    }
+
+    const evaluate = () => {
+      const speed = conn.downlink; // Mbps
+      const type = conn.effectiveType; // 4g, 3g, etc.
+
+      let level = "Good";
+
+      if (speed < 1 || type === "2g" || type === "slow-2g") level = "Poor";
+      else if (speed < 3 || type === "3g") level = "Average";
+
+      setStrength(level);
+
+      if (level === "Poor") {
+        toast.error("Your connection is weak. AI responses may be slow.", {
+          duration: 4000,
+        });
+      }
+      if (level === "Good") {
+        toast.success("Connection strength: Good", { duration: 2000 });
+      }
+    };
+
+    evaluate();
+    conn.addEventListener("change", evaluate);
+
+    return () => conn.removeEventListener("change", evaluate);
+  }, []);
+
+  return strength;
+};
+
+  
   const sendMessage = async () => {
     if (!msg.trim()) return;
 
@@ -66,11 +113,27 @@ const GeminiAssistant = () => {
         style={{ top: 20, right: 12, position: "fixed", margin: 0, paddingBottom: 0 }}
         bodyStyle={{ height: "600px", padding: "16px", display: "flex", flexDirection: "column" }}
         title={
-          <div className="flex justify-between items-center">
-            <span className="text-blue-300 text-sm">SwiftMeta AI-Powered</span>
-            <Button type="text" icon={<X />} onClick={() => setOpen(false)} />
-          </div>
-        }
+  <div className="flex flex-col gap-1">
+    <div className="flex justify-between items-center">
+      <span className="text-blue-300 text-sm">SwiftMeta AI-Powered</span>
+      <Button type="text" icon={<X />} onClick={() => setOpen(false)} />
+    </div>
+
+    {/* Connection Strength Display */}
+    <div
+      className={`text-xs font-semibold ${
+        connectionStrength === "Good"
+          ? "text-green-500"
+          : connectionStrength === "Average"
+          ? "text-yellow-500"
+          : "text-red-500"
+      }`}
+    >
+      Connection: {connectionStrength}
+    </div>
+  </div>
+}
+
         className="rounded-xl overflow-hidden"
       >
         {/* Messages Area */}
@@ -178,6 +241,7 @@ const GeminiAssistant = () => {
           </Tooltip>
         </div>
       </Modal>
+      <Toaster position="bottom-center" />
     </>
   );
 };
