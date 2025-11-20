@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Skeleton, Row, Col, Card } from "antd";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
+// import Hero from "./components/Hero";
 import Process from "./components/Process";
 import Menu from "./components/Menu";
 import Testimonial from "./components/Testimonial";
@@ -114,7 +114,7 @@ const App = () => {
       {navbarLoading ? <Skeleton active paragraph={false} style={{ width: "100%", height: 200 }}/> : <Navbar />}
 
       <LazyLoadOnView>
-        <Hero />
+        {/*   <Hero />*/} 
         <Process />
       </LazyLoadOnView>
 
