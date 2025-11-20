@@ -5,6 +5,7 @@ import {
   Search,
   MessageSquare,
   Bell,
+  Linkedin, 
   ShoppingCart, 
 } from "lucide-react";
 import { FaWhatsapp, FaLinkedin } from "react-icons/fa";
@@ -73,12 +74,6 @@ const Navbar = () => {
               />
             </nav>
 
-            {/* Social (desktop) */}
-            <div className="hidden md:flex items-center gap-3">
-              <FaXTwitter className="cursor-pointer hover:text-blue-500" size={16} />
-              <FaInstagram className="cursor-pointer hover:text-pink-500" size={16} />
-              <FaLinkedin className="cursor-pointer hover:text-blue-700" size={16} />
-            </div>
 
             {/* WhatsApp CTA */}
             <button
@@ -146,7 +141,7 @@ const Navbar = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={1.3}
+                    strokeWidth={1}
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
@@ -155,9 +150,9 @@ const Navbar = () => {
 
             {/* Mobile nav links */}
     <nav className="flex flex-col gap-3 mb-4">
-  {navLinks.map((link) => (
+  {navLinks.map((link, index) => (
     <Link
-      key={link.name}
+      key={index}
       to={link.href}
       onClick={() => setMenuOpen(false)}
       className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 
@@ -178,14 +173,12 @@ const Navbar = () => {
             <div className="flex items-center gap-4 justify-center">
               <FaXTwitter className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
               <FaInstagram className="cursor-pointer hover:text-pink-500 dark:text-red-100" size={18} />
-              <FaLinkedin className="cursor-pointer hover:text-blue-500 dark:text-blue-100" size={18} />
+              <Linkedin className="cursor-pointer hover:text-blue-500 dark:text-blue-100" size={18} />
               <FaWhatsapp className="cursor-pointer hover:text-blue-500 dark:text-green-600" size={18} onClick={handleWhatsAppRedirect} />
             </div>
           </div>
         </div>
       )}
-
-      {/* Floating AI Chat */}
       
     </>
   );
