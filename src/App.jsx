@@ -111,7 +111,12 @@ const App = () => {
     </Router>
       
       {/* Navbar Skeleton */}
-      {navbarLoading ? <Skeleton active paragraph={false} style={{ width: "100%", height: 200 }}/> : <Navbar />}
+      {navbarLoading ? <Skeleton active paragraph={false} style={{ width: "100%", height: 200 }}/> : 
+      <Router>
+      <Navbar />
+    </Router>
+      
+      }
 
       <LazyLoadOnView>
         {/*   <Hero />*/} 
