@@ -5,10 +5,9 @@ import {
   Search,
   MessageSquare,
   Bell,
-  ShoppingCart,
-  Instagram, Linkedin, 
+  ShoppingCart 
 } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6"
 import ThemeToggle from "./ThemeToggle";
 import GeminiAssistant from "../layouts/GeminiAssistant";
