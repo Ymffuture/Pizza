@@ -149,19 +149,120 @@ const Navbar = () => {
             </div>
 
             {/* Mobile nav links */}
-    <nav className="flex flex-col gap-3 mb-4">
-  {navLinks.map((link, index) => (
-    <Link
-      key={index}
-      to={link.href}
-      onClick={() => setMenuOpen(false)}
-      className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 
-                 transition text-gray-700 dark:text-gray-200 text-center"
+    {/* Mobile Menu Drawer */}
+{menuOpen && (
+  <div
+    className="fixed inset-0 z-40 bg-black/30"
+    onClick={() => setMenuOpen(false)}
+  >
+    <div
+      className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 rounded-t-3xl p-6 shadow-lg"
+      onClick={(e) => e.stopPropagation()}
     >
-      {link.name}
-    </Link>
-  ))}
-</nav>
+      {/* Close header */}
+      <div className="flex items-center justify-between mb-4">
+        <GeminiAssistant />
+        <div className="text-lg font-bold text-blue-600">SwiftMeta AI</div>
+
+        <button
+          onClick={() => setMenuOpen(false)}
+          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-7 w-7 text-gray-600 dark:text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile nav links (NO MAPPING) */}
+      <nav className="flex flex-col gap-3 mb-6">
+
+        <Link
+          to="/"
+          onClick={() => setMenuOpen(false)}
+          className="flex items-center gap-3 py-3 px-4 rounded-lg 
+                     hover:bg-gray-200 dark:hover:bg-gray-800 
+                     transition text-gray-700 dark:text-gray-200"
+        >
+          <Home size={18} /> Home
+        </Link>
+
+        <Link
+          to="/small-projects"
+          onClick={() => setMenuOpen(false)}
+          className="flex items-center gap-3 py-3 px-4 rounded-lg 
+                     hover:bg-gray-200 dark:hover:bg-gray-800 
+                     transition text-gray-700 dark:text-gray-200"
+        >
+          <Users size={18} /> Small Projects
+        </Link>
+
+        <Link
+          to="/large-projects"
+          onClick={() => setMenuOpen(false)}
+          className="flex items-center gap-3 py-3 px-4 rounded-lg 
+                     hover:bg-gray-200 dark:hover:bg-gray-800 
+                     transition text-gray-700 dark:text-gray-200"
+        >
+          <Search size={18} /> Large Projects
+        </Link>
+
+        <Link
+          to="/server-api"
+          onClick={() => setMenuOpen(false)}
+          className="flex items-center gap-3 py-3 px-4 rounded-lg 
+                     hover:bg-gray-200 dark:hover:bg-gray-800 
+                     transition text-gray-700 dark:text-gray-200"
+        >
+          <MessageSquare size={18} /> Server / API
+        </Link>
+
+      </nav>
+
+      {/* Theme */}
+      <div className="flex items-center gap-3 mb-6">
+        <ThemeToggle />
+        Theme
+      </div>
+
+      {/* Social */}
+      <div className="flex items-center gap-5 justify-center">
+        <FaXTwitter
+          size={20}
+          className="cursor-pointer hover:text-blue-500 dark:text-white"
+        />
+
+        <FaInstagram
+          size={20}
+          className="cursor-pointer hover:text-pink-500 dark:text-pink-200"
+        />
+
+        <Linkedin
+          size={20}
+          className="cursor-pointer hover:text-blue-500 dark:text-blue-200"
+        />
+
+        <FaWhatsapp
+          size={20}
+          className="cursor-pointer hover:text-green-600 dark:text-green-400"
+          onClick={handleWhatsAppRedirect}
+        />
+      </div>
+    </div>
+  </div>
+)}
+
 
             {/* WhatsApp & Theme */}
             <div className="flex items-center gap-3 mb-4">
@@ -169,14 +270,14 @@ const Navbar = () => {
               Thame
             </div>
 
-            {/* Social 
+            {/* Social */} 
             <div className="flex items-center gap-4 justify-center">
               <FaXTwitter className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
               <FaInstagram className="cursor-pointer hover:text-pink-500 dark:text-red-100" size={18} />
               <Linkedin className="cursor-pointer hover:text-blue-500 dark:text-blue-100" size={18} />
               <FaWhatsapp className="cursor-pointer hover:text-blue-500 dark:text-green-600" size={18} onClick={handleWhatsAppRedirect} />
             </div>
-            */} 
+            
           </div>
         </div>
       )}
