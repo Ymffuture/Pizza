@@ -16,7 +16,7 @@ const LargeProjects = lazy(() => import("./pages/LargeProjects"));
 const ServerAPI = lazy(() => import("./pages/ServerAPI"));
 
 // Example Home (Optional: Replace with your real one)
-const Home = lazy(() => import("/Home"));
+const Home = lazy(() => import("./Home"));
 
 // ⬇️ SVG Loader Component
 const Loader = () => (
