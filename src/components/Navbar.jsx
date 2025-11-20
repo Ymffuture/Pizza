@@ -12,11 +12,10 @@ import { FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6"
 import ThemeToggle from "./ThemeToggle";
 import GeminiAssistant from "../layouts/GeminiAssistant";
-import { Link } from 'react-router-dom';
-
+import { Link, useLocation } from "react-router-dom";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const phoneNumber = "27847776308";
+  const phoneNumber = "27634414863";
   const message = "Hello! I’m interested in building a website with you.";
 
   const handleWhatsAppRedirect = () => {
