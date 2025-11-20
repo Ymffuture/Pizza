@@ -15,7 +15,7 @@ import GeminiAssistant from "../layouts/GeminiAssistant";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const phoneNumber = "27634414863";
+  const phoneNumber = "27847776308";
   const message = "Hello! I’m interested in building a website with you.";
 
   const handleWhatsAppRedirect = () => {
