@@ -6,9 +6,10 @@ import {
   MessageSquare,
   Bell,
   ShoppingCart,
+  Instagram, Linkedin, 
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { Twitter, Instagram, Linkedin } from "lucide-react";
+import { FaXTwitter } from "react-icons/fa6"
 import ThemeToggle from "./ThemeToggle";
 import GeminiAssistant from "../layouts/GeminiAssistant";
 
@@ -74,7 +75,7 @@ const Navbar = () => {
 
             {/* Social (desktop) */}
             <div className="hidden md:flex items-center gap-3">
-              <Twitter className="cursor-pointer hover:text-blue-500" size={16} />
+              <FaXTwitter className="cursor-pointer hover:text-blue-500" size={16} />
               <Instagram className="cursor-pointer hover:text-pink-500" size={16} />
               <Linkedin className="cursor-pointer hover:text-blue-700" size={16} />
             </div>
@@ -174,7 +175,7 @@ const Navbar = () => {
 
             {/* Social */}
             <div className="flex items-center gap-4 justify-center">
-              <Twitter className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
+              <FaXTwitter className="cursor-pointer hover:text-blue-500 dark:text-white" size={18} />
               <Instagram className="cursor-pointer hover:text-pink-500 dark:text-red-100" size={18} />
               <Linkedin className="cursor-pointer hover:text-blue-500 dark:text-blue-100" size={18} />
               <FaWhatsapp className="cursor-pointer hover:text-blue-500 dark:text-green-600" size={18} onClick={handleWhatsAppRedirect} />
