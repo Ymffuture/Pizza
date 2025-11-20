@@ -158,7 +158,7 @@ const Navbar = () => {
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
-                  href={link.href}
+                  to={link.href}
                   onClick={() => setMenuOpen(false)}
                   className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-gray-700 dark:text-gray-200 text-center"
                 >
