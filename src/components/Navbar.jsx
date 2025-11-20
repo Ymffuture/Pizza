@@ -8,7 +8,7 @@ import {
   Linkedin, 
   ShoppingCart, 
 } from "lucide-react";
-import { FaWhatsapp, FaLinkedin } from "react-icons/fa";
+import { FaWhatsapp} from "react-icons/fa";
 import { FaXTwitter, FaInstagram} from "react-icons/fa6"
 import ThemeToggle from "./ThemeToggle";
 import GeminiAssistant from "../layouts/GeminiAssistant";
