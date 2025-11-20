@@ -12,7 +12,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6"
 import ThemeToggle from "./ThemeToggle";
 import GeminiAssistant from "../layouts/GeminiAssistant";
-
+import { Link, useLocation } from "react-router-dom";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const phoneNumber = "27634414863";
@@ -156,14 +156,14 @@ const Navbar = () => {
             {/* Mobile nav links */}
             <nav className="flex flex-col gap-3 mb-4">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.name}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-gray-700 dark:text-gray-200 text-center"
                 >
                   {link.name}
-                </a>
+                </Link>
               ))}
             </nav>
 
