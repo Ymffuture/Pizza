@@ -221,8 +221,8 @@ const Navbar = () => {
           className="flex items-center gap-6 justify-center"
         >
           <FaXTwitter size={20} className="cursor-pointer hover:text-blue-500 dark:text-white" />
-          <Instagram size={20} className="cursor-pointer hover:text-pink-500 dark:text-pink-300" />
-          <Linkedin size={20} className="cursor-pointer hover:text-blue-600 dark:text-blue-300" />
+          <FaInstagram size={20} className="cursor-pointer hover:text-pink-500 dark:text-pink-300" />
+          <FaLinkedin size={20} className="cursor-pointer hover:text-blue-600 dark:text-blue-300" />
           <FaWhatsapp
             size={20}
             onClick={handleWhatsAppRedirect}
