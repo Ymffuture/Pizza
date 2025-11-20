@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Skeleton, Row, Col, Card } from "antd";
-import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Process from "./components/Process";
 import Menu from "./components/Menu";
