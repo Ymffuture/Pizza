@@ -73,6 +73,7 @@ const Navbar = () => {
                 size={18}
               />
             </nav>
+</div>
 
             {/* Social (desktop) */}
             <div className="hidden md:flex items-center gap-3">
