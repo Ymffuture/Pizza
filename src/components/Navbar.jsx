@@ -12,7 +12,6 @@ import { FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6"
 import ThemeToggle from "./ThemeToggle";
 import GeminiAssistant from "../layouts/GeminiAssistant";
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -73,7 +72,6 @@ const Navbar = () => {
                 size={18}
               />
             </nav>
-</div>
 
             {/* Social (desktop) */}
             <div className="hidden md:flex items-center gap-3">
@@ -157,19 +155,17 @@ const Navbar = () => {
 
             {/* Mobile nav links */}
             <nav className="flex flex-col gap-3 mb-4">
-  {navLinks.map((link) => (
-    <Link
-      key={link.name}
-      to={link.href}
-      onClick={() => setMenuOpen(false)}
-      className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 
-                 transition text-gray-700 dark:text-gray-200 text-center"
-    >
-      {link.name}
-    </Link>
-  ))}
-</nav>
-
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3 px-4 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition text-gray-700 dark:text-gray-200 text-center"
+                >
+                  {link.name}
+                </a>
+              ))}
+            </nav>
 
             {/* WhatsApp & Theme */}
             <div className="flex items-center gap-3 mb-4">
