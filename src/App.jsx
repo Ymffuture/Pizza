@@ -26,7 +26,7 @@ const Home = lazy(() => import("./components/Hero"));
 // ⬇️ SVG Loader Component
 const Loader = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
   <circle cx="100" cy="100" r="80" fill="#0B0E17" stroke="#00FFEA" stroke-width="3"/>
   <circle cx="100" cy="100" r="20" fill="#00FFEA">
     <animate attributeName="r" values="20;28;20" dur="1.8s" repeatCount="indefinite"/>
@@ -88,6 +88,7 @@ const App = () => {
       {/* Suspense wraps everything to show loader while components load */}
       <Suspense fallback={<Loader />}>
         <Routes>
+          {navbarLoading ? <Skeleton active paragraph={true} style={{ width: "100%", height: 150 }}/> : <Navbar /> }
           {/* MAIN ROUTES */}
           <Route path="/" element={<Home />} />
           <Route path="/policy" element={<Policy />} />
@@ -110,13 +111,6 @@ const App = () => {
       </Suspense>
     </Router>
       
-      {/* Navbar Skeleton */}
-      {navbarLoading ? <Skeleton active paragraph={false} style={{ width: "100%", height: 200 }}/> : 
-      <Router>
-      <Navbar />
-    </Router>
-      
-      }
 
       <LazyLoadOnView>
         {/*   <Hero />*/} 
