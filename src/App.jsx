@@ -85,11 +85,12 @@ const App = () => {
   return (
     <>
 <Router>
+  
+          {navbarLoading ? <Skeleton active paragraph={true} style={{ width: "100%", height: 150 }}/> : <Navbar /> }
+          {/* MAIN ROUTES */}
       {/* Suspense wraps everything to show loader while components load */}
       <Suspense fallback={<Loader />}>
         <Routes>
-          {navbarLoading ? <Skeleton active paragraph={true} style={{ width: "100%", height: 150 }}/> : <Navbar /> }
-          {/* MAIN ROUTES */}
           <Route path="/" element={<Home />} />
           <Route path="/policy" element={<Policy />} />
           <Route path="/terms" element={<Terms />} />
