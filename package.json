@@ -1,5 +1,5 @@
 {
-  "name": "fooddelivery-web-bitehub",
+  "name": "swiftmeta",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -21,7 +21,7 @@
     "react-markdown": "^8.0.7",
     "remark-gfm": "^3.0.1",
     "lucide-react": "^0.447.0", 
-    "antd": "^5.10.0",
+    
     "@emailjs/browser": "^3.2.0", 
     "react-hot-toast": "^2.4.1", 
     "tailwindcss": "^4.1.7", 
@@ -33,7 +33,7 @@
     "prop-types": "^15.8.1", 
     "lexical": "^0.15.0",
     "@lexical/react": "^0.15.0", 
-    "axios": "^1.10.0",
+    
     "tailwind-scrollbar-hide": "^1.1.7", 
     "lottie-react": "^2.4.0", 
     "copy-to-clipboard": "^3.3.3", 
@@ -42,7 +42,7 @@
     "jwt-decode": "^4.0.0",
     "file-saver": "^2.0.5",
     "@heroicons/react": "^2.0.18",
-    "react-hot-toast": "^2.4.1", 
+    
     "html-react-parser": "^5.1.7",
     "dompurify": "^3.0.5", 
     "gsap": "^3.12.5", 
