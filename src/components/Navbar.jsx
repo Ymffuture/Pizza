@@ -230,35 +230,7 @@ const Navbar = () => {
 
       </nav>
 
-      {/* Theme */}
-      <div className="flex items-center gap-3 mb-6">
-        <ThemeToggle />
-        Theme
-      </div>
-
-      {/* Social */}
-      <div className="flex items-center gap-5 justify-center">
-        <FaXTwitter
-          size={20}
-          className="cursor-pointer hover:text-blue-500 dark:text-white"
-        />
-
-        <FaInstagram
-          size={20}
-          className="cursor-pointer hover:text-pink-500 dark:text-pink-200"
-        />
-
-        <Linkedin
-          size={20}
-          className="cursor-pointer hover:text-blue-500 dark:text-blue-200"
-        />
-
-        <FaWhatsapp
-          size={20}
-          className="cursor-pointer hover:text-green-600 dark:text-green-400"
-          onClick={handleWhatsAppRedirect}
-        />
-      </div>
+      
     </div>
   </div>
 )}
