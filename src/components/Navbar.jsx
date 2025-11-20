@@ -5,7 +5,7 @@ import {
   Search,
   MessageSquare,
   Bell,
-  ShoppingCart 
+  ShoppingCart, 
 } from "lucide-react";
 import { FaWhatsapp, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6"
