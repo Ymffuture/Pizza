@@ -2,10 +2,9 @@ import React from "react";
 import {
   FaFacebookF,
   FaInstagram,
-  FaTwitter,
   FaLinkedinIn,
 } from "react-icons/fa";
-
+import { FaXTwitter } from "react-icons/fa6"
 const Footer = () => {
   return (
     <footer className="bg-white dark:bg-[#0A0A0D] text-gray-900 dark:text-gray-300 transition-colors duration-300">
@@ -40,7 +39,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="hover:text-blue-400 transition"
             >
-              <FaTwitter />
+              <FaXTwitter />
             </a>
             <a
               href="https://www.linkedin.com/in/kgomotsonkosi-l"
