@@ -26,18 +26,24 @@ const Home = lazy(() => import("./components/Hero"));
 // ⬇️ SVG Loader Component
 const Loader = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-    <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="100" cy="100" r="80" fill="#0B0E17" stroke="#00FFEA" stroke-width="3"/>
-  <circle cx="100" cy="100" r="20" fill="#00FFEA">
-    <animate attributeName="r" values="20;28;20" dur="1.8s" repeatCount="indefinite"/>
+    <svg width="80" height="80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="45" fill="#0B0E17" stroke="#00FFEA" stroke-width="3" />
+  
+  <circle cx="100" cy="100" r="12" fill="#00FFEA">
+    <animate attributeName="r" values="12;18;12" dur="1.8s" repeatCount="indefinite" />
   </circle>
-  <path d="M100 100 Q70 70 70 100 Q70 130 100 130" fill="none" stroke="#00FFEA" stroke-width="8">
-    <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+
+  <path d="M100 100 Q80 80 80 100 Q80 120 100 120"
+    fill="none" stroke="#00FFEA" stroke-width="6">
+    <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
   </path>
-  <path d="M100 100 Q130 70 130 100 Q130 130 100 130" fill="none" stroke="#00FFEA" stroke-width="8">
-    <animate attributeName="opacity" values="0;1;0" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+
+  <path d="M100 100 Q120 80 120 100 Q120 120 100 120"
+    fill="none" stroke="#00FFEA" stroke-width="6">
+    <animate attributeName="opacity" values="0;1;0" dur="2s" begin="0.5s" repeatCount="indefinite" />
   </path>
 </svg>
+
     <p className="text-gray-500 mt-3">Loading page...</p>
   </div>
 );
