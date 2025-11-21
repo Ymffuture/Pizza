@@ -18,7 +18,9 @@ const names_randomly = [
   "Isabella Müller",
   "Mateo Ivanov",
   "Aria Singh",
-  "Lucas Dubois"
+  "Lucas Dubois", 
+  "Simphiwe Nkosi",
+  "Karabo Thwala" 
 ];
 
 // Example testimonial texts
