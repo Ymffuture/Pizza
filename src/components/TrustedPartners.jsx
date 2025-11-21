@@ -10,7 +10,7 @@ const partners = [
   {
     name: "MongoDB",
     href: "https://www.mongodb.com",
-    logo: "https://www.mongodb.com/assets/images/global/mongodb-logo-white.png",
+    logo: "https://webassets.mongodb.com/_com_assets/cms/mongodb_logo1-76twgcu2dm.png",
   },
   {
     name: "Gemini AI",
@@ -20,7 +20,7 @@ const partners = [
   {
     name: "Render",
     href: "https://render.com",
-    logo: "https://render.com/_next/static/media/logo.3b5d2d9e.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Render_logo.svg/512px-Render_logo.svg.png",
   },
   {
     name: "Node.js",
@@ -35,15 +35,25 @@ const partners = [
   {
     name: "Vercel",
     href: "https://vercel.com",
-    logo: "https://assets.vercel.com/image/upload/v1662137169/nextjs/Icon_light_background.png",
+    logo: "https://assets.vercel.com/image/upload/front/assets/design/vercel-triangle-black.svg",
   },
   {
     name: "Supabase",
     href: "https://supabase.com",
-    logo: "https://supabase.com/_next/static/media/logo-dark.5f9e7e8a.svg",
+    logo: "https://supabase.com/brand-assets/supabase-logo-icon.png",
   },
-  // Add more as needed
+  {
+    name: "React",
+    href: "https://reactjs.org",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
+  },
+  {
+    name: "TailwindCSS",
+    href: "https://tailwindcss.com",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg",
+  },
 ];
+
 
 const TrustedPartners = ({ pauseOnHover = true, speed = 20 }) => {
   const tickerRef = useRef(null);
