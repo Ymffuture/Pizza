@@ -35,32 +35,78 @@ const GetApp = () => {
             </p>
 
             {/* App Store Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* Google Play */}
-              <div className="relative w-full sm:w-auto">
-                <button
-                  disabled
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
-                >
-                  <img src={googlePlayIcon} alt="Google Play" className="h-12 sm:h-10 object-contain" />
-                  
-                </button>
-                
-              </div>
+         <div className="flex flex-col sm:flex-row gap-4">
+  {/* Google Play */}
+  <div className="relative w-full sm:w-auto">
+    <button
+      disabled
+      className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+    >
+      <img
+        src={googlePlayIcon}
+        alt="Google Play"
+        className="h-12 sm:h-10 object-contain"
+      />
+    </button>
+  </div>
 
-              {/* App Store */}
-              <div className="relative w-full sm:w-auto">
-                <button
-                  disabled
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
-                >
-                  <img src={huaweiAppGalleryIcon || samsungGalaxyStoreIcon || amazonAppstoreIcon} alt="App Store" className="h-12 sm:h-10 object-contain" />
-                  
-                </button>
-                
-              </div>
-            </div>
-          </div>
+  {/* App Store */}
+  <div className="relative w-full sm:w-auto">
+    <button
+      disabled
+      className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+    >
+      <img
+        src={appStoreIcon}
+        alt="App Store"
+        className="h-12 sm:h-10 object-contain"
+      />
+    </button>
+  </div>
+
+  {/* Huawei AppGallery */}
+  <div className="relative w-full sm:w-auto">
+    <button
+      disabled
+      className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+    >
+      <img
+        src={huaweiAppGalleryIcon}
+        alt="Huawei AppGallery"
+        className="h-12 sm:h-10 object-contain"
+      />
+    </button>
+  </div>
+
+  {/* Samsung Galaxy Store */}
+  <div className="relative w-full sm:w-auto">
+    <button
+      disabled
+      className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+    >
+      <img
+        src={samsungGalaxyStoreIcon}
+        alt="Samsung Galaxy Store"
+        className="h-12 sm:h-10 object-contain"
+      />
+    </button>
+  </div>
+
+  {/* Amazon Appstore */}
+  <div className="relative w-full sm:w-auto">
+    <button
+      disabled
+      className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+    >
+      <img
+        src={amazonAppstoreIcon}
+        alt="Amazon Appstore"
+        className="h-12 sm:h-10 object-contain"
+      />
+    </button>
+  </div>
+</div>
+
 
           {/* Right Image */}
           <div className="flex justify-center">
