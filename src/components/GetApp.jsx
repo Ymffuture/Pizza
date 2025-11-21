@@ -2,8 +2,20 @@ import React from "react";
 import img from "../assets/img/order.png";
 
 // Official app store icons URLs
-const googlePlayIcon = "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg";
-const appStoreIcon = "https://upload.wikimedia.org/wikipedia/commons/6/67/App_Store_%28iOS%29.svg";
+const googlePlayIcon =
+  "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg";
+
+const appStoreIcon =
+  "https://upload.wikimedia.org/wikipedia/commons/6/67/App_Store_%28iOS%29.svg";
+
+const huaweiAppGalleryIcon =
+  "https://upload.wikimedia.org/wikipedia/commons/2/2d/Huawei_AppGallery_badge_EN.svg";
+
+const samsungGalaxyStoreIcon =
+  "https://upload.wikimedia.org/wikipedia/commons/4/4e/Samsung_Galaxy_Store_badge_EN.svg";
+
+const amazonAppstoreIcon =
+  "https://upload.wikimedia.org/wikipedia/commons/3/3f/Amazon_Appstore_badge.svg";
 
 const GetApp = () => {
   return (
@@ -42,7 +54,7 @@ const GetApp = () => {
                   disabled
                   className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
-                  <img src={appStoreIcon} alt="App Store" className="h-12 sm:h-10 object-contain" />
+                  <img src={huaweiAppGalleryIcon} alt="App Store" className="h-12 sm:h-10 object-contain" />
                   
                 </button>
                 
