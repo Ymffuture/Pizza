@@ -4,14 +4,18 @@ import img from "../assets/img/order.png";
 // Official app store icons URLs
 const googlePlayIcon =
   "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg";
+
 const appStoreIcon =
   "https://upload.wikimedia.org/wikipedia/commons/6/67/App_Store_%28iOS%29.svg";
+
 const huaweiAppGalleryIcon =
-  "https://upload.wikimedia.org/wikipedia/commons/2/2d/Huawei_AppGallery_badge_EN.svg";
+  "https://commons.wikimedia.org/wiki/File:Huawei_AppGallery_Badge_Black_EN.svg?format=svg";  // from Wikimedia :contentReference[oaicite:0]{index=0}
+
 const samsungGalaxyStoreIcon =
-  "https://upload.wikimedia.org/wikipedia/commons/4/4e/Samsung_Galaxy_Store_badge_EN.svg";
+  "https://upload.wikimedia.org/wikipedia/commons/0/02/Samsung_Galaxy_Store_logo.svg";  // Galaxy Store logo from Wikimedia :contentReference[oaicite:1]{index=1}
+
 const amazonAppstoreIcon =
-  "https://upload.wikimedia.org/wikipedia/commons/3/3f/Amazon_Appstore_badge.svg";
+  "https://logos-download.com/wp-content/uploads/2021/01/Amazon_Appstore_logo_SVG.svg";  // from Logos-Download :contentReference[oaicite:2]{index=2}
 
 const GetApp = () => {
   return (
@@ -39,7 +43,7 @@ const GetApp = () => {
                 <div key={i} className="relative w-full sm:w-auto">
                   <button
                     disabled
-                    className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
+                    className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium opacity-80 cursor-not-allowed"
                   >
                     <img src={icon} alt="App Store Icon" className="h-12 sm:h-10 object-contain" />
                   </button>
