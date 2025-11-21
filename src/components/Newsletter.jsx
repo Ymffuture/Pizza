@@ -133,22 +133,21 @@ const Newsletter = () => {
 
           {/* BUTTON */}
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={cooldown > 0}
-              loading={loading}
-              className={`w-full ${
-                cooldown > 0
-                  ? "bg-gray-500 cursor-not-allowed dark:bg-red-600 "
-                  : "bg-blue-200 hover:bg-blue-500"
-              }`}
-            >
-              {cooldown > 0
-                ? `Wait ${formatTime(cooldown)}`
-                : "Send Message"}
-            </Button>
-          </Form.Item>
+  <Button
+    type="primary"
+    htmlType="submit"
+    disabled={cooldown > 0}
+    loading={loading}
+    className={`w-full !text-white transition-colors duration-300
+      ${cooldown > 0
+        ? "bg-gray-500 dark:!bg-red-600 dark:hover:!bg-red-700 cursor-not-allowed"
+        : "bg-blue-300 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700"
+      }`}
+  >
+    {cooldown > 0 ? `Wait ${formatTime(cooldown)}` : "Send Message"}
+  </Button>
+</Form.Item>
+
         </Form>
       </div>
     </section>
