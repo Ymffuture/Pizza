@@ -94,7 +94,7 @@ const Newsletter = () => {
           {/* NAME */}
           <Form.Item
             name="name"
-            label="Full Name"
+            label={<span className="text-gray-900 dark:text-gray-200 font-semibold text-sm">Full Name</span>}
             rules={[{ required: true, message: "Please enter your name" }]}
           >
             <Input
@@ -106,14 +106,14 @@ const Newsletter = () => {
           {/* EMAIL */}
           <Form.Item
             name="email"
-            label="Email Address"
+            label={<span className="text-gray-900 dark:text-gray-200 font-semibold text-sm">Email</span>}
             rules={[
               { required: true, message: "Please enter your email" },
               { type: "email", message: "Please enter a valid email" },
             ]}
           >
             <Input
-              placeholder="you@example.com"
+              placeholder="yourname@example.com"
               className="border-gray-300 dark:bg-gray-900 dark:text-gray-200"
             />
           </Form.Item>
@@ -121,13 +121,13 @@ const Newsletter = () => {
           {/* MESSAGE */}
           <Form.Item
             name="message"
-            label="Your Message"
+            label={<span className="text-gray-900 dark:text-gray-200 font-semibold text-sm">Message</span>}
             rules={[{ required: true, message: "Please enter your message" }]}
           >
             <TextArea
               rows={5}
-              placeholder="Your message..."
-              className="border-gray-300 dark:bg-gray-900 dark:text-gray-200"
+              placeholder="Ask anything"
+              className="border-gray-100 dark:bg-gray-900 dark:text-white"
             />
           </Form.Item>
 
@@ -140,8 +140,8 @@ const Newsletter = () => {
               loading={loading}
               className={`w-full ${
                 cooldown > 0
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-400 hover:bg-blue-500"
+                  ? "bg-gray-500 cursor-not-allowed dark:bg-red-600 "
+                  : "bg-blue-200 hover:bg-blue-500"
               }`}
             >
               {cooldown > 0
