@@ -51,7 +51,7 @@ const Home = () => {
   return (
     <>
       <LazyLoadOnView>
-        {/*   <Hero />*/} 
+        <Hero />
         <Process />
       </LazyLoadOnView>
 
