@@ -4,12 +4,12 @@ import MenuCard from "../layouts/MenuCard";
 
 // Search keywords for each service category
 const keywords = [
-  "ecommerce website",
-  "html css website",
+  "ecommerce",
+  "html css",
   "reactjs",
   "nextjs",
-  "portfolio website",
-  "business website",
+  "portfolio",
+  "business",
   "landing page design",
   "web application react js",
 ];
@@ -77,7 +77,7 @@ const Menu = () => {
 
 
   return (
-    <section className="dark:bg-white text-gray dark:text-black py-16 px-5 lg:px-14 transition-colors duration-200 rounded">
+    <section className="dark:bg-white text-gray dark:text-black transition-colors duration-200">
       <div className="text-center mb-12">
         <p className="text-gray-500 font-medium uppercase tracking-wider mb-2">
           Our Services
