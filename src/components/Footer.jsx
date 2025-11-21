@@ -257,7 +257,7 @@ const Footer = () => {
               <div className="flex flex-col items-center gap-2">
   {/* Temperature */}
   <div className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-gray-100">
-    <SunIcon className="w-6 h-6 text-yellow-400" />
+    {/*  <SunIcon className="w-6 h-6 text-yellow-400" />*/} 
     <span>{weather.temp}°C</span>
   </div>
 
