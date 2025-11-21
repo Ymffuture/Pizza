@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Skeleton } from "antd";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+import NotFound from "./pages/NotFound";
 // Lazy-loaded pages
 const Policy = lazy(() => import("./pages/Policy"));
 const Terms = lazy(() => import("./pages/Terms"));
@@ -78,10 +78,7 @@ const App = () => {
             <Route
               path="*"
               element={
-                <div className="min-h-screen flex flex-col items-center justify-center">
-                  <h1 className="text-4xl font-bold mb-3">404</h1>
-                  <p className="text-gray-600">Page not found</p>
-                </div>
+                <NotFound/>
               }
             />
           </Routes>
