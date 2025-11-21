@@ -99,7 +99,7 @@ const Newsletter = () => {
           >
             <Input
               placeholder="Your Name"
-              className="border-gray-300 dark:bg-gray-900 dark:text-gray-200"
+              className="border-gray-300 dark:bg-[#202124] dark:text-gray-200"
             />
           </Form.Item>
 
