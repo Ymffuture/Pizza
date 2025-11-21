@@ -18,9 +18,9 @@ const names_randomly = [
   "Isabella Müller",
   "Mateo Ivanov",
   "Aria Singh",
-  "Lucas Dubois", 
+  "Lucas Dubois",
   "Simphiwe Nkosi",
-  "Karabo Thwala" 
+  "Karabo Thwala",
 ];
 
 // Example testimonial texts
@@ -31,18 +31,15 @@ const texts = [
   "I always order from here. The food quality and delivery are perfect every time!",
 ];
 
-// Component
 const Testimonial = () => {
   const [testimonials, setTestimonials] = useState([]);
 
   useEffect(() => {
     const fetchAvatars = async () => {
       try {
-        // Pick 4 random names
-        const shuffledNames = names_randomly.sort(() => 0.5 - Math.random()).slice(0, 4);
+        const shuffled = names_randomly.sort(() => 0.5 - Math.random()).slice(0, 4);
 
-        // Fetch random avatars from Unsplash
-        const avatarRequests = shuffledNames.map(() =>
+        const avatarRequests = shuffled.map(() =>
           axios.get(
             "https://api.unsplash.com/photos/random?query=person&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw"
           )
@@ -51,12 +48,11 @@ const Testimonial = () => {
         const responses = await Promise.all(avatarRequests);
         const avatars = responses.map((res) => res.data.urls.small);
 
-        // Build testimonial array
-        const temp = shuffledNames.map((name, i) => ({
+        const temp = shuffled.map((name, i) => ({
           id: i + 1,
           name,
           text: texts[Math.floor(Math.random() * texts.length)],
-          rating: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
+          rating: Math.floor(Math.random() * 2) + 4,
           avatar: avatars[i],
         }));
 
@@ -72,45 +68,94 @@ const Testimonial = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 600,
+    speed: 900,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 4000,
+    fade: true, // 🍎 Apple-style fade transition
+    autoplaySpeed: 5000,
+    cssEase: "ease-in-out",
     arrows: false,
   };
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-14 bg-white dark:bg-black text-gray-500 dark:text-gray-400 transition-colors duration-300">
-      <div className="text-center mb-12">
-        <h2 className="text-blue-500 font-bold text-3xl md:text-4xl mb-2">What They Say?</h2>
-        <p className="text-gray-400">Real reviews from our happy customers</p>
+    <section className="relative py-20 px-4 sm:px-6 lg:px-16 bg-white dark:bg-black transition-all duration-300">
+      {/* Apple-style soft gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50 to-white dark:from-[#0A0A0A] dark:via-black dark:to-[#0A0A0A] pointer-events-none" />
+
+      <div className="relative text-center mb-16 z-10">
+        <h2 className="text-4xl md:text-5xl font-semibold text-gray-900 dark:text-white mb-3 tracking-tight">
+          What They Say
+        </h2>
+        <p className="text-gray-500 dark:text-gray-400 text-lg">
+          Real experiences from real users
+        </p>
       </div>
 
-      <Slider {...settings}>
-        {testimonials.map((review) => (
-          <div key={review.id} className="px-2 sm:px-6">
-            <div className="bg-gray-100 dark:bg-[#1F1D2B] p-6 sm:p-8 rounded-2xl shadow-md">
-              <p className="mb-4 italic text-base sm:text-lg">{`"${review.text}"`}</p>
-              <div className="flex items-center gap-4">
-                <img
-                  src={review.avatar}
-                  alt={review.name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-gray-300 dark:border-blue-500"
-                />
-                <div>
-                  <h4 className="font-semibold text-gray-700 dark:text-blue-500">{review.name}</h4>
-                  <div className="flex text-yellow-400 text-sm">
-                    {[...Array(5)].map((_, i) =>
-                      i < review.rating ? <FaStar key={i} /> : <FaRegStar key={i} />
-                    )}
+      <div className="relative max-w-3xl mx-auto z-10">
+        <Slider {...settings}>
+          {testimonials.map((review) => (
+            <div key={review.id} className="px-4">
+              <div
+                className="
+                  bg-white/80 dark:bg-white/5 
+                  backdrop-blur-xl 
+                  border border-white/30 dark:border-white/10
+                  shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_50px_rgba(0,0,0,0.6)]
+                  px-8 py-10 rounded-3xl 
+                  transform transition-all duration-700
+                  fade-slide
+                "
+              >
+                <p className="text-lg md:text-xl italic text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                  “{review.text}”
+                </p>
+
+                <div className="flex items-center gap-4">
+                  <img
+                    src={review.avatar}
+                    alt={review.name}
+                    className="
+                      w-14 h-14 rounded-full object-cover
+                      border-2 border-white dark:border-blue-500
+                      shadow-md
+                    "
+                  />
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900 dark:text-blue-400 text-lg">
+                      {review.name}
+                    </h4>
+                    <div className="flex text-yellow-400 text-sm">
+                      {[...Array(5)].map((_, i) =>
+                        i < review.rating ? (
+                          <FaStar key={i} />
+                        ) : (
+                          <FaRegStar key={i} />
+                        )
+                      )}
+                    </div>
                   </div>
                 </div>
+
               </div>
             </div>
-          </div>
-        ))}
-      </Slider>
+          ))}
+        </Slider>
+      </div>
+
+      {/* Fade-slide animation style */}
+      <style>{`
+        .fade-slide {
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeSlideUp 0.9s ease forwards;
+        }
+
+        @keyframes fadeSlideUp {
+          0% { opacity: 0; transform: translateY(20px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </section>
   );
 };
