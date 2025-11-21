@@ -6,7 +6,7 @@ import Menu from "./components/Menu";
 import Testimonial from "./components/Testimonial";
 import GetApp from "./components/GetApp";
 import Newsletter from "./components/Newsletter";
-
+import TrustedPartners from "./components/TrustedPartners" ;
 const LazyLoadOnView = ({ children }) => {
   const ref = React.useRef();
   const [isVisible, setIsVisible] = React.useState(false);
@@ -77,6 +77,7 @@ const Home = () => {
         <Testimonial />
         <GetApp />
         <Newsletter />
+        <TrustedPartners/>
       </LazyLoadOnView>
 
     </>
