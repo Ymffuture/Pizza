@@ -39,7 +39,7 @@ const GetApp = () => {
 
             {/* App Store Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 flex-wrap">
-              {[googlePlayIcon, appStoreIcon, huaweiAppGalleryIcon, samsungGalaxyStoreIcon, amazonAppstoreIcon].map((icon, i) => (
+              {[googlePlayIcon].map((icon, i) => (
                 <div key={i} className="relative w-full sm:w-auto">
                   <button
                     disabled
