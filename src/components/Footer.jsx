@@ -5,6 +5,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import toast, { Toaster } from "react-hot-toast";
+import { SunIcon, CloudIcon, MapPinIcon } from "@heroicons/react/24/outline";
 
 // SVG Loader
 const LoadingSVG = () => (
@@ -253,13 +254,26 @@ const Footer = () => {
                 className="w-16 h-16"
                 alt="Weather icon"
               />
-              <p className="text-2xl font-bold">{weather.temp}°C</p>
-              <p className="capitalize text-gray-600 dark:text-gray-400">
-                {weather.desc}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {weather.city}
-              </p>
+              <div className="flex flex-col items-center gap-2">
+  {/* Temperature */}
+  <div className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-gray-100">
+    <SunIcon className="w-6 h-6 text-yellow-400" />
+    <span>{weather.temp}°C</span>
+  </div>
+
+  {/* Description */}
+  <div className="flex items-center gap-2 capitalize text-gray-600 dark:text-gray-400">
+    <CloudIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+    <span>{weather.desc}</span>
+  </div>
+
+  {/* City */}
+  <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+    <MapPinIcon className="w-5 h-5 text-red-500" />
+    <span>{weather.city}</span>
+  </div>
+</div>
+
             </motion.div>
           )}
         </div>
