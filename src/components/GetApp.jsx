@@ -54,7 +54,7 @@ const GetApp = () => {
                   disabled
                   className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-2 py-3 rounded-full shadow opacity-80 cursor-not-allowed"
                 >
-                  <img src={huaweiAppGalleryIcon} alt="App Store" className="h-12 sm:h-10 object-contain" />
+                  <img src={huaweiAppGalleryIcon || samsungGalaxyStoreIcon || amazonAppstoreIcon} alt="App Store" className="h-12 sm:h-10 object-contain" />
                   
                 </button>
                 
