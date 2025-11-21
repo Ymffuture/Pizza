@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import emailjs from "@emailjs/browser";
 import { toast, Toaster } from "react-hot-toast";
@@ -7,21 +7,61 @@ const { TextArea } = Input;
 
 const Newsletter = () => {
   const [loading, setLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0); // seconds left
+  const [form] = Form.useForm();
 
+  // ⏳ Check cooldown on load
+  useEffect(() => {
+    const lastSent = localStorage.getItem("newsletter_last_sent");
+    if (lastSent) {
+      const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
+      const remaining = 7200 - diff; // 2 hours = 7200 seconds
+      if (remaining > 0) setCooldown(remaining);
+    }
+  }, []);
+
+  // ⏳ Countdown timer
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => {
+      setCooldown((t) => t - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
+  const formatTime = (sec) => {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+
+    return `${h}h : ${m}m : ${s}s`;
+  };
+
+  // 📩 Submit handler
   const handleSubmit = async (values) => {
+    if (cooldown > 0) return;
+
     setLoading(true);
     try {
       await emailjs.send(
-        "service_kw38oux", 
-        "template_etyg50k", 
+        "service_kw38oux",
+        "template_etyg50k",
         {
           from_name: values.name,
           from_email: values.email,
-          message: values.message,   // ⬅ send textarea message
+          message: values.message,
         },
         "IolitXztFVvhZg6PX"
       );
+
       toast.success("Message sent successfully!");
+
+      // 🧹 Clear form fields
+      form.resetFields();
+
+      // 🕒 Save cooldown timestamp
+      localStorage.setItem("newsletter_last_sent", Date.now().toString());
+      setCooldown(7200); // 2 hours cooldown
     } catch (error) {
       console.error(error);
       toast.error("Oops! Something went wrong. Please try again.");
@@ -33,6 +73,7 @@ const Newsletter = () => {
   return (
     <section className="dark:bg-black py-16 transition-colors duration-300">
       <Toaster position="top-right" reverseOrder={false} />
+
       <div className="max-w-2xl mx-auto px-6 lg:px-20 rounded-3xl border border-gray-300 dark:border-gray-700 py-12">
         <div className="text-center mb-8">
           <h4 className="text-blue-400 font-semibold uppercase mb-2">Newsletter</h4>
@@ -44,8 +85,12 @@ const Newsletter = () => {
           </p>
         </div>
 
-        <Form layout="vertical" onFinish={handleSubmit} className="space-y-4">
-
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          className="space-y-4"
+        >
           {/* NAME */}
           <Form.Item
             name="name"
@@ -54,7 +99,7 @@ const Newsletter = () => {
           >
             <Input
               placeholder="Your Name"
-              className="border-gray-300 focus:border-blue-400 focus:ring-blue-400"
+              className="border-gray-300 dark:bg-gray-900 dark:text-gray-200"
             />
           </Form.Item>
 
@@ -69,11 +114,11 @@ const Newsletter = () => {
           >
             <Input
               placeholder="you@example.com"
-              className="border-gray-300 focus:border-blue-400 focus:ring-blue-400"
+              className="border-gray-300 dark:bg-gray-900 dark:text-gray-200"
             />
           </Form.Item>
 
-          {/* MESSAGE TEXTAREA */}
+          {/* MESSAGE */}
           <Form.Item
             name="message"
             label="Your Message"
@@ -82,7 +127,7 @@ const Newsletter = () => {
             <TextArea
               rows={5}
               placeholder="Your message..."
-              className="border-gray-300 focus:border-blue-400 focus:ring-blue-400"
+              className="border-gray-300 dark:bg-gray-900 dark:text-gray-200"
             />
           </Form.Item>
 
@@ -91,13 +136,19 @@ const Newsletter = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-blue-400 hover:bg-blue-500 w-full"
+              disabled={cooldown > 0}
               loading={loading}
+              className={`w-full ${
+                cooldown > 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-400 hover:bg-blue-500"
+              }`}
             >
-              Send Message
+              {cooldown > 0
+                ? `Wait ${formatTime(cooldown)}`
+                : "Send Message"}
             </Button>
           </Form.Item>
-
         </Form>
       </div>
     </section>
