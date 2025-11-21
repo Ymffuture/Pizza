@@ -7,25 +7,21 @@ const { TextArea } = Input;
 
 const Newsletter = () => {
   const [loading, setLoading] = useState(false);
-  const [cooldown, setCooldown] = useState(0); // seconds left
+  const [cooldown, setCooldown] = useState(0);
   const [form] = Form.useForm();
 
-  // ⏳ Check cooldown on load
   useEffect(() => {
     const lastSent = localStorage.getItem("newsletter_last_sent");
     if (lastSent) {
       const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
-      const remaining = 7200 - diff; // 2 hours = 7200 seconds
+      const remaining = 7200 - diff;
       if (remaining > 0) setCooldown(remaining);
     }
   }, []);
 
-  // ⏳ Countdown timer
   useEffect(() => {
     if (cooldown <= 0) return;
-    const timer = setInterval(() => {
-      setCooldown((t) => t - 1);
-    }, 1000);
+    const timer = setInterval(() => setCooldown((t) => t - 1), 1000);
     return () => clearInterval(timer);
   }, [cooldown]);
 
@@ -33,11 +29,9 @@ const Newsletter = () => {
     const h = Math.floor(sec / 3600);
     const m = Math.floor((sec % 3600) / 60);
     const s = sec % 60;
-
     return `${h}h : ${m}m : ${s}s`;
   };
 
-  // 📩 Submit handler
   const handleSubmit = async (values) => {
     if (cooldown > 0) return;
 
@@ -55,99 +49,142 @@ const Newsletter = () => {
       );
 
       toast.success("Message sent successfully!");
-
-      // 🧹 Clear form fields
       form.resetFields();
-
-      // 🕒 Save cooldown timestamp
       localStorage.setItem("newsletter_last_sent", Date.now().toString());
-      setCooldown(7200); // 2 hours cooldown
+      setCooldown(7200);
     } catch (error) {
       console.error(error);
-      toast.error("Oops! Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="dark:bg-black py-16 transition-colors duration-300">
-      <Toaster position="top-right" reverseOrder={false} />
+    <section className="dark:bg-black bg-[#f5f5f7] py-24 transition-all duration-500">
 
-      <div className="max-w-2xl mx-auto px-6 lg:px-20 rounded-3xl border border-gray-300 dark:border-gray-700 py-12">
-        <div className="text-center mb-8">
-          <h4 className="text-blue-400 font-semibold uppercase mb-2">Newsletter</h4>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Get the Latest Updates
+      <Toaster position="top-right" />
+
+      <div
+        className="
+          max-w-3xl mx-auto px-8 py-16 rounded-[32px]
+          backdrop-blur-xl bg-white/70 dark:bg-white/5 
+          border border-white/40 dark:border-white/10 
+          shadow-[0_8px_32px_rgba(0,0,0,0.1)]
+          transition-all duration-500
+        "
+      >
+        {/* HEADER */}
+        <div className="text-center mb-12">
+          <h4 className="text-blue-500 font-semibold tracking-wide uppercase mb-3">
+            Newsletter
+          </h4>
+
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+            Stay Inspired.
           </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Subscribe or send us a quick message. We’d love to hear from you.
+
+          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-xl mx-auto">
+            Get updates, insights, and helpful resources — straight to your inbox.
           </p>
         </div>
 
+        {/* FORM */}
         <Form
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
-          className="space-y-4"
+          className="space-y-6"
         >
           {/* NAME */}
           <Form.Item
             name="name"
-            label={<span className="text-gray-900 dark:text-gray-200 font-semibold text-sm">Full Name</span>}
+            label={
+              <span className="text-gray-900 dark:text-gray-200 font-medium">
+                Full Name
+              </span>
+            }
             rules={[{ required: true, message: "Please enter your name" }]}
           >
             <Input
-              placeholder="Your Name"
-              className="border-gray-300 dark:bg-[#202124] dark:text-gray-200"
+              placeholder="John Appleseed"
+              className="
+                h-12 rounded-2xl px-4 text-gray-800 dark:text-gray-100
+                bg-white/70 dark:bg-white/5
+                border border-gray-200 dark:border-gray-700
+                focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20
+                transition-all duration-300
+              "
             />
           </Form.Item>
 
           {/* EMAIL */}
           <Form.Item
             name="email"
-            label={<span className="text-gray-900 dark:text-gray-200 font-semibold text-sm">Email</span>}
+            label={
+              <span className="text-gray-900 dark:text-gray-200 font-medium">
+                Email Address
+              </span>
+            }
             rules={[
               { required: true, message: "Please enter your email" },
-              { type: "email", message: "Please enter a valid email" },
+              { type: "email", message: "Enter a valid email" },
             ]}
           >
             <Input
-              placeholder="yourname@example.com"
-              className="border-gray-300 dark:bg-gray-900 dark:text-gray-200"
+              placeholder="you@example.com"
+              className="
+                h-12 rounded-2xl px-4 text-gray-800 dark:text-gray-100
+                bg-white/70 dark:bg-white/5
+                border border-gray-200 dark:border-gray-700
+                focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20
+                transition-all duration-300
+              "
             />
           </Form.Item>
 
           {/* MESSAGE */}
           <Form.Item
             name="message"
-            label={<span className="text-gray-900 dark:text-gray-200 font-semibold text-sm">Message</span>}
-            rules={[{ required: true, message: "Please enter your message" }]}
+            label={
+              <span className="text-gray-900 dark:text-gray-200 font-medium">
+                Message
+              </span>
+            }
+            rules={[{ required: true, message: "Please write your message" }]}
           >
             <TextArea
               rows={5}
-              placeholder="Ask anything"
-              className="border-gray-100 dark:bg-gray-900 dark:text-white"
+              placeholder="Write something..."
+              className="
+                rounded-2xl p-4 text-gray-800 dark:text-gray-100
+                bg-white/70 dark:bg-white/5
+                border border-gray-200 dark:border-gray-700
+                focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20
+                transition-all duration-300
+              "
             />
           </Form.Item>
 
           {/* BUTTON */}
           <Form.Item>
-  <Button
-    type="primary"
-    htmlType="submit"
-    disabled={cooldown > 0}
-    loading={loading}
-    className={`w-full text-red-600 transition-colors duration-300
-      ${cooldown > 0
-        ? "bg-gray-500 dark:!bg-red-600 dark:hover:!bg-red-700 cursor-not-allowed"
-        : "bg-blue-300 hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700"
-      }`}
-  >
-    {cooldown > 0 ? `Wait ${formatTime(cooldown)}` : "Send Message"}
-  </Button>
-</Form.Item>
-
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={cooldown > 0}
+              loading={loading}
+              className={`
+                w-full h-12 text-lg font-semibold rounded-2xl transition-all duration-300
+                ${
+                  cooldown > 0
+                    ? "bg-gray-400 dark:bg-gray-700 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                }
+              `}
+            >
+              {cooldown > 0 ? `Wait ${formatTime(cooldown)}` : "Send Message"}
+            </Button>
+          </Form.Item>
         </Form>
       </div>
     </section>
