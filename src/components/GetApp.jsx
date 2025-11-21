@@ -1,65 +1,77 @@
 import React from "react";
 import img from "../assets/img/order.png";
 
-// Official app store icons URLs
 const googlePlayIcon =
   "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg";
 
-const appStoreIcon =
-  "https://upload.wikimedia.org/wikipedia/commons/6/67/App_Store_%28iOS%29.svg";
-
-const huaweiAppGalleryIcon =
-  "https://commons.wikimedia.org/wiki/File:Huawei_AppGallery_Badge_Black_EN.svg?format=svg";  // from Wikimedia :contentReference[oaicite:0]{index=0}
-
-const samsungGalaxyStoreIcon =
-  "https://upload.wikimedia.org/wikipedia/commons/0/02/Samsung_Galaxy_Store_logo.svg";  // Galaxy Store logo from Wikimedia :contentReference[oaicite:1]{index=1}
-
-const amazonAppstoreIcon =
-  "https://logos-download.com/wp-content/uploads/2021/01/Amazon_Appstore_logo_SVG.svg";  // from Logos-Download :contentReference[oaicite:2]{index=2}
-
 const GetApp = () => {
   return (
-    <section className="dark:bg-black py-10 transition-colors duration-300">
-      <div className="dark:bg-[#1F1D2B] py-16 px-6 lg:px-20 rounded-3xl mx-4 lg:mx-16">
-        <div className="grid md:grid-cols-2 items-center gap-10">
-          
-          {/* Left Text + App Store Buttons */}
-          <div className="flex flex-col gap-6">
-            <div>
-              <h4 className="text-gray-500 font-semibold uppercase mb-2">
-                Our Application
-              </h4>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Simple Way To get in touch with the developer
-              </h2>
-              <p className="text-gray-700 dark:text-gray-300 mb-6">
-                Discover more ideas in one chat.
-              </p>
-            </div>
+    <section className="py-20 bg-[#FAFAFA] dark:bg-black transition-all duration-300">
+      {/* Apple-style container */}
+      <div className="max-w-6xl mx-auto px-6">
+        <div
+          className="
+            rounded-[40px] 
+            bg-white dark:bg-[#111111]
+            shadow-[0_20px_60px_rgba(0,0,0,0.08)]
+            dark:shadow-[0_20px_60px_rgba(0,0,0,0.45)]
+            p-12 md:p-16
+            grid md:grid-cols-2 gap-16
+            relative overflow-hidden
+          "
+        >
 
-            {/* App Store Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 flex-wrap">
-              {[googlePlayIcon].map((icon, i) => (
-                <div key={i} className="relative w-full sm:w-auto">
-                  <button
-                    disabled
-                    className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium opacity-80 cursor-not-allowed"
-                  >
-                    <img src={icon} alt="App Store Icon" className="h-12 sm:h-10 object-contain" />
-                  </button>
-                </div>
-              ))}
+          {/* Soft gradient like Apple */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent dark:from-white/5 pointer-events-none" />
+
+          {/* LEFT SIDE TEXT */}
+          <div className="relative flex flex-col justify-center z-10">
+            <h4 className="uppercase tracking-wide text-gray-500 dark:text-gray-400 font-semibold mb-3">
+              Our Application
+            </h4>
+
+            <h2 className="text-4xl md:text-5xl font-semibold text-gray-900 dark:text-white leading-tight mb-6">
+              A Smarter Way to Connect  
+            </h2>
+
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-10 max-w-md">
+              Stay close to the developer — explore ideas, updates, and insights in one elegant experience.
+            </p>
+
+            {/* GOOGLE PLAY BUTTON */}
+            <div className="flex items-center">
+              <button
+                disabled
+                className="
+                  opacity-90 dark:opacity-80 cursor-not-allowed
+                  hover:opacity-100 transition
+                "
+              >
+                <img
+                  src={googlePlayIcon}
+                  alt="Google Play Store"
+                  className="h-14 md:h-12 object-contain drop-shadow-sm"
+                />
+              </button>
             </div>
           </div>
 
-          {/* Right Image */}
-          <div className="flex justify-center">
+          {/* RIGHT IMAGE — Apple-style floating device */}
+          <div className="relative flex justify-center items-center z-10">
             <img
               src={img}
               alt="App Preview"
-              className="w-[280px] sm:w-[320px] md:w-[400px] lg:w-[480px] drop-shadow-2xl rounded-xl dark:grayscale"
+              className="
+                w-[260px] md:w-[340px] lg:w-[420px]
+                drop-shadow-[0_25px_60px_rgba(0,0,0,0.15)]
+                dark:drop-shadow-[0_25px_80px_rgba(0,0,0,0.8)]
+                rounded-2xl
+                hover:scale-[1.02]
+                transition-all duration-500
+              "
             />
           </div>
+
         </div>
       </div>
     </section>
