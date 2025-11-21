@@ -31,7 +31,7 @@ const Footer = () => {
         try {
           const res = await fetch(
             `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${
-  "a5a57fc0c6ca0eb5eb574f653212a78d" 
+  "378c0d8b5246ceb52c1c6c6899b3446e" 
             }&units=metric`
           );
 
