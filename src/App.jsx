@@ -74,7 +74,7 @@ const App = () => {
             <Route path="/small-projects" element={<SmallProjects />} />
             <Route path="/large-projects" element={<LargeProjects />} />
             <Route path="/server-api" element={<ServerAPI />} />
-            <Route path="/signup" element={<SignApp/>} 
+            <Route path="/signup" element={<SignApp/>} />
 
             {/* 404 Page */}
             <Route
