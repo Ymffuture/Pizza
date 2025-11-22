@@ -2,16 +2,16 @@
 import React, { useRef } from "react";
 
 const partners = [
-  { name: "Cloudinary", href: "https://cloudinary.com", logo: "/partners/cloudinary.png" },
-  { name: "MongoDB", href: "https://mongodb.com", logo: "/partners/mongodb.png" },
-  { name: "Gemini AI", href: "https://gemini.google.com", logo: "/partners/gemini.svg" },
+  { name: "Cloudinary", href: "https://cloudinary.com", logo: "/partners/Cloudinary.png" },
+  { name: "MongoDB", href: "https://mongodb.com", logo: "/partners/MongoDB.png" },
+  { name: "Gemini AI", href: "https://gemini.google.com", logo: "/partners/Gemini.png" },
   { name: "Render", href: "https://render.com", logo: "/partners/render.png" },
-  { name: "Node.js", href: "https://nodejs.org", logo: "/partners/node.svg" },
-  { name: "GitHub", href: "https://github.com", logo: "/partners/github.png" },
-  { name: "Vercel", href: "https://vercel.com", logo: "/partners/vercel.svg" },
+  { name: "Node.js", href: "https://nodejs.org", logo: "/partners/Node.png" },
+  { name: "GitHub", href: "https://github.com", logo: "/partners/Github.png" },
+  { name: "Vercel", href: "https://vercel.com", logo: "/partners/Vercel.png" },
   { name: "Supabase", href: "https://supabase.com", logo: "/partners/supabase.png" },
-  { name: "React", href: "https://reactjs.org", logo: "/partners/react.svg" },
-  { name: "TailwindCSS", href: "https://tailwindcss.com", logo: "/partners/tailwind.svg" },
+  { name: "React", href: "https://netlify.com", logo: "/partners/Netlify.png" },
+  { name: "TailwindCSS", href: "https://tailwindcss.com", logo: "/partners/Tailwindcss.png" },
 ];
 
 const TrustedPartners = ({ pauseOnHover = true, speed = 20 }) => {
