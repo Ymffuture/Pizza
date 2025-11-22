@@ -4,9 +4,12 @@ import {
   Search,
   Bell,
   Users,
-  ShoppingCart,
-  BotMessageSquare,
+  FolderKanban,
+  Factory,
+  ServerCog,
+  LogIn,
 } from "lucide-react";
+
 import { FaWhatsapp, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
@@ -97,7 +100,7 @@ const Navbar = () => {
 
           {/* LOGO */}
           <div
-            className="text-2xl font-bold cursor-pointer"
+            className="text-2xl cursor-pointer"
             onClick={() => navigate("/")}
           >
             <span className="text-blue-500">Swift</span>
@@ -149,14 +152,14 @@ const Navbar = () => {
   {/* HOME ICON */}
   <Home
     onClick={() => navigate("/")}
-    size={20}
+    size={28}
     className="cursor-pointer hover:text-blue-500 dark:text-white"
   />
 
   {/* THREE DOTS MENU */}
   <Dropdown overlay={menu} trigger={["click"]}>
     <MoreHorizontal
-      size={22}
+      size={28}
       className="cursor-pointer hover:text-blue-500 dark:text-white"
     />
   </Dropdown>
@@ -168,7 +171,7 @@ const Navbar = () => {
               onClick={handleWhatsAppRedirect}
               className="hidden md:flex items-center text-green-500 hover:text-green-600"
             >
-              <FaWhatsapp size={20}/>
+              <FaWhatsapp size={28}/>
             </button>
 
             {/* Theme Toggle */}
@@ -221,9 +224,9 @@ const Navbar = () => {
               {/* HEADER */}
               <div className="flex items-center justify-between mb-4">
                 <GeminiAssistant />
-                <h2 className="text-xl font-bold text-blue-600">SwiftMeta AI</h2>
+                <h2 className="text-xl font-bold text-blue-500 dark:text-gray-400">SwiftMeta AI</h2>
                 <button
-                  className="p-2"
+                  className="p-2 dark:text-gray-400 dark:bg-white"
                   onClick={() => setMenuOpen(false)}
                 >
                   ✖
@@ -256,12 +259,12 @@ const Navbar = () => {
               {/* LINKS */}
               <nav className="flex flex-col gap-3 mb-6">
                 {[
-                  { name: "Home", href: "/", icon: <Home size={18} /> },
-                  { name: "Small Projects", href: "/small-projects", icon: <Users size={18} /> },
-                  { name: "Large Projects", href: "/large-projects", icon: <ShoppingCart size={18} /> },
-                  { name: "Server/API", href: "/server-api", icon: <BotMessageSquare size={18} /> },
-                 { name: "Small Projects", href: "/signup", icon: <Users size={18} /> },
-                ].map((item) => (
+  { name: "Home", href: "/", icon: <Home size={18} /> },
+  { name: "Small Projects", href: "/small-projects", icon: <FolderKanban size={18} /> },
+  { name: "Large Projects", href: "/large-projects", icon: <Factory size={18} /> },
+  { name: "Server/API", href: "/server-api", icon: <ServerCog size={18} /> },
+  { name: "Log in", href: "/signup", icon: <LogIn size={18} /> },
+].map((item) => (
                   <Link
                     key={item.name}
                     to={item.href}
@@ -275,18 +278,18 @@ const Navbar = () => {
               </nav>
 
               {/* THEME */}
-              <div className="flex items-center gap-3 mb-5">
+              <div className="flex items-center gap-3 mb-5 dark:text-gray-400">
                 <ThemeToggle /> Theme
               </div>
 
               {/* SOCIAL ICONS */}
-              <div className="flex items-center justify-center gap-6">
-                <FaXTwitter size={24} className="cursor-pointer" />
-                <FaInstagram size={24} className="cursor-pointer" />
-                <FaLinkedin size={24} className="cursor-pointer" />
+              <div className="flex items-center justify-center gap-8">
+                <FaXTwitter size={24} className="cursor-pointer dark:text-white" />
+                <FaInstagram size={24} className="cursor-pointer dark:text-red-600" />
+                <FaLinkedin size={24} className="cursor-pointer dark:text-blue-600" />
                 <FaWhatsapp
                   size={24}
-                  className="cursor-pointer"
+                  className="cursor-pointer dark:text-green-600"
                   onClick={handleWhatsAppRedirect}
                 />
               </div>
