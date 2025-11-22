@@ -13,7 +13,31 @@ import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import GeminiAssistant from "../layouts/GeminiAssistant";
 import { motion, AnimatePresence } from "framer-motion";
+import { MoreHorizontal } from "lucide-react";
+import { Dropdown, Menu } from "antd";
 
+const menu = (
+  <Menu
+    items={[
+      {
+        key: "1",
+        label: (
+          <span onClick={() => navigate("/small-projects")}>
+            Small Projects
+          </span>
+        ),
+      },
+      {
+        key: "2",
+        label: (
+          <span onClick={() => navigate("/large-projects")}>
+            Large Projects
+          </span>
+        ),
+      },
+    ]}
+  />
+);
 // ----------------------
 // SEARCH DATA SOURCE
 // ----------------------
@@ -121,43 +145,30 @@ const Navbar = () => {
 
             {/* DESKTOP ICON NAVIGATION */}
             <nav className="hidden md:flex items-center gap-5">
-              <Home
-                onClick={() => navigate("/")}
-                size={20}
-                className="cursor-pointer hover:text-blue-500"
-              />
 
-              <BotMessageSquare
-                onClick={() => navigate("/ai")}
-                size={20}
-                className="cursor-pointer hover:text-blue-500"
-              />
+  {/* HOME ICON */}
+  <Home
+    onClick={() => navigate("/")}
+    size={20}
+    className="cursor-pointer hover:text-blue-500"
+  />
 
-              <Users
-                onClick={() => navigate("/small-projects")}
-                size={20}
-                className="cursor-pointer hover:text-blue-500"
-              />
+  {/* THREE DOTS MENU */}
+  <Dropdown overlay={menu} trigger={["click"]}>
+    <MoreHorizontal
+      size={22}
+      className="cursor-pointer hover:text-blue-500"
+    />
+  </Dropdown>
 
-              <Bell
-                onClick={handleWeather}
-                size={20}
-                className="cursor-pointer hover:text-blue-500"
-              />
-
-              <ShoppingCart
-                onClick={() => navigate("/large-projects")}
-                size={20}
-                className="cursor-pointer hover:text-blue-500"
-              />
-            </nav>
+</nav>
 
             {/* WhatsApp CTA */}
             <button
               onClick={handleWhatsAppRedirect}
-              className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-green-500 text-white rounded-full text-sm hover:bg-green-600"
+              className="hidden md:flex items-center text-green-500 hover:text-green-600"
             >
-              <FaWhatsapp /> Get a Quote
+              <FaWhatsapp size={20}/>
             </button>
 
             {/* Theme Toggle */}
@@ -174,7 +185,7 @@ const Navbar = () => {
                 className="h-7 w-7 dark:text-white"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="3"
                 viewBox="0 0 24 24"
               >
                 <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
