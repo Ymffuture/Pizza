@@ -260,6 +260,7 @@ const Navbar = () => {
                   { name: "Small Projects", href: "/small-projects", icon: <Users size={18} /> },
                   { name: "Large Projects", href: "/large-projects", icon: <ShoppingCart size={18} /> },
                   { name: "Server/API", href: "/server-api", icon: <BotMessageSquare size={18} /> },
+                 { name: "Small Projects", href: "/signup", icon: <Users size={18} /> },
                 ].map((item) => (
                   <Link
                     key={item.name}
