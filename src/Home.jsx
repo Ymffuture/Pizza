@@ -62,7 +62,7 @@ const Home = () => {
             {[...Array(4)].map((_, idx) => (
               <Col xs={24} sm={12} md={12} lg={6} key={idx}>
                 <Card>
-                  <Skeleton.Image style={{ width: "100%", height: 150 }} active />
+                  <Skeleton.Image style={{ width: "100%", height: 100 }} active />
                   <Skeleton active paragraph={{ rows: 2 }} />
                 </Card>
               </Col>
@@ -77,9 +77,9 @@ const Home = () => {
         <Testimonial />
         <GetApp />
         <Newsletter />
-        <TrustedPartners/>
+        
       </LazyLoadOnView>
-
+<TrustedPartners/>
     </>
   );
 };
