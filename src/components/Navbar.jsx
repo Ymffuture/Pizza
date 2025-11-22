@@ -96,14 +96,14 @@ const Navbar = () => {
     <>
       {/* DESKTOP NAVBAR */}
       <header className="fixed top-0 w-full z-50 bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
 
           {/* LOGO */}
           <div
             className="text-2xl cursor-pointer"
             onClick={() => navigate("/")}
           >
-            <span className="text-blue-500">Swift</span>
+            <span className="text-blue-500 dark:text-blue-600">Swift</span>
             <span className="text-gray-700 dark:text-gray-300">Meta™</span>
           </div>
 
@@ -113,7 +113,7 @@ const Navbar = () => {
               <Search size={18} className="text-gray-400" />
               <input
                 type="text"
-                placeholder="Search SwiftMeta"
+                placeholder="Search Navigation links"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="ml-3 w-full bg-transparent outline-none text-sm dark:text-white"
@@ -224,9 +224,9 @@ const Navbar = () => {
               {/* HEADER */}
               <div className="flex items-center justify-between mb-4">
                 <GeminiAssistant />
-                <h2 className="text-xl font-bold text-blue-500 dark:text-gray-400">SwiftMeta AI</h2>
+                <h2 className="text-xl text-blue-500 dark:text-gray-400">SwiftMeta AI</h2>
                 <button
-                  className="p-2 dark:text-gray-400 dark:bg-white"
+                  className="p-2 dark:text-gray-400"
                   onClick={() => setMenuOpen(false)}
                 >
                   ✖
