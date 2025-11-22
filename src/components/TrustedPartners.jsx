@@ -2,12 +2,12 @@
 import React, { useRef } from "react";
 
 const partners = [
-  { name: "Cloudinary", href: "https://cloudinary.com", logo: "/partners/Cloudinary.png" },
+  { name: "Cloudinary", href: "https://cloudinary.com", logo: "../assets/partners/Cloudinary.png" },
   { name: "MongoDB", href: "https://mongodb.com", logo: "/partners/MongoDB.png" },
   { name: "Gemini AI", href: "https://gemini.google.com", logo: "/partners/Gemini.png" },
   { name: "Render", href: "https://render.com", logo: "/partners/render.png" },
   { name: "Node.js", href: "https://nodejs.org", logo: "/partners/Node.png" },
-  { name: "GitHub", href: "https://github.com", logo: "/partners/Github.png" },
+  { name: "GitHub", href: "https://github.com", logo: "/partners/GitHub.png" },
   { name: "Vercel", href: "https://vercel.com", logo: "/partners/Vercel.png" },
   { name: "Supabase", href: "https://supabase.com", logo: "/partners/supabase.png" },
   { name: "Netlify", href: "https://netlify.com", logo: "/partners/Netlify.png" },
