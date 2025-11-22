@@ -4,6 +4,7 @@ import { Skeleton } from "antd";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
+import SignApp from "./layouts/lib/SignIn_Up";
 // Lazy-loaded pages
 const Policy = lazy(() => import("./pages/Policy"));
 const Terms = lazy(() => import("./pages/Terms"));
@@ -73,6 +74,7 @@ const App = () => {
             <Route path="/small-projects" element={<SmallProjects />} />
             <Route path="/large-projects" element={<LargeProjects />} />
             <Route path="/server-api" element={<ServerAPI />} />
+            <Route path="/signup" element={<SignApp/>} 
 
             {/* 404 Page */}
             <Route
