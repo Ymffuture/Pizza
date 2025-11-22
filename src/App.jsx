@@ -4,7 +4,7 @@ import { Skeleton } from "antd";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
-import SignApp from "./layouts/lib/SignIn_Up";
+import SignApp from "./layouts/SignIn_Up";
 // Lazy-loaded pages
 const Policy = lazy(() => import("./pages/Policy"));
 const Terms = lazy(() => import("./pages/Terms"));
