@@ -1,122 +1,195 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabaseClient";
+import {
+  Input,
+  Button,
+  Alert,
+  Card,
+  Spin,
+  Tabs,
+} from "antd";
+import { MailOutlined, LockOutlined } from "@ant-design/icons";
 
-function SignIn_Up() {
-  const [email,setEmail]=useState("");
-  const [password , setPassword]=useState("");
-  const [user,setUser]=useState(null);
-  const [error,setError]=useState("");
-  const [loading,setLoading]=useState(false);
+const { TabPane } = Tabs;
 
-  const handleSignUp = async ()=>{
+export default function SignIn_Up() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // ----------------------------
+  // HANDLERS
+  // ----------------------------
+  const handleSignUp = async () => {
     setError("");
     setLoading(true);
-    const {data,error} = await supabase.auth.signUp({email,password});
+
+    const { data, error } = await supabase.auth.signUp({ email, password });
+
     setLoading(false);
     if (error) return setError(error.message);
     setUser(data.user ?? null);
-  }
+  };
 
-  const handleLogin = async ()=>{
+  const handleLogin = async () => {
     setError("");
     setLoading(true);
-    const {data,error} = await supabase.auth.signInWithPassword({email,password});
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
     setLoading(false);
     if (error) return setError(error.message);
     setUser(data.user ?? null);
-  }
+  };
 
-
-  const handleLogOut= async ()=>{
+  const handleLogOut = async () => {
     setError("");
     setLoading(true);
-    const {data,error} = await supabase.auth.signOut({email,password});
+
+    const { error } = await supabase.auth.signOut();
+
     setLoading(false);
     if (error) return setError(error.message);
-    setUser(data.user ?? null);
-  }
+    setUser(null);
+  };
 
-  // keep session + react to changes
+  // ----------------------------
+  // SESSION LISTENER
+  // ----------------------------
   useEffect(() => {
-
     const init = async () => {
-      // 1. Get the current session from Supabase
-      const { data: { session } } = await supabase.auth.getSession();
-      // 2. If a user is logged in, setUser updates the state with user data, else null
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       setUser(session?.user ?? null);
     };
 
     init();
 
-    // 3. Listen to authentication state changes (login, logout, refresh)
-    const { data: { subscription } } =
-      supabase.auth.onAuthStateChange((_event, session) => {
-        // 4. Update the user state whenever auth changes
-        setUser(session?.user ?? null);
-      });
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => setUser(session?.user ?? null)
+    );
 
-    // 5. Cleanup: unsubscribe when component unmounts
-    return () => subscription.unsubscribe();
+    return () => listener.subscription.unsubscribe();
   }, []);
 
-
-
-
+  // ------------------------------------
+  // FRONTEND UI (Clean Apple Style)
+  // ------------------------------------
   return (
-    <div className="container">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50 dark:bg-black">
+      <Card
+        className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200/60 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl"
+        style={{ borderRadius: "20px" }}
+      >
+        <h2 className="text-3xl font-semibold text-center mb-6 text-gray-900 dark:text-white">
+          SwiftMeta Authentication
+        </h2>
 
-      {!user?(
-        <div className="card">
-        <h2>React Supabase Login</h2>
-        {error && <p className="error">{error}</p>}
-        {loading?"Please wait ..":""}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={e=>setEmail(e.target.value)}
+        {error && (
+          <Alert
+            message={error}
+            type="error"
+            showIcon
+            className="mb-4 rounded-lg"
+          />
+        )}
 
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e=>setPassword(e.target.value)}
-          
-        />
-        <div className="button-group">
-          <button className="login"
+        {!user ? (
+          <>
+            <Tabs defaultActiveKey="login" centered tabBarStyle={{ marginBottom: 30 }}>
+              <TabPane tab="Login" key="login">
+                <Input
+                  size="large"
+                  prefix={<MailOutlined />}
+                  placeholder="Email"
+                  type="email"
+                  className="mb-3 rounded-lg"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+
+                <Input.Password
+                  size="large"
+                  prefix={<LockOutlined />}
+                  placeholder="Password"
+                  className="mb-4 rounded-lg"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <Button
+                  type="primary"
+                  size="large"
+                  block
+                  loading={loading}
+                  disabled={!email || !password}
+                  className="rounded-full bg-blue-600 hover:bg-blue-700"
                   onClick={handleLogin}
-                  disabled={loading || !email || !password }
-          >
-            Login
-          </button>
-          <button className="signup"
+                >
+                  Sign In
+                </Button>
+              </TabPane>
+
+              <TabPane tab="Create Account" key="signup">
+                <Input
+                  size="large"
+                  prefix={<MailOutlined />}
+                  placeholder="Email"
+                  className="mb-3 rounded-lg"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+
+                <Input.Password
+                  size="large"
+                  prefix={<LockOutlined />}
+                  placeholder="Password"
+                  className="mb-4 rounded-lg"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <Button
+                  type="primary"
+                  size="large"
+                  block
+                  loading={loading}
+                  disabled={!email || !password}
+                  className="rounded-full bg-blue-600 hover:bg-blue-700"
                   onClick={handleSignUp}
-                  disabled={loading || !email || !password}
-          >
-            Sign Up
-            
-          </button>
-        </div>
-      </div>
-      ):(
-        <div className="card">
-          <h2>welcome ,{user.email}</h2>
-            <div className="button-group">
-            <button className="logout"
-                    onClick={handleLogOut}
-                    disabled={loading  }
+                >
+                  Create Account
+                </Button>
+              </TabPane>
+            </Tabs>
+          </>
+        ) : (
+          <>
+            <p className="text-lg text-center mb-5 text-gray-800 dark:text-gray-200">
+              Welcome, <span className="font-medium">{user.email}</span>
+            </p>
+
+            <Button
+              danger
+              block
+              size="large"
+              loading={loading}
+              className="rounded-full"
+              onClick={handleLogOut}
             >
-              {loading?"Please Wait ...":"Logout"} 
-            </button>
-          </div>
-        </div>
-      )}
-      
-      
+              Logout
+            </Button>
+          </>
+        )}
+      </Card>
     </div>
   );
 }
-
-export default SignIn_Up;
