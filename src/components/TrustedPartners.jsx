@@ -65,7 +65,7 @@ const TrustedPartners = () => {
         {/* Title */}
         <div className="text-center mb-12">
           <h3 className="text-4xl font-semibold text-gray-900 dark:text-white">
-            Trusted by Leading Innovators
+            Powered by Leading Innovators
           </h3>
           <p className="text-gray-500 dark:text-gray-400 mt-3">
             Empowering our ecosystem through world-class partners
@@ -82,16 +82,21 @@ const TrustedPartners = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center justify-center p-6 
-                  rounded-2xl transition-all duration-300 hover:-translate-y-1
+                   transition-all duration-300 hover:-translate-y-1
                   hover:scale-[1.05] bg-white/60 dark:bg-white/5 backdrop-blur-xl 
                   shadow-lg border border-gray-200/40 dark:border-white/10"
                 >
                   <img
-                    src={p.logo}
-                    alt={p.name}
-                    className="h-20 md:h-24 object-contain opacity-80 grayscale 
-                    group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300"
-                  />
+  src={p.logo}
+  alt={p.name}
+  className="
+    h-20 md:h-24 object-contain opacity-80 
+    grayscale group-hover:opacity-100 group-hover:grayscale-0 
+    dark:invert dark:grayscale-0 
+    transition-all duration-300
+  "
+/>
+
                 </a>
               </div>
             ))}
