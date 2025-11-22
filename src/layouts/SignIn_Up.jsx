@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabaseClient";
 
-function App() {
+function SignIn_Up() {
   const [email,setEmail]=useState("");
   const [password , setPassword]=useState("");
   const [user,setUser]=useState(null);
@@ -119,4 +119,4 @@ function App() {
   );
 }
 
-export default App;
+export default SignIn_Up;
