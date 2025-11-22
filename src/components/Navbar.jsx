@@ -150,14 +150,14 @@ const Navbar = () => {
   <Home
     onClick={() => navigate("/")}
     size={20}
-    className="cursor-pointer hover:text-blue-500"
+    className="cursor-pointer hover:text-blue-500 dark:text-white"
   />
 
   {/* THREE DOTS MENU */}
   <Dropdown overlay={menu} trigger={["click"]}>
     <MoreHorizontal
       size={22}
-      className="cursor-pointer hover:text-blue-500"
+      className="cursor-pointer hover:text-blue-500 dark:text-white"
     />
   </Dropdown>
 
