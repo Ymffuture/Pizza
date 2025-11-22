@@ -5,11 +5,11 @@ import React, { useRef } from "react";
 import CloudinaryLogo from "../assets/partners/Cloudinary.png";
 import MongoDBLogo from "../assets/partners/MongoDB.png";
 import GeminiLogo from "../assets/partners/Gemini.png";
-import RenderLogo from "../assets/partners/render.png";
-import NodeLogo from "../assets/partners/Node.png";
+import RenderLogo from "../assets/partners/wethinkcode.png";
+import NodeLogo from "../assets/partners/umuzi.png";
 import GitHubLogo from "../assets/partners/GitHub.png";
 import VercelLogo from "../assets/partners/Vercel.png";
-import SupabaseLogo from "../assets/partners/Supabase.png";
+import SupabaseLogo from "../assets/partners/supabase.png";
 import NetlifyLogo from "../assets/partners/Netlify.png";
 import TailwindLogo from "../assets/partners/Tailwindcss.png";
 
