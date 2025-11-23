@@ -64,7 +64,7 @@ const App = () => {
         {navbarLoading ? (
           <Skeleton active paragraph={true} style={{ width: "100%", height: 150 }} />
         ) : (
-          <Navbar />
+        <p>Navbar</p>
         )}
 
         {/* Page Routes */}
