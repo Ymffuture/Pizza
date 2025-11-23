@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "../../layouts/lib/supabaseClient";
 import SidebarItem from "./SidebarItem";
 import {
   LayoutDashboard,
