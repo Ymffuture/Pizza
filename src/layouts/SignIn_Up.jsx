@@ -5,24 +5,35 @@ import {
   Button,
   Alert,
   Card,
-  Spin,
   Tabs,
+  Divider,
 } from "antd";
-import { MailOutlined, LockOutlined } from "@ant-design/icons";
+import {
+  MailOutlined,
+  LockOutlined,
+  GoogleOutlined,
+  GithubOutlined,
+  FacebookOutlined,
+} from "@ant-design/icons";
+import { SiSpotify } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
 export default function SignIn_Up() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [user, setUser] = useState(null);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState("");
 
-  // ----------------------------
-  // HANDLERS
-  // ----------------------------
+  // ------------------------------------
+  // EMAIL SIGN UP
+  // ------------------------------------
   const handleSignUp = async () => {
     setError("");
     setLoading(true);
@@ -31,9 +42,14 @@ export default function SignIn_Up() {
 
     setLoading(false);
     if (error) return setError(error.message);
+
     setUser(data.user ?? null);
+    navigate("/");
   };
 
+  // ------------------------------------
+  // EMAIL LOGIN
+  // ------------------------------------
   const handleLogin = async () => {
     setError("");
     setLoading(true);
@@ -45,9 +61,35 @@ export default function SignIn_Up() {
 
     setLoading(false);
     if (error) return setError(error.message);
+
     setUser(data.user ?? null);
+    navigate("/");
   };
 
+  // ------------------------------------
+  // SOCIAL LOGIN
+  // ------------------------------------
+  const loginWithProvider = async (provider) => {
+    try {
+      setSocialLoading(provider);
+      setError("");
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: "https://swiftmeta.vercel.app/",
+        },
+      });
+
+      if (error) setError(error.message);
+    } finally {
+      setSocialLoading("");
+    }
+  };
+
+  // ------------------------------------
+  // LOG OUT
+  // ------------------------------------
   const handleLogOut = async () => {
     setError("");
     setLoading(true);
@@ -56,12 +98,13 @@ export default function SignIn_Up() {
 
     setLoading(false);
     if (error) return setError(error.message);
+
     setUser(null);
   };
 
-  // ----------------------------
+  // ------------------------------------
   // SESSION LISTENER
-  // ----------------------------
+  // ------------------------------------
   useEffect(() => {
     const init = async () => {
       const {
@@ -81,12 +124,12 @@ export default function SignIn_Up() {
   }, []);
 
   // ------------------------------------
-  // FRONTEND UI (Clean Apple Style)
+  // UI
   // ------------------------------------
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50 dark:bg-black">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-100 dark:bg-black">
       <Card
-        className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200/60 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl"
+        className="w-full max-w-md shadow-xl rounded-2xl border border-gray-300 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl"
         style={{ borderRadius: "20px" }}
       >
         <h2 className="text-3xl font-semibold text-center mb-6 text-gray-900 dark:text-white">
@@ -105,6 +148,7 @@ export default function SignIn_Up() {
         {!user ? (
           <>
             <Tabs defaultActiveKey="login" centered tabBarStyle={{ marginBottom: 30 }}>
+              {/* LOGIN TAB */}
               <TabPane tab="Login" key="login">
                 <Input
                   size="large"
@@ -138,6 +182,7 @@ export default function SignIn_Up() {
                 </Button>
               </TabPane>
 
+              {/* SIGNUP TAB */}
               <TabPane tab="Create Account" key="signup">
                 <Input
                   size="large"
@@ -170,6 +215,60 @@ export default function SignIn_Up() {
                 </Button>
               </TabPane>
             </Tabs>
+
+            {/* SOCIAL LOGIN */}
+            <Divider>Or continue with</Divider>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                icon={<GoogleOutlined />}
+                loading={socialLoading === "google"}
+                className="rounded-full flex items-center justify-center"
+                onClick={() => loginWithProvider("google")}
+              >
+                Google
+              </Button>
+
+              <Button
+                icon={<GithubOutlined />}
+                loading={socialLoading === "github"}
+                className="rounded-full flex items-center justify-center"
+                onClick={() => loginWithProvider("github")}
+              >
+                GitHub
+              </Button>
+
+              <Button
+                icon={<FacebookOutlined />}
+                loading={socialLoading === "facebook"}
+                className="rounded-full flex items-center justify-center"
+                onClick={() => loginWithProvider("facebook")}
+              >
+                Facebook
+              </Button>
+
+              <Button
+                icon={<SiSpotify size={18} />}
+                loading={socialLoading === "spotify"}
+                className="rounded-full flex items-center justify-center"
+                onClick={() => loginWithProvider("spotify")}
+              >
+                Spotify
+              </Button>
+            </div>
+
+            {/* TERMS */}
+            <p className="text-center text-xs mt-5 text-gray-600 dark:text-gray-400">
+              By signing in, you agree to SwiftMeta’s{" "}
+              <a href="/terms" className="text-blue-600 dark:text-blue-400">
+                Terms of Service
+              </a>{" "}
+              and{" "}
+              <a href="/privacy" className="text-blue-600 dark:text-blue-400">
+                Privacy Policy
+              </a>
+              .
+            </p>
           </>
         ) : (
           <>
