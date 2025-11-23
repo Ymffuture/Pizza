@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 import SignApp from "./layouts/SignIn_Up";
+import DashboardLayout from "./components/dashboard/DashboardLayout";
+import Dashboard from "./components/dashboard/Dashboard";
 // Lazy-loaded pages
 const Policy = lazy(() => import("./pages/Policy"));
 const Terms = lazy(() => import("./pages/Terms"));
@@ -75,7 +77,12 @@ const App = () => {
             <Route path="/large-projects" element={<LargeProjects />} />
             <Route path="/server-api" element={<ServerAPI />} />
             <Route path="/signup" element={<SignApp/>} />
-
+            <Route element={<DashboardLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/build" element={<div>Build Website</div>} />
+          <Route path="/dashboard/pricing" element={<div>Price Range</div>} />
+          <Route path="/dashboard/projects" element={<div>Free Projects</div>} />
+        </Route>
             {/* 404 Page */}
             <Route
               path="*"
