@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../layouts/lib/supabaseClient";
+import { supabase } from "../../layouts/lib/supabaseClient";
 import { Spin } from "antd";
 
 export default function ProtectedRoute({ children }) {
