@@ -36,7 +36,7 @@ export default function ProtectedRoute({ children }) {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
         toast("You've been signed out", { icon: "🔒", id: "auth-signed-out" });
-        navigate("/signin", { replace: true });
+        navigate("/signup", { replace: true });
       }
     });
 
