@@ -1,37 +1,58 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../../layouts/lib/supabaseClient";
 import { Spin } from "antd";
+import toast from "react-hot-toast";
 
 export default function ProtectedRoute({ children }) {
-  const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState(null);
+  const [checking, setChecking] = useState(true);
+  const [authorized, setAuthorized] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    let ignore = false;
+    let unsubscribed = false;
 
-    async function checkAuth() {
+    const checkUser = async () => {
       const { data } = await supabase.auth.getSession();
-      if (!ignore) {
-        setSession(data.session);
-        setLoading(false);
 
-        if (!data.session) {
-          window.location.href = "/signin"; 
-        }
+      if (unsubscribed) return;
+
+      if (!data.session) {
+        toast.error("Please sign in to continue", {
+          id: "auth-warning",
+        });
+
+        navigate("/signin", { replace: true });
+        return;
       }
-    }
 
-    checkAuth();
-    return () => { ignore = true };
-  }, []);
+      setAuthorized(true);
+      setChecking(false);
+    };
 
-  if (loading) {
+    checkUser();
+
+    // Realtime listener (logout triggers redirect)
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        toast("You've been signed out", { icon: "🔒", id: "auth-signed-out" });
+        navigate("/signin", { replace: true });
+      }
+    });
+
+    return () => {
+      unsubscribed = true;
+      listener.subscription.unsubscribe();
+    };
+  }, [navigate]);
+
+  if (checking) {
     return (
-      <div className="flex items-center justify-center h-screen dark:bg-black">
+      <div className="flex items-center justify-center h-screen dark:bg-black transition-all duration-300">
         <Spin size="large" />
       </div>
     );
   }
 
-  return children;
+  return authorized ? children : null;
 }
