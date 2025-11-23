@@ -20,13 +20,12 @@ export default function SignIn_Up() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // ---------------------------------------------------
-  // NORMAL SIGNUP
+  // EMAIL + PASSWORD SIGN UP
   // ---------------------------------------------------
   const handleSignUp = async () => {
     setError("");
@@ -36,7 +35,8 @@ export default function SignIn_Up() {
       email,
       password,
       options: {
-        data: { username }, // store username in user_metadata
+        data: { username },
+        emailRedirectTo: "https://swiftmeta.vercel.app/dashboard",
       },
     });
 
@@ -47,7 +47,7 @@ export default function SignIn_Up() {
   };
 
   // ---------------------------------------------------
-  // NORMAL LOGIN
+  // EMAIL + PASSWORD LOGIN
   // ---------------------------------------------------
   const handleLogin = async () => {
     setError("");
@@ -65,17 +65,17 @@ export default function SignIn_Up() {
   };
 
   // ---------------------------------------------------
-  // SOCIAL AUTH HANDLERS
+  // SOCIAL LOGIN (GitHub, Facebook, Spotify)
   // ---------------------------------------------------
   const loginWithProvider = async (provider) => {
     setError("");
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-    redirectTo: "https://swiftmeta.vercel.app/dashboard",
-  }, 
+        redirectTo: "https://swiftmeta.vercel.app/dashboard",
+      },
     });
 
     setLoading(false);
@@ -86,7 +86,7 @@ export default function SignIn_Up() {
   // SESSION LISTENER
   // ---------------------------------------------------
   useEffect(() => {
-    const init = async () => {
+    const initSession = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -95,7 +95,7 @@ export default function SignIn_Up() {
       if (session?.user) navigate("/dashboard");
     };
 
-    init();
+    initSession();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -203,10 +203,8 @@ export default function SignIn_Up() {
 
             <Divider>Or continue with</Divider>
 
-            {/* SOCIAL AUTH BUTTONS */}
             <div className="grid grid-cols-2 gap-3 mt-4">
 
-              {/* GitHub */}
               <Button
                 icon={<GithubOutlined />}
                 size="large"
@@ -216,7 +214,6 @@ export default function SignIn_Up() {
                 GitHub
               </Button>
 
-              {/* Facebook */}
               <Button
                 icon={<FacebookOutlined />}
                 size="large"
@@ -226,7 +223,6 @@ export default function SignIn_Up() {
                 Facebook
               </Button>
 
-              {/* Spotify */}
               <Button
                 icon={<RiSpotifyFill size={18} color="#1DB954" />}
                 size="large"
@@ -236,7 +232,7 @@ export default function SignIn_Up() {
                 Spotify
               </Button>
 
-              {/* Google (Commented Out) */}
+              {/* GOOGLE COMMENTED OUT */}
               
               <Button
                 icon={<GoogleOutlined />}
@@ -249,7 +245,9 @@ export default function SignIn_Up() {
             
             </div>
           </>
-        ) : <p className="text-gray-600 animate-pulse" >Please wait... </p>}
+        ) : (
+          <p className="text-gray-600 animate-pulse">Please wait...</p>
+        )}
       </Card>
     </div>
   );
