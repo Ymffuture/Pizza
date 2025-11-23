@@ -1,5 +1,6 @@
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function DashboardLayout() {
   return (
@@ -8,7 +9,10 @@ export default function DashboardLayout() {
         <Sidebar />
 
         <main className="flex-1 p-6">
-          <Outlet />
+          <ProtectedRoute>
+      <Outlet />
+    </ProtectedRoute>
+          
         </main>
       </div>
     </div>
