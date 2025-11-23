@@ -1,3 +1,5 @@
+import MainDashboard from "./DashboardLayout" ;
+
 export default function Dashboard() {
   return (
     <div className="text-gray-900 dark:text-white">
@@ -5,6 +7,8 @@ export default function Dashboard() {
       <p className="text-gray-600 dark:text-gray-400">
         Select a feature from the sidebar to begin.
       </p>
+
+      <MainDashboard />
     </div>
   );
 }
