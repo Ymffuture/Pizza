@@ -114,7 +114,7 @@ export default function SignIn_Up() {
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50 dark:bg-black">
       <Card className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200/60 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl">
         <h2 className="text-3xl font-semibold text-center mb-6 text-gray-900 dark:text-white">
-          SwiftMeta Authentication
+          Login SwiftMeta
         </h2>
 
         {error && (
@@ -237,7 +237,7 @@ export default function SignIn_Up() {
               </Button>
 
               {/* Google (Commented Out) */}
-              {/*
+              
               <Button
                 icon={<GoogleOutlined />}
                 size="large"
@@ -246,10 +246,10 @@ export default function SignIn_Up() {
               >
                 Google
               </Button>
-              */}
+            
             </div>
           </>
-        ) : null}
+        ) : <p className="text-gray-600 animate-pulse" >Please wait... </p>}
       </Card>
     </div>
   );
