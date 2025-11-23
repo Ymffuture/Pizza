@@ -22,7 +22,7 @@ export default function ProtectedRoute({ children }) {
           id: "auth-warning",
         });
 
-        navigate("/signin", { replace: true });
+        navigate("/signup", { replace: true });
         return;
       }
 
