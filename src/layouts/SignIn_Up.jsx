@@ -63,7 +63,7 @@ export default function SignIn_Up() {
     if (error) return setError(error.message);
 
     setUser(data.user ?? null);
-    navigate("/");
+    navigate("/dashboard");
   };
 
   // ------------------------------------
@@ -77,7 +77,7 @@ export default function SignIn_Up() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: "https://swiftmeta.vercel.app/",
+          redirectTo: "https://swiftmeta.vercel.app/dashboard",
         },
       });
 
@@ -132,8 +132,8 @@ export default function SignIn_Up() {
         className="w-full max-w-md shadow-xl rounded-2xl border border-gray-300 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl"
         style={{ borderRadius: "20px" }}
       >
-        <h2 className="text-3xl font-semibold text-center mb-6 text-gray-900 dark:text-white">
-          SwiftMeta Authentication
+        <h2 className="text-3xl font-semibold text-center mb-6 text-gray-900 dark:text-white bg-blue-600 rounded">
+          SwiftMeta
         </h2>
 
         {error && (
