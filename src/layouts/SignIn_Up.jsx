@@ -1,34 +1,33 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "./lib/supabaseClient";
-
-import { Input, Button, Alert, Card, Tabs } from "antd";
-import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Input, Button, Alert, Card, Tabs, Divider } from "antd";
+import {
+  MailOutlined,
+  LockOutlined,
+  UserOutlined,
+  GithubOutlined,
+  FacebookOutlined,
+  GoogleOutlined,
+} from "@ant-design/icons";
+import { RiSpotifyFill } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 
 const { TabPane } = Tabs;
 
 export default function SignIn_Up() {
   const navigate = useNavigate();
 
-  // FORM FIELDS
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [spotify, setSpotify] = useState("");
-  const [facebook, setFacebook] = useState("");
-  const [github, setGithub] = useState("");
-
-  // const handleGoogleLogin = async () => {
-  //   await supabase.auth.signInWithOAuth({ provider: "google" });
-  // };
 
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ----------------------------
-  // SIGN UP
-  // ----------------------------
+  // ---------------------------------------------------
+  // NORMAL SIGNUP
+  // ---------------------------------------------------
   const handleSignUp = async () => {
     setError("");
     setLoading(true);
@@ -36,38 +35,20 @@ export default function SignIn_Up() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-    });
-
-    if (error) {
-      setLoading(false);
-      return setError(error.message);
-    }
-
-    const userId = data.user?.id;
-    if (!userId) {
-      setLoading(false);
-      return setError("Signup failed. Try again.");
-    }
-
-    // Insert profile metadata
-    await supabase.from("profiles").insert({
-      id: userId,
-      email,
-      username,
-      spotify,
-      facebook,
-      github,
+      options: {
+        data: { username }, // store username in user_metadata
+      },
     });
 
     setLoading(false);
-    setUser(data.user ?? null);
+    if (error) return setError(error.message);
 
-    navigate("/dashboard"); // redirect ✔
+    if (data.user) navigate("/dashboard");
   };
 
-  // ----------------------------
-  // LOGIN
-  // ----------------------------
+  // ---------------------------------------------------
+  // NORMAL LOGIN
+  // ---------------------------------------------------
   const handleLogin = async () => {
     setError("");
     setLoading(true);
@@ -80,24 +61,30 @@ export default function SignIn_Up() {
     setLoading(false);
     if (error) return setError(error.message);
 
-    setUser(data.user ?? null);
-    navigate("/dashboard"); // redirect ✔
+    if (data.user) navigate("/dashboard");
   };
 
-  // ----------------------------
-  // LOG OUT
-  // ----------------------------
-  const handleLogOut = async () => {
+  // ---------------------------------------------------
+  // SOCIAL AUTH HANDLERS
+  // ---------------------------------------------------
+  const loginWithProvider = async (provider) => {
+    setError("");
     setLoading(true);
 
-    await supabase.auth.signOut();
-    setUser(null);
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+
     setLoading(false);
+    if (error) return setError(error.message);
   };
 
-  // ----------------------------
+  // ---------------------------------------------------
   // SESSION LISTENER
-  // ----------------------------
+  // ---------------------------------------------------
   useEffect(() => {
     const init = async () => {
       const {
@@ -105,23 +92,27 @@ export default function SignIn_Up() {
       } = await supabase.auth.getSession();
 
       setUser(session?.user ?? null);
+      if (session?.user) navigate("/dashboard");
     };
 
     init();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => setUser(session?.user ?? null)
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        if (session?.user) navigate("/dashboard");
+      }
     );
 
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  // ---------------------------------------------------
+  // UI
+  // ---------------------------------------------------
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50 dark:bg-black">
-      <Card
-        className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200/60 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl"
-        style={{ borderRadius: "20px" }}
-      >
+      <Card className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200/60 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl">
         <h2 className="text-3xl font-semibold text-center mb-6 text-gray-900 dark:text-white">
           SwiftMeta Authentication
         </h2>
@@ -133,7 +124,8 @@ export default function SignIn_Up() {
         {!user ? (
           <>
             <Tabs defaultActiveKey="login" centered tabBarStyle={{ marginBottom: 30 }}>
-              {/* ---------------- LOGIN ---------------- */}
+              
+              {/* LOGIN */}
               <TabPane tab="Login" key="login">
                 <Input
                   size="large"
@@ -166,7 +158,7 @@ export default function SignIn_Up() {
                 </Button>
               </TabPane>
 
-              {/* ---------------- SIGNUP ---------------- */}
+              {/* SIGN UP */}
               <TabPane tab="Create Account" key="signup">
                 <Input
                   size="large"
@@ -182,7 +174,6 @@ export default function SignIn_Up() {
                   prefix={<MailOutlined />}
                   placeholder="Email"
                   className="mb-3 rounded-lg"
-                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -195,42 +186,6 @@ export default function SignIn_Up() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-
-                {/* Social Handles */}
-                <Input
-                  size="large"
-                  placeholder="Spotify URL"
-                  className="mb-3 rounded-lg"
-                  value={spotify}
-                  onChange={(e) => setSpotify(e.target.value)}
-                />
-
-                <Input
-                  size="large"
-                  placeholder="Facebook URL"
-                  className="mb-3 rounded-lg"
-                  value={facebook}
-                  onChange={(e) => setFacebook(e.target.value)}
-                />
-
-                <Input
-                  size="large"
-                  placeholder="Github URL"
-                  className="mb-4 rounded-lg"
-                  value={github}
-                  onChange={(e) => setGithub(e.target.value)}
-                />
-
-                {/* GOOGLE (commented out) */}
-                {/*
-                <Button
-                  block
-                  className="mb-3 rounded-full"
-                  onClick={handleGoogleLogin}
-                >
-                  Sign up with Google
-                </Button>
-                */}
 
                 <Button
                   type="primary"
@@ -245,25 +200,56 @@ export default function SignIn_Up() {
                 </Button>
               </TabPane>
             </Tabs>
-          </>
-        ) : (
-          <>
-            <p className="text-lg text-center mb-5 text-gray-800 dark:text-gray-200">
-              Welcome, <span className="font-medium">{user.email}</span>
-            </p>
 
-            <Button
-              danger
-              block
-              size="large"
-              loading={loading}
-              className="rounded-full"
-              onClick={handleLogOut}
-            >
-              Logout
-            </Button>
+            <Divider>Or continue with</Divider>
+
+            {/* SOCIAL AUTH BUTTONS */}
+            <div className="grid grid-cols-2 gap-3 mt-4">
+
+              {/* GitHub */}
+              <Button
+                icon={<GithubOutlined />}
+                size="large"
+                className="w-full rounded-lg"
+                onClick={() => loginWithProvider("github")}
+              >
+                GitHub
+              </Button>
+
+              {/* Facebook */}
+              <Button
+                icon={<FacebookOutlined />}
+                size="large"
+                className="w-full rounded-lg"
+                onClick={() => loginWithProvider("facebook")}
+              >
+                Facebook
+              </Button>
+
+              {/* Spotify */}
+              <Button
+                icon={<RiSpotifyFill size={18} color="#1DB954" />}
+                size="large"
+                className="w-full rounded-lg"
+                onClick={() => loginWithProvider("spotify")}
+              >
+                Spotify
+              </Button>
+
+              {/* Google (Commented Out) */}
+              {/*
+              <Button
+                icon={<GoogleOutlined />}
+                size="large"
+                className="w-full rounded-lg"
+                onClick={() => loginWithProvider("google")}
+              >
+                Google
+              </Button>
+              */}
+            </div>
           </>
-        )}
+        ) : null}
       </Card>
     </div>
   );
