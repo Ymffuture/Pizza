@@ -143,15 +143,15 @@ export default function Build() {
   );
 
   return (
-    <div className="min-h-screen p-6 bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto space-y-8">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center">
+        <div className="justify-between items-center">
           <div>
-            <h1 className="text-4xl font-semibold">Build a Website</h1>
+            <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">Build a Website and make it yours. </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              HTML / CSS / JS Playground — Apple-Inspired UI
+              HTML / CSS / JS Playground — SwiftMeta
             </p>
           </div>
 
@@ -162,7 +162,7 @@ export default function Build() {
                 checked={livePreview}
                 onChange={(e) => setLivePreview(e.target.checked)}
               />
-              Live Preview
+              🔴 Live Preview
             </label>
 
             <button
