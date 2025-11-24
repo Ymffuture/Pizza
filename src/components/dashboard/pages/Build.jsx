@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Code2, Palette, FileCode, Play, Download, Eye } from "lucide-react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 const defaultHTML = `<!-- index.html -->
 <h1 id="title">Hello from SwiftMeta Build</h1>
@@ -192,31 +194,67 @@ export default function Build() {
           {/* LEFT — EDITOR */}
           <div>
             {activeTab === "html" && (
-              <textarea
-                value={html}
-                onChange={(e) => setHtml(e.target.value)}
-                spellCheck={false}
-                className="w-full h-96 p-4 bg-white dark:bg-white/10 font-mono text-sm rounded-xl resize-none"
-              />
-            )}
+  <div className="relative h-96 rounded-xl overflow-hidden bg-white/5">
+    <SyntaxHighlighter
+      language="html"
+      style={atomOneDark}
+      className="absolute inset-0 p-4 pointer-events-none opacity-80"
+      showLineNumbers
+    >
+      {html}
+    </SyntaxHighlighter>
+
+    <textarea
+      value={html}
+      onChange={(e) => setHtml(e.target.value)}
+      spellCheck={false}
+      className="absolute inset-0 p-4 font-mono text-sm bg-transparent text-transparent caret-white outline-none resize-none"
+    />
+  </div>
+)}
+
 
             {activeTab === "css" && (
-              <textarea
-                value={css}
-                onChange={(e) => setCss(e.target.value)}
-                spellCheck={false}
-                className="w-full h-96 p-4 bg-white dark:bg-white/10 font-mono text-sm rounded-xl resize-none"
-              />
-            )}
+  <div className="relative h-96 rounded-xl overflow-hidden bg-white/5">
+    <SyntaxHighlighter
+      language="css"
+      style={atomOneDark}
+      className="absolute inset-0 p-4 pointer-events-none opacity-80"
+      showLineNumbers
+    >
+      {css}
+    </SyntaxHighlighter>
+
+    <textarea
+      value={css}
+      onChange={(e) => setCss(e.target.value)}
+      spellCheck={false}
+      className="absolute inset-0 p-4 font-mono text-sm bg-transparent text-transparent caret-white outline-none resize-none"
+    />
+  </div>
+)}
+
 
             {activeTab === "js" && (
-              <textarea
-                value={js}
-                onChange={(e) => setJs(e.target.value)}
-                spellCheck={false}
-                className="w-full h-96 p-4 bg-white dark:bg-white/10 font-mono text-sm rounded-xl resize-none"
-              />
-            )}
+  <div className="relative h-96 rounded-xl overflow-hidden bg-white/5">
+    <SyntaxHighlighter
+      language="javascript"
+      style={atomOneDark}
+      className="absolute inset-0 p-4 pointer-events-none opacity-80"
+      showLineNumbers
+    >
+      {js}
+    </SyntaxHighlighter>
+
+    <textarea
+      value={js}
+      onChange={(e) => setJs(e.target.value)}
+      spellCheck={false}
+      className="absolute inset-0 p-4 font-mono text-sm bg-transparent text-transparent caret-white outline-none resize-none"
+    />
+  </div>
+)}
+
           </div>
 
           {/* RIGHT — Preview + Console */}
