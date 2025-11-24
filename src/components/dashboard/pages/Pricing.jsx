@@ -1,4 +1,4 @@
-import BlogPages from "../../BlogPages";
+import BlogPages from "../../../BlogPages";
 
 export default function Pricing() {
   return (
