@@ -18,8 +18,8 @@ const LargeProjects = lazy(() => import("./pages/LargeProjects"));
 const ServerAPI = lazy(() => import("./pages/ServerAPI"));
 const Home = lazy(() => import("./Home"));
 const Build = lazy(() =>import("./components/dashboard/pages/Build")) ;
-const Pricing lazy(() =>import("./components/dashboard/pages/Pricing")) ;
-const FreeProjects lazy(() =>import("./components/dashboard/pages/FreeProjects"));
+const Pricing = lazy(() =>import("./components/dashboard/pages/Pricing")) ;
+const FreeProjects = lazy(() =>import("./components/dashboard/pages/FreeProjects"));
 
 const Loader = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-transparent">
