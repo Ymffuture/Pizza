@@ -194,7 +194,7 @@ export default function Build() {
           {/* LEFT — EDITOR */}
           <div>
             {activeTab === "html" && (
-  <div className="relative h-[500px] rounded-xl overflow-hidden bg-white/5">
+  <div className="relative h-[700px] rounded-xl overflow-hidden bg-white/5">
   <div className="absolute inset-0 overflow-auto">
     <SyntaxHighlighter
       language="html"
@@ -211,7 +211,7 @@ export default function Build() {
     value={html}
     onChange={(e) => setHtml(e.target.value)}
     spellCheck={false}
-    className="absolute inset-0 overflow-auto p-4 font-mono text-sm 
+    className="inset-0 overflow-auto p-4 font-mono text-sm 
                bg-transparent text-transparent caret-white
                outline-none resize-none"
   />
