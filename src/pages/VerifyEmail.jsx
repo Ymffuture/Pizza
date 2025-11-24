@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { api } from "../api";
 import { useLocation, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast} from "react-hot-toast";
 
 export default function VerifyEmail() {
   const loc = useLocation();
