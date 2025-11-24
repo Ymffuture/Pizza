@@ -194,65 +194,83 @@ export default function Build() {
           {/* LEFT — EDITOR */}
           <div>
             {activeTab === "html" && (
-  <div className="relative h-96 rounded-xl overflow-hidden bg-white/5">
+  <div className="relative h-[500px] rounded-xl overflow-hidden bg-white/5">
+  <div className="absolute inset-0 overflow-auto">
     <SyntaxHighlighter
       language="html"
       style={atomOneDark}
-      className="absolute inset-0 p-4 pointer-events-none opacity-80"
+      customStyle={{ background: "transparent", padding: "16px" }}
       showLineNumbers
+      wrapLongLines={true}
     >
       {html}
     </SyntaxHighlighter>
-
-    <textarea
-      value={html}
-      onChange={(e) => setHtml(e.target.value)}
-      spellCheck={false}
-      className="absolute inset-0 p-4 font-mono text-sm bg-transparent text-transparent caret-white outline-none resize-none"
-    />
   </div>
+
+  <textarea
+    value={html}
+    onChange={(e) => setHtml(e.target.value)}
+    spellCheck={false}
+    className="absolute inset-0 overflow-auto p-4 font-mono text-sm 
+               bg-transparent text-transparent caret-white
+               outline-none resize-none"
+  />
+</div>
+
 )}
 
 
             {activeTab === "css" && (
-  <div className="relative h-96 rounded-xl overflow-hidden bg-white/5">
+<div className="relative h-[500px] rounded-xl overflow-hidden bg-white/5">
+  <div className="absolute inset-0 overflow-auto">
     <SyntaxHighlighter
       language="css"
       style={atomOneDark}
-      className="absolute inset-0 p-4 pointer-events-none opacity-80"
+      customStyle={{ background: "transparent", padding: "16px" }}
       showLineNumbers
+      wrapLongLines={true}
     >
       {css}
     </SyntaxHighlighter>
-
-    <textarea
-      value={css}
-      onChange={(e) => setCss(e.target.value)}
-      spellCheck={false}
-      className="absolute inset-0 p-4 font-mono text-sm bg-transparent text-transparent caret-white outline-none resize-none"
-    />
   </div>
+
+  <textarea
+    value={css}
+    onChange={(e) => setCss(e.target.value)}
+    spellCheck={false}
+    className="absolute inset-0 overflow-auto p-4 font-mono text-sm 
+               bg-transparent text-transparent caret-white
+               outline-none resize-none"
+  />
+</div>
+
 )}
 
 
             {activeTab === "js" && (
-  <div className="relative h-96 rounded-xl overflow-hidden bg-white/5">
+  <div className="relative h-[500px] rounded-xl overflow-hidden bg-white/5">
+  <div className="absolute inset-0 overflow-auto">
     <SyntaxHighlighter
       language="javascript"
       style={atomOneDark}
-      className="absolute inset-0 p-4 pointer-events-none opacity-80"
+      customStyle={{ background: "transparent", padding: "16px" }}
       showLineNumbers
+      wrapLongLines={true}
     >
       {js}
     </SyntaxHighlighter>
-
-    <textarea
-      value={js}
-      onChange={(e) => setJs(e.target.value)}
-      spellCheck={false}
-      className="absolute inset-0 p-4 font-mono text-sm bg-transparent text-transparent caret-white outline-none resize-none"
-    />
   </div>
+
+  <textarea
+    value={js}
+    onChange={(e) => setJs(e.target.value)}
+    spellCheck={false}
+    className="absolute inset-0 overflow-auto p-4 font-mono text-sm 
+               bg-transparent text-transparent caret-white
+               outline-none resize-none"
+  />
+</div>
+
 )}
 
           </div>
