@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 import SignApp from "./layouts/SignIn_Up";
-
+import Blog from "./blog/Posts" ;
 // Dashboard
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./components/dashboard/Dashboard";
@@ -100,7 +100,7 @@ const App = () => {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="build" element={<Build/>} />
-            <Route path="pricing" element={<Pricing/>} />
+            <Route path="pricing" element={<Blog/>} />
             <Route path="projects" element={<FreeProjects/>} />
           </Route>
 
