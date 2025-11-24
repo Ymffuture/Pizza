@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-
+import {
+  Code2,
+  Palette,
+  FileCode,
+  Play,
+  Download,
+  Eye,
+} from "lucide-react";
+ 
 /**
  * Build page - simple HTML/CSS/JS playground that runs code in a sandboxed iframe.
  *
@@ -197,154 +205,149 @@ ${consoleBridge}
   const clearLogs = () => setLogs([]);
 
   return (
-    <div className="min-h-screen p-6 bg-gray-50 dark:bg-[#0b0b0c] text-gray-900 dark:text-gray-100">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="min-h-screen p-6 bg-gradient-to-b 
+      from-[#f5f5f7] to-[#e9eaec] 
+      dark:from-[#0b0b0c] dark:to-[#0b0b0c] 
+      text-gray-900 dark:text-gray-100 select-none">
+
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* HEADER */}
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-semibold">Build a Website</h1>
+            <h1 className="text-4xl font-semibold tracking-tight">
+              Build a Website
+            </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              Live HTML/CSS/JS playground — sandboxed preview and console.
+              Live HTML/CSS/JS Playground — macOS-Inspired Editor
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 text-sm">
+            <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input
                 type="checkbox"
-                checked={livePreview}
-                onChange={(e) => setLivePreview(e.target.checked)}
-                className="h-4 w-4"
+                className="h-4 w-4 rounded"
               />
               Live preview
             </label>
 
-            <button
-              onClick={handleRun}
-              className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg shadow-sm text-sm"
-              title="Run (Ctrl/Cmd + Enter)"
-            >
-              Run (⏎)
+            <button className="px-4 py-2 bg-black dark:bg-white 
+              text-white dark:text-black rounded-xl text-sm shadow-sm 
+              hover:opacity-80 active:scale-95 transition-all flex items-center gap-2">
+              <Play size={16} /> Run
             </button>
 
-            <button
-              onClick={handleDownload}
-              className="px-3 py-2 border rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              Download
+            <button className="px-3 py-2 border dark:border-white/20 rounded-xl text-sm
+              hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+              <Download size={16} />
             </button>
           </div>
         </header>
 
-        {/* Main layout: editors on left, preview right */}
+        {/* MAIN LAYOUT */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Editors */}
-          <div className="space-y-4">
-            {/* HTML editor */}
-            <div className="border rounded-xl overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-2 bg-white/60 dark:bg-gray-900/60 border-b">
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">HTML</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">index.html</span>
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Auto-indent · UTF-8</div>
+
+          {/* LEFT SIDE – EDITORS */}
+          <div className="space-y-5">
+
+            {/* macOS Tabs */}
+            <div className="flex gap-2 border-b border-gray-200 dark:border-gray-800 pb-2">
+              <button className="px-4 py-2 bg-white/80 dark:bg-white/10 shadow-sm rounded-xl flex items-center gap-2 text-sm">
+                <FileCode size={16} /> HTML
+              </button>
+              <button className="px-4 py-2 hover:bg-white/70 dark:hover:bg-white/10 rounded-xl flex items-center gap-2 text-sm">
+                <Palette size={16} /> CSS
+              </button>
+              <button className="px-4 py-2 hover:bg-white/70 dark:hover:bg-white/10 rounded-xl flex items-center gap-2 text-sm">
+                <Code2 size={16} /> JS
+              </button>
+            </div>
+
+            {/* HTML Editor */}
+            <div className="backdrop-blur-xl bg-white/40 dark:bg-white/5 border border-black/10 dark:border-white/10 shadow-xl rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 border-b dark:border-white/10">
+                <span className="font-mono text-xs">index.html</span>
+                <span className="text-xs text-gray-400">UTF-8</span>
               </div>
+
               <textarea
                 spellCheck={false}
-                value={html}
-                onChange={(e) => setHtml(e.target.value)}
-                className="w-full h-44 md:h-56 p-4 bg-white/40 dark:bg-black/60 text-sm font-mono outline-none resize-none"
+                className="w-full h-52 p-4 bg-transparent text-sm font-mono outline-none resize-none"
               />
             </div>
 
-            {/* CSS editor */}
-            <div className="border rounded-xl overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-2 bg-white/60 dark:bg-gray-900/60 border-b">
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">CSS</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">style.css</span>
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Scoped to preview</div>
+            {/* CSS Editor */}
+            <div className="backdrop-blur-xl bg-white/40 dark:bg-white/5 border border-black/10 dark:border-white/10 shadow-xl rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 border-b dark:border-white/10">
+                <span className="font-mono text-xs">style.css</span>
+                <span className="text-xs text-gray-400">Scoped</span>
               </div>
+
               <textarea
                 spellCheck={false}
-                value={css}
-                onChange={(e) => setCss(e.target.value)}
-                className="w-full h-36 p-4 bg-white/40 dark:bg-black/60 text-sm font-mono outline-none resize-none"
+                className="w-full h-40 p-4 bg-transparent text-sm font-mono outline-none resize-none"
               />
             </div>
 
-            {/* JS editor */}
-            <div className="border rounded-xl overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-2 bg-white/60 dark:bg-gray-900/60 border-b">
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">JS</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">script.js</span>
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">Sandboxed</div>
+            {/* JS Editor */}
+            <div className="backdrop-blur-xl bg-white/40 dark:bg-white/5 border border-black/10 dark:border-white/10 shadow-xl rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 border-b dark:border-white/10">
+                <span className="font-mono text-xs">script.js</span>
+                <span className="text-xs text-gray-400">Sandboxed</span>
               </div>
+
               <textarea
                 spellCheck={false}
-                value={js}
-                onChange={(e) => setJs(e.target.value)}
-                className="w-full h-36 p-4 bg-white/40 dark:bg-black/60 text-sm font-mono outline-none resize-none"
+                className="w-full h-40 p-4 bg-transparent text-sm font-mono outline-none resize-none"
               />
             </div>
           </div>
 
-          {/* Preview + Console */}
-          <div className="space-y-4">
-            <div className="border rounded-xl overflow-hidden bg-white dark:bg-gray-900/60">
-              <div className="flex items-center justify-between px-4 py-2 bg-white/60 dark:bg-gray-900/60 border-b">
-                <div className="text-sm text-gray-600 dark:text-gray-300">Preview</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">{isRunning ? "Running…" : "Idle"}</div>
+          {/* RIGHT SIDE – PREVIEW & CONSOLE */}
+          <div className="space-y-5">
+            
+            {/* PREVIEW */}
+            <div className="backdrop-blur-xl bg-white/40 dark:bg-white/5 shadow-xl border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 border-b dark:border-white/10">
+                <span className="text-sm flex items-center gap-2">
+                  <Eye size={16} /> Live Preview
+                </span>
+                <span className="text-xs text-gray-500">Idle</span>
               </div>
 
               <div className="w-full h-[420px] bg-gray-50 dark:bg-black">
-                {/* sandboxed iframe */}
-                <iframe
-                  ref={iframeRef}
-                  title="preview"
-                  className="w-full h-full border-0 bg-white dark:bg-black"
-                  sandbox="allow-scripts allow-forms"
-                  srcDoc={livePreview ? undefined : undefined} // we use blob URLs; srcDoc left undefined
-                />
+                <iframe className="w-full h-full border-0 bg-transparent" />
               </div>
             </div>
 
-            {/* Console */}
-            <div className="border rounded-xl overflow-hidden bg-white dark:bg-gray-900/60">
-              <div className="flex items-center justify-between px-4 py-2 bg-white/60 dark:bg-gray-900/60 border-b">
-                <div className="text-sm text-gray-600 dark:text-gray-300">Console</div>
-                <div className="flex items-center gap-2">
-                  <button onClick={clearLogs} className="text-xs text-gray-500 hover:underline">Clear</button>
-                  <span className="text-xs text-gray-400">{logs.length} logs</span>
-                </div>
+            {/* CONSOLE */}
+            <div className="backdrop-blur-xl bg-white/40 dark:bg-white/5 shadow-xl border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 border-b dark:border-white/10">
+                <span className="text-sm">Console</span>
+                <button className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
+                  Clear
+                </button>
               </div>
 
-              <div className="px-4 py-3 h-40 overflow-auto text-sm bg-black/5 dark:bg-white/2 font-mono">
-                {logs.length === 0 ? (
-                  <div className="text-gray-500 dark:text-gray-400">No logs yet — console.log will appear here.</div>
-                ) : (
-                  logs.slice().reverse().map((l) => (
-                    <div key={l.id} className="mb-2">
-                      <span className={`inline-block px-2 py-0.5 rounded text-xs mr-2 ${l.type === 'error' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-200'}`}>
-                        {l.type}
-                      </span>
-                      <span className="text-xs">{l.text}</span>
-                    </div>
-                  ))
-                )}
+              <div className="p-4 h-40 overflow-y-auto font-mono text-xs text-gray-600 dark:text-gray-300">
+                <p className="text-gray-400">No logs yet...</p>
               </div>
             </div>
+
           </div>
         </div>
 
-        <div className="mt-6 text-xs text-gray-500 dark:text-gray-400">
-          Tip: Press <strong>Ctrl/Cmd + Enter</strong> to run. Use Live Preview for auto updates.
-        </div>
+        {/* FOOTNOTE */}
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          Tip: Press <b>Command/Ctrl + Enter</b> to run your code.
+        </p>
+
       </div>
+
     </div>
   );
 }
+
 
  
