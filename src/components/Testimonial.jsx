@@ -25,10 +25,14 @@ const names_randomly = [
 
 // Example testimonial texts
 const texts = [
-  "Foody is the best. Besides the many and delicious meals, it always delivers super fast and fresh!",
-  "The meals are absolutely delicious and always arrive hot and on time. Highly recommend Foody!",
-  "Great service, fantastic food. Love the design and ease of the app too!",
-  "I always order from here. The food quality and delivery are perfect every time!",
+  "SwiftMeta helped me design a modern, responsive website that looks stunning on all devices!",
+  "The customization tools are clean and intuitive. I created a full website without touching a single line of code.",
+  "I love how smooth the editor is — fast, minimal, and beautifully designed. It feels like using Apple-level software.",
+  "My site was live in minutes. The templates, animations, and layout options are extremely high-quality!",
+  "Building pages feels natural. Drag, drop, and everything aligns perfectly without breaking the layout.",
+  "The design system is elegant and consistent. Every component feels premium and well-crafted.",
+  "I migrated my old site in a day. SwiftMeta’s editor made everything easier and far more professional.",
+  "Animations, colors, and typography look incredible — my website finally feels like a real brand."
 ];
 
 const Testimonial = () => {
