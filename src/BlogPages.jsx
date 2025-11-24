@@ -10,7 +10,7 @@ import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import { setToken } from "./api";
 
-export default function App(){
+export default function BlogPages(){
   useEffect(()=>{
     const t = localStorage.getItem("token");
     setToken(t);
