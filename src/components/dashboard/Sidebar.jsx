@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../layouts/lib/supabaseClient";
 import SidebarItem from "./SidebarItem";
-import Build from "./pages/Build";
-import Pricing from "./pages/Pricing";
-import FreeProjects from "./pages/FreeProjects";
 import {
   Globe,
   BadgeDollarSign,
@@ -64,9 +61,9 @@ export default function Sidebar() {
           )}
 
           <div className="flex flex-col gap-2">
-            <SidebarItem label={<Build/>} to="/dashboard/build" icon={<Globe />} />
-            <SidebarItem label={<Pricing/>} to="/dashboard/pricing" icon={<BadgeDollarSign />} />
-            <SidebarItem label={<FreeProjects/>} to="/dashboard/projects" icon={<FolderOpen />} />
+            <SidebarItem label="Build Website" to="/dashboard/build" icon={<Globe />} />
+            <SidebarItem label="Price Range" to="/dashboard/pricing" icon={<BadgeDollarSign />} />
+            <SidebarItem label="Free Projects" to="/dashboard/projects" icon={<FolderOpen />} />
           </div>
         </div>
 
