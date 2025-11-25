@@ -83,7 +83,7 @@ const App = () => {
             <Route path="projects" element={<FreeProjects />} />
 
             {/* NESTED ROUTES INSIDE PRICING */}
-            <Route path="pricing" element={<Pricing />}>
+            <Route path="blog" element={<Pricing />}>
               <Route path="feed" element={<Feed />} />
               <Route path="blog" element={<NavBlog />} />
               <Route path="register" element={<Register />} />
