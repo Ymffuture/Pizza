@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { api, setToken } from "../api";
-import {toast} from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function Profile(){
   const [user, setUser] = useState(null);
