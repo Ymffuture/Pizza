@@ -14,10 +14,10 @@ export default function NavBlog() {
         </Link>
 
         <div className="flex gap-4">
-          <Link className="hover:text-blue-500" to="dashboard/pricing/login">Login</Link>
-          <Link className="hover:text-blue-500" to="/register">Register</Link>
-          <Link className="hover:text-blue-500" to="/new">New Post</Link>
-          <Link className="hover:text-blue-500" to="/profile">Profile</Link>
+          <Link className="hover:text-blue-500" to="dashboard/blog/login">Login</Link>
+          <Link className="hover:text-blue-500" to="dashboard/blog/register">Register</Link>
+          <Link className="hover:text-blue-500" to="dashboard/blog/new">New Post</Link>
+          <Link className="hover:text-blue-500" to="dashboard/blog/profile">Profile</Link>
         </div>
       </div>
     </nav>
