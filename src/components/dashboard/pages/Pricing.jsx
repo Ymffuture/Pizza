@@ -1,4 +1,4 @@
-import BlogPages from "../NavBlog";
+import BlogPages from "../../NavBlog";
 
 export default function Pricing() {
   return (
