@@ -7,6 +7,15 @@ import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 import SignApp from "./layouts/SignIn_Up";
 
+import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
+import LoginPhone from "./pages/LoginPhone";
+import Feed from "./pages/Feed";
+import NewPost from "./pages/NewPost";
+import Profile from "./pages/Profile";
+// import NavBlog from "./components/NavBlog";
+import { setToken } from "./api";
+
 // Dashboard
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./components/dashboard/Dashboard";
@@ -75,6 +84,11 @@ const App = () => {
     setTimeout(() => setNavbarLoading(false), 800);
   }, []);
 
+  useEffect(()=>{
+    const t = localStorage.getItem("token");
+    setToken(t);
+  }, []);
+  
   return (
     <Router>
       {/* REAL NAVBAR */}
@@ -104,6 +118,17 @@ const App = () => {
             <Route path="projects" element={<FreeProjects/>} />
           </Route>
 
+      {/* Blog*/} 
+<div style={{ maxWidth: 920, margin: "28px auto", padding: "0 16px" }}>
+        
+          <Route path="/" element={<Feed />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/login" element={<LoginPhone />} />
+          <Route path="/new" element={<NewPost />} />
+          <Route path="/profile" element={<Profile />} />
+        
+      </div> 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
