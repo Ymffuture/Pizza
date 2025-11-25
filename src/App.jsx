@@ -13,10 +13,9 @@ import LoginPhone from "./pages/LoginPhone";
 import Feed from "./pages/Feed";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
-import NavBlog from "./components/NavBlog" ;
+import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
 
-// Dashboard
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./components/dashboard/Dashboard";
 
@@ -39,35 +38,10 @@ const Loader = () => (
       xmlns="http://www.w3.org/2000/svg"
       className="animate-spin text-gray-300 dark:text-gray-700"
     >
-      <circle
-        cx="50"
-        cy="50"
-        r="40"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-        strokeDasharray="250"
-        strokeDashoffset="180"
-      />
-      <circle cx="50" cy="50" r="10" fill="#00E5FF">
-        <animate
-          attributeName="r"
-          values="10;14;10"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-        <animate
-          attributeName="opacity"
-          values="1;0.6;1"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-      </circle>
+      <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="6" fill="none" />
+      <circle cx="50" cy="50" r="10" fill="#00E5FF" />
     </svg>
-    <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide">
-      Loading page...
-    </p>
+    <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm">Loading page...</p>
   </div>
 );
 
@@ -102,22 +76,21 @@ const App = () => {
           <Route path="/server-api" element={<ServerAPI />} />
           <Route path="/signup" element={<SignApp />} />
 
-          {/* BLOG */}
-          
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="build" element={<Build />} />
-            
             <Route path="projects" element={<FreeProjects />} />
-            <Route path="pricing" element={<Pricing/>} >
-            <Route path="/feed" element={<Feed />} />
-          <Route path="/blog" element={<NavBlog />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/login" element={<LoginPhone />} />
-          <Route path="/new" element={<NewPost />} />
-          <Route path="/profile" element={<Profile />} />
+
+            {/* NESTED ROUTES INSIDE PRICING */}
+            <Route path="pricing" element={<Pricing />}>
+              <Route path="feed" element={<Feed />} />
+              <Route path="blog" element={<NavBlog />} />
+              <Route path="register" element={<Register />} />
+              <Route path="verify-email" element={<VerifyEmail />} />
+              <Route path="login" element={<LoginPhone />} />
+              <Route path="new" element={<NewPost />} />
+              <Route path="profile" element={<Profile />} />
             </Route>
           </Route>
 
