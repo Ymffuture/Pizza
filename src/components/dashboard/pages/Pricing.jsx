@@ -1,4 +1,4 @@
-//import BlogPages from "../../NavBlog";
+import Blog from "../../NavBlog";
 
 export default function Pricing() {
   return (
@@ -6,7 +6,7 @@ export default function Pricing() {
       <h1 className="text-3xl font-bold mb-4">SwiftMeta</h1>
       <p className="text-gray-600 dark:text-gray-400">
         
-      
+      <Blog/>
       </p>
     </div>
   );
