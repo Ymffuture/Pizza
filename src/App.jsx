@@ -13,6 +13,7 @@ import LoginPhone from "./pages/LoginPhone";
 import Feed from "./pages/Feed";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
+import NavBlog from "./components/NavBlog" ;
 import { setToken } from "./api";
 
 // Dashboard
@@ -103,6 +104,7 @@ const App = () => {
 
           {/* BLOG */}
           <Route path="/feed" element={<Feed />} />
+          <Route path="/blog" element={<NavBlog />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/login" element={<LoginPhone />} />
