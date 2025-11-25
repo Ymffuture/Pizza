@@ -7,7 +7,7 @@ import LoginPhone from "./pages/LoginPhone";
 import Feed from "./pages/Feed";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
-import Navbar from "./components/Navbar";
+import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
 
 export default function BlogPages(){
@@ -19,7 +19,7 @@ export default function BlogPages(){
   return (
     <>
       <Toaster />
-      <Navbar />
+      <NavBlog />
       <div style={{ maxWidth: 920, margin: "28px auto", padding: "0 16px" }}>
         <Routes>
           <Route path="/" element={<Feed />} />
