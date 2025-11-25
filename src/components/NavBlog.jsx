@@ -1,18 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function NavBlog(){
+export default function NavBlog() {
   return (
-    <nav style={{ background: "#fff", padding: 12, borderBottom: "1px solid #eee" }}>
-      <div style={{ maxWidth: 920, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div>
-          <Link to="/">SwiftMeta Blog</Link>
-        </div>
-        <div style={{ display: "flex", gap: 12 }}>
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
-          <Link to="/new">New Post</Link>
-          <Link to="/profile">Profile</Link>
+    <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 py-3 px-4 rounded-xl shadow-sm">
+      <div className="max-w-4xl mx-auto flex justify-between items-center">
+        
+        <Link
+          to="/"
+          className="text-lg font-semibold text-gray-900 dark:text-white hover:opacity-80"
+        >
+          SwiftMeta Blog
+        </Link>
+
+        <div className="flex gap-4">
+          <Link className="hover:text-blue-500" to="dashboard/pricing/login">Login</Link>
+          <Link className="hover:text-blue-500" to="/register">Register</Link>
+          <Link className="hover:text-blue-500" to="/new">New Post</Link>
+          <Link className="hover:text-blue-500" to="/profile">Profile</Link>
         </div>
       </div>
     </nav>
