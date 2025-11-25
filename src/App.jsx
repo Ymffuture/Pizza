@@ -103,20 +103,22 @@ const App = () => {
           <Route path="/signup" element={<SignApp />} />
 
           {/* BLOG */}
-          <Route path="/feed" element={<Feed />} />
+          
+          {/* DASHBOARD */}
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="build" element={<Build />} />
+            
+            <Route path="projects" element={<FreeProjects />} />
+            <Route path="pricing" element={<Pricing/>} >
+            <Route path="/feed" element={<Feed />} />
           <Route path="/blog" element={<NavBlog />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/login" element={<LoginPhone />} />
           <Route path="/new" element={<NewPost />} />
           <Route path="/profile" element={<Profile />} />
-
-          {/* DASHBOARD */}
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="build" element={<Build />} />
-            <Route path="pricing" element={<Pricing />} />
-            <Route path="projects" element={<FreeProjects />} />
+            </Route>
           </Route>
 
           {/* 404 */}
