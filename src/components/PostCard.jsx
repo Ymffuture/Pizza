@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { api, setToken } from "../api";
-import { toast} from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export default function PostCard({ post, onRefresh }) {
   const [liked, setLiked] = useState(false);
