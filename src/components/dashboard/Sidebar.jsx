@@ -87,7 +87,7 @@ export default function Sidebar() {
           md:hidden fixed bottom-0 left-0 w-full 
           bg-white/80 dark:bg-gray-900/80
           backdrop-blur-xl border-t border-gray-200 dark:border-gray-800
-          flex justify-around py-3
+          flex justify-around py-3 z-20
         "
       >
         {navItems.map((item) => {
