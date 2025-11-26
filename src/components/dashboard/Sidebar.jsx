@@ -12,6 +12,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Dropdown } from "antd";
 import { toast } from "react-hot-toast";
+import { User } from "lucide-react";
 
 export default function Sidebar() {
   const [user, setUser] = useState(null);
@@ -30,7 +31,7 @@ export default function Sidebar() {
 
   const goProfile = () => navigate("/dashboard/profile");
 
-  const mobileMenu = {
+  const _menu = {
     items: [
       {
         key: "profile",
@@ -107,16 +108,16 @@ export default function Sidebar() {
 
         {/* ✅ Mobile profile avatar with dropdown */}
         {user ? (
-          <Dropdown {...mobileMenu} trigger={["click"]} placement="topCenter">
-            <button className="flex flex-col items-center gap-1">
-              <img
-                src={user.user_metadata?.avatar_url || "/default-avatar.png"}
-                alt="Profile"
-                className="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-700"
-              />
-              <span className="text-xs text-gray-500 dark:text-gray-400">You</span>
-            </button>
-          </Dropdown>
+          <Dropdown overlay={_menu} trigger={["click"]} placement="topCenter">
+  <button className="flex flex-col items-center gap-1">
+    <img
+      src={user?.user_metadata?.avatar_url || "/default-avatar.png"}
+      alt="Profile"
+      className="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+    />
+    <span className="text-xs text-gray-500 dark:text-gray-400">You</span>
+  </button>
+</Dropdown>
         ) : (
           <button onClick={() => navigate("/signup")} className="flex flex-col items-center gap-1 text-gray-600 dark:text-gray-300">
             <UserCircle size={22} />
