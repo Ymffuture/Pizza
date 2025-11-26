@@ -104,7 +104,7 @@ export default function Pricing() {
 
         {/* Mobile menu button */}
         <div className="md:hidden">
-          <Dropdown {...mobileMenu}>
+          <Dropdown {mobileMenu}>
             <Menu size={26} className="text-gray-700 dark:text-gray-200 active:scale-95 transition-transform"/>
           </Dropdown>
         </div>
