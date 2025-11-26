@@ -271,31 +271,37 @@ export default function SignIn_Up() {
           </>
         ) : (
           <>
-            <p className="text-lg text-center mb-5 text-gray-800 dark:text-gray-200">
-              Welcome, <span className="font-medium">{user.email}</span>
-            </p>
+  <div className="flex flex-col items-center justify-center space-y-6 py-8">
+    <p className="text-lg text-center text-gray-800 dark:text-gray-200">
+      Welcome, <span className="font-semibold">{user.email}</span>
+    </p>
 
-            <Button
-              danger
-              block
-              size="large"
-              loading={loading}
-              className="rounded-full"
-              onClick={handleLogOut}
-            >
-              Logout
-            </Button>
-            <Button
-              
-              block
-              size="large"
-              loading={loading}
-              className="rounded-full"
-              
-            >
-              <Link to="/dashboard" >Go to Dashboard </Link>
-            </Button>
-          </>
+    <div className="w-full max-w-sm flex flex-col gap-3">
+      <Button
+        danger
+        block
+        size="large"
+        loading={loading}
+        className="rounded-full h-12 text-base font-medium shadow-sm transition hover:scale-[1.01] active:scale-[0.97]"
+        onClick={handleLogOut}
+      >
+        Logout
+      </Button>
+
+      <Button
+        block
+        size="large"
+        loading={loading}
+        className="rounded-full h-12 text-base font-medium bg-black text-white dark:bg-white dark:text-black shadow-sm border-none transition hover:opacity-90 active:scale-[0.97]"
+      >
+        <Link to="/dashboard" className="w-full flex justify-center items-center">
+          Go to Dashboard
+        </Link>
+      </Button>
+    </div>
+  </div>
+</>
+
         )}
       </Card>
     </div>
