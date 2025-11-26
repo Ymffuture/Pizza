@@ -27,7 +27,7 @@ export default function Sidebar() {
   const navItems = [
     { label: "Home", to: "/dashboard", icon: <Home size={20} /> },
     { label: "Build", to: "/dashboard/build", icon: <Globe size={20} /> },
-    { label: "Pricing", to: "/dashboard/pricing", icon: <BadgeDollarSign size={20} /> },
+    { label: "Pricing", to: "/dashboard/blog", icon: <BadgeDollarSign size={20} /> },
     { label: "Projects", to: "/dashboard/projects", icon: <FolderOpen size={20} /> },
   ];
 
@@ -62,7 +62,7 @@ export default function Sidebar() {
 
           <div className="flex flex-col gap-2">
             <SidebarItem label="Build Website" to="/dashboard/build" icon={<Globe />} />
-            <SidebarItem label="Price Range" to="/dashboard/pricing" icon={<BadgeDollarSign />} />
+            <SidebarItem label="Blog" to="/dashboard/blog" icon={<BadgeDollarSign />} />
             <SidebarItem label="Free Projects" to="/dashboard/projects" icon={<FolderOpen />} />
           </div>
         </div>
