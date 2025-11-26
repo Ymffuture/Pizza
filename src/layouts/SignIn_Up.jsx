@@ -16,8 +16,7 @@ import {
   FacebookOutlined,
 } from "@ant-design/icons";
 import { SiSpotify } from "react-icons/si";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link} from "react-router-dom";
 const { TabPane } = Tabs;
 
 export default function SignIn_Up() {
@@ -285,6 +284,16 @@ export default function SignIn_Up() {
               onClick={handleLogOut}
             >
               Logout
+            </Button>
+            <Button
+              
+              block
+              size="large"
+              loading={loading}
+              className="rounded-full"
+              
+            >
+              <Link to="/dashboard" >Go to Dashboard </Link>
             </Button>
           </>
         )}
