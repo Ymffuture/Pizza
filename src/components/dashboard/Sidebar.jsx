@@ -31,26 +31,6 @@ export default function Sidebar() {
 
   const goProfile = () => navigate("/dashboard/profile");
 
-  const _menu = {
-    items: [
-      {
-        key: "profile",
-        label: (
-          <button onClick={goProfile} className="flex items-center gap-2 text-sm">
-            <UserCircle size={16} /> Profile
-          </button>
-        ),
-      },
-      {
-        key: "logout",
-        label: (
-          <button onClick={handleLogout} className="flex items-center gap-2 text-red-500 text-sm">
-            <LogOut size={16} /> Logout
-          </button>
-        ),
-      },
-    ],
-  };
 
   const navItems = [
     { label: "Home", to: "/dashboard", icon: <Home size={20} /> },
@@ -62,7 +42,7 @@ export default function Sidebar() {
   return (
     <>
       {/* DESKTOP */}
-      <aside className="w-72 hidden md:flex flex-col justify-between bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-6">
+      <aside className="w-80 hidden md:flex flex-col justify-between bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-6">
         <div>
           {user && (
             <div className="flex items-center gap-3 mb-8">
@@ -108,16 +88,16 @@ export default function Sidebar() {
 
         {/* ✅ Mobile profile avatar with dropdown */}
         {user ? (
-          <Dropdown overlay={_menu} trigger={["click"]} placement="topCenter">
-  <button className="flex flex-col items-center gap-1">
+          
+  <button onClick={handleLogout} className="flex flex-col items-center gap-1">
     <img
       src={user?.user_metadata?.avatar_url || "/default-avatar.png"}
-      alt="Profile"
+      alt="img"
       className="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
     />
     <span className="text-xs text-gray-500 dark:text-gray-400">You</span>
   </button>
-</Dropdown>
+
         ) : (
           <button onClick={() => navigate("/signup")} className="flex flex-col items-center gap-1 text-gray-600 dark:text-gray-300">
             <UserCircle size={22} />
