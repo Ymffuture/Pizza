@@ -27,7 +27,7 @@ export default function Sidebar() {
   const navItems = [
     { label: "Home", to: "/dashboard", icon: <Home size={20} /> },
     { label: "Build", to: "/dashboard/build", icon: <Globe size={20} /> },
-    { label: "Pricing", to: "/dashboard/blog", icon: <BadgeDollarSign size={20} /> },
+    { label: "Blog", to: "/dashboard/blog", icon: <BadgeDollarSign size={20} /> },
     { label: "Projects", to: "/dashboard/projects", icon: <FolderOpen size={20} /> },
   ];
 
