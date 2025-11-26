@@ -34,7 +34,15 @@ const menu = (
         key: "2",
         label: (
           <span onClick={() => navigate("/large-projects")}>
-            Large Projects
+            Small Projects
+          </span>
+        ),
+      },
+      {
+        key: "3",
+        label: (
+          <span onClick={() => navigate("/signup")}>
+            Log in
           </span>
         ),
       },
