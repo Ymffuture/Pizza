@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import { Dropdown } from "antd";
 import { Menu, FilePlus, User, LogIn, UserPlus } from "lucide-react";
 import { useState, useEffect } from "react";
-import { supabase } from "../../layouts/lib/supabaseClient";
+import { supabase } from "../../../layouts/lib/supabaseClient";
 
 export default function Pricing() {
   const [user, setUser] = useState(null);
