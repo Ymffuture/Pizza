@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Dropdown } from "antd";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { supabase } from "../../layouts/lib/supabaseClient";
+import { supabase } from "../layouts/lib/supabaseClient";
 import { UserCircle, LogOut } from "lucide-react";
 
 export default function Profile() {
