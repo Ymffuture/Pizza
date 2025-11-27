@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { api } from "../api";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Register() {
   const [phone, setPhone] = useState("");
@@ -11,7 +11,6 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
 
-  // CORRECT register submit
   async function onSubmit(e) {
     e.preventDefault();
     setLoading(true);
@@ -28,7 +27,6 @@ export default function Register() {
     }
   }
 
-  // ✅ FIXED image upload logic
   async function handleAvatarUpload(file) {
     const fd = new FormData();
     fd.append("image", file);
@@ -47,12 +45,12 @@ export default function Register() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 dark:bg-black p-5">
+      <Toaster />
       <div className="bg-white dark:bg-gray-900 w-full max-w-sm p-6 rounded-3xl shadow-xl">
         <h2 className="text-2xl font-semibold text-center mb-4 text-black dark:text-white">
           Create Account 🍎
         </h2>
 
-        {/* AVATAR PICK */}
         <div className="flex justify-center mb-5">
           <label className="relative">
             <input
@@ -65,7 +63,7 @@ export default function Register() {
               className="hidden"
             />
             <img
-              src={avatar || "/default-avatar.png"}
+              src={avatar || "https://via.placeholder.com/80?text=Avatar"}
               className="w-20 h-20 rounded-full object-cover border-2 dark:border-gray-700 cursor-pointer"
             />
             <span className="absolute bottom-0 right-0 bg-black text-white text-[10px] px-2 py-1 rounded-full">
@@ -74,7 +72,6 @@ export default function Register() {
           </label>
         </div>
 
-        {/* FORM */}
         <form onSubmit={onSubmit} className="space-y-3">
           <input
             placeholder="Cellphone number"
