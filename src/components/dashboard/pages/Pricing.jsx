@@ -108,11 +108,11 @@ export default function Pricing() {
       <main className="mt-10 min-h-[60vh]">
         <Home />
       </main>
-      {/* Page content */}
+      {/* Page content 
       <main className="mt-10 min-h-[80vh]">
         <Outlet />
       </main>
-
+*/} 
     </div>
   );
 }
