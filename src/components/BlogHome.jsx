@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Heart, Trash2, Pencil, MoreHorizontal, UserCircle, Send } from "lucide-react";
 import { Dropdown } from "antd";
 import { api } from "../api";
@@ -122,7 +122,7 @@ export default function BlogHome() {
         </article>
       ))}
 
-      <Outlet/>
+    
     </div>
   );
 }
