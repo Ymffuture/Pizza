@@ -1,156 +1,197 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Link } from "react-router-dom";
-import { Heart, Send, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import React, { useEffect, useState, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Heart, Trash2, Pencil, MoreHorizontal, Send } from "lucide-react";
+import { Dropdown } from "antd";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { api } from "../api";
 import toast from "react-hot-toast";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const nav = useNavigate();
 
-  // Fetch posts paginated
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
-      const res = await api.get(`/posts?page=${page}&limit=5`);
-      if (res.data.length === 0) setHasMore(false);
-      else setPosts(prev => [...prev, ...res.data]);
+      const r = await api.get(`/posts?page=${page}`);
+      if (r.data.length === 0) {
+        setHasMore(false);
+        return;
+      }
+      setPosts(prev => [...prev, ...r.data]);
     } catch {
       toast.error("Failed to load posts");
     }
-  };
-
-  useEffect(() => {
-    fetchPosts();
   }, [page]);
 
-  // Infinite scroll trigger
-  const fetchMore = () => setPage(prev => prev + 1);
+  useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
-  // Update posts in real-time (poll every 5s)
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      try {
-        const latest = await api.get("/posts/latest");
-        setPosts(prev => {
-          const newPosts = latest.data.filter(lp => !prev.find(p => p._id === lp._id));
-          return [...newPosts, ...prev];
-        });
-      } catch {}
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const updatePostComments = (postId, newComments) => {
+    setPosts(prev =>
+      prev.map(p => (p._id === postId ? { ...p, comments: newComments } : p))
+    );
+  };
+
+  const menu = (post) => (
+    <div className="bg-white dark:bg-black rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 w-36 overflow-hidden text-xs">
+      <button
+        onClick={() => nav(`/dashboard/blog/edit/${post._id}`)}
+        className="flex items-center gap-2 w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
+      >
+        <Pencil size={14}/> Edit
+      </button>
+      <button
+        onClick={async () => {
+          await api.delete(`/posts/${post._id}`);
+          setPosts(posts.filter(p => p._id !== post._id));
+          toast.success("Post deleted");
+        }}
+        className="flex items-center gap-2 w-full px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10"
+      >
+        <Trash2 size={14}/> Delete
+      </button>
+    </div>
+  );
 
   return (
-    <InfiniteScroll
-      dataLength={posts.length}
-      next={fetchMore}
-      hasMore={hasMore}
-      loader={<p className="text-center py-4">Loading...</p>}
-    >
-      {posts.map(post => (
-        <Post key={post._id} post={post} setPosts={setPosts} />
-      ))}
-    </InfiniteScroll>
+    <div className="min-h-screen pb-28 md:pb-5">
+      <InfiniteScroll
+        dataLength={posts.length}
+        next={() => setPage(prev => prev + 1)}
+        hasMore={hasMore}
+        loader={<p className="text-center py-5">Loading...</p>}
+      >
+        {posts.map(post => (
+          <article key={post._id} className="bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800 mb-5 p-5 transition-all hover:shadow-xl max-w-2xl mx-auto">
+
+            {/* AUTHOR + MENU */}
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center gap-3">
+                <img
+                  src={post.author?.avatar || "/default-avatar.png"}
+                  onError={e => (e.currentTarget.src = "/default-avatar.png")}
+                  alt="author"
+                  className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700"
+                />
+                <div>
+                  <p className="text-sm font-semibold">{post.author?.name || "Anonymous"}</p>
+                  <time className="text-[10px] opacity-60">{new Date(post.createdAt).toLocaleString()}</time>
+                </div>
+              </div>
+
+              <Dropdown overlay={menu(post)} trigger={["click"]} placement="bottomRight">
+                <MoreHorizontal size={24} className="cursor-pointer hover:opacity-70 transition"/>
+              </Dropdown>
+            </div>
+
+            {/* POST CONTENT */}
+            <h2 className="text-xl font-bold mb-1">{post.title}</h2>
+            <p className="text-sm opacity-90 whitespace-pre-line">{post.body}</p>
+
+            {/* IMAGE DISPLAY */}
+            {Array.isArray(post.images) && post.images.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+                {post.images.map((img, i) => (
+                  <img
+                    key={i}
+                    src={img}
+                    onError={e => (e.currentTarget.src = "/default-avatar.png")}
+                    alt="post media"
+                    className="w-full min-h-[160px] object-cover rounded-2xl transition-all hover:scale-105 duration-300"
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* ACTION BAR */}
+            <div className="flex justify-between items-center mt-5">
+              <button
+                onClick={async () => {
+                  const r = await api.post(`/posts/${post._id}/toggle-like`);
+                  setPosts(prev =>
+                    prev.map(p => p._id === post._id ? { ...p, likes: Array(r.data.likesCount).fill(1) } : p)
+                  );
+                  toast.success(r.data.liked ? "Liked ❤️" : "Unliked 💔");
+                }}
+                className="flex items-center gap-2 text-sm font-medium"
+              >
+                <Heart size={18} fill={post.likes?.length ? "currentColor" : "none"} /> 
+                {post.likes?.length || 0}
+              </button>
+
+              <Link to={`/posts/${post._id}`} className="text-xs opacity-60 hover:underline">
+                {post.comments?.length || 0} comments
+              </Link>
+            </div>
+
+            {/* COMMENT BOX */}
+            <div className="mt-4 border-t border-gray-100 dark:border-gray-800 pt-3">
+              <CommentBox postId={post._id} onCommentUpdate={updatePostComments} />
+            </div>
+
+          </article>
+        ))}
+      </InfiniteScroll>
+    </div>
   );
 }
 
-function Post({ post, setPosts }) {
-  const [comments, setComments] = useState(post.comments || []);
+function CommentBox({ postId, onCommentUpdate }) {
   const [text, setText] = useState("");
+  const [comments, setComments] = useState([]);
 
-  const handleLike = async () => {
-    try {
-      const r = await api.post(`/posts/${post._id}/toggle-like`);
-      setPosts(prev => prev.map(p => 
-        p._id === post._id ? { ...p, likes: r.data.likes } : p
-      ));
-    } catch {
-      toast.error("Failed to like post");
-    }
-  };
+  useEffect(() => {
+    api.get(`/posts/${postId}`).then(r => {
+      const data = r.data.comments || [];
+      setComments(data);
+      onCommentUpdate(postId, data);
+    });
+  }, [postId, onCommentUpdate]);
 
-  const sendComment = async () => {
+  async function send() {
     if (!text.trim()) return;
     try {
-      const r = await api.post(`/posts/${post._id}/comments`, { text });
-      setComments(prev => [...prev, r.data]);
+      const r = await api.post(`/posts/${postId}/comments`, { text });
+      const newComments = [...comments, r.data];
+      setComments(newComments);
+      onCommentUpdate(postId, newComments);
       setText("");
     } catch {
       toast.error("Failed to post comment");
     }
-  };
+  }
 
   return (
-    <article className="bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800 mb-5 p-5 max-w-2xl mx-auto transition-all hover:shadow-xl">
-      
-      {/* Author */}
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center gap-3">
-          <img
-            src={post.author?.avatar || "/default-avatar.png"}
-            onError={(e) => e.target.src = "/default-avatar.png"}
-            className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700"
-          />
-          <div>
-            <p className="text-sm font-semibold">{post.author?.name || "Anonymous"}</p>
-            <time className="text-[10px] opacity-60">{new Date(post.createdAt).toLocaleString()}</time>
-          </div>
-        </div>
-      </div>
-
-      {/* Content */}
-      <h2 className="text-xl font-bold mb-1">{post.title}</h2>
-      <p className="text-sm opacity-90 whitespace-pre-line">{post.body}</p>
-
-      {/* Images */}
-      {post.images?.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
-          {post.images.map((img, i) => (
-            <img key={i} src={img} alt="post media" className="w-full min-h-[160px] object-cover rounded-2xl"/>
-          ))}
-        </div>
-      )}
-
-      {/* Action Bar */}
-      <div className="flex justify-between items-center mt-5">
-        <button onClick={handleLike} className="flex items-center gap-2 text-sm font-medium">
-          <Heart size={18} fill={post.likes?.length ? "currentColor" : "none"} /> {post.likes?.length || 0}
+    <section>
+      <div className="flex items-center gap-2">
+        <input
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder="Write a comment..."
+          className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-gray-800 text-xs focus:outline-none focus:ring-1"
+        />
+        <button onClick={send} className="bg-black text-white p-2 rounded-full hover:opacity-80 active:scale-95 transition" aria-label="send comment">
+          <Send size={16}/>
         </button>
-        <span className="text-xs opacity-60">{comments.length} comments</span>
       </div>
 
-      {/* Comment Box */}
-      <div className="mt-4 border-t border-gray-100 dark:border-gray-800 pt-3">
-        <div className="flex items-center gap-2">
-          <input
-            value={text}
-            onChange={e => setText(e.target.value)}
-            placeholder="Write a comment..."
-            className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-gray-800 text-xs focus:outline-none focus:ring-1"
-          />
-          <button onClick={sendComment} className="bg-black text-white p-2 rounded-full hover:opacity-80 active:scale-95 transition">
-            <Send size={16}/>
-          </button>
-        </div>
-
-        <div className="mt-3 space-y-2">
-          {comments.map(c => (
-            <div key={c._id} className="flex gap-2 items-start">
-              <img
-                src={c.author?.avatar || "/default-avatar.png"}
-                onError={(e) => e.target.src = "/default-avatar.png"}
-                className="w-7 h-7 rounded-full object-cover border border-gray-300 dark:border-gray-700"
-              />
-              <div className="bg-gray-100 dark:bg-black/50 px-3 py-2 rounded-2xl w-fit max-w-[80%] text-xs">
-                <strong className="block mb-1 text-[11px]">{c.author?.name || "User"}</strong>
-                {c.text}
-              </div>
+      <div className="mt-3 space-y-2">
+        {comments.map(c => (
+          <div key={c._id} className="flex gap-2 items-start">
+            <img
+              src={c.author?.avatar || "/default-avatar.png"}
+              onError={e => (e.currentTarget.src = "/default-avatar.png")}
+              alt="comment author"
+              className="w-7 h-7 rounded-full object-cover border border-gray-300 dark:border-gray-700"
+            />
+            <div className="bg-gray-100 dark:bg-black/50 px-3 py-2 rounded-2xl w-fit max-w-[80%] text-xs">
+              <strong className="block mb-1 text-[11px]">{c.author?.name || "User"}</strong>
+              {c.text}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </article>
+    </section>
   );
 }
