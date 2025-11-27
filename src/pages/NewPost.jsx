@@ -2,190 +2,147 @@ import React, { useState } from "react";
 import { api } from "../api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { ImagePlus, X } from "lucide-react";
+import { PenLine /*, ImagePlus, X*/ } from "lucide-react";
 
 export default function NewPost() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const nav = useNavigate();
 
-  async function upload(file) {
-    const fd = new FormData();
-    fd.append("image", file);
-
-    const token = localStorage.getItem("filebankUser")
-      ? JSON.parse(localStorage.getItem("filebankUser")).role
-      : null;
-
-    const res = await api.post("/uploads/image", fd, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-    });
-
-    return res.data.url;
-  }
+  // ─────────────────────────────────────────────────────────────
+  // IMAGE UPLOAD (Cloudinary) — preserved but disabled for now
+  // const [files, setFiles] = useState([]);
+  //
+  // async function upload(file) {
+  //   const fd = new FormData();
+  //   fd.append("image", file);
+  //
+  //   const token = localStorage.getItem("filebankUser")
+  //     ? JSON.parse(localStorage.getItem("filebankUser")).token
+  //     : null;
+  //
+  //   const res = await api.post("/uploads/image", fd, {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //       ...(token && { Authorization: `Bearer ${token}` }),
+  //     },
+  //   });
+  //
+  //   return res.data.url;
+  // }
+  // ─────────────────────────────────────────────────────────────
 
   async function submit(e) {
     e.preventDefault();
     if (!title.trim() || !body.trim()) {
-      toast.error("Please fill all required fields");
+      toast.error("A title and message are required");
       return;
     }
 
     setUploading(true);
     try {
-      const uploaded = [];
-      for (const file of files) {
-        const url = await upload(file);
-        uploaded.push(url);
-      }
-
       await api.post("/posts", {
         title: title.trim(),
         body: body.trim(),
-        images: uploaded,
+        // images: uploaded,  ← disabled while upload UI is commented
       });
 
-      toast.success("Post created");
+      toast.success("Post shared");
       nav("/");
     } catch (err) {
       console.error(err);
-      toast.error(err?.response?.data?.message || "Failed to create post");
+      toast.error(err?.response?.data?.message || "Could not publish post");
     } finally {
       setUploading(false);
     }
   }
 
-  const removeFile = (name) => {
-    setFiles((prev) => prev.filter((f) => f.name !== name));
-  };
-
   return (
-    <div className="min-h-screen bg-[#F5F5F7] dark:bg-black flex justify-center pt-10 sm:pt-16 px-4">
-      <div
+    <main className="min-h-screen bg-[#F5F5F7] dark:bg-black flex justify-center pt-12 px-4">
+      <section
         className="
-        w-full max-w-2xl
-        bg-white/60 dark:bg-gray-900/40
-        backdrop-blur-2xl
-        border border-gray-200 dark:border-gray-800
-        shadow-xl
-        rounded-2xl
-        p-6 sm:p-8 md:p-10
-        space-y-6
-      "
+          w-full max-w-xl
+          bg-white/50 dark:bg-gray-900/30
+          backdrop-blur-xl
+          border border-gray-200 dark:border-gray-800
+          shadow-lg hover:shadow-xl transition-shadow
+          rounded-3xl
+          p-6 sm:p-8 md:p-10
+          space-y-6
+        "
       >
-        {/* Header */}
-        <h2 className="text-2xl sm:text-3xl font-semibold flex items-center gap-2">
-          <ImagePlus size={26} />
-          Create Post
-        </h2>
+        {/* HEADER */}
+        <header className="flex items-center gap-2">
+          <PenLine size={28} />
+          <h1 className="text-2xl sm:text-3xl font-semibold">
+            New Post
+          </h1>
+        </header>
 
-        {/* Form */}
+        {/* FORM */}
         <form onSubmit={submit} className="space-y-5">
           <input
-            placeholder="Post title"
+            aria-label="Post title"
+            placeholder="Give your post a title..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="
-            w-full
-            text-lg sm:text-xl
-            px-4 py-3
-            rounded-xl
-            bg-gray-100/70 dark:bg-gray-800/70
-            focus:ring-2 focus:ring-blue-500
-            outline-none transition
-          "
+              w-full
+              text-lg font-medium
+              px-4 py-3
+              rounded-2xl
+              bg-gray-100/80 dark:bg-gray-800/40
+              border border-transparent focus:border-blue-500
+              focus:ring-2 focus:ring-blue-500/30
+              outline-none transition-all
+            "
           />
 
           <textarea
-            placeholder="Write something amazing..."
+            aria-label="Post content"
+            placeholder="What's on your mind?"
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            rows={6}
+            rows={5}
             className="
-            w-full
-            text-base sm:text-lg
-            px-4 py-3
-            rounded-xl
-            bg-gray-100/70 dark:bg-gray-800/70
-            focus:ring-2 focus:ring-blue-500
-            outline-none resize-none transition
-          "
+              w-full
+              text-base sm:text-lg
+              px-4 py-3
+              rounded-2xl
+              bg-gray-100/80 dark:bg-gray-800/40
+              border border-transparent focus:border-blue-500
+              focus:ring-2 focus:ring-blue-500/30
+              outline-none resize-none transition-all
+            "
           />
 
-          {/* File upload */}
-          <label
-            className="
-            flex flex-col items-center justify-center
-            w-full
-            h-28 sm:h-36
-            border border-dashed border-gray-300 dark:border-gray-700
-            rounded-xl cursor-pointer
-            hover:bg-gray-50 dark:hover:bg-gray-800/50 transition
-          "
-          >
-            <ImagePlus size={32} className="text-gray-500 mb-2" />
-            <span className="text-sm sm:text-base font-medium text-gray-600 dark:text-gray-400">
-              Upload images
-            </span>
-            <input
-              type="file"
-              multiple
-              onChange={(e) => setFiles(Array.from(e.target.files))}
-              className="hidden"
-            />
-          </label>
+          {/* ─────────────────────────────────────────────────────────
+            IMAGE UPLOAD UI COMMENTED OUT FOR NOW
+          ───────────────────────────────────────────────────────── 
+          <label className="..."> ... </label>
+          {files.length > 0 && <div> ...preview... </div>}
+          ───────────────────────────────────────────────────────── */}
 
-          {/* Preview row */}
-          {files.length > 0 && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 pt-2">
-              {files.map((file) => (
-                <div key={file.name} className="relative group">
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt="preview"
-                    className="w-full aspect-square object-cover rounded-xl border dark:border-gray-700"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeFile(file.name)}
-                    className="
-                    absolute top-1 right-1
-                    bg-white/80 dark:bg-black/60
-                    p-1 rounded-full
-                    opacity-0 group-hover:opacity-100 transition
-                  "
-                  >
-                    <X size={16} className="text-red-500" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Submit button */}
           <button
             type="submit"
+            aria-busy={uploading}
             disabled={uploading}
             className="
-            w-full
-            py-3 sm:py-4
-            rounded-xl
-            bg-black dark:bg-white
-            text-white dark:text-black
-            font-semibold text-lg
-            active:scale-[0.98] transition
-            disabled:opacity-40 disabled:scale-100 disabled:cursor-not-allowed
-          "
+              w-full
+              py-4
+              rounded-2xl
+              bg-black dark:bg-white
+              text-white dark:text-black
+              font-semibold text-lg
+              active:scale-[0.99] transition-transform
+              disabled:opacity-30 disabled:cursor-not-allowed
+            "
           >
-            {uploading ? "Publishing..." : "Publish"}
+            {uploading ? "Posting..." : "Share Post"}
           </button>
         </form>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
