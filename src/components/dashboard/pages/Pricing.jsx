@@ -105,11 +105,11 @@ export default function Pricing() {
         </div>
 
       </nav>
-      <main className="mt-10 min-h-[100vh]">
+      <main className="mt-4 min-h-[40vh]">
         <Outlet />
       </main>
       
-      <main className="mt-10 min-h-[50vh]">
+      <main className="mt-10 min-h-[60vh]">
         <Home />
       </main>
       {/* Page content */} 
