@@ -23,7 +23,7 @@
     "react-markdown": "^8.0.7",
     "remark-gfm": "^3.0.1",
     "lucide-react": "^0.447.0", 
-    
+    "react-infinite-scroll-component": "^6.1.0",
     "@emailjs/browser": "^3.2.0", 
     "react-hot-toast": "^2.4.1", 
     "tailwindcss": "^4.1.7", 
