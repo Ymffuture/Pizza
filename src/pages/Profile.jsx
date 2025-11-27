@@ -1,44 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { api, setToken } from "../api";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { api } from "../api";
+import { LogOut, Image } from "react-icons/fa";
+import { Dropdown } from "antd";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../layouts/lib/supabaseClient";
 
-export default function Profile(){
+export default function Profile() {
   const [user, setUser] = useState(null);
-  const [name, setName] = useState("");
+  const nav = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    setToken(token);
-    async function fetchUser(){
-      try {
-        // server doesn't expose profile route; we can read token payload or call /posts? We will fetch first post author as simple hack
-        const res = await api.get("/posts");
-        const first = res.data.find(p => true);
-        // this is just placeholder: better to add a /auth/me route server-side
-        // For now show name from token subject — skip
-      } catch (err) {}
-    }
-    fetchUser();
-  }, []);
+  useEffect(()=> {
+    supabase.auth.getUser().then(({data})=> setUser(data.user));
+  },[]);
 
-  async function update(){
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return toast.error("Not logged in");
-      const res = await api.put("/auth/profile", { name });
-      toast.success("Saved");
-    } catch (err){ toast.error("Error"); }
-  }
+  const menu = (
+    <div className="bg-white dark:bg-black rounded-2xl shadow-xl overflow-hidden w-40">
+      <Link to="/dashboard/blog/profile">
+        <button className="w-full px-4 py-2 text-left hover:bg-gray-100">
+          <UserCircle size={18}/> Profile
+        </button>
+      </Link>
+      <button onClick={handleLogout} className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50">
+        <LogOut size={18}/> Logout
+      </button>
+    </div>
+  );
 
   return (
-    <div style={{ maxWidth: 640 }}>
-      <h2>Profile</h2>
-      <div>
-        <label>Display name</label>
-        <input value={name} onChange={e=>setName(e.target.value)} />
+    <div className="flex flex-col items-center p-6">
+      <div className="relative">
+        <Dropdown overlay={menu} trigger={["click"]} placement="topCenter">
+          <img 
+            src={user?.user_metadata?.avatar_url || "/default-avatar.png"} 
+            className="w-24 h-24 rounded-full object-cover border dark:border-gray-700 cursor-pointer"
+          />
+        </Dropdown>
       </div>
-      <button onClick={update}>Save</button>
+      <h3 className="text-xl mt-4">{user?.email}</h3>
     </div>
   );
 }
