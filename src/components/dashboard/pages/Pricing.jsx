@@ -3,7 +3,7 @@ import { Dropdown, Button } from "antd";
 import { FilePlus, User, LogIn, UserPlus, MoreHorizontal } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "../../../layouts/lib/supabaseClient";
-import Home from "../../components/BlogHome" ;
+import Home from "../../../components/BlogHome" ;
 export default function Pricing() {
   const [user, setUser] = useState(null);
 
