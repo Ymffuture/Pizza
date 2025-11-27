@@ -55,7 +55,7 @@ export default function BlogHome() {
   );
 
   return (
-    <div className="min-h-screen pb-28 md:pb-5">
+    <div className="min-h-screen pb-28 md:pb-2">
       <InfiniteScroll
         dataLength={posts.length}
         next={() => setPage(prev => prev + 1)}
