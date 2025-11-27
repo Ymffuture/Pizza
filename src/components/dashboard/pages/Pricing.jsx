@@ -3,7 +3,7 @@ import { Dropdown, Button } from "antd";
 import { FilePlus, User, LogIn, UserPlus, MoreHorizontal } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "../../../layouts/lib/supabaseClient";
-
+import Home from "../../components/BlogHome" ;
 export default function Pricing() {
   const [user, setUser] = useState(null);
 
@@ -105,9 +105,11 @@ export default function Pricing() {
         </div>
 
       </nav>
-
-      {/* Page content */}
       <main className="mt-10 min-h-[60vh]">
+        <Home />
+      </main>
+      {/* Page content */}
+      <main className="mt-10 min-h-[80vh]">
         <Outlet />
       </main>
 
