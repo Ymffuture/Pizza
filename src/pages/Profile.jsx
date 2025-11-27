@@ -4,7 +4,7 @@ import { api } from "../api";
 import { LogOut, Image } from "react-icons/fa";
 import { Dropdown } from "antd";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../layouts/lib/supabaseClient";
+import { supabase } from "../layouts/lib/supabaseClient";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
