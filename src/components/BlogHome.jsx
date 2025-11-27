@@ -1,148 +1,131 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Heart, Trash2, Pencil, MoreHorizontal, UserCircle, Send } from "lucide-react";
+import { Heart, Trash2, Pencil, MoreHorizontal, Send } from "lucide-react";
 import { Dropdown } from "antd";
 import { api } from "../api";
 import toast from "react-hot-toast";
 
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const nav = useNavigate();
+  const observer = useRef();
 
-  useEffect(() => {
-    api.get("/posts")
-      .then(r => setPosts(r.data))
-      .catch(() => toast.error("Failed to load posts"));
+  const loadPosts = useCallback(async (p) => {
+    try {
+      const r = await api.get(`/posts?page=${p}&limit=10`);
+      setPosts(prev => p === 1 ? r.data.posts : [...prev, ...r.data.posts]);
+      setHasMore(r.data.hasMore);
+    } catch {
+      toast.error("Failed to load posts");
+    }
   }, []);
 
+  useEffect(() => {
+    loadPosts(page);
+  }, [page, loadPosts]);
+
+  const lastPostRef = useCallback(node => {
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) setPage(prev => prev + 1);
+    });
+    if (node) observer.current.observe(node);
+  }, [hasMore]);
+
+  const updatePost = (id, updates) => {
+    setPosts(prev => prev.map(p => p._id === id ? { ...p, ...updates } : p));
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => loadPosts(1), 30000); // Poll for updates
+    return () => clearInterval(interval);
+  }, [loadPosts]);
+
   const menu = (post) => (
-    <div className="
-      bg-white dark:bg-black rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 
-      w-36 overflow-hidden text-xs
-    ">
-      <button
-        onClick={() => nav(`/dashboard/blog/edit/${post._id}`)}
-        className="flex items-center gap-2 w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
-      >
+    <div className="bg-white dark:bg-black rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 w-36 overflow-hidden text-xs">
+      <button onClick={() => nav(`/dashboard/blog/edit/${post._id}`)} className="flex items-center gap-2 w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800">
         <Pencil size={14}/> Edit
       </button>
-      <button
-        onClick={async () => {
-          await api.delete(`/posts/${post._id}`);
-          setPosts(posts.filter(p => p._id !== post._id));
-          toast.success("Post deleted");
-        }}
-        className="flex items-center gap-2 w-full px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10"
-      >
+      <button onClick={async () => {
+        await api.delete(`/posts/${post._id}`);
+        setPosts(posts.filter(p => p._id !== post._id));
+        toast.success("Post deleted");
+      }} className="flex items-center gap-2 w-full px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10">
         <Trash2 size={14}/> Delete
       </button>
     </div>
   );
 
   return (
-    <div className="pb-28 md:pb-5 overflow-hidden">
-      {posts.map(post => (
+    <div className="pb-28 md:pb-5 overflow-x-hidden">
+      {posts.map((post, i) => (
         <article
+          ref={posts.length === i + 1 ? lastPostRef : null}
           key={post._id}
-          className="
-            bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800
-            mb-5 p-5 transition-all hover:shadow-xl
-            max-w-2xl mx-auto
-          "
+          className="bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800 mb-5 p-5 transition-all hover:shadow-xl max-w-2xl mx-auto animate-fade-in"
         >
-
-          {/* AUTHOR + MENU */}
           <div className="flex justify-between items-start mb-3">
             <div className="flex items-center gap-3">
               <img
-                src={post.author?.avatar || "/default-avatar.png"}
+                src={post.author?.avatar ? `${process.env.REACT_APP_API_URL}${post.author.avatar}` : "/default-avatar.png"}
                 alt="author"
                 className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700"
+                onError={e => e.target.src = "/default-avatar.png"}
               />
               <div>
                 <p className="text-sm font-semibold">{post.author?.name || "Anonymous"}</p>
-                <time className="text-[10px] opacity-60">
-                  {new Date(post.createdAt).toLocaleString()}
-                </time>
+                <time className="text-[10px] opacity-60">{new Date(post.createdAt).toLocaleString()}</time>
               </div>
             </div>
-
             <Dropdown overlay={menu(post)} trigger={["click"]} placement="bottomRight">
               <MoreHorizontal size={24} className="cursor-pointer hover:opacity-70 transition"/>
             </Dropdown>
           </div>
-
-          {/* POST CONTENT */}
           <h2 className="text-xl font-bold mb-1">{post.title}</h2>
           <p className="text-sm opacity-90 whitespace-pre-line">{post.body}</p>
-
-          {/* IMAGE DISPLAY */}
           {post.images?.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
               {post.images.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt="post media"
-                  className="w-full min-h-[160px] object-cover rounded-2xl"
-                />
+                <img key={i} src={`${process.env.REACT_APP_API_URL}${img}`} alt="post media" className="w-full min-h-[160px] object-cover rounded-2xl" />
               ))}
             </div>
           )}
-
-          {/* ACTION BAR */}
           <div className="flex justify-between items-center mt-5">
-
-            {/* LIKE BUTTON */}
-            <button
-              onClick={async () => {
-                const r = await api.post(`/posts/${post._id}/toggle-like`);
-                setPosts(posts.map(p =>
-                  p._id === post._id ? { ...p, likes: Array(r.data.likesCount).fill(1) } : p
-                ));
-                toast.success(r.data.liked ? "Liked ❤️" : "Unliked 💔");
-              }}
-              className="flex items-center gap-2 text-sm font-medium"
-            >
-              <Heart size={18} fill={post.likes?.length ? "currentColor" : "none"} /> 
-              {post.likes?.length || 0}
+            <button onClick={async () => {
+              const r = await api.post(`/posts/${post._id}/toggle-like`);
+              updatePost(post._id, { likes: r.data.likes, likesCount: r.data.likesCount });
+              toast.success(r.data.liked ? "Liked ❤️" : "Unliked 💔");
+            }} className="flex items-center gap-2 text-sm font-medium">
+              <Heart size={18} fill={post.likesCount > 0 ? "currentColor" : "none"} /> {post.likesCount || 0}
             </button>
-
-            {/* COMMENT COUNT PREVIEW */}
-            <Link to={`/posts/${post._id}`} className="text-xs opacity-60 hover:underline">
-              {post.comments?.length || 0} comments
-            </Link>
+            <Link to={`/posts/${post._id}`} className="text-xs opacity-60 hover:underline">{post.commentCount || 0} comments</Link>
           </div>
-
-          {/* COMMENT BOX */}
           <div className="mt-4 border-t border-gray-100 dark:border-gray-800 pt-3">
-            <CommentBox postId={post._id}/>
+            <CommentBox postId={post._id} onCommentAdded={() => updatePost(post._id, { commentCount: (post.commentCount || 0) + 1 })} />
           </div>
-
         </article>
       ))}
-
-    
     </div>
   );
 }
 
-function CommentBox({ postId }) {
+function CommentBox({ postId, onCommentAdded }) {
   const [text, setText] = useState("");
   const [comments, setComments] = useState([]);
 
-  // Load comments from API structure { post, comments }
   useEffect(() => {
-    api.get(`/posts/${postId}`).then(r => setComments(r.data.comments || []));
+    api.get(`/posts/${postId}/comments`).then(r => setComments(r.data));
   }, [postId]);
 
   async function send() {
     if (!text.trim()) return;
-
     try {
       const r = await api.post(`/posts/${postId}/comments`, { text });
       setComments([...comments, r.data]);
       setText("");
+      onCommentAdded();
     } catch {
       toast.error("Failed to post comment");
     }
@@ -151,35 +134,15 @@ function CommentBox({ postId }) {
   return (
     <section>
       <div className="flex items-center gap-2">
-        <input
-          value={text}
-          onChange={e => setText(e.target.value)}
-          placeholder="Write a comment..."
-          className="
-            flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-black/40
-            border border-gray-200 dark:border-gray-800 
-            text-xs focus:outline-none focus:ring-1
-          "
-        />
-
-        <button
-          onClick={send}
-          className="bg-black text-white p-2 rounded-full hover:opacity-80 active:scale-95 transition"
-          aria-label="send comment"
-        >
+        <input value={text} onChange={e => setText(e.target.value)} placeholder="Write a comment..." className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-gray-800 text-xs focus:outline-none focus:ring-1" />
+        <button onClick={send} className="bg-black text-white p-2 rounded-full hover:opacity-80 active:scale-95 transition" aria-label="send comment">
           <Send size={16}/>
         </button>
       </div>
-
-      {/* COMMENTS LIST */}
       <div className="mt-3 space-y-2">
         {comments.map(c => (
-          <div key={c._id} className="flex gap-2 items-start">
-            <img
-              src={c.author?.avatar || "/default-avatar.png"}
-              alt="comment author"
-              className="w-7 h-7 rounded-full object-cover border border-gray-300 dark:border-gray-700"
-            />
+          <div key={c._id} className="flex gap-2 items-start animate-slide-up">
+            <img src={c.author?.avatar ? `${process.env.REACT_APP_API_URL}${c.author.avatar}` : "/default-avatar.png"} alt="comment author" className="w-7 h-7 rounded-full object-cover border border-gray-300 dark:border-gray-700" onError={e => e.target.src = "/default-avatar.png"} />
             <div className="bg-gray-100 dark:bg-black/50 px-3 py-2 rounded-2xl w-fit max-w-[80%] text-xs">
               <strong className="block mb-1 text-[11px]">{c.author?.name || "User"}</strong>
               {c.text}
