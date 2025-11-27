@@ -89,7 +89,7 @@ export default function Sidebar() {
         {/* ✅ Mobile profile avatar with dropdown */}
         {user ? (
           
-  <button onClick={handleLogout} className="flex flex-col items-center gap-1">
+  <button className="flex flex-col items-center gap-1">
     <img
       src={user?.user_metadata?.avatar_url || "/default-avatar.png"}
       alt="img"
@@ -100,7 +100,7 @@ export default function Sidebar() {
 
         ) : (
           <button onClick={() => navigate("/signup")} className="flex flex-col items-center gap-1 text-gray-600 dark:text-gray-300">
-            <UserCircle size={22} />
+            <UserCircle size={28} />
             <span className="text-xs">Sign In</span>
           </button>
         )}
