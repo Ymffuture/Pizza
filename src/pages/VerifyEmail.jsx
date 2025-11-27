@@ -1,41 +1,34 @@
-import React, { useState } from "react";
-import { api } from "../api";
-import { useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate,useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
+import { api } from "../api";
 
-export default function VerifyEmail() {
-  const loc = useLocation();
-  const nav = useNavigate();
-  const [email, setEmail] = useState(loc.state?.email || "");
-  const [code, setCode] = useState("");
-  const [loading, setLoading] = useState(false);
+export default function VerifyEmail(){
+  const nav=useNavigate();
+  const {state}=useLocation();
+  const [code, setCode]=useState("");
 
-  async function onVerify(e){
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await api.post("/auth/verify-email", { email, code });
-      toast.success("Email verified — you can now request phone OTP and login");
-      nav("/login");
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Invalid code");
-    } finally { setLoading(false); }
+  async function verify(){
+    await api.post("/auth/verify-email",{email: state.email, code});
+    toast.success("Verified");
+    nav("/dashboard/blog");
   }
 
   return (
-    <div style={{ maxWidth: 640, margin: "24px auto" }}>
-      <h2>Verify Email</h2>
-      <form onSubmit={onVerify}>
-        <div style={{ marginBottom: 8 }}>
-          <label>Email</label>
-          <input value={email} onChange={e => setEmail(e.target.value)} required />
-        </div>
-        <div style={{ marginBottom: 8 }}>
-          <label>Code</label>
-          <input value={code} onChange={e => setCode(e.target.value)} required />
-        </div>
-        <button disabled={loading}>{loading ? "..." : "Verify"}</button>
-      </form>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-black p-5">
+      <div className="bg-white dark:bg-black/60 p-6 rounded-3xl shadow-xl border dark:border-gray-800 w-full max-w-sm">
+        <h2 className="text-xl font-semibold text-center mb-4">Verify your Email</h2>
+        <input value={code} onChange={e=> setCode(e.target.value)} placeholder="Enter 6-digit OTP"
+          className="w-full text-center px-4 py-3 rounded-full border dark:border-gray-700 dark:bg-black mb-3"
+        />
+        <button onClick={verify} className="w-full py-3 rounded-full font-medium bg-black text-white hover:opacity-90 active:scale-95">
+          Verify
+        </button>
+
+        <p className="text-center text-xs mt-4 text-gray-400">
+          A code was sent to <b>{state.email}</b>
+        </p>
+      </div>
     </div>
   );
 }
