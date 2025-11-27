@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import { Heart, Trash2, Edit3, MoreHorizontal } from "react-icons/fa";
+import { Heart, Trash2, Pencil, MoreHorizontal } from "lucide-react";
+
+import {  Edit3 } from "react-icons/fa";
 import { Dropdown } from "antd";
 import { api } from "../api";
 import toast from "react-hot-toast";
