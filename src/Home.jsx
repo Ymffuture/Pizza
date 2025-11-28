@@ -6,6 +6,7 @@ import Menu from "./components/Menu";
 import Testimonial from "./components/Testimonial";
 import GetApp from "./components/GetApp";
 import Newsletter from "./components/Newsletter";
+import Feed from "./pages/Feed" ;
 import TrustedPartners from "./components/TrustedPartners" ;
 const LazyLoadOnView = ({ children }) => {
   const ref = React.useRef();
@@ -54,7 +55,7 @@ const Home = () => {
         <Hero />
         <Process />
       </LazyLoadOnView>
-
+<Feed/>
       {/* Menu Skeleton */}
       <div className="px-5 lg:px-14 py-10">
         {menuLoading ? (
