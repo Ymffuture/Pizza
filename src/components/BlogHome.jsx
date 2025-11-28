@@ -111,7 +111,7 @@ const Loader = () => (
               <div className="flex items-center gap-3">
                 <img
                   src={post.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
-                  onError={e => (e.currentTarget.src = "/default-avatar.png")}
+                  onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/err.jpg")}
                   alt="author"
                   className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700"
                 />
@@ -153,11 +153,11 @@ const Loader = () => (
                   setPosts(prev =>
                     prev.map(p => p._id === post._id ? { ...p, likes: Array(r.data.likesCount).fill(1) } : p)
                   );
-                  toast.success(r.data.liked ? "Liked ❤️" : "Unliked 💔");
+                  toast.success(r.data.liked ? "Liked post" : "Unliked post");
                 }}
                 className="flex items-center gap-2 text-sm font-medium"
               >
-                <Heart size={18} fill={post.likes?.length ? "currentColor" : "none"} /> 
+                <Heart size={20} fill={post.likes?.length ? "#000" : "none"} /> 
                 {post.likes?.length || 0}
               </button>
 
@@ -222,7 +222,7 @@ function CommentBox({ postId, onCommentUpdate }) {
           <div key={c._id} className="flex gap-2 items-start">
             <img
               src={c.author?.avatar || "/default-avatar.png"}
-              onError={e => (e.currentTarget.src = "/default-avatar.png")}
+              onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/images.jpeg")}
               alt="comment author"
               className="w-7 h-7 rounded-full object-cover border border-gray-300 dark:border-gray-700"
             />
