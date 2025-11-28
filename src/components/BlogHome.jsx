@@ -95,7 +95,7 @@ const Loader = () => (
 );
   
   return (
-    <div className="min-h-screen pb-28 md:pb-2">
+    <div className="min-h-screen pb-28 md:pb-2 w-100">
       <InfiniteScroll
         dataLength={posts.length}
         next={() => setPage(prev => prev + 1)}
