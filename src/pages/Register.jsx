@@ -7,7 +7,7 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null); // store File directly
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
 
@@ -16,7 +16,16 @@ export default function Register() {
     setLoading(true);
 
     try {
-      await api.post("/auth/register", { phone, email, name, avatar });
+      const formData = new FormData();
+      formData.append("phone", phone);
+      formData.append("email", email);
+      formData.append("name", name);
+      if (avatarFile) formData.append("avatar", avatarFile);
+
+      const res = await api.post("/auth/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       toast.success("OTP sent, check your email 📩");
       nav("/dashboard/blog/verify-email", { state: { email } });
     } catch (err) {
@@ -27,28 +36,11 @@ export default function Register() {
     }
   }
 
-  async function handleAvatarUpload(file) {
-    const fd = new FormData();
-    fd.append("image", file);
-
-    try {
-      const res = await api.post("/uploads/image", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      setAvatar(res.data.url);
-      toast.success("Avatar uploaded ✅");
-    } catch (err) {
-      toast.error("Image upload failed ❌");
-      console.error("IMAGE ERROR:", err);
-    }
-  }
-
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 dark:bg-black p-5">
-      
       <div className="bg-white dark:bg-gray-900 w-full max-w-sm p-6 rounded-3xl shadow-xl">
         <h2 className="text-2xl font-semibold text-center mb-4 text-black dark:text-white">
-          Create Account 
+          Create Account
         </h2>
 
         <div className="flex justify-center mb-5">
@@ -56,14 +48,15 @@ export default function Register() {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => {
-                const f = e.target.files[0];
-                if (f) handleAvatarUpload(f);
-              }}
+              onChange={(e) => setAvatarFile(e.target.files[0])}
               className="hidden"
             />
             <img
-              src={avatar || "https://via.placeholder.com/80?text=Avatar"}
+              src={
+                avatarFile
+                  ? URL.createObjectURL(avatarFile)
+                  : "https://via.placeholder.com/80?text=Avatar"
+              }
               className="w-20 h-20 rounded-full object-cover border-2 dark:border-gray-700 cursor-pointer"
             />
             <span className="absolute bottom-0 right-0 bg-black text-white text-[10px] px-2 py-1 rounded-full">
