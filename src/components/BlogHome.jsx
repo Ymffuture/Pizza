@@ -77,7 +77,7 @@ const Loader = () => (
         <animate
           attributeName="r"
           values="10;14;10"
-          dur="1.8s"
+          dur="4.8s"
           repeatCount="indefinite"
         />
         <animate
@@ -95,7 +95,7 @@ const Loader = () => (
 );
   
   return (
-    <div className="min-h-screen pb-28 md:pb-2 mx-auto max-w-[100%] px-4 pt-6 pb-4 ">
+    <div className="min-h-screen pb-28 md:pb-2 mx-auto px-4 pt-6 pb-4 ">
       <InfiniteScroll
         dataLength={posts.length}
         next={() => setPage(prev => prev + 1)}
@@ -103,7 +103,7 @@ const Loader = () => (
         loader={<p className="text-center py-5"><Loader/></p>}
       >
         {posts.map(post => (
-          <article key={post._id} className="bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800 mb-5 p-5 transition-all hover:shadow-xl max-w-2xl mx-auto">
+          <article key={post._id} className="bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800 mb-5 p-5 transition-all hover:shadow-xl mx-auto">
 
             {/* AUTHOR + MENU */}
             <div className="flex justify-between items-start mb-3">
