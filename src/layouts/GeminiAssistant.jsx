@@ -242,7 +242,7 @@ const useConnectionStrength = () => {
           </Tooltip>
         </div>
       </Modal>
-      <Toaster position="bottom-center" />
+      
     </>
   );
 };
