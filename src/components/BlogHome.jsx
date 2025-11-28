@@ -110,7 +110,7 @@ const Loader = () => (
             <div className="flex justify-between items-start mb-3">
               <div className="flex items-center gap-3">
                 <img
-                  src={post.author?.avatar || "/default-avatar.png"}
+                  src={post.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
                   onError={e => (e.currentTarget.src = "/default-avatar.png")}
                   alt="author"
                   className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700"
@@ -137,7 +137,7 @@ const Loader = () => (
                   <img
                     key={i}
                     src={img}
-                    onError={e => (e.currentTarget.src = "/default-avatar.png")}
+                    onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/pp.jpeg")}
                     alt="post media"
                     className="w-full min-h-[160px] object-cover rounded-2xl transition-all hover:scale-105 duration-300"
                   />
