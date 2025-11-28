@@ -176,15 +176,12 @@ useEffect(() => {
               </Link>
             </li>
             <li>
-              Weather update :
-              {weather.warning === "heavy rain" && (
-  <div className="mt-2 px-3 py-1 text-sm rounded-full bg-[#202124] text-white">
-    
-<Umbrella size={18} className="inline mr-1" /> 
- Heavy rain expected today
-  </div>
-)}
-
+              Weather update:
+              {weather?.warning === "heavy rain" && ( // ✅ Now safe
+                <div className="mt-2 px-3 py-1 text-sm rounded-full bg-[#202124] text-white flex items-center justify-center gap-1">
+                  <Umbrella size={18} /> Heavy rain expected today
+                </div>
+)} 
             </li>
           </ul>
         </div>
