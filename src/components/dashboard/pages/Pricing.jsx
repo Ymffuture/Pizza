@@ -13,7 +13,7 @@ export default function Pricing() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    window.location.href = "/";
+    window.location.href = "/signup";
   };
 
   // This is the actual overlay menu component
@@ -62,7 +62,7 @@ export default function Pricing() {
   );
 
   return (
-    <div className="px-5 sm:px-8 md:px-12 py-8 text-gray-900 dark:text-white mx-auto">
+    <div className="text-gray-900 dark:text-white mx-auto w-full">
 
       {/* Hero 
       <header className="text-center space-y-4 mb-8">
@@ -105,11 +105,11 @@ export default function Pricing() {
         </div>
 
       </nav>
-      <main className="mt-4 min-h-[40vh]">
+      <main className="mt-4">
         <Outlet />
       </main>
       
-      <main className="mt-10 min-h-[60vh]">
+      <main className="mt-4">
         <Home />
       </main>
       {/* Page content */} 
