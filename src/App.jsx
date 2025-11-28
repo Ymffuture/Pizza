@@ -125,7 +125,16 @@ const App = () => {
       </Suspense>
 
       <Footer />
-      <Toaster />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          className: "bg-[#202124] text-white", // black background
+          style: {
+            borderRadius: "8px",
+            padding: "12px 16px",
+          },
+        }}
+      />
     </Router>
     
   );
