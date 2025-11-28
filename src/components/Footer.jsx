@@ -38,76 +38,69 @@ const Footer = () => {
   const [weather, setWeather] = useState(null);
   const [loadingWeather, setLoadingWeather] = useState(true);
 
-  useEffect(() => {
-    const cached = localStorage.getItem("footerWeather");
-    const cachedDate = localStorage.getItem("footerWeatherDate");
-    const today = new Date().toDateString();
+useEffect(() => {
+  const cached = localStorage.getItem("footerWeather");
+  const cachedDate = localStorage.getItem("footerWeatherDate");
+  const today = new Date().toDateString();
 
-    const el = document.querySelector("#weatherBox");
+  const el = document.querySelector("#weatherBox");
+  gsap.from(el, { opacity: 0, scale: 0.8, duration: 1, ease: "power3.out" });
 
-    // GSAP intro animation
-    gsap.from(el, { opacity: 0, scale: 0.8, duration: 1, ease: "power3.out" });
+  if (cached && cachedDate === today) {
+    setWeather(JSON.parse(cached));
+    setLoadingWeather(false);
+    return;
+  }
 
-    // Use cached weather if available
-    if (cached && cachedDate === today) {
-      const data = JSON.parse(cached);
-      setWeather(data);
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const { latitude, longitude } = pos.coords;
+
+    try {
+      // 1. fetch hourly forecast
+      const forecastRes = await fetch(
+        `https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&appid=YOUR_API_KEY&units=metric`
+      );
+      const f = await forecastRes.json();
+
+      // 2. detect heavy rain within today's hours
+      const now = Math.floor(Date.now() / 1000);
+      const endOfToday = new Date().setHours(23, 59, 59) / 1000;
+
+      const heavy = f.hourly?.find(
+        (h) =>
+          h.dt >= now &&
+          h.dt <= endOfToday &&
+          h.rain?.["1h"] >= 7 // heavy rain threshold (mm)
+      );
+
+      const info = {
+        temp: Math.round(f.current.temp),
+        icon: f.current.weather[0].icon,
+        city: f.timezone.split("/")[1], // fallback if name missing
+        desc: f.current.weather[0].description,
+        warning: heavy ? "heavy rain" : null,
+      };
+
+      setWeather(info);
       setLoadingWeather(false);
+      localStorage.setItem("footerWeather", JSON.stringify(info));
+      localStorage.setItem("footerWeatherDate", today);
 
-      if (!localStorage.getItem("weatherToastShown")) {
-        toast.success(`Today's weather: ${data.temp}°C · ${data.city}`, {
-          style: { background: "#000", color: "#fff" },
+      if (heavy) {
+        toast.success("Expect heavy rain today ☔", { 
+          style: { background: "#202124", color: "#fff" } 
         });
-        localStorage.setItem("weatherToastShown", today);
       }
-      return;
+    } catch (err) {
+      console.error(err);
+      setLoadingWeather(false);
+      toast.error("Weather fetch failed", {
+        style: { background: "#202124", color: "#fff" },
+      });
     }
+  });
+}, []);
 
-    // Get geolocation
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const { latitude, longitude } = pos.coords;
-
-        try {
-          const res = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=378c0d8b5246ceb52c1c6c6899b3446e&units=metric`
-          );
-          const data = await res.json();
-
-          const weatherInfo = {
-            temp: Math.round(data.main.temp),
-            icon: data.weather[0].icon,
-            city: data.name,
-            desc: data.weather[0].description,
-          };
-
-          setWeather(weatherInfo);
-          setLoadingWeather(false);
-
-          // Cache for today
-          localStorage.setItem("footerWeather", JSON.stringify(weatherInfo));
-          localStorage.setItem("footerWeatherDate", today);
-          localStorage.setItem("weatherToastShown", today);
-
-          toast.success(`Weather updated: ${weatherInfo.temp}°C`, {
-            style: { background: "#000", color: "#fff" },
-          });
-        } catch (err) {
-          console.error(err);
-          setLoadingWeather(false);
-          toast.error("Weather fetch failed", {
-            style: { background: "#000", color: "#fff" },
-          });
-        }
-      },
-      () => {
-        setLoadingWeather(false);
-        toast.error("Location access denied", {
-          style: { background: "#000", color: "#fff" },
-        });
-      }
-    );
-  }, []);
 
   return (
     <footer className="bg-white dark:bg-[#0A0A0D] text-gray-900 dark:text-gray-300 transition-colors duration-300 relative">
@@ -183,9 +176,15 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link to="/weather" className="hover:text-blue-500 transition">
-                Weather
-              </Link>
+              Weather update :
+              {weather.warning === "heavy rain" && (
+  <div className="mt-2 px-3 py-1 text-sm rounded-full bg-[#202124] text-white">
+    
+<Umbrella size={18} className="inline mr-1" /> 
+ Heavy rain expected today
+  </div>
+)}
+
             </li>
           </ul>
         </div>
