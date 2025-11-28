@@ -18,7 +18,7 @@ export default function Pricing() {
 
   // This is the actual overlay menu component
   const menu = (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 w-full overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
       <Link to="/dashboard/blog/login">
         <button className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-gray-100 dark:hover:bg-gray-800">
           <LogIn size={18} /> Login
@@ -62,7 +62,7 @@ export default function Pricing() {
   );
 
   return (
-    <div className="px-5 sm:px-8 md:px-12 py-8 text-gray-900 dark:text-white max-w-5xl mx-auto">
+    <div className="px-5 sm:px-8 md:px-12 py-8 text-gray-900 dark:text-white mx-auto">
 
       {/* Hero 
       <header className="text-center space-y-4 mb-8">
