@@ -123,18 +123,19 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
-
+<Toaster
+      position="top-right"
+      toastOptions={{
+        style: {
+          borderRadius: "8px",
+          padding: "12px 16px",
+          backgroundColor: "#202124", // dark/black background
+          color: "#fff", // white text
+        },
+      }}
+    />
       <Footer />
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          className: "bg-[#202124] text-white", // black background
-          style: {
-            borderRadius: "8px",
-            padding: "12px 16px",
-          },
-        }}
-      />
+      
     </Router>
     
   );
