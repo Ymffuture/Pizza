@@ -4,7 +4,7 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import gsap from "gsap";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { SunIcon, CloudIcon, MapPinIcon } from "@heroicons/react/24/outline";
 
 // SVG Loader
@@ -111,7 +111,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-white dark:bg-[#0A0A0D] text-gray-900 dark:text-gray-300 transition-colors duration-300 relative">
-      <Toaster position="bottom-center" reverseOrder={false} />
+      
 
       <div className="max-w-7xl mx-auto py-16 px-6 lg:px-20 grid md:grid-cols-4 gap-10">
         {/* Brand */}
