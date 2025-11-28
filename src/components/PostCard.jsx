@@ -1,42 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { api, setToken } from "../api";
 import toast from "react-hot-toast";
+import { Heart } from "lucide-react";
 
 export default function PostCard({ post, onRefresh }) {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likes?.length || 0);
 
-  // detect if current user liked — simple approach: frontend won't know user id; server returns liked state ideally
-  async function toggleLike(){
+  useEffect(() => {
+    // If backend returns liked state, it's ideal to set here:
+    if (post.liked !== undefined) setLiked(post.liked);
+  }, [post.liked]);
+
+  async function toggleLike() {
     const token = localStorage.getItem("token");
     if (!token) return toast.error("Please login first");
     setToken(token);
+
     try {
       const res = await api.post(`/posts/${post._id}/toggle-like`);
       setLikesCount(res.data.likesCount);
       setLiked(res.data.liked);
-    } catch (err){
+      onRefresh?.(); 
+    } catch (err) {
       toast.error("Could not like");
     }
   }
 
   return (
-    <div style={{ border: "1px solid #eee", borderRadius: 10, padding: 12, marginBottom: 12, background: "#fff" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-        <strong>{post.author?.name || post.author?.phone}</strong>
-        <small>{new Date(post.createdAt).toLocaleString()}</small>
-      </div>
-      <h3 style={{ margin: "6px 0" }}>{post.title}</h3>
-      <p style={{ color: "#333" }}>{post.body}</p>
-      {post.images && post.images.length > 0 && (
-        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-          {post.images.map((img) => <img key={img} src={img} style={{ width: 120, height: 80, objectFit: "cover", borderRadius: 6 }} />)}
-        </div>
+    <article className="bg-white dark:bg-[#121212] rounded-2xl shadow-sm dark:shadow-none p-4 transition-all duration-300">
+
+      {/* Author bar */}
+      <header className="flex justify-between items-center mb-3">
+        <strong className="text-base font-semibold text-gray-900 dark:text-gray-100">
+          {post.author?.name || post.author?.phone || "Unknown"}
+        </strong>
+        <time className="text-xs text-gray-500 dark:text-gray-400">
+          {new Date(post.createdAt).toLocaleString()}
+        </time>
+      </header>
+
+      {/* Content */}
+      <h3 className="text-xl font-bold text-gray-950 dark:text-white mb-2 tracking-tight">
+        {post.title}
+      </h3>
+      <p className="text-sm text-gray-800 dark:text-gray-300 leading-relaxed mb-3">
+        {post.body}
+      </p>
+
+      {/* Media grid */}
+      {post.images?.length > 0 && (
+        <section className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+          {post.images.map((img) => (
+            <img
+              key={img}
+              src={img}
+              alt={post.title}
+              className="w-full h-28 object-cover rounded-xl bg-gray-100 dark:bg-gray-800"
+              loading="lazy"
+            />
+          ))}
+        </section>
       )}
 
-      <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
-        <button onClick={toggleLike}>{likesCount} 👍</button>
-      </div>
-    </div>
+      {/* Like Bar */}
+      <footer className="flex items-center">
+        <button
+          onClick={toggleLike}
+          aria-label="Toggle like"
+          className={`flex items-center gap-1 px-2 py-1 text-sm font-medium rounded-full transition-transform active:scale-90 ${
+            liked 
+              ? "text-red-600 dark:text-red-500" 
+              : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          }`}
+        >
+          <Heart size={18} className={liked ? "fill-current" : ""} />
+          <span>{likesCount}</span>
+        </button>
+      </footer>
+
+    </article>
   );
 }
