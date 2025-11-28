@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Dropdown } from "antd";
 import { useNavigate, Link } from "react-router-dom";
@@ -14,9 +13,9 @@ export default function Profile() {
     supabase.auth.getUser().then(({ data, error }) => {
       if (error) {
         toast.error("Failed to load user");
-      } else {
-        setUser(data.user);
+        return;
       }
+      setUser(data.user);
     });
   }, []);
 
@@ -36,15 +35,17 @@ export default function Profile() {
         key: "profile",
         label: (
           <Link to="/dashboard/blog/profile" className="flex items-center gap-2">
-            <UserCircle size={18} /> <span>Profile</span>
+            <UserCircle size={18} />
+            <span>Profile</span>
           </Link>
         ),
       },
       {
         key: "logout",
         label: (
-          <button onClick={handleLogout} className="flex items-center gap-2 text-red-600 w-full">
-            <LogOut size={18} /> <span>Logout</span>
+          <button onClick={handleLogout} className="flex items-center gap-2 text-red-500 w-full">
+            <LogOut size={18} />
+            <span>Logout</span>
           </button>
         ),
       },
@@ -52,41 +53,39 @@ export default function Profile() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen px-4 bg-[#f5f5f7] dark:bg-black">
-      {/* Profile Card */}
-      <div className="w-full max-w-sm bg-white dark:bg-[#111] rounded-3xl shadow-2xl p-6 flex flex-col items-center transition-all">
+    <div className="flex justify-center items-center min-h-screen bg-[#f2f2f6] dark:bg-black p-4">
+      <div className="w-full max-w-[360px] bg-white dark:bg-[#0A0A0A] rounded-[32px] shadow-xl p-6 flex flex-col items-center gap-4 border border-gray-100 dark:border-gray-900">
+        
+        {/* Avatar with dropdown menu (correct v5 usage) */}
+        <Dropdown menu={menu} trigger={["click"]} placement="bottomCenter">
+          <img
+            src={user?.user_metadata?.avatar_url || "/default-avatar.png"}
+            alt="User avatar"
+            className="w-28 h-28 rounded-full object-cover cursor-pointer transition hover:scale-[1.03] border border-gray-200 dark:border-gray-800"
+          />
+        </Dropdown>
 
-        {/* Avatar */}
-        <div className="relative">
-          <Dropdown {...menu} trigger={["click"]} placement="bottomCenter">
-            <img
-              src={user?.user_metadata?.avatar_url || "/default-avatar.png"}
-              alt="User avatar"
-              className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 dark:border-gray-700 cursor-pointer hover:scale-105 transition-transform"
-            />
-          </Dropdown>
-        </div>
+        {/* Display Name */}
+        <h2 className="text-[22px] font-semibold text-center text-gray-900 dark:text-white">
+          {user?.user_metadata?.full_name || "No name"}
+        </h2>
 
         {/* Email */}
-        <h3 className="text-xl font-semibold mt-4 break-all text-center text-gray-900 dark:text-white">
-          {user?.email || "Loading user..."}
-        </h3>
-
-        {/* Subtitle */}
-        <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">
-          Click avatar to open menu
+        <p className="text-[13px] text-gray-500 dark:text-gray-400 text-center break-all">
+          {user?.email}
         </p>
 
-        {/* Logout Button */}
+        {/* Logout button */}
         <button
           onClick={handleLogout}
-          className="mt-6 w-full bg-black dark:bg-white text-white dark:text-black py-2.5 rounded-2xl font-medium hover:opacity-80 active:scale-95 transition-all flex justify-center items-center gap-2"
+          className="w-full mt-4 bg-black dark:bg-white text-white dark:text-black py-3 rounded-2xl font-medium flex justify-center items-center gap-2 transition hover:opacity-80 active:scale-95"
         >
           <LogOut size={18} />
-          <span>Logout</span>
+          Logout
         </button>
 
       </div>
     </div>
   );
 }
+
