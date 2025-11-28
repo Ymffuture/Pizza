@@ -49,7 +49,7 @@ export default function NewPost() {
       });
 
       toast.success("Post shared");
-      nav("/");
+      nav("/dashboard/blog");
     } catch (err) {
       console.error(err);
       toast.error(err?.response?.data?.message || "Could not publish post");
