@@ -125,8 +125,9 @@ const App = () => {
       </Suspense>
 
       <Footer />
+      <Toaster />
     </Router>
-    <Toaster />
+    
   );
 };
 
