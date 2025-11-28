@@ -7,9 +7,8 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
     "SF Pro Display", "Inter", "Poppins", sans-serif;
+  overflow-x: hidden;
 }
-
-
 
 @font-face {
   font-family: "SF Pro";
