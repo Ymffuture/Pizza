@@ -54,53 +54,54 @@ export default function BlogHome() {
     </div>
   );
 const Loader = () => (
-  <div className="flex flex-col items-center justify-center min-h-screen bg-transparent">
-    <svg
-      width="70"
-      height="70"
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
-      className="animate-spin text-gray-300 dark:text-gray-700"
-    >
-      <circle
-        cx="50"
-        cy="50"
-        r="40"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-        strokeDasharray="250"
-        strokeDashoffset="180"
-      />
-      <circle cx="50" cy="50" r="10" fill="#00E5FF">
-        <animate
-          attributeName="r"
-          values="10;14;10"
-          dur="4.8s"
-          repeatCount="indefinite"
-        />
-        <animate
-          attributeName="opacity"
-          values="1;0.6;1"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-      </circle>
-    </svg>
-    <p className="text-gray-800 dark:text-gray-400 mt-3 text-sm tracking-wide">
-      Loading Blogs...
-    </p>
-  </div>
+  <div className="flex flex-col items-center justify-center min-h-[120px] bg-transparent overflow-hidden">
+    <svg
+      viewBox="0 0 100 100"
+      xmlns="http://www.w3.org/2000/svg"
+      className="animate-spin text-gray-300 dark:text-gray-700 w-16 h-16 shrink-0"
+    >
+      <circle
+        cx="50"
+        cy="50"
+        r="40"
+        stroke="currentColor"
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+        strokeDasharray="250"
+        strokeDashoffset="180"
+      />
+      <circle cx="50" cy="50" r="10" fill="currentColor">
+        <animate
+          attributeName="r"
+          values="10;14;10"
+          dur="4.8s"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="opacity"
+          values="1;0.6;1"
+          dur="1.6s"
+          repeatCount="indefinite"
+        />
+      </circle>
+    </svg>
+    <p className="text-gray-800 dark:text-gray-400 mt-3 text-sm tracking-wide">
+      Loading Blogs...
+    </p>
+  </div>
 );
+
   
   return (
-    <div className="min-h-screen pb-28 md:pb-2 mx-auto px-4 pt-6 pb-4 ">
+    <div className="min-h-screen pb-28 md:pb-2 mx-auto px-4 pt-6 pb-4 max-w-2xl overflow-x-hidden">
+
       <InfiniteScroll
         dataLength={posts.length}
         next={() => setPage(prev => prev + 1)}
         hasMore={hasMore}
-        loader={<p className="text-center py-5"><Loader/></p>}
+        loader={<div className="flex justify-center py-5"><Loader/></div>}
+
       >
         {posts.map(post => (
           <article key={post._id} className="bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800 mb-5 p-5 transition-all hover:shadow-xl mx-auto">
