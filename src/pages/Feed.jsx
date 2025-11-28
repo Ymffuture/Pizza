@@ -22,7 +22,7 @@ export default function Feed() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
+    <div className="bg-white dark:bg-black transition-colors duration-300">
       {/* Feed container */}
       <div className="mx-auto max-w-[470px] px-4 pt-6 pb-4">
 
