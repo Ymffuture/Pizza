@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import emailjs from "@emailjs/browser";
-import { toast, Toaster } from "react-hot-toast";
+import { toast} from "react-hot-toast";
 
 const { TextArea } = Input;
 
@@ -63,7 +63,7 @@ const Newsletter = () => {
   return (
     <section className="dark:bg-black bg-[#f5f5f7] py-24 transition-all duration-500">
 
-      <Toaster position="top-right" />
+      
 
       <div
         className="
