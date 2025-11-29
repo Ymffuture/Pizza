@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { api } from "../api";
+import { api, setToken } from "../api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
-  const [step, setStep] = useState("phone"); // phone → otp
+  const [step, setStep] = useState("phone");
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
 
-  // ✅ Restore login on refresh
+  // ✅ Restore login properly on refresh
   useEffect(() => {
-    const saved = localStorage.getItem("filebankUser");
-    const token = localStorage.getItem("token");
-    if (saved && token) {
+    const savedUser = localStorage.getItem("filebankUser");
+    const savedToken = localStorage.getItem("token");
+
+    if (savedUser && savedToken) {
+      setToken(savedToken); 
       nav("/dashboard/blog");
     }
   }, [nav]);
 
+  // ✅ Request OTP using the correct backend route
   async function sendOtp(e) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.post("/auth/login-phone", { phone });
+      const res = await api.post("/auth/login-phone-otp", { phone }); // ← correct route
       toast.success(res.data.message || "OTP sent to email");
       setStep("otp");
     } catch (err) {
@@ -33,18 +36,17 @@ export default function Login() {
     }
   }
 
+  // ✅ Verify OTP and login then persist credentials
   async function verifyOtp(e) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.post("/auth/verify-login-otp", { phone, otp });
+      const res = await api.post("/auth/login-phone", { phone, code: otp }); // must send as `code`
 
-      // ✅ Save token so it survives refresh
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem(
-        "filebankUser",
-        JSON.stringify(res.data.user)
-      );
+      const { token, user } = res.data;
+
+      setToken(token); // also saves to localStorage
+      localStorage.setItem("filebankUser", JSON.stringify(user));
 
       toast.success("Logged in successfully");
       nav("/dashboard/blog");
@@ -60,7 +62,6 @@ export default function Login() {
       <div className="bg-white dark:bg-black/60 w-full max-w-sm rounded-3xl p-6 shadow-xl border dark:border-gray-800">
         <h2 className="text-2xl text-center font-semibold mb-5">Welcome Back</h2>
 
-        {/* STEP 1: enter phone */}
         {step === "phone" && (
           <form onSubmit={sendOtp} className="space-y-3">
             <input
@@ -80,11 +81,10 @@ export default function Login() {
           </form>
         )}
 
-        {/* STEP 2: enter OTP */}
         {step === "otp" && (
           <form onSubmit={verifyOtp} className="space-y-3">
             <input
-              placeholder="Enter OTP from email"
+              placeholder="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               required
@@ -95,7 +95,7 @@ export default function Login() {
               disabled={loading}
               className="w-full py-3 rounded-full font-medium bg-black text-white hover:opacity-90 active:scale-95 transition"
             >
-              {loading ? "Verifying OTP..." : "Verify OTP"}
+              {loading ? "Verifying..." : "Verify OTP"}
             </button>
           </form>
         )}
