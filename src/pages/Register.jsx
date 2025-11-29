@@ -7,7 +7,7 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [avatarFile, setAvatarFile] = useState(null); // store File directly
+  const [avatarFile, setAvatarFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
 
@@ -20,16 +20,24 @@ export default function Register() {
       formData.append("phone", phone);
       formData.append("email", email);
       formData.append("name", name);
-      if (avatarFile) formData.append("avatar", avatarFile);
+      if (avatarFile) formData.append("avatar", avatarFile); // ✅ key matches backend
 
+      // ✅ Wait for backend to confirm OTP email was sent
       const res = await api.post("/auth/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("OTP sent, check your email 📩");
-      nav("/dashboard/blog/verify-email", { state: { email } });
+      // ✅ Only continue if request succeeded
+      if (res.data?.message) {
+        toast.success("Check your email for the verification code 📩");
+        nav("/dashboard/blog/verify-email", { state: { email } });
+      } else {
+        toast.error("Didn't receive confirmation from server");
+      }
+
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Registration failed ❌");
+      const msg = err.response?.data?.message || "Registration failed";
+      toast.error(msg);
       console.error("REGISTER ERROR:", err);
     } finally {
       setLoading(false);
@@ -44,7 +52,7 @@ export default function Register() {
         </h2>
 
         <div className="flex justify-center mb-5">
-          <label className="relative">
+          <label className="relative cursor-pointer">
             <input
               type="file"
               accept="image/*"
@@ -57,7 +65,8 @@ export default function Register() {
                   ? URL.createObjectURL(avatarFile)
                   : "https://via.placeholder.com/80?text=Avatar"
               }
-              className="w-20 h-20 rounded-full object-cover border-2 dark:border-gray-700 cursor-pointer"
+              alt="User avatar"
+              className="w-20 h-20 rounded-full object-cover border-2 dark:border-gray-700"
             />
             <span className="absolute bottom-0 right-0 bg-black text-white text-[10px] px-2 py-1 rounded-full">
               Edit
@@ -71,7 +80,7 @@ export default function Register() {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-full border border-gray-300 dark:border-gray-700 dark:bg-black text-sm text-black dark:text-white outline-none"
+            className="w-full px-4 py-3 rounded-full border border-gray-300 dark:border-gray-700 dark:bg-black text-sm text-black dark:text-white outline-none text-center"
           />
 
           <input
@@ -79,17 +88,18 @@ export default function Register() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-3 rounded-full border border-gray-300 dark:border-gray-700 dark:bg-black text-sm text-black dark:text-white outline-none"
+            className="w-full px-4 py-3 rounded-full border border-gray-300 dark:border-gray-700 dark:bg-black text-sm text-black dark:text-white outline-none text-center"
           />
 
           <input
             placeholder="Display name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 rounded-full border border-gray-300 dark:border-gray-700 dark:bg-black text-sm text-black dark:text-white outline-none"
+            className="w-full px-4 py-3 rounded-full border border-gray-300 dark:border-gray-700 dark:bg-black text-sm text-black dark:text-white outline-none text-center"
           />
 
           <button
+            type="submit"
             disabled={loading}
             className="w-full py-3 rounded-full font-medium bg-black text-white hover:opacity-90 active:scale-95 transition text-sm"
           >
