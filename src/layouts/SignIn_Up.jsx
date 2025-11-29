@@ -131,9 +131,8 @@ export default function SignIn_Up() {
         className="w-full max-w-md shadow-xl rounded-2xl border border-gray-300 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl"
         style={{ borderRadius: "20px" }}
       >
-        <h2 className="text-3xl font-semibold text-center mb-6 text-gray-900 dark:text-white bg-blue-600 rounded">
-          SwiftMeta
-        </h2>
+        <span className="text-blue-500 dark:text-blue-600">Swift</span>
+            <span className="text-gray-700 dark:text-gray-300">Meta™</span>
 
         {error && (
           <Alert
