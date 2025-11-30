@@ -3,7 +3,6 @@ import { api } from "../api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-// Save session to localStorage
 function persistSession(token, user) {
   localStorage.setItem("token", token);
   localStorage.setItem("filebankUser", JSON.stringify(user));
@@ -12,32 +11,34 @@ function persistSession(token, user) {
 export default function Login() {
   const [identifier, setIdentifier] = useState(""); // email or phone
   const [otp, setOtp] = useState("");
-  const [step, setStep] = useState("identifier"); // "identifier" | "otp"
+  const [step, setStep] = useState("identifier");
   const [loading, setLoading] = useState(false);
-  const [devOtp, setDevOtp] = useState(null); // OTP for dev/testing
+  const [devOtp, setDevOtp] = useState(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const nav = useNavigate();
 
-  // Auto-redirect if already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("filebankUser");
     if (token && user) nav("/dashboard/blog");
   }, [nav]);
 
-  // Validate email or phone
-  const isIdentifierValid = (id) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{9,15}$/;
-    return emailRegex.test(id) || phoneRegex.test(id);
-  };
+  // Cooldown timer
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendCooldown]);
 
-  // Request OTP
+  const isIdentifierValid = (id) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id) || /^[0-9]{9,15}$/.test(id);
+
   async function sendOtp(e) {
     e.preventDefault();
     setLoading(true);
 
     if (!isIdentifierValid(identifier)) {
-      toast.error("Enter a valid email or phone number");
+      toast.error("Enter valid email or phone");
       setLoading(false);
       return;
     }
@@ -45,19 +46,19 @@ export default function Login() {
     try {
       const isEmail = identifier.includes("@");
       const endpoint = isEmail ? "/auth/request-login-otp" : "/auth/request-phone-otp";
-
       const res = await api.post(endpoint, isEmail ? { email: identifier } : { phone: identifier });
+      const receivedOtp = res.data?.otp;
 
-      // Show OTP in dev environment only
-      if (res.data?.otp) {
-        setDevOtp(res.data.otp);
-        toast.success(`OTP (dev only): ${res.data.otp}`);
-        setOtp(res.data.otp); // optionally prefill
+      if (receivedOtp) {
+        setDevOtp(receivedOtp);
+        setOtp(receivedOtp); // prefill input
+        toast.success(`OTP (dev only): ${receivedOtp}`);
       } else {
-        toast.success("OTP sent successfully");
+        toast.success("OTP sent via email/SMS");
       }
 
       setStep("otp");
+      setResendCooldown(30); // 30s cooldown
     } catch (err) {
       toast.error(err.response?.data?.message || "OTP request failed");
       console.error("REQUEST OTP ERROR:", err);
@@ -66,7 +67,6 @@ export default function Login() {
     }
   }
 
-  // Verify OTP and login
   async function verifyOtp(e) {
     e.preventDefault();
     setLoading(true);
@@ -74,17 +74,14 @@ export default function Login() {
     try {
       const isEmail = identifier.includes("@");
       const endpoint = isEmail ? "/auth/verify-login-otp" : "/auth/verify-phone";
-
       const res = await api.post(endpoint, isEmail ? { email: identifier, code: otp } : { phone: identifier, code: otp });
       const { token, user } = res.data;
-
-      if (!token) throw new Error("No token returned");
 
       persistSession(token, user);
       toast.success("Logged in ✅");
       nav("/dashboard/blog");
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message || "Invalid OTP");
+      toast.error(err.response?.data?.message || "Invalid OTP");
       console.error("VERIFY OTP ERROR:", err);
     } finally {
       setLoading(false);
@@ -136,6 +133,14 @@ export default function Login() {
                 Dev OTP: {devOtp}
               </p>
             )}
+            <button
+              type="button"
+              disabled={resendCooldown > 0 || loading}
+              onClick={sendOtp}
+              className={`w-full py-2 text-sm mt-2 rounded-full font-medium ${resendCooldown > 0 ? 'bg-gray-400' : 'bg-gray-800 text-white'} transition`}
+            >
+              {resendCooldown > 0 ? `Resend OTP in ${resendCooldown}s` : "Resend OTP"}
+            </button>
           </form>
         )}
       </div>
