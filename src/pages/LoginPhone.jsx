@@ -15,7 +15,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
 
-  // ✅ Restore session on refresh safely
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("filebankUser");
@@ -26,7 +25,7 @@ export default function Login() {
 
   const isPhoneValid = (n) => /^[0-9]{9,15}$/.test(n);
 
-  // ✅ Request phone OTP
+  // Request phone/email OTP
   async function sendOtp(e) {
     e.preventDefault();
     setLoading(true);
@@ -38,8 +37,11 @@ export default function Login() {
     }
 
     try {
-      const res = await api.post("/auth/request-phone-otp", { phone }); // ✅ fixed route
-      toast.success("OTP sent to your device (check email or SMS)");
+      // Call backend endpoint that returns OTP directly for testing
+      const res = await api.post("/auth/request-login-otp", { email: phone }); // using email field for testing
+      const { otp: receivedOtp } = res.data;
+
+      toast.success(`OTP generated: ${receivedOtp}`); // ✅ show OTP in toast
       setStep("otp");
     } catch (err) {
       toast.error(err.response?.data?.message || "OTP request failed");
@@ -49,13 +51,13 @@ export default function Login() {
     }
   }
 
-  // ✅ Verify OTP and login
+  // Verify OTP and login
   async function verifyOtp(e) {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await api.post("/auth/verify-phone", { phone, code: otp }); // ✅ matches backend
+      const res = await api.post("/auth/verify-login-otp", { email: phone, code: otp });
       const { token, user } = res.data;
 
       if (!token) throw new Error("No token returned");
@@ -83,7 +85,7 @@ export default function Login() {
         {step === "phone" && (
           <form onSubmit={sendOtp} className="space-y-3">
             <input
-              placeholder="Enter phone number"
+              placeholder="Enter email (for testing OTP)"
               value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/\s/g, ""))}
               required
