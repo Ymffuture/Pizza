@@ -1,3 +1,5 @@
+import Feed from "../../pages/Feed";
+
 export default function Dashboard() {
   return (
     <section className="w-full py-20 text-center">
@@ -29,7 +31,10 @@ export default function Dashboard() {
       </p>
 
       {/* Divider like Apple */}
+      
       <div className="mt-10 w-20 mx-auto h-[2px] bg-gray-300 dark:bg-gray-700 rounded-full animate-fadeIn delay-500" />
+
+      <Feed/>
     </section>
   );
 }
