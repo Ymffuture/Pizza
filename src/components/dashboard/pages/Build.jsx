@@ -12,7 +12,9 @@ body {
   padding: 20px;
   color: #222;
 }
-h1 { color: #0ea5a4; cursor: pointer; }`;
+h1 { color: #202124; cursor: pointer; }
+p{ color:#0ea5a4 ;} 
+`;
 
 const defaultJS = `// script.js
 const el = document.getElementById("title");
@@ -192,7 +194,7 @@ export default function Build() {
           <div>
             {activeTab === "html" && (
               <Editor
-                height="700px"
+                height="500px"
                 language="html"
                 theme="vs-dark"
                 value={html}
