@@ -61,7 +61,10 @@ export default function Login() {
       // Only show for development
       if (receivedOtp) {
         setDevOtp(receivedOtp);
-        toast.success(`OTP: ${receivedOtp}`);
+        toast(`Login OTP: ${receivedOtp}`, {
+  duration: 70990, // 1 minute
+});
+
       } else {
         toast.success("OTP sent successfully");
       }
@@ -154,13 +157,13 @@ export default function Login() {
             >
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
-
+            {/*
             {devOtp && (
               <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-2">
                 Login OTP: {devOtp}
               </p>
             )}
-
+*/} 
             <button
               type="button"
               disabled={resendCooldown > 0 || loading}
