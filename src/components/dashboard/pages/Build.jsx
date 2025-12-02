@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Code2, Palette, FileCode, Play, Download, Eye } from "lucide-react";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import Editor from "@monaco-editor/react";
 
 const defaultHTML = `<!-- index.html -->
 <h1 id="title">Hello from SwiftMeta Build</h1>
@@ -29,14 +28,13 @@ export default function Build() {
   const [css, setCss] = useState(defaultCSS);
   const [js, setJs] = useState(defaultJS);
 
-  const [activeTab, setActiveTab] = useState("html"); // <-- NEW !
+  const [activeTab, setActiveTab] = useState("html");
   const [livePreview, setLivePreview] = useState(true);
   const [logs, setLogs] = useState([]);
 
   const iframeRef = useRef(null);
   const blobUrlRef = useRef(null);
 
-  /* ------------------------------ Build Iframe Doc ------------------------------ */
   const buildDocument = useCallback(
     (html, css, js) => {
       const bridge = `
@@ -73,7 +71,6 @@ export default function Build() {
     []
   );
 
-  /* ------------------------------ Update Iframe ------------------------------ */
   const runPreview = useCallback(() => {
     if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
 
@@ -85,12 +82,10 @@ export default function Build() {
     iframeRef.current.src = url;
   }, [html, css, js, buildDocument]);
 
-  /* Live preview effect */
   useEffect(() => {
     if (livePreview) runPreview();
   }, [html, css, js, livePreview, runPreview]);
 
-  /* Console bridge listener */
   useEffect(() => {
     const handler = (e) => {
       if (!e.data?.__bridge) return;
@@ -103,7 +98,6 @@ export default function Build() {
     return () => window.removeEventListener("message", handler);
   }, []);
 
-  /* Ctrl/Cmd + Enter */
   useEffect(() => {
     const handler = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
@@ -114,7 +108,6 @@ export default function Build() {
     return () => window.removeEventListener("keydown", handler);
   }, [runPreview]);
 
-  /* Download final file */
   const downloadFile = () => {
     const content = buildDocument(html, css, js);
     const blob = new Blob([content], { type: "text/html" });
@@ -126,10 +119,8 @@ export default function Build() {
     a.click();
   };
 
-  /* Clear console */
   const clearLogs = () => setLogs([]);
 
-  /* Tab button UI */
   const tabBtn = (id, label, Icon) => (
     <button
       onClick={() => setActiveTab(id)}
@@ -144,11 +135,19 @@ export default function Build() {
     </button>
   );
 
+  const editorOptions = {
+    minimap: { enabled: false },
+    scrollbar: { vertical: 'auto' },
+    wordWrap: 'on',
+    fontSize: 14,
+    lineNumbers: 'on',
+    automaticLayout: true,
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto space-y-8">
 
-        {/* HEADER */}
         <div className="justify-between items-center">
           <div>
             <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">Build a Website and make it yours. </h1>
@@ -183,7 +182,6 @@ export default function Build() {
           </div>
         </div>
 
-        {/* TABS */}
         <div className="flex gap-2 border-b border-gray-300 dark:border-white/10 pb-2">
           {tabBtn("html", "HTML", FileCode)}
           {tabBtn("css", "CSS", Palette)}
@@ -191,94 +189,40 @@ export default function Build() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* LEFT — EDITOR */}
           <div>
             {activeTab === "html" && (
-  <div className="relative h-[700px] rounded-xl overflow-hidden bg-white/5">
-  <div className="absolute inset-0 overflow-auto">
-    <SyntaxHighlighter
-      language="html"
-      style={atomOneDark}
-      customStyle={{ background: "transparent", padding: "16px" }}
-      showLineNumbers
-      wrapLongLines={true}
-    >
-      {html}
-    </SyntaxHighlighter>
-  </div>
-
-  <textarea
-    value={html}
-    onChange={(e) => setHtml(e.target.value)}
-    spellCheck={false}
-    className="inset-0 overflow-auto p-4 font-mono text-sm 
-               bg-transparent text-transparent caret-white
-               outline-none resize-none"
-  />
-</div>
-
-)}
-
-
+              <Editor
+                height="700px"
+                language="html"
+                theme="vs-dark"
+                value={html}
+                onChange={(value) => setHtml(value || "")}
+                options={editorOptions}
+              />
+            )}
             {activeTab === "css" && (
-<div className="relative h-[500px] rounded-xl overflow-hidden bg-white/5">
-  <div className="absolute inset-0 overflow-auto">
-    <SyntaxHighlighter
-      language="css"
-      style={atomOneDark}
-      customStyle={{ background: "transparent", padding: "16px" }}
-      showLineNumbers
-      wrapLongLines={true}
-    >
-      {css}
-    </SyntaxHighlighter>
-  </div>
-
-  <textarea
-    value={css}
-    onChange={(e) => setCss(e.target.value)}
-    spellCheck={false}
-    className="absolute inset-0 overflow-auto p-4 font-mono text-sm 
-               bg-transparent text-transparent caret-white
-               outline-none resize-none"
-  />
-</div>
-
-)}
-
-
+              <Editor
+                height="500px"
+                language="css"
+                theme="vs-dark"
+                value={css}
+                onChange={(value) => setCss(value || "")}
+                options={editorOptions}
+              />
+            )}
             {activeTab === "js" && (
-  <div className="relative h-[500px] rounded-xl overflow-hidden bg-white/5">
-  <div className="absolute inset-0 overflow-auto">
-    <SyntaxHighlighter
-      language="javascript"
-      style={atomOneDark}
-      customStyle={{ background: "transparent", padding: "16px" }}
-      showLineNumbers
-      wrapLongLines={true}
-    >
-      {js}
-    </SyntaxHighlighter>
-  </div>
-
-  <textarea
-    value={js}
-    onChange={(e) => setJs(e.target.value)}
-    spellCheck={false}
-    className="absolute inset-0 overflow-auto p-4 font-mono text-sm 
-               bg-transparent text-transparent caret-white
-               outline-none resize-none"
-  />
-</div>
-
-)}
-
+              <Editor
+                height="500px"
+                language="javascript"
+                theme="vs-dark"
+                value={js}
+                onChange={(value) => setJs(value || "")}
+                options={editorOptions}
+              />
+            )}
           </div>
 
-          {/* RIGHT — Preview + Console */}
           <div className="space-y-4">
-
-            {/* PREVIEW */}
             <div className="rounded-xl overflow-hidden border dark:border-white/10">
               <div className="px-4 py-2 bg-gray-200 dark:bg-white/10 flex items-center gap-2">
                 <Eye size={16} /> Live Preview
@@ -287,7 +231,6 @@ export default function Build() {
               <iframe ref={iframeRef} className="w-full h-80 bg-white dark:bg-black" />
             </div>
 
-            {/* CONSOLE */}
             <div className="rounded-xl overflow-hidden border dark:border-white/10 bg-white/30 dark:bg-white/5">
               <div className="px-4 py-2 flex justify-between border-b dark:border-white/10">
                 <span>Console</span>
