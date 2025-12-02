@@ -67,7 +67,7 @@ export default function Login() {
       if (receivedOtp) {
         setDevOtp(receivedOtp);
         toast(`Login OTP: ${receivedOtp}`, {
-  duration: 70990, // 1 minute
+  duration: 30000, // 1 minute
 });
 
       } else {
@@ -106,7 +106,7 @@ export default function Login() {
       const { token, user } = res.data;
 
       persistSession(token, user);
-      toast.success("Logged in");
+      toast("Logged in");
       nav("/dashboard/blog");
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid OTP");
