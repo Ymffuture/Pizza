@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { api } from "../api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { AlertTriangle } from "lucide-react";
+
+
 
 function persistSession(token, user) {
   localStorage.setItem("token", token);
@@ -42,7 +45,9 @@ export default function Login() {
     setLoading(true);
 
     if (!isIdentifierValid(identifier)) {
-      toast.error("Enter valid email or phone number");
+      toast.error("Enter valid email or phone number", {
+  icon: <AlertTriangle className="text-red-500" />,
+});
       setLoading(false);
       return;
     }
@@ -66,7 +71,7 @@ export default function Login() {
 });
 
       } else {
-        toast.success("OTP sent successfully");
+        toast("OTP sent successfully");
       }
 
       setStep("otp");
@@ -168,7 +173,7 @@ export default function Login() {
               type="button"
               disabled={resendCooldown > 0 || loading}
               onClick={sendOtp}
-              className={`w-full py-2 text-sm mt-2 rounded-full font-medium ${
+              className={`w-full py-2 text-sm mt-2 rounde font-medium ${
                 resendCooldown > 0
                   ? "bg-gray-400"
                   : "bg-gray-800 text-white"
