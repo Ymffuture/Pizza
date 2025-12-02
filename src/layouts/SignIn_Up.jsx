@@ -43,7 +43,7 @@ export default function SignIn_Up() {
     if (error) return setError(error.message);
 
     setUser(data.user ?? null);
-    navigate("/");
+    navigate("/dashboard");
   };
 
   // ------------------------------------
@@ -62,7 +62,7 @@ export default function SignIn_Up() {
     if (error) return setError(error.message);
 
     setUser(data.user ?? null);
-    navigate("/dashboard");
+    navigate("/dashboard/blog");
   };
 
   // ------------------------------------
