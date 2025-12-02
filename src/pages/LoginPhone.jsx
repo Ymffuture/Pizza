@@ -10,7 +10,7 @@ function persistSession(token, user) {
 
 export default function Login() {
   const [identifier, setIdentifier] = useState(""); // email or phone
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState("");               // fixed controlled input
   const [step, setStep] = useState("identifier");
   const [loading, setLoading] = useState(false);
   const [devOtp, setDevOtp] = useState(null);
@@ -26,39 +26,49 @@ export default function Login() {
   // Cooldown timer
   useEffect(() => {
     if (resendCooldown <= 0) return;
-    const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+    const timer = setTimeout(() => setResendCooldown((prev) => prev - 1), 1000);
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
+  // Email or phone
   const isIdentifierValid = (id) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id) || /^[0-9]{9,15}$/.test(id);
 
+  // ----------------------------
+  // SEND OTP
+  // ----------------------------
   async function sendOtp(e) {
     e.preventDefault();
     setLoading(true);
 
     if (!isIdentifierValid(identifier)) {
-      toast.error("Enter valid email or phone");
+      toast.error("Enter valid email or phone number");
       setLoading(false);
       return;
     }
 
     try {
       const isEmail = identifier.includes("@");
-      const endpoint = isEmail ? "/auth/request-login-otp" : "/auth/request-phone-otp";
-      const res = await api.post(endpoint, isEmail ? { email: identifier } : { phone: identifier });
+      const endpoint = isEmail
+        ? "/auth/request-login-otp"
+        : "/auth/request-phone-otp";
+
+      const payload = isEmail ? { email: identifier } : { phone: identifier };
+      const res = await api.post(endpoint, payload);
+
       const receivedOtp = res.data?.otp;
 
+      // Only show for development
       if (receivedOtp) {
         setDevOtp(receivedOtp);
-        setOtp(receivedOtp); // prefill input
         toast.success(`OTP: ${receivedOtp}`);
       } else {
-        toast.success("OTP sent via email/SMS");
+        toast.success("OTP sent successfully");
       }
 
       setStep("otp");
-      setResendCooldown(30); // 30s cooldown
+      setOtp("");                  // clear input
+      setResendCooldown(30);
     } catch (err) {
       toast.error(err.response?.data?.message || "OTP request failed");
       console.error("REQUEST OTP ERROR:", err);
@@ -67,14 +77,24 @@ export default function Login() {
     }
   }
 
+  // ----------------------------
+  // VERIFY OTP
+  // ----------------------------
   async function verifyOtp(e) {
     e.preventDefault();
     setLoading(true);
 
     try {
       const isEmail = identifier.includes("@");
-      const endpoint = isEmail ? "/auth/verify-login-otp" : "/auth/verify-phone";
-      const res = await api.post(endpoint, isEmail ? { email: identifier, code: otp } : { phone: identifier, code: otp });
+      const endpoint = isEmail
+        ? "/auth/verify-login-otp"
+        : "/auth/verify-phone";
+
+      const payload = isEmail
+        ? { email: identifier, code: otp }
+        : { phone: identifier, code: otp };
+
+      const res = await api.post(endpoint, payload);
       const { token, user } = res.data;
 
       persistSession(token, user);
@@ -100,10 +120,13 @@ export default function Login() {
             <input
               placeholder="Email or phone"
               value={identifier}
-              onChange={(e) => setIdentifier(e.target.value.replace(/\s/g, ""))}
+              onChange={(e) =>
+                setIdentifier(e.target.value.replace(/\s/g, ""))
+              }
               required
               className="w-full text-center px-4 py-3 rounded-full border dark:border-gray-700 bg-gray-50 dark:bg-black text-black dark:text-white outline-none"
             />
+
             <button
               disabled={loading}
               className="w-full py-3 rounded-full font-medium bg-black text-white hover:opacity-90 active:scale-95 transition"
@@ -117,29 +140,40 @@ export default function Login() {
           <form onSubmit={verifyOtp} className="space-y-3">
             <input
               placeholder="Enter OTP"
-              value={''}
-              onChange={(e) => setOtp(e.target.value.replace(/\s/g, ""))}
+              value={otp}                                // FIXED controlled input
+              onChange={(e) =>
+                setOtp(e.target.value.replace(/\s/g, ""))
+              }
               required
               className="w-full text-center px-4 py-3 rounded-full border dark:border-gray-700 bg-gray-50 dark:bg-black text-black dark:text-white outline-none"
             />
+
             <button
               disabled={loading}
               className="w-full py-3 rounded-full font-medium bg-black text-white hover:opacity-90 active:scale-95 transition"
             >
               {loading ? "Verifying..." : "Verify OTP"}
             </button>
+
             {devOtp && (
               <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-2">
-                Login code: {devOtp}
+                Login OTP: {devOtp}
               </p>
             )}
+
             <button
               type="button"
               disabled={resendCooldown > 0 || loading}
               onClick={sendOtp}
-              className={`w-full py-2 text-sm mt-2 rounded-full font-medium ${resendCooldown > 0 ? 'bg-gray-400' : 'bg-gray-800 text-white'} transition`}
+              className={`w-full py-2 text-sm mt-2 rounded-full font-medium ${
+                resendCooldown > 0
+                  ? "bg-gray-400"
+                  : "bg-gray-800 text-white"
+              } transition`}
             >
-              {resendCooldown > 0 ? `Resend OTP in ${resendCooldown}s` : "Resend OTP"}
+              {resendCooldown > 0
+                ? `Resend OTP in ${resendCooldown}s`
+                : "Resend OTP"}
             </button>
           </form>
         )}
