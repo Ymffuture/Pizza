@@ -52,7 +52,7 @@ export default function Login() {
       if (receivedOtp) {
         setDevOtp(receivedOtp);
         setOtp(receivedOtp); // prefill input
-        toast.success(`OTP (dev only): ${receivedOtp}`);
+        toast.success(`OTP: ${receivedOtp}`);
       } else {
         toast.success("OTP sent via email/SMS");
       }
@@ -78,7 +78,7 @@ export default function Login() {
       const { token, user } = res.data;
 
       persistSession(token, user);
-      toast.success("Logged in ✅");
+      toast.success("Logged in");
       nav("/dashboard/blog");
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid OTP");
@@ -117,7 +117,7 @@ export default function Login() {
           <form onSubmit={verifyOtp} className="space-y-3">
             <input
               placeholder="Enter OTP"
-              value={otp}
+              value={''}
               onChange={(e) => setOtp(e.target.value.replace(/\s/g, ""))}
               required
               className="w-full text-center px-4 py-3 rounded-full border dark:border-gray-700 bg-gray-50 dark:bg-black text-black dark:text-white outline-none"
@@ -130,7 +130,7 @@ export default function Login() {
             </button>
             {devOtp && (
               <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-2">
-                Dev OTP: {devOtp}
+                Login code: {devOtp}
               </p>
             )}
             <button
