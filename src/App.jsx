@@ -28,6 +28,8 @@ const Home = lazy(() => import("./Home"));
 const Build = lazy(() => import("./components/dashboard/pages/Build"));
 const Pricing = lazy(() => import("./components/dashboard/pages/Pricing"));
 const FreeProjects = lazy(() => import("./components/dashboard/pages/FreeProjects"));
+const Edit =lazy(() =>import("./pages/EditPost")) ;
+const ViewPost = lazg(() => import("./pages/ViewPost")) ;
 
 const Loader = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-transparent">
@@ -116,6 +118,8 @@ const App = () => {
               <Route path="login" element={<LoginPhone />} />
               <Route path="new" element={<NewPost />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="edit" element={<Edit />} />
+              <Route path="view-post" element={<ViewPost/>} />
             </Route>
           </Route>
 
