@@ -37,10 +37,6 @@
     "lexical": "^0.15.0",
     "@lexical/react": "^0.15.0", 
     "@emoji-mart/data": "^1.1.2",
-    
-    
-    
-    "@katherineheadshall/emoji-mart-react": "1.1.2",
     "@giphy/js-components": "^7.0.1",
     "emoji-mart": "^5.5.2",
     "emoji-picker-react": "^4.7.9",
