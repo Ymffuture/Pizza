@@ -3,8 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 
-import { Picker } from "emoji-mart";
-import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "@katherineheadshall/emoji-mart-react";
+import "@katherineheadshall/emoji-mart-react/dist/style.css"; // only this one
+
 import { api } from "../api";
 import toast from "react-hot-toast";
 import { Send, ImageIcon, Heart } from "lucide-react";
