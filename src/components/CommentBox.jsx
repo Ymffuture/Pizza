@@ -1,17 +1,17 @@
 // CommentBox.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
-import { convertToHTML, convertFromHTML } from "draft-convert";
-import { Editor } from "draft-js";
+import { Editor, EditorState, ContentState } from "draft-js";
 import "draft-js/dist/Draft.css";
 
 import { api } from "../api";
 import toast from "react-hot-toast";
 import { Send, ImageIcon, Heart } from "lucide-react";
-import { Picker } from "emoji-picker-react";
+import Picker from "emoji-picker-react";
 
 export default function CommentBox({ postId, onCommentUpdate }) {
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -35,26 +35,24 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     }
   }
 
-  function handleEditorChange(state) {
-    setEditorState(state);
-  }
-
-  function getHTML() {
-    return convertToHTML(editorState.getCurrentContent());
-  }
-
   function getPlainText() {
     return editorState.getCurrentContent().getPlainText();
   }
 
+  function getSimpleHTML() {
+    return editorState.getCurrentContent().getPlainText().replace(/\n/g, "<br/>");
+  }
+
   async function uploadFile(file) {
     setUploading(true);
-    const fd = new FormData();
-    fd.append("file", file);
     try {
+      const fd = new FormData();
+      fd.append("file", file);
+
       const r = await api.post("/upload", fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
       return r.data.url;
     } catch {
       toast.error("Upload failed");
@@ -68,14 +66,17 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     const plainText = getPlainText();
     if (!plainText.trim()) return toast.error("Write something");
 
-    const html = getHTML();
+    const html = getSimpleHTML();
+
     try {
       const r = await api.post(`/posts/${postId}/comments`, {
         text: html,
         plainText,
       });
+
       setComments(prev => [...prev, r.data]);
       onCommentUpdate(postId, [...comments, r.data]);
+
       setEditorState(EditorState.createEmpty());
       toast.success("Comment posted");
     } catch {
@@ -83,13 +84,10 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     }
   }
 
-  function addEmoji(event, emojiObject) {
+  function addEmoji(emojiObject) {
     const emoji = emojiObject.emoji;
-    const content = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    const newContent = ContentState.createFromText(
-      content.getPlainText().slice(0, selection.getStartOffset()) + emoji + content.getPlainText().slice(selection.getEndOffset())
-    );
+    const newText = getPlainText() + emoji;
+    const newContent = ContentState.createFromText(newText);
     setEditorState(EditorState.createWithContent(newContent));
     setShowEmoji(false);
   }
@@ -97,10 +95,10 @@ export default function CommentBox({ postId, onCommentUpdate }) {
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-xl p-3 border">
-        <div className="border p-2 rounded min-h-[100px]" onClick={() => {}}>
+        <div className="border p-2 rounded min-h-[100px]">
           <Editor
             editorState={editorState}
-            onChange={handleEditorChange}
+            onChange={setEditorState}
             placeholder="Write a comment..."
           />
         </div>
@@ -109,6 +107,7 @@ export default function CommentBox({ postId, onCommentUpdate }) {
           <button onClick={() => fileRef.current.click()} className="p-2 rounded bg-gray-100">
             <ImageIcon size={16} />
           </button>
+
           <input
             type="file"
             ref={fileRef}
@@ -116,12 +115,11 @@ export default function CommentBox({ postId, onCommentUpdate }) {
             onChange={async e => {
               const f = e.target.files[0];
               if (!f) return;
+
               const url = await uploadFile(f);
               if (url) {
-                const content = editorState.getCurrentContent();
-                const newContent = ContentState.createFromText(
-                  content.getPlainText() + `\n![image](${url})`
-                );
+                const newText = getPlainText() + `\n[image](${url})`;
+                const newContent = ContentState.createFromText(newText);
                 setEditorState(EditorState.createWithContent(newContent));
               }
             }}
@@ -131,8 +129,11 @@ export default function CommentBox({ postId, onCommentUpdate }) {
             😊
           </button>
 
-          <div className="ml-auto flex items-center gap-2">
-            <button onClick={submitComment} className="px-4 py-2 bg-black text-white rounded-full flex items-center gap-1">
+          <div className="ml-auto">
+            <button
+              onClick={submitComment}
+              className="px-4 py-2 bg-black text-white rounded-full flex items-center gap-1"
+            >
               <Send size={14} /> Send
             </button>
           </div>
@@ -154,6 +155,8 @@ export default function CommentBox({ postId, onCommentUpdate }) {
   );
 }
 
+// ------------------ COMMENT ROW ------------------
+
 function CommentRow({ comment, postId, onUpdate }) {
   const [showReplies, setShowReplies] = useState(false);
   const [replies, setReplies] = useState(comment.replies || []);
@@ -169,9 +172,12 @@ function CommentRow({ comment, postId, onUpdate }) {
 
   async function toggleReplies() {
     setShowReplies(s => !s);
+
     if (!showReplies && replies.length === 0) {
       try {
-        const r = await api.get(`/posts/${postId}/comments/${comment._id}/replies?page=1&pageSize=5`);
+        const r = await api.get(
+          `/posts/${postId}/comments/${comment._id}/replies?page=1&pageSize=5`
+        );
         setReplies(r.data.replies || []);
       } catch {
         toast.error("Failed to load replies");
@@ -180,19 +186,24 @@ function CommentRow({ comment, postId, onUpdate }) {
   }
 
   return (
-    <div className="p-3 rounded-xl bg-gray-50 dark:bg-black/40 border">
+    <div className="p-3 rounded-xl bg-gray-50 border">
       <div className="flex items-start gap-3">
         <img src={comment.author?.avatar} className="w-10 h-10 rounded-full" />
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <div>
               <strong>{comment.author?.name}</strong>
-              <div className="text-xs text-gray-500" dangerouslySetInnerHTML={{ __html: comment.text }} />
+              <div
+                className="text-xs text-gray-500"
+                dangerouslySetInnerHTML={{ __html: comment.text }}
+              />
             </div>
+
             <div className="flex items-center gap-2">
               <button onClick={likeComment} className="flex items-center gap-1">
                 <Heart size={14} /> {comment.likes?.length || 0}
               </button>
+
               <button onClick={toggleReplies} className="text-xs">
                 {comment.replies?.length || 0} Replies
               </button>
@@ -204,7 +215,10 @@ function CommentRow({ comment, postId, onUpdate }) {
               {replies.map(rep => (
                 <div key={rep._id} className="flex gap-2 items-start">
                   <img src={rep.author?.avatar} className="w-8 h-8 rounded-full" />
-                  <div className="bg-white p-2 rounded-xl text-sm" dangerouslySetInnerHTML={{ __html: rep.text }} />
+                  <div
+                    className="bg-white p-2 rounded-xl text-sm"
+                    dangerouslySetInnerHTML={{ __html: rep.text }}
+                  />
                 </div>
               ))}
             </div>
