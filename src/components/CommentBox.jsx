@@ -1,7 +1,8 @@
 // CommentRichBox.jsx
 import React, { useState, useEffect, useRef } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+
 import { Picker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import { api } from "../api";
