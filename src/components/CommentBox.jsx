@@ -1,229 +1,165 @@
-// CommentBox.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { Editor, EditorState, ContentState } from "draft-js";
-import "draft-js/dist/Draft.css";
-
 import { api } from "../api";
 import toast from "react-hot-toast";
-import { Send, ImageIcon, Heart } from "lucide-react";
-import Picker from "emoji-picker-react";
+
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+import { Card, Button, Tabs, Upload, Input } from "antd";
+import { FiImage, FiSmile, FiSend } from "react-icons/fi";
+
+const { TextArea } = Input;
 
 export default function CommentBox({ postId, onCommentUpdate }) {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
+  const [text, setText] = useState("");
   const [comments, setComments] = useState([]);
-  const [loadingComments, setLoadingComments] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [showEmoji, setShowEmoji] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const fileRef = useRef();
 
   useEffect(() => {
     loadComments();
   }, []);
 
   async function loadComments() {
-    setLoadingComments(true);
     try {
-      const res = await api.get(`/posts/${postId}`);
-      setComments(res.data.comments || []);
-      onCommentUpdate(postId, res.data.comments || []);
+      const r = await api.get(`/posts/${postId}`);
+      setComments(r.data.comments || []);
+      onCommentUpdate(postId, r.data.comments || []);
     } catch {
       toast.error("Failed to load comments");
     } finally {
-      setLoadingComments(false);
+      setLoading(false);
     }
   }
 
-  function getPlainText() {
-    return editorState.getCurrentContent().getPlainText();
-  }
+  async function uploadImage(file) {
+    const fd = new FormData();
+    fd.append("file", file);
 
-  function getSimpleHTML() {
-    return editorState.getCurrentContent().getPlainText().replace(/\n/g, "<br/>");
-  }
-
-  async function uploadFile(file) {
-    setUploading(true);
     try {
-      const fd = new FormData();
-      fd.append("file", file);
-
-      const r = await api.post("/upload", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
+      const r = await api.post("/upload", fd);
       return r.data.url;
     } catch {
-      toast.error("Upload failed");
+      toast.error("Image upload failed");
       return null;
-    } finally {
-      setUploading(false);
     }
   }
 
   async function submitComment() {
-    const plainText = getPlainText();
-    if (!plainText.trim()) return toast.error("Write something");
-
-    const html = getSimpleHTML();
+    if (!text.trim()) return toast.error("Write something");
 
     try {
       const r = await api.post(`/posts/${postId}/comments`, {
-        text: html,
-        plainText,
+        text,
+        plainText: text,
       });
 
       setComments(prev => [...prev, r.data]);
       onCommentUpdate(postId, [...comments, r.data]);
-
-      setEditorState(EditorState.createEmpty());
+      setText("");
       toast.success("Comment posted");
     } catch {
       toast.error("Failed to post comment");
     }
   }
 
-  function addEmoji(emojiObject) {
-    const emoji = emojiObject.emoji;
-    const newText = getPlainText() + emoji;
-    const newContent = ContentState.createFromText(newText);
-    setEditorState(EditorState.createWithContent(newContent));
+  function addEmoji(e) {
+    setText(prev => prev + e);
     setShowEmoji(false);
   }
 
+  const items = [
+    {
+      key: "1",
+      label: "Write",
+      children: (
+        <TextArea
+          value={text}
+          onChange={e => setText(e.target.value)}
+          autoSize={{ minRows: 4 }}
+          placeholder="Write markdown..."
+        />
+      ),
+    },
+    {
+      key: "2",
+      label: "Preview",
+      children: (
+        <Card className="prose max-w-none p-3">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {text || "*Nothing to preview...*"}
+          </ReactMarkdown>
+        </Card>
+      ),
+    },
+  ];
+
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl p-3 border">
-        <div className="border p-2 rounded min-h-[100px]">
-          <Editor
-            editorState={editorState}
-            onChange={setEditorState}
-            placeholder="Write a comment..."
-          />
-        </div>
 
-        <div className="flex items-center gap-2 mt-2">
-          <button onClick={() => fileRef.current.click()} className="p-2 rounded bg-gray-100">
-            <ImageIcon size={16} />
-          </button>
+      {/* INPUT CARD */}
+      <Card bordered className="rounded-xl shadow-sm">
 
-          <input
-            type="file"
-            ref={fileRef}
-            className="hidden"
-            onChange={async e => {
-              const f = e.target.files[0];
-              if (!f) return;
+        {/* WRITE / PREVIEW TABS */}
+        <Tabs items={items} />
 
-              const url = await uploadFile(f);
+        <div className="flex items-center gap-3 mt-3">
+
+          {/* IMAGE UPLOAD */}
+          <Upload
+            showUploadList={false}
+            beforeUpload={async file => {
+              const url = await uploadImage(file);
               if (url) {
-                const newText = getPlainText() + `\n[image](${url})`;
-                const newContent = ContentState.createFromText(newText);
-                setEditorState(EditorState.createWithContent(newContent));
+                setText(prev => prev + `\n![](${url})`);
               }
+              return false;
             }}
-          />
+          >
+            <Button icon={<FiImage />} />
+          </Upload>
 
-          <button onClick={() => setShowEmoji(s => !s)} className="p-2 rounded bg-gray-100">
-            😊
-          </button>
+          {/* EMOJI BUTTON */}
+          <Button icon={<FiSmile />} onClick={() => setShowEmoji(s => !s)} />
 
-          <div className="ml-auto">
-            <button
-              onClick={submitComment}
-              className="px-4 py-2 bg-black text-white rounded-full flex items-center gap-1"
-            >
-              <Send size={14} /> Send
-            </button>
-          </div>
+          {/* SEND BUTTON */}
+          <Button
+            type="primary"
+            icon={<FiSend />}
+            onClick={submitComment}
+            className="ml-auto rounded-full"
+          >
+            Send
+          </Button>
         </div>
 
+        {/* EMOJI LIST */}
         {showEmoji && (
-          <div className="mt-2">
-            <Picker onEmojiClick={addEmoji} />
+          <div className="grid grid-cols-8 gap-2 bg-gray-100 p-2 mt-3 rounded-xl">
+            {["😀","😂","😍","🔥","😎","😢","😭","🙏","❤️","🎉","👍","👀"].map(e => (
+              <button
+                key={e}
+                className="text-xl"
+                onClick={() => addEmoji(e)}
+              >
+                {e}
+              </button>
+            ))}
           </div>
         )}
-      </div>
 
+      </Card>
+
+      {/* COMMENTS LIST */}
       <div className="space-y-3">
         {comments.map(c => (
-          <CommentRow key={c._id} comment={c} postId={postId} onUpdate={loadComments} />
+          <CommentRow
+            key={c._id}
+            comment={c}
+            postId={postId}
+            onUpdate={loadComments}
+          />
         ))}
-      </div>
-    </div>
-  );
-}
-
-// ------------------ COMMENT ROW ------------------
-
-function CommentRow({ comment, postId, onUpdate }) {
-  const [showReplies, setShowReplies] = useState(false);
-  const [replies, setReplies] = useState(comment.replies || []);
-
-  async function likeComment() {
-    try {
-      await api.post(`/posts/${postId}/comments/${comment._id}/like`);
-      onUpdate();
-    } catch {
-      toast.error("Failed to like comment");
-    }
-  }
-
-  async function toggleReplies() {
-    setShowReplies(s => !s);
-
-    if (!showReplies && replies.length === 0) {
-      try {
-        const r = await api.get(
-          `/posts/${postId}/comments/${comment._id}/replies?page=1&pageSize=5`
-        );
-        setReplies(r.data.replies || []);
-      } catch {
-        toast.error("Failed to load replies");
-      }
-    }
-  }
-
-  return (
-    <div className="p-3 rounded-xl bg-gray-50 border">
-      <div className="flex items-start gap-3">
-        <img src={comment.author?.avatar} className="w-10 h-10 rounded-full" />
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <div>
-              <strong>{comment.author?.name}</strong>
-              <div
-                className="text-xs text-gray-500"
-                dangerouslySetInnerHTML={{ __html: comment.text }}
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button onClick={likeComment} className="flex items-center gap-1">
-                <Heart size={14} /> {comment.likes?.length || 0}
-              </button>
-
-              <button onClick={toggleReplies} className="text-xs">
-                {comment.replies?.length || 0} Replies
-              </button>
-            </div>
-          </div>
-
-          {showReplies && (
-            <div className="mt-3 space-y-2">
-              {replies.map(rep => (
-                <div key={rep._id} className="flex gap-2 items-start">
-                  <img src={rep.author?.avatar} className="w-8 h-8 rounded-full" />
-                  <div
-                    className="bg-white p-2 rounded-xl text-sm"
-                    dangerouslySetInnerHTML={{ __html: rep.text }}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
