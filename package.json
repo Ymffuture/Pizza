@@ -40,7 +40,7 @@
     
     
     
-    "@emoji-mart/react": "^1.1.8",
+    "@emoji-mart/react": "^1.1.1",
     "@giphy/js-components": "^7.0.1",
     "emoji-mart": "^5.5.2",
     "emoji-picker-react": "^4.7.9",
