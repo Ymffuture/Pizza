@@ -27,6 +27,10 @@
     "draft-js": "^0.12.7",
     "draftjs-to-html": "^0.9.1",
     "html-to-draftjs": "^1.5.0",
+    "draft-js": "0.12.7",
+    "draft-convert": "2.1.13",
+    "emoji-picker-react": "4.6.1",
+    
     "react-infinite-scroll-component": "^6.1.0",
     "@emailjs/browser": "^3.2.0", 
     "react-hot-toast": "^2.4.1", 
