@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
+import { EditorState, convertToRaw, ContentState, convertFromHTML } from "draft-js";
+import { Editor } from "draft-js";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
+import "draft-js/dist/Draft.css";
+
 import { api } from "../api";
 import toast from "react-hot-toast";
 import { Send, ImageIcon, Heart } from "lucide-react";
 import stripHtml from "string-strip-html";
-
-// Lexical imports
-import { LexicalComposer } from "@lexical/react";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { OnChangePlugin } from "@lexical/react";
+import EmojiPicker from "emoji-picker-react"; // lightweight, works with React 19
 
 export default function CommentBox({ postId, onCommentUpdate }) {
-  const [editorHtml, setEditorHtml] = useState("");
-  const [plainText, setPlainText] = useState("");
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -37,9 +36,12 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     }
   }
 
-  function handleEditorChange(content) {
-    setEditorHtml(content);
-    setPlainText(stripHtml(content).result || stripHtml(content));
+  function handleEditorChange(state) {
+    setEditorState(state);
+  }
+
+  function getPlainText() {
+    return stripHtml(draftToHtml(convertToRaw(editorState.getCurrentContent()))).result || "";
   }
 
   async function uploadFile(file) {
@@ -60,16 +62,19 @@ export default function CommentBox({ postId, onCommentUpdate }) {
   }
 
   async function submitComment() {
+    const plainText = getPlainText();
     if (!plainText.trim()) return toast.error("Write something");
+
+    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
     try {
       const r = await api.post(`/posts/${postId}/comments`, {
-        text: editorHtml,
+        text: htmlContent,
         plainText,
       });
       setComments(prev => [...prev, r.data]);
       onCommentUpdate(postId, [...comments, r.data]);
-      setEditorHtml("");
-      setPlainText("");
+      setEditorState(EditorState.createEmpty());
       toast.success("Comment posted");
     } catch {
       toast.error("Failed to post comment");
@@ -77,19 +82,21 @@ export default function CommentBox({ postId, onCommentUpdate }) {
   }
 
   function addEmoji(emoji) {
-    setEditorHtml(prev => prev + emoji.emoji);
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    const newContent = ContentState.createFromText(
+      content.getPlainText() + emoji.emoji
+    );
+    setEditorState(EditorState.push(editorState, newContent, "insert-characters"));
     setShowEmoji(false);
   }
 
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-xl p-3 border">
-        <LexicalComposer initialConfig={{ namespace: 'comment-editor', theme: {}, onError: console.error }}>
-  <RichTextPlugin contentEditable={<ContentEditable />} placeholder={<div>Write comment...</div>} />
-  <HistoryPlugin />
-  <OnChangePlugin onChange={handleEditorChange} />
-</LexicalComposer>
-
+        <div className="border rounded p-2 min-h-[100px]" onClick={() => {}}>
+          <Editor editorState={editorState} onChange={handleEditorChange} placeholder="Write a comment..." />
+        </div>
 
         <div className="flex items-center gap-2 mt-2">
           <button onClick={() => fileRef.current.click()} className="p-2 rounded bg-gray-100">
@@ -103,7 +110,13 @@ export default function CommentBox({ postId, onCommentUpdate }) {
               const f = e.target.files[0];
               if (!f) return;
               const url = await uploadFile(f);
-              if (url) setEditorHtml(prev => prev + `<p><img src="${url}" alt="image" style="max-width:100%" /></p>`);
+              if (url) {
+                const content = editorState.getCurrentContent();
+                const newContent = ContentState.createFromText(
+                  content.getPlainText() + `\n<img src="${url}" alt="image" />`
+                );
+                setEditorState(EditorState.push(editorState, newContent, "insert-characters"));
+              }
             }}
           />
 
@@ -112,7 +125,7 @@ export default function CommentBox({ postId, onCommentUpdate }) {
           </button>
 
           <div className="ml-auto flex items-center gap-2">
-            <button onClick={submitComment} className="px-4 py-2 bg-black text-white rounded-full">
+            <button onClick={submitComment} className="px-4 py-2 bg-black text-white rounded-full flex items-center gap-1">
               <Send size={14} /> Send
             </button>
           </div>
