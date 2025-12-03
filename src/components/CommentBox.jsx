@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic"; // if using Next; otherwise import react-quill normally
 import ReactQuill from "react-quill"; // npm i react-quill
 import "react-quill/dist/quill.snow.css";
-import { Picker } from "emoji-mart"; // npm i emoji-mart
+import { Picker } from "@katherineheadshall/emoji-mart-react";
+import "@katherineheadshall/emoji-mart-react/dist/style.css";
 import "emoji-mart/css/emoji-mart.css";
 import { api } from "../api";
 import toast from "react-hot-toast";
