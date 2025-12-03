@@ -1,15 +1,16 @@
-// CommentRichBox.jsx
 import React, { useState, useEffect, useRef } from "react";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
-
-import { Picker } from "@katherineheadshall/emoji-mart-react";
-import "@katherineheadshall/emoji-mart-react/dist/style.css"; // only this one
-
 import { api } from "../api";
 import toast from "react-hot-toast";
 import { Send, ImageIcon, Heart } from "lucide-react";
 import stripHtml from "string-strip-html";
+
+// Lexical imports
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChange";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { EmojiPicker } from "emoji-picker-react"; // React 19 compatible
 
 export default function CommentBox({ postId, onCommentUpdate }) {
   const [editorHtml, setEditorHtml] = useState("");
@@ -37,9 +38,9 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     }
   }
 
-  function handleEditorChange(html) {
-    setEditorHtml(html);
-    setPlainText(stripHtml(html).result || stripHtml(html));
+  function handleEditorChange(content) {
+    setEditorHtml(content);
+    setPlainText(stripHtml(content).result || stripHtml(content));
   }
 
   async function uploadFile(file) {
@@ -77,20 +78,27 @@ export default function CommentBox({ postId, onCommentUpdate }) {
   }
 
   function addEmoji(emoji) {
-    const sym = emoji.native;
-    setEditorHtml(prev => prev + sym);
+    setEditorHtml(prev => prev + emoji.emoji);
     setShowEmoji(false);
   }
 
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-xl p-3 border">
-        <ReactQuill
-          value={editorHtml}
-          onChange={handleEditorChange}
-          theme="snow"
-          placeholder="Write a comment..."
-        />
+        <LexicalComposer
+          initialConfig={{
+            namespace: "comment-editor",
+            theme: {},
+            onError: e => console.error(e),
+          }}
+        >
+          <RichTextPlugin
+            contentEditable={<ContentEditable className="border p-2 rounded min-h-[80px]" />}
+            placeholder={<div className="text-gray-400">Write a comment...</div>}
+          />
+          <HistoryPlugin />
+          <OnChangePlugin onChange={handleEditorChange} />
+        </LexicalComposer>
 
         <div className="flex items-center gap-2 mt-2">
           <button onClick={() => fileRef.current.click()} className="p-2 rounded bg-gray-100">
@@ -104,9 +112,7 @@ export default function CommentBox({ postId, onCommentUpdate }) {
               const f = e.target.files[0];
               if (!f) return;
               const url = await uploadFile(f);
-              if (url) {
-                setEditorHtml(prev => prev + `<p><img src="${url}" alt="image" style="max-width:100%" /></p>`);
-              }
+              if (url) setEditorHtml(prev => prev + `<p><img src="${url}" alt="image" style="max-width:100%" /></p>`);
             }}
           />
 
@@ -123,12 +129,11 @@ export default function CommentBox({ postId, onCommentUpdate }) {
 
         {showEmoji && (
           <div className="mt-2">
-            <Picker onSelect={addEmoji} />
+            <EmojiPicker onEmojiClick={addEmoji} />
           </div>
         )}
       </div>
 
-      {/* Comments List */}
       <div className="space-y-3">
         {comments.map(c => (
           <CommentRow key={c._id} comment={c} postId={postId} onUpdate={loadComments} />
@@ -154,7 +159,6 @@ function CommentRow({ comment, postId, onUpdate }) {
   async function toggleReplies() {
     setShowReplies(s => !s);
     if (!showReplies && replies.length === 0) {
-      // fetch first page of replies if needed
       try {
         const r = await api.get(`/posts/${postId}/comments/${comment._id}/replies?page=1&pageSize=5`);
         setReplies(r.data.replies || []);
