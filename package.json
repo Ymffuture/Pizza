@@ -1,7 +1,7 @@
 {
   "name": "swiftmeta",
   "private": true,
-  "version": "0.0.0",
+  "version": "5.6.680",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -41,7 +41,7 @@
 "emoji-mart": "^5.6.0",
 "emoji-picker-react": "^4.16.1",
 "react-mentions": "^4.4.10",
-"react-quill-new": "^3.6.0"
+"react-quill-new": "^3.6.0",
     "tailwind-scrollbar-hide": "^1.1.7", 
     "lottie-react": "^2.4.0", 
     "copy-to-clipboard": "^3.3.3", 
