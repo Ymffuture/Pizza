@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { api } from "../api";
 import toast from "react-hot-toast";
-
+import CommentRow from "./CommentRow";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
