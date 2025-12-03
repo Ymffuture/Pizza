@@ -1,18 +1,17 @@
+// CommentBox.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { EditorState, convertToRaw, ContentState, convertFromHTML } from "draft-js";
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { convertToHTML, convertFromHTML } from "draft-convert";
 import { Editor } from "draft-js";
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
 import "draft-js/dist/Draft.css";
 
 import { api } from "../api";
 import toast from "react-hot-toast";
 import { Send, ImageIcon, Heart } from "lucide-react";
-import stripHtml from "string-strip-html";
-import EmojiPicker from "emoji-picker-react"; // lightweight, works with React 19
+import { Picker } from "emoji-picker-react";
 
 export default function CommentBox({ postId, onCommentUpdate }) {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(true);
   const [showEmoji, setShowEmoji] = useState(false);
@@ -40,8 +39,12 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     setEditorState(state);
   }
 
+  function getHTML() {
+    return convertToHTML(editorState.getCurrentContent());
+  }
+
   function getPlainText() {
-    return stripHtml(draftToHtml(convertToRaw(editorState.getCurrentContent()))).result || "";
+    return editorState.getCurrentContent().getPlainText();
   }
 
   async function uploadFile(file) {
@@ -65,11 +68,10 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     const plainText = getPlainText();
     if (!plainText.trim()) return toast.error("Write something");
 
-    const htmlContent = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-
+    const html = getHTML();
     try {
       const r = await api.post(`/posts/${postId}/comments`, {
-        text: htmlContent,
+        text: html,
         plainText,
       });
       setComments(prev => [...prev, r.data]);
@@ -81,21 +83,26 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     }
   }
 
-  function addEmoji(emoji) {
+  function addEmoji(event, emojiObject) {
+    const emoji = emojiObject.emoji;
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
     const newContent = ContentState.createFromText(
-      content.getPlainText() + emoji.emoji
+      content.getPlainText().slice(0, selection.getStartOffset()) + emoji + content.getPlainText().slice(selection.getEndOffset())
     );
-    setEditorState(EditorState.push(editorState, newContent, "insert-characters"));
+    setEditorState(EditorState.createWithContent(newContent));
     setShowEmoji(false);
   }
 
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-xl p-3 border">
-        <div className="border rounded p-2 min-h-[100px]" onClick={() => {}}>
-          <Editor editorState={editorState} onChange={handleEditorChange} placeholder="Write a comment..." />
+        <div className="border p-2 rounded min-h-[100px]" onClick={() => {}}>
+          <Editor
+            editorState={editorState}
+            onChange={handleEditorChange}
+            placeholder="Write a comment..."
+          />
         </div>
 
         <div className="flex items-center gap-2 mt-2">
@@ -113,9 +120,9 @@ export default function CommentBox({ postId, onCommentUpdate }) {
               if (url) {
                 const content = editorState.getCurrentContent();
                 const newContent = ContentState.createFromText(
-                  content.getPlainText() + `\n<img src="${url}" alt="image" />`
+                  content.getPlainText() + `\n![image](${url})`
                 );
-                setEditorState(EditorState.push(editorState, newContent, "insert-characters"));
+                setEditorState(EditorState.createWithContent(newContent));
               }
             }}
           />
@@ -133,7 +140,7 @@ export default function CommentBox({ postId, onCommentUpdate }) {
 
         {showEmoji && (
           <div className="mt-2">
-            <EmojiPicker onEmojiClick={addEmoji} />
+            <Picker onEmojiClick={addEmoji} />
           </div>
         )}
       </div>
