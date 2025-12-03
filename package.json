@@ -24,13 +24,8 @@
     "react-markdown": "^8.0.7",
     "remark-gfm": "^3.0.1",
     "lucide-react": "^0.447.0", 
-    "draft-js": "^0.12.7",
-  
-    
-    "draft-js": "0.12.7",
-    "draft-convert": "2.1.13",
+    "draft-js": "^0.12.7", 
     "emoji-picker-react": "4.6.1",
-    
     "react-infinite-scroll-component": "^6.1.0",
     "@emailjs/browser": "^3.2.0", 
     "react-hot-toast": "^2.4.1", 
