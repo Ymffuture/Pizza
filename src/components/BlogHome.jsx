@@ -8,8 +8,6 @@ import { api } from "../api";
 import toast from "react-hot-toast";
 
 // ⭐ Import your pages (these files must exist)
-import EditPost from "../pages/EditPost";
-import ViewPost from "../pages/ViewPost";
 import CommentBox from "../components/CommentBox";   // ⬅ extracted component
 
 export default function BlogHome() {
