@@ -5,12 +5,11 @@ import { Send, ImageIcon, Heart } from "lucide-react";
 import stripHtml from "string-strip-html";
 
 // Lexical imports
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { LexicalComposer } from "@lexical/react";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { OnChangePlugin } from "@lexical/react/LexicalOnChange";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { EmojiPicker } from "emoji-picker-react"; // React 19 compatible
+import { OnChangePlugin } from "@lexical/react";
 
 export default function CommentBox({ postId, onCommentUpdate }) {
   const [editorHtml, setEditorHtml] = useState("");
@@ -85,20 +84,12 @@ export default function CommentBox({ postId, onCommentUpdate }) {
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-xl p-3 border">
-        <LexicalComposer
-          initialConfig={{
-            namespace: "comment-editor",
-            theme: {},
-            onError: e => console.error(e),
-          }}
-        >
-          <RichTextPlugin
-            contentEditable={<ContentEditable className="border p-2 rounded min-h-[80px]" />}
-            placeholder={<div className="text-gray-400">Write a comment...</div>}
-          />
-          <HistoryPlugin />
-          <OnChangePlugin onChange={handleEditorChange} />
-        </LexicalComposer>
+        <LexicalComposer initialConfig={{ namespace: 'comment-editor', theme: {}, onError: console.error }}>
+  <RichTextPlugin contentEditable={<ContentEditable />} placeholder={<div>Write comment...</div>} />
+  <HistoryPlugin />
+  <OnChangePlugin onChange={handleEditorChange} />
+</LexicalComposer>
+
 
         <div className="flex items-center gap-2 mt-2">
           <button onClick={() => fileRef.current.click()} className="p-2 rounded bg-gray-100">
