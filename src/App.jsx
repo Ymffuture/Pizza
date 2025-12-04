@@ -29,7 +29,7 @@ const Build = lazy(() => import("./components/dashboard/pages/Build"));
 const Pricing = lazy(() => import("./components/dashboard/pages/Pricing"));
 const FreeProjects = lazy(() => import("./components/dashboard/pages/FreeProjects"));
 const Edit =lazy(() =>import("./pages/EditPost")) ;
-const ViewPost = lazg(() => import("./pages/ViewPost")) ;
+const ViewPost = lazy(() => import("./pages/ViewPost")) ;
 
 const Loader = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-transparent">
