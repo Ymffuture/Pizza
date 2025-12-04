@@ -2,7 +2,7 @@ import Feed from "../../pages/Feed";
 
 export default function Dashboard() {
   return (
-    <section className="w-full py-20 text-center">
+    <section className="w-full py-20 text-center scale-95">
       {/* Gradient Apple-style headline */}
       <h1
         className="
