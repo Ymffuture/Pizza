@@ -118,8 +118,8 @@ const App = () => {
               <Route path="login" element={<LoginPhone />} />
               <Route path="new" element={<NewPost />} />
               <Route path="profile" element={<Profile />} />
-              <Route path="edit" element={<Edit />} />
-              <Route path="view-post" element={<ViewPost/>} />
+              <Route path="edit/:id" element={<Edit />} />
+              <Route path="view-post/:id" element={<ViewPost/>} />
             </Route>
           </Route>
 
