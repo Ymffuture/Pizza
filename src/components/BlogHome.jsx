@@ -161,7 +161,7 @@ const Loader = () => (
                 {post.likes?.length || 0}
               </button>
 
-              <Link to={`/posts/${post._id}`} className="text-xs opacity-60 hover:underline">
+              <Link to={`/dashboard/blog/posts/${post._id}`} className="text-xs opacity-60 hover:underline">
                 {post.comments?.length || 0} comments
               </Link>
             </div>
