@@ -2,13 +2,56 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Heart, Trash2, Pencil, MoreHorizontal } from "lucide-react";
-import { Dropdown } from "antd";
+import { Dropdown, Modal, Button } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { api } from "../api";
 import toast from "react-hot-toast";
 
-// ⭐ Import your pages (these files must exist)
-import CommentBox from "../components/CommentBox";   // ⬅ extracted component
+// ⭐ Components
+import CommentBox from "../components/CommentBox";
+
+const { confirm } = Modal;
+
+// Post menu dropdown component
+function PostMenu({ post, onEdit, onDelete }) {
+  const handleDelete = () => {
+    confirm({
+      title: "Are you sure you want to delete this post?",
+      content: "This action cannot be undone.",
+      okText: "Yes, delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      async onOk() {
+        try {
+          await api.delete(`/posts/${post._id}`);
+          onDelete(post._id);
+          toast.success("Post deleted");
+        } catch (err) {
+          console.error(err);
+          toast.error("Failed to delete post");
+        }
+      },
+    });
+  };
+
+  return (
+    <div className="bg-white dark:bg-black rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 w-36 overflow-hidden text-xs">
+      <button
+        onClick={onEdit}
+        className="flex items-center gap-2 w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
+      >
+        <Pencil size={14} /> Edit
+      </button>
+
+      <button
+        onClick={handleDelete}
+        className="flex items-center gap-2 w-full px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10"
+      >
+        <Trash2 size={14} /> Delete
+      </button>
+    </div>
+  );
+}
 
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
@@ -16,6 +59,7 @@ export default function BlogHome() {
   const [hasMore, setHasMore] = useState(true);
   const nav = useNavigate();
 
+  // Fetch posts with pagination
   const fetchPosts = useCallback(async () => {
     try {
       const r = await api.get(`/posts?page=${page}`);
@@ -29,37 +73,18 @@ export default function BlogHome() {
     }
   }, [page]);
 
-  useEffect(() => { fetchPosts(); }, [fetchPosts]);
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
-
+  // Update comments for a post
   const updatePostComments = (postId, newComments) => {
     setPosts(prev =>
       prev.map(p => (p._id === postId ? { ...p, comments: newComments } : p))
     );
   };
 
-  const menu = (post) => (
-    <div className="bg-white dark:bg-black rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 w-36 overflow-hidden text-xs">
-      <button
-        onClick={() => nav(`/dashboard/blog/edit/${post._id}`)}
-        className="flex items-center gap-2 w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
-      >
-        <Pencil size={14}/> Edit
-      </button>
-
-      <button
-        onClick={async () => {
-          await api.delete(`/dashboard/blog/posts/${post._id}`);
-          setPosts(posts.filter(p => p._id !== post._id));
-          toast.success("Post deleted");
-        }}
-        className="flex items-center gap-2 w-full px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10"
-      >
-        <Trash2 size={14}/> Delete
-      </button>
-    </div>
-  );
-
+  // Loader for infinite scroll
   const Loader = () => (
     <div className="flex flex-col items-center justify-center min-h-[120px]">
       <div className="animate-spin border-4 border-gray-300 border-t-black rounded-full w-10 h-10"></div>
@@ -81,7 +106,6 @@ export default function BlogHome() {
             key={post._id}
             className="bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800 mb-5 p-5 hover:shadow-xl transition-all"
           >
-
             {/* HEADER */}
             <div className="flex justify-between items-start mb-3">
               <div className="flex items-center gap-3">
@@ -98,7 +122,17 @@ export default function BlogHome() {
                 </div>
               </div>
 
-              <Dropdown overlay={menu(post)} trigger={["click"]} placement="bottomRight">
+              <Dropdown
+                overlay={
+                  <PostMenu
+                    post={post}
+                    onEdit={() => nav(`/dashboard/blog/edit/${post._id}`)}
+                    onDelete={(id) => setPosts(prev => prev.filter(p => p._id !== id))}
+                  />
+                }
+                trigger={["click"]}
+                placement="bottomRight"
+              >
                 <MoreHorizontal size={22} className="cursor-pointer" />
               </Dropdown>
             </div>
