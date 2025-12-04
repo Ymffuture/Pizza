@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Modal, Input, Button, Spin } from "antd";
 import { api } from "../api";
-import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export default function EditPost() {
-  const { id } = useParams();
-  const nav = useNavigate();
+const { TextArea } = Input;
 
+export default function EditPostModal({ postId, visible, onClose, onUpdated }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [title, setTitle] = useState("");
@@ -14,17 +13,19 @@ export default function EditPost() {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-    loadPost();
-  }, []);
+    if (visible) loadPost();
+  }, [visible]);
 
   async function loadPost() {
+    setLoading(true);
     try {
-      const r = await api.get(`/posts/${id}`);
+      const r = await api.get(`/posts/${postId}`);
       setTitle(r.data.title);
       setBody(r.data.body);
       setImages(r.data.images || []);
     } catch (e) {
       toast.error("Failed to load post");
+      onClose();
     } finally {
       setLoading(false);
     }
@@ -33,9 +34,10 @@ export default function EditPost() {
   async function save() {
     setSaving(true);
     try {
-      await api.put(`/posts/${id}`, { title, body, images });
+      await api.put(`/posts/${postId}`, { title, body, images });
       toast.success("Post updated");
-      nav("/dashboard/blog");
+      onUpdated(); // Callback for parent to refresh list
+      onClose();
     } catch (e) {
       toast.error("Failed to update");
     } finally {
@@ -43,33 +45,44 @@ export default function EditPost() {
     }
   }
 
-  if (loading) return <p className="text-center p-10">Loading...</p>;
-
   return (
-    <div className="max-w-xl mx-auto pt-8 p-4">
-      <h1 className="text-2xl font-bold mb-4">Edit Post</h1>
-
-      <input
-        className="w-full px-4 py-3 mb-3 border rounded-xl"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        placeholder="Title"
-      />
-
-      <textarea
-        className="w-full px-4 py-3 h-40 mb-3 border rounded-xl"
-        value={body}
-        onChange={e => setBody(e.target.value)}
-        placeholder="Write something..."
-      />
-
-      <button
-        onClick={save}
-        disabled={saving}
-        className="w-full py-3 bg-black text-white rounded-xl"
-      >
-        {saving ? "Saving..." : "Save Changes"}
-      </button>
-    </div>
+    <Modal
+      title="Edit Post"
+      open={visible}
+      onCancel={onClose}
+      footer={[
+        <Button key="cancel" onClick={onClose}>
+          Cancel
+        </Button>,
+        <Button
+          key="save"
+          type="primary"
+          loading={saving}
+          onClick={save}
+        >
+          Save Changes
+        </Button>,
+      ]}
+    >
+      {loading ? (
+        <div className="text-center py-10">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+          />
+          <TextArea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Write something..."
+            rows={6}
+          />
+        </div>
+      )}
+    </Modal>
   );
 }
