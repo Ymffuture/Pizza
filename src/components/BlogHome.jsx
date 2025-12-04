@@ -49,7 +49,7 @@ export default function BlogHome() {
 
       <button
         onClick={async () => {
-          await api.delete(`/posts/${post._id}`);
+          await api.delete(`/dashboard/blog/posts/${post._id}`);
           setPosts(posts.filter(p => p._id !== post._id));
           toast.success("Post deleted");
         }}
