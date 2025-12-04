@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { api } from "../api";
 import toast from "react-hot-toast";
 import CommentRow from "./CommentRow";
+
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Card, Button, Tabs, Upload, Input } from "antd";
-import { FiImage, FiSmile, FiSend } from "react-icons/fi";
+import { FiImage, FiSend } from "react-icons/fi";
 
 const { TextArea } = Input;
 
@@ -14,7 +15,6 @@ export default function CommentBox({ postId, onCommentUpdate }) {
   const [text, setText] = useState("");
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showEmoji, setShowEmoji] = useState(false);
 
   useEffect(() => {
     loadComments();
@@ -63,12 +63,7 @@ export default function CommentBox({ postId, onCommentUpdate }) {
     }
   }
 
-  function addEmoji(e) {
-    setText(prev => prev + e);
-    setShowEmoji(false);
-  }
-
-  const items = [
+  const tabs = [
     {
       key: "1",
       label: "Write",
@@ -77,7 +72,7 @@ export default function CommentBox({ postId, onCommentUpdate }) {
           value={text}
           onChange={e => setText(e.target.value)}
           autoSize={{ minRows: 4 }}
-          placeholder="Write markdown..."
+          placeholder="Write something..."
         />
       ),
     },
@@ -85,7 +80,7 @@ export default function CommentBox({ postId, onCommentUpdate }) {
       key: "2",
       label: "Preview",
       children: (
-        <Card className="prose max-w-none p-3">
+        <Card className="prose max-w-none p-3 bg-gray-50 rounded-xl">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {text || "*Nothing to preview...*"}
           </ReactMarkdown>
@@ -97,13 +92,14 @@ export default function CommentBox({ postId, onCommentUpdate }) {
   return (
     <div className="space-y-4">
 
-      {/* INPUT CARD */}
-      <Card bordered className="rounded-xl shadow-sm">
+      {/* INPUT CARD (Telegram style) */}
+      <Card bordered className="rounded-2xl shadow-sm border-gray-200">
 
-        {/* WRITE / PREVIEW TABS */}
-        <Tabs items={items} />
+        {/* TABS */}
+        <Tabs items={tabs} />
 
-        <div className="flex items-center gap-3 mt-3">
+        {/* ACTION BAR */}
+        <div className="flex items-center gap-3 mt-3 bg-gray-100 p-2 rounded-xl">
 
           {/* IMAGE UPLOAD */}
           <Upload
@@ -116,41 +112,26 @@ export default function CommentBox({ postId, onCommentUpdate }) {
               return false;
             }}
           >
-            <Button icon={<FiImage />} />
+            <Button
+              icon={<FiImage />}
+              className="rounded-full shadow-sm"
+            />
           </Upload>
-
-          {/* EMOJI BUTTON */}
-          <Button icon={<FiSmile />} onClick={() => setShowEmoji(s => !s)} />
 
           {/* SEND BUTTON */}
           <Button
             type="primary"
             icon={<FiSend />}
             onClick={submitComment}
-            className="ml-auto rounded-full"
+            className="ml-auto rounded-full px-6 shadow-md"
           >
             Send
           </Button>
         </div>
 
-        {/* EMOJI LIST */}
-        {showEmoji && (
-          <div className="grid grid-cols-8 gap-2 bg-gray-100 p-2 mt-3 rounded-xl">
-            {["😀","😂","😍","🔥","😎","😢","😭","🙏","❤️","🎉","👍","👀"].map(e => (
-              <button
-                key={e}
-                className="text-xl"
-                onClick={() => addEmoji(e)}
-              >
-                {e}
-              </button>
-            ))}
-          </div>
-        )}
-
       </Card>
 
-      {/* COMMENTS LIST */}
+      {/* COMMENT LIST */}
       <div className="space-y-3">
         {comments.map(c => (
           <CommentRow
