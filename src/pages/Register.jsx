@@ -12,16 +12,13 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const nav = useNavigate();
 
-  // ✅ Cleanup object URL to avoid memory leaks
   useEffect(() => {
     if (!avatarFile) return;
     const url = URL.createObjectURL(avatarFile);
     setAvatarURL(url);
-
     return () => URL.revokeObjectURL(url);
   }, [avatarFile]);
 
-  // ✅ Basic phone validation
   function isPhoneValid(number) {
     const phoneRegex = /^[0-9]{9,15}$/;
     return phoneRegex.test(number);
@@ -48,8 +45,15 @@ export default function Register() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
+      // ----------------------------------------------------
+      // ✅ SHOW OTP FROM BACKEND AS A TOAST
+      // ----------------------------------------------------
+      if (res.data?.otp_code) {
+        toast.success(`OTP: ${res.data.otp_code}`);
+      }
+      // ----------------------------------------------------
+
       if (res.data?.message) {
-        toast.success("Verification code sent to your email 📩");
         nav("/dashboard/blog/verify-email", { state: { email } });
       } else {
         toast.error("Server didn’t send confirmation");
@@ -71,7 +75,7 @@ export default function Register() {
         </h2>
 
         <div className="flex justify-center mb-5">
-          <label className="relative cursor-pointer" aria-label="Upload profile picture">
+          <label className="relative cursor-pointer">
             <input
               type="file"
               accept="image/*"
