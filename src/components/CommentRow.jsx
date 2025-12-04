@@ -9,7 +9,7 @@ export default function CommentRow({ comment, postId, onUpdate }) {
 
   async function likeComment() {
     try {
-      await api.post(`/api/posts/${postId}/comments/${comment._id}/like`);
+      await api.post(`/posts/${postId}/comments/${comment._id}/like`);
       onUpdate();
     } catch {
       toast.error("Failed to like comment");
@@ -24,7 +24,7 @@ export default function CommentRow({ comment, postId, onUpdate }) {
 
     try {
       const r = await api.get(
-        `/api/posts/${postId}/comments/${comment._id}/replies?page=1&pageSize=10`
+        `/posts/${postId}/comments/${comment._id}/replies?page=1&pageSize=10`
       );
       setReplies(r.data.replies || []);
     } catch {
@@ -37,7 +37,7 @@ export default function CommentRow({ comment, postId, onUpdate }) {
   async function likeReply(replyId) {
     try {
       await api.post(
-        `/api/posts/${postId}/comments/${comment._id}/replies/${replyId}/like`
+        `/posts/${postId}/comments/${comment._id}/replies/${replyId}/like`
       );
       loadReplies(); // refresh replies
     } catch {
