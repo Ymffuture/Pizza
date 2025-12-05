@@ -1,6 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { Dropdown } from "antd";
-import { FilePlus, User, LogIn, UserPlus, MoreHorizontal } from "lucide-react";
+import { FilePlus, User, LogIn, UserPlus, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import { api } from "../../../api";
 import Home from "../../../components/BlogHome";
@@ -8,11 +8,11 @@ import Home from "../../../components/BlogHome";
 export default function Pricing() {
   const [user, setUser] = useState(null);
 
-  // Load current logged-in user from MongoDB (JWT stored in localStorage)
+  // Load logged-in MongoDB user
   useEffect(() => {
     async function loadUser() {
       try {
-        const res = await api.get("/auth/me"); // MUST return user: {name, email, avatar}
+        const res = await api.get("/auth/me");
         setUser(res.data.user || null);
       } catch {
         setUser(null);
@@ -21,67 +21,51 @@ export default function Pricing() {
     loadUser();
   }, []);
 
-  // Logout from MongoDB-based auth
+  // MongoDB logout
   const handleLogout = async () => {
     try {
-      await api.post("/auth/logout"); // OPTIONAL depending on backend
-    } catch (e) {
-      /* ignore */
-    }
+      await api.post("/auth/logout");
+    } catch {}
     localStorage.removeItem("token");
     setUser(null);
     window.location.href = "/dashboard/blog/login";
   };
 
-  // MOBILE DROPDOWN MENU
-  const menu = (
+  // AVATAR DROPDOWN
+  const avatarMenu = (
     <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
 
-      {!user && (
-        <>
-          <Link to="/dashboard/blog/login">
-            <button className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-gray-100 dark:hover:bg-gray-800">
-              <LogIn size={18} /> Login
-            </button>
-          </Link>
+      <div className="px-4 py-3 border-b dark:border-gray-700">
+        <p className="font-medium text-sm">{user?.name}</p>
+        <p className="text-xs text-gray-500">{user?.email}</p>
+      </div>
 
-          <Link to="/dashboard/blog/register">
-            <button className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-gray-100 dark:hover:bg-gray-800">
-              <UserPlus size={18} /> Register
-            </button>
-          </Link>
-        </>
-      )}
-
-      <Link to="/dashboard/blog/new">
+      <Link to="/dashboard/blog/profile">
         <button className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-gray-100 dark:hover:bg-gray-800">
-          <FilePlus size={18} /> New Post
+          <User size={16} /> Profile
         </button>
       </Link>
 
-      {user && (
-        <>
-          <Link to="/dashboard/blog/profile">
-            <button className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-gray-100 dark:hover:bg-gray-800">
-              <User size={18} /> Profile
-            </button>
-          </Link>
+      <Link to="/dashboard/blog/new">
+        <button className="flex items-center gap-3 w-full px-4 py-3 text-sm hover:bg-gray-100 dark:hover:bg-gray-800">
+          <FilePlus size={16} /> New Post
+        </button>
+      </Link>
 
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-          >
-            Logout
-          </button>
-        </>
-      )}
+      <button
+        onClick={handleLogout}
+        className="flex items-center gap-3 w-full px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+      >
+        <LogOut size={16} /> Logout
+      </button>
+
     </div>
   );
 
   return (
     <div className="text-gray-900 dark:text-white mx-auto w-full">
 
-      {/* NAVBAR */}
+      {/* NAV */}
       <nav className="bg-white/70 dark:bg-gray-900/60 backdrop-blur-2xl border border-gray-200 dark:border-gray-800 p-3 sm:p-4 rounded-2xl shadow-md flex justify-between items-center">
 
         <Link to="/" className="text-lg font-semibold hover:opacity-80">
@@ -89,7 +73,7 @@ export default function Pricing() {
         </Link>
 
         {/* DESKTOP MENU */}
-        <div className="hidden md:flex gap-5 text-sm font-medium pr-2">
+        <div className="hidden md:flex gap-5 items-center text-sm font-medium pr-2">
 
           {!user && (
             <>
@@ -108,30 +92,48 @@ export default function Pricing() {
           </Link>
 
           {user && (
-            <>
-              <Link to="/dashboard/blog/profile" className="hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1">
-                <User size={15}/> Profile
-              </Link>
-
-              <button
-                onClick={handleLogout}
-                className="hover:text-red-600 dark:hover:text-red-400 flex items-center gap-1"
-              >
-                Logout
-              </button>
-            </>
+            <Dropdown overlay={avatarMenu} trigger={["click"]} placement="bottomRight">
+              <img
+                src={user?.avatar || "https://via.placeholder.com/40"}
+                alt="avatar"
+                className="w-10 h-10 rounded-full border dark:border-gray-700 cursor-pointer hover:opacity-80 transition"
+              />
+            </Dropdown>
           )}
-
         </div>
 
-        {/* MOBILE */}
-        <div className="md:hidden">
-          <Dropdown overlay={menu} trigger={["click"]} placement="topRight">
-            <MoreHorizontal
-              size={28}
-              className="cursor-pointer text-gray-700 dark:text-gray-300 active:scale-95 transition-transform"
-            />
-          </Dropdown>
+        {/* MOBILE MENU */}
+        <div className="md:hidden flex items-center">
+          {user ? (
+            <Dropdown overlay={avatarMenu} trigger={["click"]} placement="bottomRight">
+              <img
+                src={user?.avatar || "https://via.placeholder.com/36"}
+                className="w-10 h-10 rounded-full border dark:border-gray-700 cursor-pointer"
+              />
+            </Dropdown>
+          ) : (
+            <Dropdown
+              overlay={
+                <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
+                  <Link to="/dashboard/blog/login">
+                    <button className="w-full px-4 py-3 text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <LogIn size={16}/> Login
+                    </button>
+                  </Link>
+
+                  <Link to="/dashboard/blog/register">
+                    <button className="w-full px-4 py-3 text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <UserPlus size={16}/> Register
+                    </button>
+                  </Link>
+                </div>
+              }
+              trigger={["click"]}
+              placement="bottomRight"
+            >
+              <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700"></div>
+            </Dropdown>
+          )}
         </div>
 
       </nav>
