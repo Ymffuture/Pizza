@@ -46,10 +46,10 @@ export default function EditPostModal({ postId, visible, onClose, onUpdated }) {
   }
   
 const Loader = () => (
-  <div className="flex flex-col items-center justify-center min-h-screen bg-transparent">
+  <div className="flex flex-col items-center justify-center bg-transparent">
     <svg
-      width="90"
-      height="90"
+      width="50"
+      height="50"
       viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
       className="animate-spin text-gray-300 dark:text-gray-700"
