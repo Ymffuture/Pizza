@@ -50,10 +50,10 @@ export default function ViewPostModal({ postId, visible, onClose }) {
     }
   }
 const Loader = () => (
-  <div className="flex flex-col items-center justify-center min-h-screen bg-transparent">
+  <div className="flex flex-col items-center justify-center bg-transparent">
     <svg
-      width="90"
-      height="90"
+      width="60"
+      height="60"
       viewBox="0 0 100 100"
       xmlns="http://www.w3.org/2000/svg"
       className="animate-spin text-gray-300 dark:text-gray-700"
@@ -79,7 +79,7 @@ const Loader = () => (
         <animate
           attributeName="opacity"
           values="1;0.6;1"
-          dur="1.6s"
+          dur="1.9s"
           repeatCount="indefinite"
         />
       </circle>
