@@ -5,11 +5,15 @@ import { Dropdown } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { api } from "../api";
 import toast from "react-hot-toast";
+import EditPostModal from "../pages/EditPost";
 
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [editingPostId, setEditingPostId] = useState(null);
+const [showEditModal, setShowEditModal] = useState(false);
+
   const nav = useNavigate();
 
   const fetchPosts = useCallback(async () => {
@@ -36,7 +40,10 @@ export default function BlogHome() {
   const menu = (post) => (
     <div className="bg-white dark:bg-black rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 w-36 overflow-hidden text-xs">
       <button
-        onClick={() => nav(`/dashboard/blog/edit/${post._id}`)}
+        onClick={() => {
+          setEditingPostId(post._id);
+          setShowEditModal(true);
+        }}
         className="flex items-center gap-2 w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
       >
         <Pencil size={14}/> Edit
@@ -174,6 +181,19 @@ const Loader = () => (
           </article>
         ))}
       </InfiniteScroll>
+
+      <EditPostModal
+  postId={editingPostId}
+  visible={showEditModal}
+  onClose={() => setShowEditModal(false)}
+  onUpdated={() => {
+    setPosts([]);
+    setPage(1);
+    setHasMore(true);
+    fetchPosts(); // refresh list after save
+  }}
+/>
+
     </div>
   );
 }
