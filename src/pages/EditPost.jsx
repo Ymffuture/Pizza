@@ -36,7 +36,7 @@ export default function EditPostModal({ postId, visible, onClose, onUpdated }) {
     try {
       await api.put(`/posts/${postId}`, { title, body, images });
       toast.success("Post updated");
-      onUpdated(); // Callback for parent to refresh list
+      onUpdated();
       onClose();
     } catch (e) {
       toast.error("Failed to update");
@@ -49,6 +49,7 @@ export default function EditPostModal({ postId, visible, onClose, onUpdated }) {
     <Modal
       title="Edit Post"
       open={visible}
+      destroyOnClose
       onCancel={onClose}
       footer={[
         <Button key="cancel" onClick={onClose}>
