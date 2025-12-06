@@ -17,6 +17,45 @@ const GeminiAssistant = () => {
   const chatEndRef = useRef(null);
 
 
+  const Loader = () => (
+  <div className="flex flex-col items-center justify-center bg-transparent">
+    <svg
+      width="30"
+      height="30"
+      viewBox="0 0 100 100"
+      xmlns="http://www.w3.org/2000/svg"
+      className="animate-spin text-gray-300 dark:text-gray-700"
+    >
+      <circle
+        cx="50"
+        cy="50"
+        r="40"
+        stroke="currentColor"
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+        strokeDasharray="250"
+        strokeDashoffset="190"
+      />
+      <circle cx="50" cy="50" r="10" fill="#00E5FF">
+        <animate
+          attributeName="r"
+          values="10;14;10"
+          dur="1.6s"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="opacity"
+          values="1;0.6;1"
+          dur="1.6s"
+          repeatCount="indefinite"
+        />
+      </circle>
+    </svg>
+
+  </div>
+);
+
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -212,7 +251,7 @@ const useConnectionStrength = () => {
           {loading && (
             <div className="flex justify-start animation-fade">
               <div className="bg-white dark:bg-gray-800 rounded-2xl px-4 py-2 shadow-sm flex items-center gap-2">
-                <Spin size="small" />
+                <Loader />
                 <span className="text-gray-500 dark:text-gray-300 text-sm animation-pulse">Thinking...</span>
               </div>
             </div>
