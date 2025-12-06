@@ -6,7 +6,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import NotFound from "./pages/NotFound";
 import SignApp from "./layouts/SignIn_Up";
-
+import About from "./components/About" ;
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
 import LoginPhone from "./pages/LoginPhone";
@@ -102,7 +102,8 @@ const App = () => {
           <Route path="/large-projects" element={<LargeProjects />} />
           <Route path="/server-api" element={<ServerAPI />} />
           <Route path="/signup" element={<SignApp />} />
-<Route path="/weather" element={<Weather />} />
+          <Route path="/weather" element={<Weather />} />
+          <Route path="/about" element={<About />} />
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
