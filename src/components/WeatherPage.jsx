@@ -186,7 +186,7 @@ export default function WeatherPage() {
   // UI
   // ---------------------------------------------
   return (
-    <div className="p-4 max-w-xl mx-auto">
+    <div className="p-4 max-w-xl mx-auto h-[60vh]">
       <h1 className="text-3xl font-bold mb-4 flex items-center gap-2">
         <Cloud size={32} /> Weather App
       </h1>
