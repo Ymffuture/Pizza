@@ -49,7 +49,7 @@ const [showViewModal, setShowViewModal] = useState(false);
           setEditingPostId(post._id);
           setShowEditModal(true);
         }}
-        className="flex items-center gap-2 w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="flex items-center gap-2 w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white"
       >
         <Pencil size={14}/> Edit
       </button>
