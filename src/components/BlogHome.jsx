@@ -240,6 +240,7 @@ const Loader = () => (
 function CommentBox({ postId, onCommentUpdate }) {
   const [text, setText] = useState("");
   const [comments, setComments] = useState([]);
+  const [showAll, setShowAll] = useState(false); // NEW: comment collapse
 
   useEffect(() => {
     api.get(`/posts/${postId}`).then(r => {
@@ -262,8 +263,12 @@ function CommentBox({ postId, onCommentUpdate }) {
     }
   }
 
+  // only show first 2 unless expanded
+  const visibleComments = showAll ? comments : comments.slice(0, 2);
+
   return (
     <section>
+      {/* COMMENT INPUT */}
       <div className="flex items-center gap-2">
         <input
           value={text}
@@ -271,13 +276,18 @@ function CommentBox({ postId, onCommentUpdate }) {
           placeholder="Write a comment..."
           className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-gray-800 text-xs focus:outline-none focus:ring-1"
         />
-        <button onClick={send} className="bg-black text-white p-2 rounded-full hover:opacity-80 active:scale-95 transition" aria-label="send comment">
+        <button
+          onClick={send}
+          className="bg-black text-white p-2 rounded-full hover:opacity-80 active:scale-95 transition"
+          aria-label="send comment"
+        >
           <Send size={16}/>
         </button>
       </div>
 
+      {/* COMMENTS */}
       <div className="mt-3 space-y-2">
-        {comments.map(c => (
+        {visibleComments.map(c => (
           <div key={c._id} className="flex gap-2 items-start">
             <img
               src={c.author?.avatar || "/default-avatar.png"}
@@ -285,6 +295,7 @@ function CommentBox({ postId, onCommentUpdate }) {
               alt="comment author"
               className="w-7 h-7 rounded-full object-cover border border-gray-300 dark:border-gray-700"
             />
+
             <div className="bg-gray-100 dark:bg-black/50 px-3 py-2 rounded-2xl w-fit max-w-[80%] text-xs">
               <strong className="block mb-1 text-[11px]">{c.author?.name || "User"}</strong>
               {c.text}
@@ -292,6 +303,19 @@ function CommentBox({ postId, onCommentUpdate }) {
           </div>
         ))}
       </div>
+
+      {/* SHOW MORE / SHOW LESS */}
+      {comments.length > 2 && (
+        <button
+          onClick={() => setShowAll(prev => !prev)}
+          className="mt-2 text-xs text-blue-500 dark:text-blue-300 hover:underline"
+        >
+          {showAll
+            ? "Show less"
+            : `Show ${comments.length - 2} more comments`}
+        </button>
+      )}
     </section>
   );
 }
+
