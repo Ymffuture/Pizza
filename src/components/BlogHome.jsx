@@ -6,6 +6,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { api } from "../api";
 import toast from "react-hot-toast";
 import EditPostModal from "../pages/EditPost";
+import ViewPostModal from "../pages/ViewPost";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
@@ -13,6 +16,8 @@ export default function BlogHome() {
   const [hasMore, setHasMore] = useState(true);
   const [editingPostId, setEditingPostId] = useState(null);
 const [showEditModal, setShowEditModal] = useState(false);
+const [viewPostId, setViewPostId] = useState(null);
+const [showViewModal, setShowViewModal] = useState(false);
 
   const nav = useNavigate();
 
@@ -134,8 +139,37 @@ const Loader = () => (
             </div>
 
             {/* POST CONTENT */}
-            <h2 className="text-xl font-bold mb-1">{post.title}</h2>
-            <p className="text-sm opacity-90 whitespace-pre-line">{post.body}</p>
+            <h2
+  className="text-xl font-bold mb-1 cursor-pointer text-blue-400"
+  onClick={() => {
+    setViewPostId(post._id);
+    setShowViewModal(true);
+  }}
+>
+  {post.title}
+</h2>
+
+            <div className="prose dark:prose-invert max-w-none mb-4">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                pre: ({ node, ...props }) => (
+                  <pre
+                    {...props}
+                    className="bg-gray-900 text-white p-3 rounded-lg overflow-x-auto"
+                  />
+                ),
+                code: ({ node, inline, ...props }) =>
+                  inline ? (
+                    <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded" {...props} />
+                  ) : (
+                    <code {...props} />
+                  ),
+              }}
+            >
+              {post.body}
+            </ReactMarkdown>
+          </div>
 
             {/* IMAGE DISPLAY */}
             {Array.isArray(post.images) && post.images.length > 0 && (
@@ -192,6 +226,11 @@ const Loader = () => (
     setHasMore(true);
     fetchPosts(); // refresh list after save
   }}
+/>
+<ViewPostModal
+  postId={viewPostId}
+  visible={showViewModal}
+  onClose={() => setShowViewModal(false)}
 />
 
     </div>
