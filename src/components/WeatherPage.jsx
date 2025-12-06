@@ -19,7 +19,7 @@ export default function WeatherPage() {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [history, setHistory] = useState([]);
 
-  const API_KEY = "YOUR_OPENWEATHER_KEY";
+  const API_KEY = "378c0d8b5246ceb52c1c6c6899b3446e";
 
   // ---------------------------------------------
   // LOAD PREVIOUS WEATHER RECORDS
