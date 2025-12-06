@@ -240,30 +240,147 @@ const Loader = () => (
 function CommentBox({ postId, onCommentUpdate }) {
   const [text, setText] = useState("");
   const [comments, setComments] = useState([]);
-  const [showAll, setShowAll] = useState(false); // NEW: comment collapse
+  const [replyText, setReplyText] = useState({});
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [showAll, setShowAll] = useState(false);
 
+  // Fetch all comments for this post
   useEffect(() => {
-    api.get(`/posts/${postId}`).then(r => {
+    (async () => {
+      const r = await api.get(`/posts/${postId}`);
       const data = r.data.comments || [];
       setComments(data);
       onCommentUpdate(postId, data);
-    });
+    })();
   }, [postId, onCommentUpdate]);
 
+  // Submit a top-level comment
   async function send() {
     if (!text.trim()) return;
     try {
       const r = await api.post(`/posts/${postId}/comments`, { text });
       const newComments = [...comments, r.data];
+
       setComments(newComments);
       onCommentUpdate(postId, newComments);
       setText("");
     } catch {
-      toast.error("Failed to post comment");
+      toast.error("Failed to send comment");
     }
   }
 
-  // only show first 2 unless expanded
+  // Start reply mode
+  function openReplyField(commentId) {
+    setReplyingTo(commentId);
+    setReplyText(prev => ({ ...prev, [commentId]: "" }));
+  }
+
+  // Submit reply
+  async function sendReply(commentId) {
+    const msg = replyText[commentId];
+    if (!msg?.trim()) return;
+
+    try {
+      const r = await api.post(
+        `/posts/${postId}/comments/${commentId}/replies`,
+        { text: msg }
+      );
+
+      const updated = comments.map(c =>
+        c._id === commentId ? { ...c, replies: [...c.replies, r.data] } : c
+      );
+
+      setComments(updated);
+      onCommentUpdate(postId, updated);
+
+      setReplyText(prev => ({ ...prev, [commentId]: "" }));
+      setReplyingTo(null);
+    } catch {
+      toast.error("Failed to send reply");
+    }
+  }
+
+  // Delete comment
+  async function deleteComment(commentId) {
+    try {
+      await api.delete(`/posts/${postId}/comments/${commentId}`);
+      const updated = comments.filter(c => c._id !== commentId);
+      setComments(updated);
+      onCommentUpdate(postId, updated);
+      toast.success("Comment deleted");
+    } catch {
+      toast.error("Delete failed");
+    }
+  }
+
+  // Delete reply
+  async function deleteReply(commentId, replyId) {
+    try {
+      await api.delete(
+        `/posts/${postId}/comments/${commentId}/replies/${replyId}`
+      );
+
+      const updated = comments.map(c =>
+        c._id === commentId
+          ? { ...c, replies: c.replies.filter(r => r._id !== replyId) }
+          : c
+      );
+
+      setComments(updated);
+      onCommentUpdate(postId, updated);
+      toast.success("Reply deleted");
+    } catch {
+      toast.error("Failed");
+    }
+  }
+
+  // Like comment
+  async function toggleCommentLike(commentId) {
+    try {
+      const r = await api.post(
+        `/posts/${postId}/comments/${commentId}/toggle-like`
+      );
+
+      const updated = comments.map(c =>
+        c._id === commentId
+          ? { ...c, likes: Array(r.data.likesCount).fill(1) }
+          : c
+      );
+
+      setComments(updated);
+      onCommentUpdate(postId, updated);
+    } catch {
+      toast.error("Failed");
+    }
+  }
+
+  // Like reply
+  async function toggleReplyLike(commentId, replyId) {
+    try {
+      const r = await api.post(
+        `/posts/${postId}/comments/${commentId}/replies/${replyId}/toggle-like`
+      );
+
+      const updated = comments.map(c =>
+        c._id === commentId
+          ? {
+              ...c,
+              replies: c.replies.map(rep =>
+                rep._id === replyId
+                  ? { ...rep, likes: Array(r.data.likesCount).fill(1) }
+                  : rep
+              ),
+            }
+          : c
+      );
+
+      setComments(updated);
+      onCommentUpdate(postId, updated);
+    } catch {
+      toast.error("Failed");
+    }
+  }
+
   const visibleComments = showAll ? comments : comments.slice(0, 2);
 
   return (
@@ -274,48 +391,112 @@ function CommentBox({ postId, onCommentUpdate }) {
           value={text}
           onChange={e => setText(e.target.value)}
           placeholder="Write a comment..."
-          className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-gray-800 text-xs focus:outline-none focus:ring-1"
+          className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-gray-800 text-xs"
         />
         <button
           onClick={send}
-          className="bg-black text-white p-2 rounded-full hover:opacity-80 active:scale-95 transition"
-          aria-label="send comment"
+          className="bg-black text-white p-2 rounded-full"
         >
-          <Send size={16}/>
+          <Send size={16} />
         </button>
       </div>
 
       {/* COMMENTS */}
-      <div className="mt-3 space-y-2">
+      <div className="mt-3 space-y-3">
         {visibleComments.map(c => (
           <div key={c._id} className="flex gap-2 items-start">
+            {/* Avatar */}
             <img
-              src={c.author?.avatar || "/default-avatar.png"}
-              onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/images.jpeg")}
-              alt="comment author"
-              className="w-7 h-7 rounded-full object-cover border border-gray-300 dark:border-gray-700"
+              src={c.author?.avatar}
+              className="w-7 h-7 rounded-full object-cover border dark:border-gray-600"
             />
 
-            <div className="bg-gray-100 dark:bg-black/50 px-3 py-2 rounded-2xl w-fit max-w-[80%] text-xs">
-              <strong className="block mb-1 text-[11px]">{c.author?.name || "User"}</strong>
-              {c.text}
+            <div className="bg-gray-100 dark:bg-black/50 px-3 py-2 rounded-2xl max-w-[85%]">
+              <strong className="block text-[11px] mb-1">{c.author?.name}</strong>
+              <p className="text-xs">{c.text}</p>
+
+              {/* ACTIONS */}
+              <div className="flex gap-4 mt-1 text-[10px] opacity-70">
+                <button onClick={() => toggleCommentLike(c._id)}>
+                  ❤️ {c.likes?.length || 0}
+                </button>
+
+                <button onClick={() => openReplyField(c._id)}>Reply</button>
+
+                <button
+                  className="text-red-500"
+                  onClick={() => deleteComment(c._id)}
+                >
+                  Delete
+                </button>
+              </div>
+
+              {/* REPLIES */}
+              {c.replies?.length > 0 && (
+                <div className="ml-4 mt-2 space-y-2">
+                  {c.replies.map(r => (
+                    <div
+                      key={r._id}
+                      className="bg-gray-200 dark:bg-black/40 px-3 py-2 rounded-2xl"
+                    >
+                      <strong className="block text-[10px]">
+                        {r.author?.name}
+                      </strong>
+                      <p className="text-xs">{r.text}</p>
+
+                      <div className="flex gap-3 text-[10px] mt-1 opacity-60">
+                        <button onClick={() => toggleReplyLike(c._id, r._id)}>
+                          ❤️ {r.likes?.length || 0}
+                        </button>
+
+                        <button
+                          className="text-red-500"
+                          onClick={() => deleteReply(c._id, r._id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Reply input */}
+              {replyingTo === c._id && (
+                <div className="flex gap-2 mt-2 ml-2">
+                  <input
+                    value={replyText[c._id] || ""}
+                    onChange={e =>
+                      setReplyText(prev => ({
+                        ...prev,
+                        [c._id]: e.target.value,
+                      }))
+                    }
+                    placeholder="Reply..."
+                    className="px-3 py-1 text-xs rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
+                  />
+                  <button
+                    onClick={() => sendReply(c._id)}
+                    className="bg-black text-white px-3 py-1 text-xs rounded-full"
+                  >
+                    Send
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}
       </div>
 
-      {/* SHOW MORE / SHOW LESS */}
+      {/* SHOW MORE */}
       {comments.length > 2 && (
         <button
           onClick={() => setShowAll(prev => !prev)}
-          className="mt-2 text-xs text-blue-500 dark:text-blue-300 hover:underline"
+          className="text-xs mt-2 text-blue-500"
         >
-          {showAll
-            ? "Show less"
-            : `Show ${comments.length - 2} more comments`}
+          {showAll ? "Show less" : `Show ${comments.length - 2} more`}
         </button>
       )}
     </section>
   );
 }
-
