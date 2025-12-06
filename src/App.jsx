@@ -18,7 +18,7 @@ import { setToken } from "./api";
 
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./components/dashboard/Dashboard";
-
+const Weather =lazy(() =>import("./components/WeatherPage")) ;
 const Policy = lazy(() => import("./pages/Policy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const SmallProjects = lazy(() => import("./pages/SmallProjects"));
@@ -49,13 +49,13 @@ const Loader = () => (
         strokeLinecap="round"
         fill="none"
         strokeDasharray="250"
-        strokeDashoffset="180"
+        strokeDashoffset="190"
       />
       <circle cx="50" cy="50" r="10" fill="#00E5FF">
         <animate
           attributeName="r"
           values="10;14;10"
-          dur="1.6s"
+          dur="2.6s"
           repeatCount="indefinite"
         />
         <animate
@@ -66,7 +66,7 @@ const Loader = () => (
         />
       </circle>
     </svg>
-    <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide">
+    <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide animate-fadeIn">
       Loading page...
     </p>
   </div>
@@ -87,7 +87,7 @@ const App = () => {
   return (
     <Router>
       {navbarLoading ? (
-        <Skeleton active paragraph={{ rows: 1 }} />
+        <Skeleton active paragraph={{ rows: 2 }} />
       ) : (
         <Navbar />
       )}
@@ -102,7 +102,7 @@ const App = () => {
           <Route path="/large-projects" element={<LargeProjects />} />
           <Route path="/server-api" element={<ServerAPI />} />
           <Route path="/signup" element={<SignApp />} />
-
+<Route path="/weather" element={<Weather />} />
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
