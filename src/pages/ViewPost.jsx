@@ -73,7 +73,7 @@ const Loader = () => (
         <animate
           attributeName="r"
           values="10;14;10"
-          dur="2.6s"
+          dur="1.9s"
           repeatCount="indefinite"
         />
         <animate
