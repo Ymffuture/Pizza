@@ -69,13 +69,13 @@ const Loader = () => (
         <animate
           attributeName="r"
           values="10;14;10"
-          dur="2.6s"
+          dur="1.6s"
           repeatCount="indefinite"
         />
         <animate
           attributeName="opacity"
           values="1;0.6;1"
-          dur="2.6s"
+          dur="1.6s"
           repeatCount="indefinite"
         />
       </circle>
