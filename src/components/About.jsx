@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function AboutSwiftMeta() {
+export default function About() {
   return (
     <div style={{
       maxWidth: 800,
