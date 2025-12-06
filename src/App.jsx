@@ -13,7 +13,7 @@ import LoginPhone from "./pages/LoginPhone";
 import Feed from "./pages/Feed";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
-import NavBlog from "./components/NavBlog";
+//import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
 
 import DashboardLayout from "./components/dashboard/DashboardLayout";
@@ -112,7 +112,6 @@ const App = () => {
             {/* NESTED ROUTES INSIDE PRICING */}
             <Route path="blog" element={<Pricing />}>
               <Route path="feed" element={<Feed />} />
-              <Route path="blog" element={<NavBlog />} />
               <Route path="register" element={<Register />} />
               <Route path="verify-email" element={<VerifyEmail />} />
               <Route path="login" element={<LoginPhone />} />
