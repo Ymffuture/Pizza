@@ -128,12 +128,12 @@ const App = () => {
         </Routes>
       </Suspense>
 <Toaster
-      position="top-right"
+      position="bottom-left"
       toastOptions={{
         style: {
           borderRadius: "8px",
-          padding: "12px 16px",
-          backgroundColor: "#202124", // dark/black background
+          padding: "16px 20px",
+          backgroundColor: "#000", // dark/black background
           color: "#fff", // white text
         },
       }}
