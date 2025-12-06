@@ -16,7 +16,9 @@ export default function ViewPostModal({ postId, visible, onClose }) {
   }, [visible]);
 
   async function loadPost() {
+    if (!postId) return;
     setLoading(true);
+
     try {
       const r = await api.get(`/posts/${postId}`);
       setPost(r.data);
@@ -31,9 +33,15 @@ export default function ViewPostModal({ postId, visible, onClose }) {
   async function sendComment() {
     if (!text.trim()) return;
     setCommenting(true);
+
     try {
       const r = await api.post(`/posts/${postId}/comments`, { text });
-      setPost(prev => ({ ...prev, comments: [...prev.comments, r.data] }));
+
+      setPost(prev => ({
+        ...prev,
+        comments: [...(prev?.comments || []), r.data]
+      }));
+
       setText("");
     } catch {
       toast.error("Failed to comment");
@@ -49,6 +57,7 @@ export default function ViewPostModal({ postId, visible, onClose }) {
       onCancel={onClose}
       footer={null}
       width={600}
+      centered
     >
       {loading ? (
         <div className="text-center py-10">
@@ -56,12 +65,32 @@ export default function ViewPostModal({ postId, visible, onClose }) {
         </div>
       ) : (
         <>
-          <p className="mb-4 opacity-80">{post.body}</p>
+          {/* POST BODY */}
+          <p className="mb-4 opacity-80 whitespace-pre-line">
+            {post.body}
+          </p>
+
+          {/* POST IMAGES */}
+          {Array.isArray(post.images) && post.images.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-5">
+              {post.images.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  className="w-full rounded-xl object-cover min-h-[150px]"
+                  onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/err.jpg")}
+                  alt="post media"
+                />
+              ))}
+            </div>
+          )}
 
           <hr className="my-4" />
 
+          {/* COMMENTS */}
           <h3 className="text-lg font-bold mb-2">Comments</h3>
 
+          {/* COMMENT INPUT */}
           <div className="flex items-center gap-2 mb-3">
             <Input
               placeholder="Write a comment..."
@@ -74,21 +103,24 @@ export default function ViewPostModal({ postId, visible, onClose }) {
               type="primary"
               onClick={sendComment}
               loading={commenting}
+              disabled={!text.trim()}
             >
               Send
             </Button>
           </div>
 
+          {/* COMMENT LIST */}
           <div className="space-y-3 max-h-64 overflow-y-auto">
-            {post.comments?.map(c => (
+            {(post.comments || []).map(c => (
               <div key={c._id} className="flex gap-2 items-start">
                 <img
-                  src={c.author?.avatar}
-                  alt={c.author?.name}
-                  className="w-8 h-8 rounded-full"
+                  src={c.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
+                  className="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-700"
+                  onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/err.jpg")}
+                  alt="avatar"
                 />
                 <div className="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-xl text-sm">
-                  <b>{c.author?.name}</b>
+                  <b className="block text-[12px]">{c.author?.name || "User"}</b>
                   <p>{c.text}</p>
                 </div>
               </div>
@@ -99,4 +131,3 @@ export default function ViewPostModal({ postId, visible, onClose }) {
     </Modal>
   );
 }
- 
