@@ -75,13 +75,13 @@ const Loader = () => (
         <animate
           attributeName="opacity"
           values="1;0.6;1"
-          dur="1.6s"
+          dur="2.6s"
           repeatCount="indefinite"
         />
       </circle>
     </svg>
     <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide animate-fadeIn">
-      Loading post...
+      Loading ...
     </p>
   </div>
 );
