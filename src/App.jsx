@@ -128,16 +128,29 @@ const App = () => {
         </Routes>
       </Suspense>
 <Toaster
-      position="bottom-left"
-      toastOptions={{
-        style: {
-          borderRadius: "8px",
-          padding: "16px 20px",
-          backgroundColor: "#000", // dark/black background
-          color: "#fff", // white text
-        },
-      }}
-    />
+  position="bottom-left"
+  toastOptions={{
+    style: {
+      borderRadius: "10px",
+      padding: "10px 16px",
+      // Auto-theme: Detect browser dark mode
+      background: window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "rgba(20,20,20,0.92)"
+        : "rgba(255,255,255,0.92)",
+      color: window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "#fff"
+        : "#111",
+      backdropFilter: "blur(12px)", // smooth frosted effect
+      boxShadow:
+        "0 8px 22px rgba(0,0,0,0.18), 0 3px 8px rgba(0,0,0,0.12)", // floating shadow
+      border: window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "1px solid rgba(255,255,255,0.1)"
+        : "1px solid rgba(0,0,0,0.08)",
+    },
+    duration: 5000,
+  }}
+/>
+
       <Footer />
       
     </Router>
