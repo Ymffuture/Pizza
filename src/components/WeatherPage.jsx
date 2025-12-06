@@ -20,7 +20,47 @@ export default function WeatherPage() {
   const [history, setHistory] = useState([]);
 
   const API_KEY = "378c0d8b5246ceb52c1c6c6899b3446e";
-
+  
+const Loader = () => (
+  <div className="flex flex-col items-center justify-center bg-transparent">
+    <svg
+      width="60"
+      height="60"
+      viewBox="0 0 100 100"
+      xmlns="http://www.w3.org/2000/svg"
+      className="animate-spin text-gray-300 dark:text-gray-700"
+    >
+      <circle
+        cx="50"
+        cy="50"
+        r="40"
+        stroke="currentColor"
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+        strokeDasharray="250"
+        strokeDashoffset="190"
+      />
+      <circle cx="50" cy="50" r="10" fill="#00E5FF">
+        <animate
+          attributeName="r"
+          values="10;14;10"
+          dur="2.6s"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="opacity"
+          values="1;0.6;1"
+          dur="1.9s"
+          repeatCount="indefinite"
+        />
+      </circle>
+    </svg>
+    <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide animate-fadeIn">
+      Loading weather for Today...
+    </p>
+  </div>
+);
   // ---------------------------------------------
   // LOAD PREVIOUS WEATHER RECORDS
   // ---------------------------------------------
@@ -110,46 +150,7 @@ export default function WeatherPage() {
   // ---------------------------------------------
   const WeatherCard = ({ w }) => {
     if (!w) return null;
-const Loader = () => (
-  <div className="flex flex-col items-center justify-center bg-transparent">
-    <svg
-      width="60"
-      height="60"
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
-      className="animate-spin text-gray-300 dark:text-gray-700"
-    >
-      <circle
-        cx="50"
-        cy="50"
-        r="40"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-        strokeDasharray="250"
-        strokeDashoffset="190"
-      />
-      <circle cx="50" cy="50" r="10" fill="#00E5FF">
-        <animate
-          attributeName="r"
-          values="10;14;10"
-          dur="2.6s"
-          repeatCount="indefinite"
-        />
-        <animate
-          attributeName="opacity"
-          values="1;0.6;1"
-          dur="1.9s"
-          repeatCount="indefinite"
-        />
-      </circle>
-    </svg>
-    <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide animate-fadeIn">
-      Loading weather for Today...
-    </p>
-  </div>
-);
+
     
     return (
       <Card
