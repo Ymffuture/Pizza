@@ -413,13 +413,13 @@ function CommentBox({ postId, onCommentUpdate }) {
             />
 
             <div className="bg-gray-100 dark:bg-black/50 px-3 py-2 rounded-2xl max-w-[100%]">
-              <strong className="block text-[11px] mb-1">@{c.author?.name}</strong>
+              <strong className="block text-[11px] mb-1">@{c.author?.name.toLowerCase()}</strong>
               <p className="text-xs">{c.text}</p>
 
               {/* ACTIONS */}
               <div className="flex gap-4 mt-1 text-[10px] opacity-70">
                 <button onClick={() => toggleCommentLike(c._id)} className="flex gap-2">
-                  <FiThumbsUp className="text-gray-600 dark:text-white bold" /> {c.likes?.length || 0}
+                  <FiThumbsUp className="text-gray-600 dark:text-white bold mb-1" /> {c.likes?.length || 0}
                 </button>
 
                 <button onClick={() => openReplyField(c._id)}>Reply</button>
