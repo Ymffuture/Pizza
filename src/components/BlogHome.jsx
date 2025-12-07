@@ -419,17 +419,8 @@ function CommentBox({ postId, onCommentUpdate }) {
 
               {/* ACTIONS */}
               <div className="flex gap-4 mt-1 text-[10px] opacity-70">
-                <button
-  onClick={() => toggleReplyLike(c._id, r._id)}
-  className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300 hover:text-blue-500 transition"
->
-  <FiThumbsUp
-    size={16}
-    className={`transition ${
-      r.likes?.includes(currentUserId) ? "text-blue-500" : "opacity-60"
-    }`}
-  />
-  <span>{r.likes?.length || 0}</span>
+                <button onClick={() => toggleReplyLike(c._id, r._id)}>
+  <FiThumbsUp className="text-gray-600 dark:text-white" /> {r.likes?.length || 0}
 </button>
 
 
