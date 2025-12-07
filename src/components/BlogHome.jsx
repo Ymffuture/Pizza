@@ -396,7 +396,7 @@ function CommentBox({ postId, onCommentUpdate }) {
         />
         <button
           onClick={send}
-          className="bg-black text-white p-2 rounded-full"
+          className="bg-black dark:bg-white dark:text-black text-white p-2 rounded-full"
         >
           <Send size={16} />
         </button>
@@ -418,8 +418,8 @@ function CommentBox({ postId, onCommentUpdate }) {
 
               {/* ACTIONS */}
               <div className="flex gap-4 mt-1 text-[10px] opacity-70">
-                <button onClick={() => toggleCommentLike(c._id)}>
-                  <FiThumbsUp/> {c.likes?.length || 0}
+                <button onClick={() => toggleCommentLike(c._id)} className="flex gap-3">
+                  <FiThumbsUp className="text-gray-600 dark:text-white bold" /> {c.likes?.length || 0}
                 </button>
 
                 <button onClick={() => openReplyField(c._id)}>Reply</button>
@@ -446,12 +446,12 @@ function CommentBox({ postId, onCommentUpdate }) {
                       <p className="text-xs">{r.text}</p>
 
                       <div className="flex gap-3 text-[10px] mt-1 opacity-60">
-                        <button onClick={() => toggleReplyLike(c._id, r._id)}>
-                          ❤️ {r.likes?.length || 0}
+                        <button onClick={() => toggleReplyLike(c._id, r._id)} className="flex gap-3">
+                          <FiThumbsUp className="text-gray-600 dark:text-white bold" /> {r.likes?.length || 0}
                         </button>
 
                         <button
-                          className="text-red-500"
+                          className="text-red-500 dark:text-red-800"
                           onClick={() => deleteReply(c._id, r._id)}
                         >
                           Delete
@@ -474,13 +474,13 @@ function CommentBox({ postId, onCommentUpdate }) {
                       }))
                     }
                     placeholder="Reply..."
-                    className="px-3 py-1 text-xs rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
+                    className="p-2 text-xs rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
                   />
                   <button
                     onClick={() => sendReply(c._id)}
-                    className="bg-black text-white px-3 py-1 text-xs rounded-full"
+                    className="bg-black text-white p-1 text-xs rounded-full"
                   >
-                    Send
+                    Reply
                   </button>
                 </div>
               )}
