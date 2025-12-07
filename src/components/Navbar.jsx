@@ -112,7 +112,7 @@ const Navbar = () => {
             onClick={() => navigate("/")}
           >
             <span className="text-blue-500 dark:text-blue-600">Swift</span>
-            <span className="text-gray-700 dark:text-gray-300">Meta™</span>
+            <span className="text-gray-700 dark:text-gray-300">Meta</span>
           </div>
 
           {/* DESKTOP LIVE SEARCH */}
@@ -193,10 +193,10 @@ const Navbar = () => {
               onClick={() => setMenuOpen(true)}
             >
               <svg
-                className="h-7 w-7 dark:text-white"
+                className="h-5 w-5 dark:text-white"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="3"
+                strokeWidth="1.3"
                 viewBox="0 0 24 24"
               >
                 <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
