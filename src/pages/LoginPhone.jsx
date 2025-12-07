@@ -107,6 +107,7 @@ export default function Login() {
 
       persistSession(token, user);
       toast("Logged in");
+      window.location.reload();
       nav("/dashboard/blog");
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid OTP");
