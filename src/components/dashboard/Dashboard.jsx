@@ -1,4 +1,4 @@
-import Feed from "../../pages/Feed";
+// import Feed from "../../pages/Feed";
 
 export default function Dashboard() {
   return (
@@ -32,9 +32,9 @@ export default function Dashboard() {
 
       {/* Divider like Apple */}
       
-      <div className="mt-10 w-20 mx-auto h-[2px] bg-gray-300 dark:bg-gray-700 rounded-full animate-fadeIn delay-500" />
+      <div className="mt-10 w-40 mx-auto h-[8px] bg-gray-300 dark:bg-gray-700 rounded-full animate-fadeIn delay-500" />
 
-      <Feed/>
+      
     </section>
   );
 }
