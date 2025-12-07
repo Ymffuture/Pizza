@@ -9,8 +9,6 @@ import EditPostModal from "../pages/EditPost";
 import ViewPostModal from "../pages/ViewPost";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { FiThumbsUp } from "react-icons/fi";
-
 
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
@@ -419,11 +417,9 @@ function CommentBox({ postId, onCommentUpdate }) {
 
               {/* ACTIONS */}
               <div className="flex gap-4 mt-1 text-[10px] opacity-70">
-                <button onClick={() => toggleReplyLike(c._id, r._id)}>
-  ❤️ {r.likes?.length || 0}
-</button>
-
-
+                <button onClick={() => toggleCommentLike(c._id)}>
+                  ❤️ {c.likes?.length || 0}
+                </button>
 
                 <button onClick={() => openReplyField(c._id)}>Reply</button>
 
