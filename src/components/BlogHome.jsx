@@ -88,13 +88,13 @@ const Loader = () => (
         <animate
           attributeName="r"
           values="10;14;10"
-          dur="4.8s"
+          dur="1.6s"
           repeatCount="indefinite"
         />
         <animate
           attributeName="opacity"
           values="1;0.6;1"
-          dur="2.6s"
+          dur="1.6s"
           repeatCount="indefinite"
         />
       </circle>
@@ -195,7 +195,7 @@ const Loader = () => (
                   setPosts(prev =>
                     prev.map(p => p._id === post._id ? { ...p, likes: Array(r.data.likesCount).fill(1) } : p)
                   );
-                  toast.success(r.data.liked ? "Liked post" : "Unliked post");
+                  toast(r.data.liked ? "Liked post" : "Unliked post");
                 }}
                 className="flex items-center gap-2 text-sm font-medium"
               >
@@ -409,11 +409,11 @@ function CommentBox({ postId, onCommentUpdate }) {
             {/* Avatar */}
             <img
               src={c.author?.avatar}
-              className="w-7 h-7 rounded-full object-cover border dark:border-gray-600"
+              className="w-8 h-8 rounded-full object-cover"
             />
 
             <div className="bg-gray-100 dark:bg-black/50 px-3 py-2 rounded-2xl max-w-[100%]">
-              <strong className="block text-[11px] mb-1">{c.author?.name}</strong>
+              <strong className="block text-[11px] mb-1">@{c.author?.name}</strong>
               <p className="text-xs">{c.text}</p>
 
               {/* ACTIONS */}
