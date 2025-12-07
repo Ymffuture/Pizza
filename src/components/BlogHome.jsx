@@ -420,8 +420,9 @@ function CommentBox({ postId, onCommentUpdate }) {
               {/* ACTIONS */}
               <div className="flex gap-4 mt-1 text-[10px] opacity-70">
                 <button onClick={() => toggleReplyLike(c._id, r._id)}>
-  <FiThumbsUp className="text-gray-600 dark:text-white" /> {r.likes?.length || 0}
+  ❤️ {r.likes?.length || 0}
 </button>
+
 
 
                 <button onClick={() => openReplyField(c._id)}>Reply</button>
