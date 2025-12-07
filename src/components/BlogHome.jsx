@@ -9,6 +9,7 @@ import EditPostModal from "../pages/EditPost";
 import ViewPostModal from "../pages/ViewPost";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { ThumbsUp } from "lucide-react";
 
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
@@ -417,9 +418,19 @@ function CommentBox({ postId, onCommentUpdate }) {
 
               {/* ACTIONS */}
               <div className="flex gap-4 mt-1 text-[10px] opacity-70">
-                <button onClick={() => toggleCommentLike(c._id)}>
-                  ❤️ {c.likes?.length || 0}
-                </button>
+                <button
+  onClick={() => toggleReplyLike(c._id, r._id)}
+  className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300 hover:text-blue-500 transition"
+>
+  <ThumbsUp
+    size={16}
+    className={`transition ${
+      r.likes?.includes(currentUserId) ? "text-blue-500" : "opacity-60"
+    }`}
+  />
+  <span>{r.likes?.length || 0}</span>
+</button>
+
 
                 <button onClick={() => openReplyField(c._id)}>Reply</button>
 
