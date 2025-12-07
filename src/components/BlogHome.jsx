@@ -308,7 +308,7 @@ function CommentBox({ postId, onCommentUpdate }) {
       const updated = comments.filter(c => c._id !== commentId);
       setComments(updated);
       onCommentUpdate(postId, updated);
-      toast.success("Comment deleted");
+      toast("Comment deleted");
     } catch {
       toast.error("Delete failed");
     }
@@ -329,7 +329,7 @@ function CommentBox({ postId, onCommentUpdate }) {
 
       setComments(updated);
       onCommentUpdate(postId, updated);
-      toast.success("Reply deleted");
+      toast("Reply deleted");
     } catch {
       toast.error("Failed");
     }
@@ -441,7 +441,7 @@ function CommentBox({ postId, onCommentUpdate }) {
                       className="bg-gray-200 dark:bg-black/40 px-3 py-2 rounded-2xl"
                     >
                       <strong className="block text-[10px]">
-                        @{r.author?.name}
+                        {r.author?.name}
                       </strong>
                       <p className="text-xs">{r.text}</p>
 
@@ -474,7 +474,7 @@ function CommentBox({ postId, onCommentUpdate }) {
                       }))
                     }
                     placeholder="Reply..."
-                    className="p-2 text-xs w-50 rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
+                    className="p-2 text-xs w-10}0 rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
                   />
                   <button
                     onClick={() => sendReply(c._id)}
