@@ -369,7 +369,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
         © {new Date().getFullYear()} SwiftMeta | All rights reserved. 
         <br/>
         <br/>
-        <span className="text-gray-600" >{weather?.countryFlag} {weather?.country || ""}▪️ {weather.city}</span>
+        <span className="text-gray-600" >{weather?.countryFlag} {weather?.country || ""}▪️ {weather?.city}</span>
 
       </div>
     </footer>
