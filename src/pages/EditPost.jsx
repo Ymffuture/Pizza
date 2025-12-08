@@ -35,7 +35,7 @@ export default function EditPostModal({ postId, visible, onClose, onUpdated }) {
     setSaving(true);
     try {
       await api.put(`/posts/${postId}`, { title, body, images });
-      toast.success("Post updated");
+      toast("Post updated");
       onUpdated();
       onClose();
     } catch (e) {
@@ -63,7 +63,7 @@ const Loader = () => (
         strokeLinecap="round"
         fill="none"
         strokeDasharray="250"
-        strokeDashoffset="190"
+        strokeDashoffset="180"
       />
       <circle cx="50" cy="50" r="10" fill="#00E5FF">
         <animate
