@@ -195,11 +195,42 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
 
   return (
     <footer className="bg-white dark:bg-[#0A0A0D] text-gray-900 dark:text-gray-300 transition-colors duration-300 relative">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-  <div className="stars"></div>
-  <div className="stars2"></div>
-  <div className="stars3"></div>
+      <div style={{ position: "relative", width: "100%", overflow: "hidden" }}>
+  
+  <style>
+    {`
+      @keyframes moveStars {
+        from { transform: translate3d(0, 0, 0); }
+        to { transform: translate3d(-500px, -500px, 0); }
+      }
+    `}
+  </style>
+
+  {/* Stars */}
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      overflow: "hidden",
+      pointerEvents: "none",
+      zIndex: 0,
+    }}
+  >
+    <div
+      style={{
+        position: "absolute",
+        width: "200%",
+        height: "200%",
+        backgroundImage:
+          "radial-gradient(2px 2px at 20px 30px, white, transparent), radial-gradient(1.5px 1.5px at 80px 120px, white, transparent), radial-gradient(1px 1px at 200px 80px, white, transparent)",
+        backgroundRepeat: "repeat",
+        opacity: 0.6,
+        animation: "moveStars 90s linear infinite",
+      }}
+    />
+  </div>
 </div>
+
 
       <div className="max-w-7xl mx-auto py-16 px-6 lg:px-20 grid md:grid-cols-4 gap-10">
         {/* Brand */}
