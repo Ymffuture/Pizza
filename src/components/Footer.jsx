@@ -89,9 +89,23 @@ const Footer = () => {
           localStorage.setItem("footerWeatherDate", today);
           localStorage.setItem("weatherToastShown", today);
 
-          toast.success(`Weather updated: ${weatherInfo.temp}°C`, {
-            style: { background: "#000", color: "#fff" },
-          });
+          toast((t) => (
+  <span className="flex items-center justify-between gap-2">
+    <span>
+      Weather updated: <b>{weatherInfo.temp}°C</b>
+    </span>
+
+    <button
+      onClick={() => toast.dismiss(t.id)}
+      className="px-2 py-1 text-xs rounded bg-white text-black font-medium"
+    >
+      Close
+    </button>
+  </span>
+), {
+  style: { background: "#000", color: "#fff", padding: "10px 14px" },
+});
+
         } catch (err) {
           console.error(err);
           setLoadingWeather(false);
