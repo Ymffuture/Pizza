@@ -54,8 +54,8 @@ const menu = (
 // ----------------------
 const searchData = [
   { title: "Home", url: "/" },
-  { title: "Small Projects", url: "/small-projects" },
-  { title: "Large Projects", url: "/large-projects" },
+  { title: "Dashboard", url: "/dashboard" },
+  { title: "Sign in", url: "/signup" },
   { title: "Server/API", url: "/server-api" },
   { title: "Cloudinary", url: "https://cloudinary.com" },
   { title: "MongoDB", url: "https://mongodb.com" },
@@ -160,7 +160,7 @@ const Navbar = () => {
   {/* HOME ICON */}
   <Home
     onClick={() => navigate("/")}
-    size={28}
+    size={22}
     className="cursor-pointer hover:text-blue-500 dark:text-white"
   />
 
