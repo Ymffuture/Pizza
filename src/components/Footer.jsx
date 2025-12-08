@@ -74,12 +74,32 @@ const Footer = () => {
           );
           const data = await res.json();
 
-          const weatherInfo = {
-            temp: Math.round(data.main.temp),
-            icon: data.weather[0].icon,
-            city: data.name,
-            desc: data.weather[0].description,
-          };
+  const weatherInfo = {
+            
+  temp: Math.round(data.main.temp),                 // °C
+  feelsLike: Math.round(data.main.feels_like),      // Feels like temp
+  min: Math.round(data.main.temp_min),              // Min temp
+  max: Math.round(data.main.temp_max),              // Max temp
+
+  city: data.name,
+  country: data.sys.country,
+
+  desc: data.weather[0].description,                // Clear sky, rain etc.
+  icon: data.weather[0].icon,                       // Weather icon
+
+  humidity: data.main.humidity,                     // %
+  pressure: data.main.pressure,                     // hPa
+  visibility: data.visibility / 1000,               // km
+
+  windSpeed: data.wind.speed,                       // m/s
+  windDeg: data.wind.deg,                           // Wind direction in degrees
+
+  sunrise: data.sys.sunrise * 1000,                 // Converted to ms
+  sunset: data.sys.sunset * 1000,                   // Converted to ms
+
+  updatedAt: Date.now(),                            // Local timestamp
+};
+
 
           setWeather(weatherInfo);
           setLoadingWeather(false);
@@ -101,9 +121,9 @@ const Footer = () => {
 
         {/* USER AVATAR */}
         <img
-          className="h-10 w-10 rounded-full object-cover"
+          className="h-12 w-12 rounded-full object-cover"
           src={`https://openweathermap.org/img/wn/${weatherInfo.icon}@2x.png`}
-          alt="User avatar"
+          alt="weather icon"
         />
 
         {/* TEXT */}
@@ -113,8 +133,10 @@ const Footer = () => {
           </p>
 
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+            Location: <em>{weatherInfo.country}:{weatherInfo.city}</em>
             Temperature: <b>{weatherInfo.temp}°C</b><br />
-            Condition: {weatherInfo.description}
+            Feels like: <b className="text-green-600" >{weatherInfo.feelsLike}°C</b><hr />
+            Condition: {weatherInfo.desc}
           </p>
         </div>
       </div>
@@ -130,7 +152,11 @@ const Footer = () => {
       </button>
     </div>
   </div>
-));
+), 
+                       { duration: Infinity }
+ 
+                      
+                      );
 
 
         } catch (err) {
@@ -323,6 +349,8 @@ const Footer = () => {
       {/* Bottom */}
       <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
         © {new Date().getFullYear()} SwiftMeta | All rights reserved
+        <br/>
+        County:<b>{weatherInfo.country}</b>
       </div>
     </footer>
   );
