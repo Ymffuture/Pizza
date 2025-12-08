@@ -408,7 +408,7 @@ function CommentBox({ postId, onCommentUpdate }) {
           <div key={c._id} className="flex gap-2 items-start">
             {/* Avatar */}
             <img
-              src={c.author?.avatar}
+              src={c.author?.avatar || "https://swiftmeta.vercel.app/vite.svg}
               className="w-8 h-8 rounded-full object-cover"
             />
 
@@ -480,7 +480,7 @@ function CommentBox({ postId, onCommentUpdate }) {
                     onClick={() => sendReply(c._id)}
                     className="bg-black text-white p-2 text-xs rounded-full"
                   >
-                    Reply
+                    <Send size={16} /> 
                   </button>
                 </div>
               )}
