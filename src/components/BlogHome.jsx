@@ -408,7 +408,7 @@ function CommentBox({ postId, onCommentUpdate }) {
           <div key={c._id} className="flex gap-2 items-start">
             {/* Avatar */}
             <img
-              src={c.author?.avatar || "https://swiftmeta.vercel.app/vite.svg}
+              src={c.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg" }
               className="w-8 h-8 rounded-full object-cover"
             />
 
@@ -417,7 +417,7 @@ function CommentBox({ postId, onCommentUpdate }) {
               <p className="text-xs">{c.text}</p>
 
               {/* ACTIONS */}
-              <div className="flex gap-4 mt-1 text-[10px] opacity-70">
+              <div className="flex gap-2 mt-1 text-[10px] opacity-70">
                 <button onClick={() => toggleCommentLike(c._id)} className="flex gap-2">
                   <FiThumbsUp className="text-gray-600 dark:text-white bold mb-1" /> {c.likes?.length || 0}
                 </button>
@@ -425,7 +425,7 @@ function CommentBox({ postId, onCommentUpdate }) {
                 <button onClick={() => openReplyField(c._id)}>Reply</button>
 
                 <button
-                  className="text-red-500"
+                  className="text-red-800"
                   onClick={() => deleteComment(c._id)}
                 >
                   Delete
