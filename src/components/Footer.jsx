@@ -73,6 +73,21 @@ const Footer = () => {
             `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=378c0d8b5246ceb52c1c6c6899b3446e&units=metric`
           );
           const data = await res.json();
+          
+const COUNTRY_NAMES = {
+  ZA: { name: "South Africa", flag: "🇿🇦" },
+  US: { name: "United States", flag: "🇺🇸" },
+  GB: { name: "United Kingdom", flag: "🇬🇧" },
+  CA: { name: "Canada", flag: "🇨🇦" },
+  AU: { name: "Australia", flag: "🇦🇺" },
+  IN: { name: "India", flag: "🇮🇳" },
+  // Add more if needed
+};
+          
+const countryData = COUNTRY_NAMES[data.sys.country] || {
+  name: data.sys.country,
+  flag: "",
+};
 
   const weatherInfo = {
             
@@ -82,7 +97,9 @@ const Footer = () => {
   max: Math.round(data.main.temp_max),              // Max temp
 
   city: data.name,
-  country: data.sys.country,
+  country: countryData.name,
+  countryFlag: countryData.flag,
+
 
   desc: data.weather[0].description,                // Clear sky, rain etc.
   icon: data.weather[0].icon,                       // Weather icon
@@ -350,7 +367,7 @@ const Footer = () => {
       <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
         © {new Date().getFullYear()} SwiftMeta | All rights reserved
         <br/>
-        County: <b>{weather?.country || "N/A"}</b>
+        <b className="text-gray-600" >{weather?.countryFlag} {weather?.country || ""}</b>
 
       </div>
     </footer>
