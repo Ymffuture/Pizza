@@ -150,9 +150,9 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
           </p>
 
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-            Location: <em>{weatherInfo.country}:{weatherInfo.city}</em>
+            Location: <em>{weatherInfo.country}:{weatherInfo.city}</em><brq/>
             Temperature: <b>{weatherInfo.temp}°C</b><br />
-            Feels like: <b className="text-green-600" >{weatherInfo.feelsLike}°C</b><hr />
+            Feels like: <b className="text-green-600" >{weatherInfo.feelsLike}°C</b><br/>
             Condition: {weatherInfo.desc}
           </p>
         </div>
@@ -367,7 +367,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
       <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
         © {new Date().getFullYear()} SwiftMeta | All rights reserved
         <br/>
-        <b className="text-gray-600" >{weather?.countryFlag} {weather?.country || ""}</b>
+        <span className="text-gray-600" >{weather?.countryFlag} {weather?.country || ""}</span>
 
       </div>
     </footer>
