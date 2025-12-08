@@ -194,6 +194,12 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
   }, []);
 
   return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+  <div className="stars"></div>
+  <div className="stars2"></div>
+  <div className="stars3"></div>
+</div>
+
     <footer className="bg-white dark:bg-[#0A0A0D] text-gray-900 dark:text-gray-300 transition-colors duration-300 relative">
       
 
