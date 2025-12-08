@@ -306,7 +306,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
           id="weatherBox"
           className="text-center flex flex-col items-center justify-center"
         >
-          <h3 className="text-lg font-semibold mb-4">Today's Weather</h3>
+          <h3 className="text-lg font-semibold text-gray-600">Today's Weather</h3>
 
           {loadingWeather ? (
             <motion.div
@@ -351,11 +351,12 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
     <span>{weather.desc}</span>
   </div>
 
-  {/* City */}
+  {/* City 
   <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
     <MapPinIcon className="w-5 h-5 text-red-500" />
     <span>{weather.city}</span>
   </div>
+                */} 
 </div>
 
             </motion.div>
@@ -365,9 +366,10 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
 
       {/* Bottom */}
       <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
-        © {new Date().getFullYear()} SwiftMeta | All rights reserved
+        © {new Date().getFullYear()} SwiftMeta | All rights reserved. 
         <br/>
-        <span className="text-gray-600" >{weather?.countryFlag} {weather?.country || ""}</span>
+        <br/>
+        <span className="text-gray-600" >{weather?.countryFlag} {weather?.country || ""}▪️ {weather.city}</span>
 
       </div>
     </footer>
