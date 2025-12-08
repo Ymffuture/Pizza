@@ -67,7 +67,7 @@ const Loader = () => (
         strokeLinecap="round"
         fill="none"
         strokeDasharray="250"
-        strokeDashoffset="190"
+        strokeDashoffset="180"
       />
       <circle cx="50" cy="50" r="10" fill="#00E5FF">
         <animate
@@ -100,7 +100,7 @@ const Loader = () => (
       centered
     >
       {loading ? (
-        <div className="text-center py-10">
+        <div className="text-center py-10 animate-pulse">
           <Loader />
         </div>
       ) : (
