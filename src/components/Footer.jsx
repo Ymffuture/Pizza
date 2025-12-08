@@ -89,22 +89,49 @@ const Footer = () => {
           localStorage.setItem("footerWeatherDate", today);
           localStorage.setItem("weatherToastShown", today);
 
-          toast((t) => (
-  <span className="flex items-center justify-between gap-2">
-    <span>
-      Weather updated: <b>{weatherInfo.temp}°C</b>
-    </span>
+          toast.custom((t) => (
+  <div
+    className={`${
+      t.visible ? "animate-custom-enter" : "animate-custom-leave"
+    } max-w-md w-full bg-white dark:bg-[#111] shadow-xl rounded-xl pointer-events-auto flex ring-1 ring-black/10 dark:ring-white/10`}
+  >
+    {/* LEFT SIDE */}
+    <div className="flex-1 w-0 p-4">
+      <div className="flex items-start gap-3">
 
-    <button
-      onClick={() => toast.dismiss(t.id)}
-      className="px-2 py-1 text-xs rounded bg-white text-black font-medium"
-    >
-      Close
-    </button>
-  </span>
-), {
-  style: { background: "#000", color: "#fff", padding: "10px 14px" },
-});
+        {/* USER AVATAR */}
+        <img
+          className="h-10 w-10 rounded-full object-cover"
+          src={`https://openweathermap.org/img/wn/${weatherInfo.icon}@2x.png`}
+          alt="User avatar"
+        />
+
+        {/* TEXT */}
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">
+            Weather Updated
+          </p>
+
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+            Temperature: <b>{weatherInfo.temp}°C</b><br />
+            Condition: {weatherInfo.description}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {/* RIGHT CLOSE BUTTON */}
+    <div className="flex border-l border-gray-200 dark:border-white/10">
+      <button
+        onClick={() => toast.dismiss(t.id)}
+        className="w-full p-4 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 focus:outline-none"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+));
+
 
         } catch (err) {
           console.error(err);
