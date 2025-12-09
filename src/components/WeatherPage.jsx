@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Card, Spin, Button, Input, Tabs, message } from "antd";
 import {
   Cloud,
-  Sun,
+  
   Sun,
   Wind,
   Droplets,
