@@ -187,7 +187,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
       () => {
         setLoadingWeather(false);
         toast.error("Location access denied", {
-          style: { background: "#000", color: "#fff" },
+          style: { background: "#FF0000", color: "#fff" },
         });
       }
     );
@@ -265,13 +265,13 @@ const StarBackground = () => (
               </Link>
             </li>
             <li>
-              <Link to="/Small-projects" className="hover:text-blue-500 transition">
-                Small Projects
+              <Link to="/dashboard/blog" className="hover:text-blue-500 transition">
+                Blogs
               </Link>
             </li>
             <li>
-              <Link to="/large-projects" className="hover:text-blue-500 transition">
-                Large Projects
+              <Link to="/contact" className="hover:text-blue-500 transition">
+                Contact 
               </Link>
             </li>
             <li>
