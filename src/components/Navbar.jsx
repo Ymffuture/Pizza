@@ -18,7 +18,9 @@ import GeminiAssistant from "../layouts/GeminiAssistant";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoreHorizontal } from "lucide-react";
 import { Dropdown, Menu } from "antd";
-const navigate = useNavigate();
+
+
+
 const menu = (
   <Menu
     items={[
@@ -70,7 +72,7 @@ const searchData = [
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
-  
+  const navigate = useNavigate();
 
   const phoneNumber = "27847776308";
   const message = "Hello! I’m interested in building a website with you.";
