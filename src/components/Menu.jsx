@@ -80,7 +80,7 @@ const Menu = () => {
   }, []);
 
   return (
-    <section className="py-16 transition-colors duration-300 bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-white">
+    <section className="transition-colors duration-300 bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-white">
       <div className="text-center mb-10">
         <p className="text-gray-500 dark:text-gray-400 uppercase tracking-wide text-sm">
           Our Services
