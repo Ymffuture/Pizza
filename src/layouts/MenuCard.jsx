@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IoInformationCircleOutline } from "react-icons/io5";
 
 const MenuCard = ({ name, price, tag, image, description }) => {
   const [open, setOpen] = useState(false);
@@ -42,7 +43,7 @@ const MenuCard = ({ name, price, tag, image, description }) => {
               onClick={() => setOpen(true)}
               className="text-blue-600 hover:underline text-sm font-medium p-2"
             >
-              Info
+              <IoInformationCircleOutline />
             </button>
 
             <button
