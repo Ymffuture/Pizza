@@ -38,7 +38,7 @@ const ProcessCard = ({ icon: Icon, title, desc }) => {
             shadow-inner
           "
         >
-          <Icon
+          <icon
             className="
               w-16 h-16 
               text-blue-600 
