@@ -92,7 +92,7 @@ const useConnectionStrength = () => {
         toast((t) => (
   <span className="flex items-center justify-between gap-2">
     <span>
-      Connection status: <b>Your connection is weak. AI responses may be slow.</b>
+      NETWORK: <b className="text-red-600" >Your connection is weak. AI responses may be slow.</b>
     </span>
 
     <button
@@ -111,7 +111,7 @@ const useConnectionStrength = () => {
         toast((t) => (
   <span className="flex items-center justify-between gap-2">
     <span>
-      Connection status: <b>connected</b>
+      NETWORK: <b className="text-green-600" >Connected</b>
     </span>
 
     <button
