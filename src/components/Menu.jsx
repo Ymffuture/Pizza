@@ -24,14 +24,69 @@ const keywords = [
 ];
 
 const services = [
-  { id: 1, name: "E-Commerce Website", tag: "Popular", price: "From R1499" },
-  { id: 2, name: "HTML & CSS Website", tag: "⭐", price: "From R499" },
-  { id: 3, name: "React.js App", tag: "50% Off", price: "From R799" },
-  { id: 4, name: "Next.js", tag: "⭐", price: "From R899" },
-  { id: 5, name: "Portfolio", tag: "50% Off", price: "From R399" },
-  { id: 6, name: "Business Website", tag: "New", price: "From R1299" },
-  { id: 7, name: "Landing Page Design", tag: "70% Off", price: "From R299" },
-  { id: 8, name: "Custom Web Application", tag: "New", price: "From R999" },
+  { 
+    id: 1, 
+    name: "E-Commerce Website", 
+    tag: "Popular", 
+    price: "From R1499",
+    description: "A complete online store with product pages, cart, checkout, payments, order tracking, and a mobile-friendly design. Ideal for selling products or services 24/7."
+  },
+
+  { 
+    id: 2, 
+    name: "HTML & CSS Website", 
+    tag: "⭐", 
+    price: "From R499",
+    description: "A fast, simple, lightweight website built using HTML & CSS. Perfect for portfolios, simple business pages, or landing pages that do not require advanced features."
+  },
+
+  { 
+    id: 3, 
+    name: "React.js App", 
+    tag: "50% Off", 
+    price: "From R799",
+    description: "A modern, dynamic, and highly interactive web app built using React.js. Great for dashboards, SaaS platforms, modern front-end systems, and real-time interfaces."
+  },
+
+  { 
+    id: 4, 
+    name: "Next.js", 
+    tag: "⭐", 
+    price: "From R899",
+    description: "A high-performance website/app with SEO optimization, server-side rendering, API routes, and fast loading speeds using Next.js. Perfect for business websites and apps."
+  },
+
+  { 
+    id: 5, 
+    name: "Portfolio", 
+    tag: "50% Off", 
+    price: "From R399",
+    description: "A clean, modern personal portfolio to showcase your skills, work, projects, and experience. Ideal for freelancers, creators, designers, and developers."
+  },
+
+  { 
+    id: 6, 
+    name: "Business Website", 
+    tag: "New", 
+    price: "From R1299",
+    description: "A professional corporate website for companies, agencies, and startups. Includes services, contact pages, branding, SEO, and responsive design."
+  },
+
+  { 
+    id: 7, 
+    name: "Landing Page Design", 
+    tag: "70% Off", 
+    price: "From R299",
+    description: "A high-converting landing page designed for ads, promotions, or lead-generation campaigns. Optimized for sales, speed, UX, and mobile performance."
+  },
+
+  { 
+    id: 8, 
+    name: "Custom Web Application", 
+    tag: "New", 
+    price: "From R999",
+    description: "A fully tailored web application built to your requirements. Ideal for management systems, booking apps, dashboards, automation tools, and advanced platforms."
+  },
 ];
 
 const Menu = () => {
