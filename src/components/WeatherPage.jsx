@@ -266,7 +266,7 @@ export default function WeatherPage() {
 
   /********************* Render *********************/
   return (
-    <div className="relative min-h-screen flex items-start mb-8 justify-center py-10 px-4 bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-black">
+    <div className="relative min-h-screen flex items-start justify-center py-10 px-4 bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-black">
 
       {/* star bg */}
       <StarBackground />
@@ -274,7 +274,7 @@ export default function WeatherPage() {
       <div style={{ position: 'relative', zIndex: 10 }} className="w-full max-w-3xl">
 
         {/* Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-10">
           <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-sky-400 text-transparent bg-clip-text tracking-tight">Weather Forecast</h1>
           <p className="text-gray-500 mt-1 text-sm">Real-time climate updates · 7-day outlook · History</p>
         </div>
@@ -299,7 +299,7 @@ export default function WeatherPage() {
             <div className="py-12 flex justify-center"><Loader/></div>
           ) : (
             <Tabs defaultActiveKey="1" items={[
-              { key: '1', label: <span className="flex items-center gap-2"><Sun size={16}/> Now</span>, children: <WeatherCard w={currentWeather} /> },
+              { key: '1', label: <span className="flex items-center gap-2"><Sun size={16} className="text-yellow-600" /> Now</span>, children: <WeatherCard w={currentWeather} /> },
               { key: '2', label: <span className="flex items-center gap-2"><History size={14}/> History</span>, children: <HistoryList /> }
             ]} />
           )}
