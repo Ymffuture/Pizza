@@ -14,24 +14,24 @@ import "swiper/css/navigation";
 
 const keywords = [
   "ecommerce",
-  "html css",
-  "reactjs",
-  "nextjs",
+  "html and css",
+  "react.js",
+  "next.js",
   "portfolio",
-  "business",
-  "landing page design",
-  "web application react js",
+  "business professional website",
+  "landing page with html and bootstrap",
+  "website app react.js",
 ];
 
 const services = [
   { id: 1, name: "E-Commerce Website", tag: "Popular", price: "From R1499" },
-  { id: 2, name: "HTML & CSS Website", tag: "New", price: "From R499" },
-  { id: 3, name: "React Website", tag: "Hot", price: "From R799" },
-  { id: 4, name: "Next.js Website", tag: "", price: "From R899" },
-  { id: 5, name: "Portfolio Website", tag: "Popular", price: "From R399" },
+  { id: 2, name: "HTML & CSS Website", tag: "⭐", price: "From R499" },
+  { id: 3, name: "React.js App", tag: "50% Off", price: "From R799" },
+  { id: 4, name: "Next.js", tag: "⭐", price: "From R899" },
+  { id: 5, name: "Portfolio", tag: "50% Off", price: "From R399" },
   { id: 6, name: "Business Website", tag: "New", price: "From R1299" },
-  { id: 7, name: "Landing Page Design", tag: "", price: "From R299" },
-  { id: 8, name: "Custom Web Application", tag: "Hot", price: "From R999" },
+  { id: 7, name: "Landing Page Design", tag: "70% Off", price: "From R299" },
+  { id: 8, name: "Custom Web Application", tag: "New", price: "From R999" },
 ];
 
 const Menu = () => {
