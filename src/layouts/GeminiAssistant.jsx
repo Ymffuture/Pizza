@@ -90,7 +90,7 @@ const useConnectionStrength = () => {
 
       if (level === "Poor") {
         toast((t) => (
-  <span className="flex items-center justify-between gap-2">
+  <span className="flex items-center justify-between gap-2 text-[10px]">
     <span>
       NETWORK: <b className="text-red-600" >Your connection is weak. AI responses may be slow.</b>
     </span>
@@ -109,7 +109,7 @@ const useConnectionStrength = () => {
       }
       if (level === "Good") {
         toast((t) => (
-  <span className="flex items-center justify-between gap-2">
+  <span className="flex items-center justify-between gap-2 text-[10px]">
     <span>
       NETWORK: <b className="text-green-600" >Connected</b>
     </span>
