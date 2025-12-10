@@ -66,7 +66,7 @@ const Hero = () => {
 
 
   return (
-    <section className="bg-white dark:bg-black text-black dark:text-white
+    <section className="bg-white dark:bg-[#0A0A0D] text-black dark:text-white
     min-h-[90vh] flex flex-col-reverse lg:flex-row items-center justify-center
     px-4 md:px-10 lg:px-16 gap-14 pt-24 transition-colors duration-300">
 
