@@ -80,9 +80,9 @@ const Menu = () => {
   }, []);
 
   return (
-    <section className="transition-colors duration-300 bg-gray-50l text-gray-900 dark:text-white bg-white">
+    <section className="transition-colors duration-300 text-black dark:text-black bg-white">
       <div className="text-center mb-10">
-        <p className="text-gray-500 dark:text-gray-400 uppercase tracking-wide text-sm">
+        <p className="text-gray-500 dark:text-gray-700 uppercase tracking-wide text-sm">
           Our Services
         </p>
         <h2 className="text-3xl md:text-4xl font-bold">Websites We Build</h2>
@@ -98,7 +98,7 @@ const Menu = () => {
         navigation={true}
         pagination={{ clickable: true }}
         modules={[EffectCube, Pagination, Navigation]}
-        className="w-[90%] md:w-[70%] lg:w-[50%] mx-auto"
+        className="w-[100%] md:w-[80%] lg:w-[60%] mx-auto"
         cubeEffect={{
           shadow: true,
           slideShadows: true,
