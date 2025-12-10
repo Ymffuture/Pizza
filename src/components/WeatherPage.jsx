@@ -266,7 +266,7 @@ export default function WeatherPage() {
 
   /********************* Render *********************/
   return (
-    <div className="relative min-h-screen flex items-start justify-center py-10 px-4 bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-black">
+    <div className="relative min-h-screen flex items-start mb-8 justify-center py-10 px-4 bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-black">
 
       {/* star bg */}
       <StarBackground />
