@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProcessCard = ({ Icon, title, desc }) => {
+const ProcessCard = ({ icon: Icon, title, desc }) => {
   return (
     <div
       className="
