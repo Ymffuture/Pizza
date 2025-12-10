@@ -300,7 +300,7 @@ export default function WeatherPage() {
           ) : (
             <Tabs defaultActiveKey="1" items={[
               { key: '1', label: <span className="flex items-center gap-2"><Sun size={16} className="text-yellow-600" /> Now</span>, children: <WeatherCard w={currentWeather} /> },
-              { key: '2', label: <span className="flex items-center gap-2"><History size={14}/> History</span>, children: <HistoryList /> }
+              { key: '2', label: <span className="flex items-center gap-2"><History size={14} className="text-gray-600" /> History</span>, children: <HistoryList /> }
             ]} />
           )}
         </div>
