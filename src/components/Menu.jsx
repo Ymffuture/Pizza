@@ -118,7 +118,7 @@ const Menu = () => {
 
       {/* ============================ */}
       {/* Optional: Show 2 slides via grid under Swiper */}
-      {/* ============================ */}
+      {/* ============================
       <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-4 md:px-20">
         {services.slice(0, 6).map((service, index) => (
           <MenuCard
@@ -127,7 +127,7 @@ const Menu = () => {
             image={images[index] ?? "https://via.placeholder.com/600x400"}
           />
         ))}
-      </div>
+      </div>*/} 
     </section>
   );
 };
