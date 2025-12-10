@@ -14,13 +14,13 @@ import "swiper/css/navigation";
 
 const keywords = [
   "ecommerce",
-  "html and css",
-  "react.js",
-  "next.js",
+  "html css",
+  "javascript",
+  "typescript",
   "portfolio",
-  "business professional website",
-  "landing page with html and bootstrap",
-  "website app react.js",
+  "business website",
+  "landing page with html",
+  "website app reactjs",
 ];
 
 const services = [
