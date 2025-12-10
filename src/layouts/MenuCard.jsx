@@ -2,7 +2,7 @@ import React from "react";
 
 const MenuCard = ({ name, price, tag, image }) => {
   return (
-    <div className="group dark:bg-[#fff] shadow-md dark:shadow-none hover:shadow-xl rounded-2xl overflow-hidden transition-shadow duration-300 cursor-pointer">
+    <div className="group bg-white dark:bg-[#fff] shadow-md dark:shadow-none hover:shadow-xl rounded-2xl overflow-hidden transition-shadow duration-300 cursor-pointer">
       {/* Image */}
       <div className="relative">
         <img
