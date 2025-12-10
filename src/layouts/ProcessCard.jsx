@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProcessCard = ({ icon: Icon, title, desc }) => {
+const ProcessCard = ({ icon, title, desc }) => {
   return (
     <div
       className="
@@ -38,17 +38,7 @@ const ProcessCard = ({ icon: Icon, title, desc }) => {
             shadow-inner
           "
         >
-          <icon
-            className="
-              w-16 h-16 
-              text-blue-600 
-              dark:text-blue-300
-              drop-shadow-md 
-              group-hover:scale-110 
-              transition-transform 
-              duration-500
-            "
-          />
+          <icon />
         </div>
       </div>
 
