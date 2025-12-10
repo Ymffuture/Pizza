@@ -60,10 +60,10 @@ const Home = () => {
       <div className="px-5 lg:px-14 py-10">
         {menuLoading ? (
           <Row gutter={[16, 16]}>
-            {[...Array(4)].map((_, idx) => (
+            {[...Array(1)].map((_, idx) => (
               <Col xs={24} sm={12} md={12} lg={6} key={idx}>
                 <Card>
-                  <Skeleton.Image style={{ width: "100%", height: 100 }} active />
+                  <Skeleton.Image style={{ width: "100%", height: "100%" }} active />
                   <Skeleton active paragraph={{ rows: 2 }} />
                 </Card>
               </Col>
