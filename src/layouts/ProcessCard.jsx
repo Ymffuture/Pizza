@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProcessCard = ({ img, title, desc }) => {
+const ProcessCard = ({ Icon, title, desc }) => {
   return (
     <div
       className="
@@ -20,20 +20,36 @@ const ProcessCard = ({ img, title, desc }) => {
         hover:scale-[1.02]
       "
     >
-      {/* Image */}
-      <div className="w-full h-40 flex items-center justify-center mb-6">
-        <img
-          src={img}
-          alt={title}
+      {/* ICON */}
+      <div className="w-full flex items-center justify-center mb-6">
+        <div
           className="
-            w-40 h-40 object-contain 
-            grayscale 
-            group-hover:grayscale-0 
+            p-6 
+            rounded-2xl 
+            bg-gradient-to-br 
+            from-blue-500/10 
+            to-purple-500/10 
+            dark:from-blue-400/10 
+            dark:to-purple-400/10 
+            group-hover:from-blue-500/20 
+            group-hover:to-purple-500/20
             transition-all 
             duration-500 
-            drop-shadow-xl
+            shadow-inner
           "
-        />
+        >
+          <Icon
+            className="
+              w-16 h-16 
+              text-blue-600 
+              dark:text-blue-300
+              drop-shadow-md 
+              group-hover:scale-110 
+              transition-transform 
+              duration-500
+            "
+          />
+        </div>
       </div>
 
       {/* Title */}
