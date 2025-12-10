@@ -11,7 +11,7 @@ const MenuCard = ({ name, price, tag, image }) => {
           className="w-full h-56 sm:h-64 object-cover group-hover:scale-105 transition-transform duration-300"
         />
         {tag && (
-          <span className="absolute top-3 left-3 bg-red-100 text-white px-3 py-1 rounded-full text-xs font-medium">
+          <span className="absolute top-3 left-3 bg-red-200 text-white px-3 py-1 rounded-full text-xs font-medium">
             {tag}
           </span>
         )}
@@ -28,11 +28,11 @@ const MenuCard = ({ name, price, tag, image }) => {
 
         {/* Optional action buttons (like Facebook) */}
         <div className="flex justify-between items-center mt-4">
-          <button className="text-blue-500 hover:underline text-sm font-medium dark:bg-gray-500 rounded p-2">
-            Email Us
+          <button className="text-blue-500 hover:underline text-sm font-medium dark:bg-gray-500 rounded p-2 dark:text-white">
+            Info
           </button>
-          <button className="text-gray-500 dark:text-gray-400 hover:text-blue-500 text-sm font-medium border">
-            Chat
+          <button className="text-gray-500 dark:text-gray-400 hover:text-blue-500 text-sm font-medium border p-2">
+            Buy
           </button>
         </div>
       </div>
