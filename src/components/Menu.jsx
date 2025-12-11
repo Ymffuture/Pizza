@@ -13,15 +13,16 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 const keywords = [
-  "ecommerce",
-  "html css",
-  "javascript",
-  "typescript",
-  "portfolio",
-  "business website",
-  "landing page with html",
-  "website app reactjs",
+  "modern ecommerce website mockup",
+  "clean website design",
+  "coding desk setup",
+  "developer workspace minimal",
+  "portfolio web design mockup",
+  "corporate website layout",
+  "landing page mockup",
+  "app dashboard ui design",
 ];
+
 
 const services = [
   { 
