@@ -41,7 +41,7 @@ const MenuCard = ({ name, price, tag, image, description }) => {
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={() => setOpen(true)}
-              className="text-blue-600 hover:underline text-sm font-medium p-2"
+              className="text-blue-600 hover:underline text-[24px] font-medium p-2"
             >
               <IoInformationCircleOutline />
             </button>
