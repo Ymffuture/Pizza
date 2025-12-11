@@ -92,7 +92,7 @@ const services = [
 ];
 
 const Menu = () => {
-  const [images, setImages] = useState(Array(8).fill(null));
+  const [images, setImages] = useState(Array(16).fill(null));
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -120,11 +120,11 @@ const Menu = () => {
     const checkAndFetch = () => {
       const lastFetch = localStorage.getItem("lastFetchTime");
       const cachedImages = localStorage.getItem("cachedImages");
-      const threeDays = 3 * 24 * 60 * 60 * 1000;
+      const nDays = 7 * 24 * 60 * 60 * 1000;
 
       if (lastFetch && cachedImages) {
         const elapsed = Date.now() - parseInt(lastFetch);
-        if (elapsed < threeDays) {
+        if (elapsed < nDays) {
           setImages(JSON.parse(cachedImages));
           return;
         }
