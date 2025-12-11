@@ -13,15 +13,16 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 const keywords = [
-  "modern ecommerce website mockup",
-  "clean website design",
-  "coding desk setup",
+  "ecommerce website mockup",
+  "modern website design template",
   "developer workspace minimal",
-  "portfolio web design mockup",
-  "corporate website layout",
-  "landing page mockup",
-  "app dashboard ui design",
+  "web app dashboard ui",
+  "portfolio website mockup",
+  "corporate business website design",
+  "landing page ui design",
+  "custom web application dashboard",
 ];
+
 
 
 const services = [
