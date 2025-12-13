@@ -93,7 +93,7 @@ const Hero = () => {
           technologies like React, Next.js, Tailwind, and advanced UI/UX design.
         </p>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center gap-6 max-w-xl mx-auto lg:mx-0">
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-around gap-8 mb-12 max-w-xl mx-auto lg:mx-0">
           <motion.button
             whileHover={{ scale: 1.05 }}
             className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold rounded-full px-7 py-3 shadow-lg shadow-blue-500/20 w-full sm:w-auto"
