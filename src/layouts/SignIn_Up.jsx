@@ -16,7 +16,9 @@ import {
   FacebookOutlined,
 } from "@ant-design/icons";
 import { SiSpotify } from "react-icons/si";
+import { FaGoogle } from "react-icons/fa6";
 import { useNavigate, Link} from "react-router-dom";
+import { Helmet } from "react-helmet";
 const { TabPane } = Tabs;
 
 export default function SignIn_Up() {
@@ -126,13 +128,23 @@ export default function SignIn_Up() {
   // UI
   // ------------------------------------
   return (
+    <>
+    <Helmet>
+              <title>Log in </title>
+              <meta name="description" content="" />
+            </Helmet>
     <div className="min-h-screen flex items-center justify-center px-4 bg-gray-100 dark:bg-black">
+      
       <Card
         className="w-full max-w-md shadow-xl rounded-2xl border border-gray-300 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl"
         style={{ borderRadius: "20px" }}
       >
-        <span className="text-blue-500 dark:text-blue-600">Swift</span>
-            <span className="text-gray-700 dark:text-gray-300">Meta™</span>
+        <span className="text-2xl text-center justify-center border-1 m-[140px] p-2 rounded-2xl">
+          
+<span className="text-blue-500 dark:text-blue-600">Swift</span>
+            <span className="text-gray-700 dark:text-gray-400">Meta</span>
+
+        </span>
 
         {error && (
           <Alert
@@ -217,9 +229,9 @@ export default function SignIn_Up() {
             {/* SOCIAL LOGIN */}
             <Divider>Or continue with</Divider>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 p-2">
               <Button
-                icon={<GoogleOutlined />}
+                icon={<FaGoogle/>}
                 loading={socialLoading === "google"}
                 className="rounded-full flex items-center justify-center"
                 onClick={() => loginWithProvider("google")}
@@ -236,7 +248,7 @@ export default function SignIn_Up() {
                 GitHub
               </Button>
 
-              <Button
+              {/* <Button
                 icon={<FacebookOutlined />}
                 loading={socialLoading === "facebook"}
                 className="rounded-full flex items-center justify-center"
@@ -248,11 +260,11 @@ export default function SignIn_Up() {
               <Button
                 icon={<SiSpotify size={18} />}
                 loading={socialLoading === "spotify"}
-                className="rounded-full flex items-center justify-center"
+                className="rounded-full flex items-center justify-center bg-amber-400"
                 onClick={() => loginWithProvider("spotify")}
               >
                 Spotify
-              </Button>
+              </Button> */}
             </div>
 
             {/* TERMS */}
@@ -304,5 +316,6 @@ export default function SignIn_Up() {
         )}
       </Card>
     </div>
+    </>
   );
 }
