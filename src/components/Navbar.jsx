@@ -18,39 +18,40 @@ import GeminiAssistant from "../layouts/GeminiAssistant";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoreHorizontal } from "lucide-react";
 import { Dropdown, Menu } from "antd";
+import Dashboard from './dashboard/Dashboard';
 
 
 
-const menu = (
-  <Menu
-    items={[
+const menu = {
+  
+    items: [
       {
         key: "1",
         label: (
-          <span onClick={() => navigate("/small-projects")}>
-            Small Projects
-          </span>
+          <Link to="/dashboard">
+            Dashboard
+          </Link>
         ),
       },
       {
         key: "2",
         label: (
-          <span onClick={() => navigate("/large-projects")}>
-            Small Projects
-          </span>
+           <Link to="/weather">
+           Weather
+          </Link>
         ),
       },
       {
         key: "3",
         label: (
-          <span onClick={() => navigate("/signup")}>
-            Log in
-          </span>
+          <Link to="/signup">
+            Sign up
+          </Link>
         ),
       },
-    ]}
-  />
-);
+    ]
+  
+  };
 // ----------------------
 // SEARCH DATA SOURCE
 // ----------------------
@@ -106,15 +107,15 @@ const Navbar = () => {
     <>
       {/* DESKTOP NAVBAR */}
       <header className="fixed top-0 w-full z-50 bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-2 py-4">
 
           {/* LOGO */}
           <div
-            className="text-2xl cursor-pointer"
+            className="text-2xl cursor-pointer border-gray-300"
             onClick={() => navigate("/")}
           >
-            <span className="text-blue-500 dark:text-blue-600">Swift</span>
-            <span className="text-gray-700 dark:text-gray-300">Meta</span>
+            <span className="text-blue-500 dark:text-blue-600 font-semibold">Swift</span>
+            <span className="text-gray-700 dark:text-gray-300 font-bold">Meta</span>
           </div>
 
           {/* DESKTOP LIVE SEARCH */}
@@ -126,7 +127,7 @@ const Navbar = () => {
                 placeholder="Search Navigation links"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="ml-3 w-full bg-transparent outline-none text-sm dark:text-white"
+                className="ml-7 w-full bg-transparent p-2 outline-none text-sm dark:text-white"
               />
             </div>
 
@@ -160,48 +161,49 @@ const Navbar = () => {
             <nav className="hidden md:flex items-center gap-5">
 
   {/* HOME ICON */}
-  <Home
-    onClick={() => navigate("/")}
-    size={22}
-    className="cursor-pointer hover:text-blue-500 dark:text-white"
-  />
+ 
 
   {/* THREE DOTS MENU */}
-  <Dropdown overlay={menu} trigger={["click"]}>
+  <Dropdown menu={menu} trigger={["click"]}>
     <MoreHorizontal
       size={28}
       className="cursor-pointer hover:text-blue-500 dark:text-white"
     />
   </Dropdown>
 
+ <Home
+    onClick={() => navigate("/")}
+    size={22}
+    className="cursor-pointer hover:text-blue-500 dark:text-white"
+  />
 </nav>
 
             {/* WhatsApp CTA */}
             <button
               onClick={handleWhatsAppRedirect}
-              className="hidden md:flex items-center text-green-500 hover:text-green-600"
+              className="hidden md:flex items-center text-green-500 hover:text-green-600 px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 cursor-pointer"
             >
-              <FaWhatsapp size={28}/>
+              <FaWhatsapp size={18} />
             </button>
 
             {/* Theme Toggle */}
-            <div className="hidden md:block">
+            <div className="hidden md:block cursor-pointer">
               <ThemeToggle />
             </div>
-
+<GeminiAssistant />
             {/* Mobile Hamburger */}
             <button
-              className="md:hidden p-2 rounded-full"
+              className="md:hidden p-2 rounded-full border-amber-50"
               onClick={() => setMenuOpen(true)}
             >
               <svg
-                className="h-5 w-5 dark:text-white"
+                className="h-7 w-7 dark:text-white cursor-pointer"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1.3"
+                strokeWidth="1.1"
                 viewBox="0 0 24 24"
               >
-                <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
+                <path d="M4 6h14M4 12h10M4 18h12" strokeLinecap="round" />
               </svg>
             </button>
           </div>
@@ -233,8 +235,8 @@ const Navbar = () => {
             >
               {/* HEADER */}
               <div className="flex items-center justify-between mb-4">
-                <GeminiAssistant />
-                <h2 className="text-xl text-blue-500 dark:text-gray-400">SwiftMeta AI</h2>
+                {/* <GeminiAssistant /> */}
+                {/* <h2 className="text-xl text-blue-500 dark:text-gray-400">SwiftMeta AI</h2> */}
                 <button
                   className="p-2 dark:text-gray-400"
                   onClick={() => setMenuOpen(false)}
@@ -293,12 +295,12 @@ const Navbar = () => {
               </div>
 
               {/* SOCIAL ICONS */}
-              <div className="flex items-center justify-center gap-8">
-                <FaXTwitter size={24} className="cursor-pointer dark:text-white" />
-                <FaInstagram size={24} className="cursor-pointer dark:text-red-600" />
-                <FaLinkedin size={24} className="cursor-pointer dark:text-blue-600" />
+              <div className="flex items-center justify-center gap-4">
+                <FaXTwitter size={20} className="cursor-pointer dark:text-white" />
+                <FaInstagram size={20} className="cursor-pointer dark:text-red-300" />
+                <FaLinkedin size={20} className="cursor-pointer dark:text-blue-600" />
                 <FaWhatsapp
-                  size={24}
+                  size={20}
                   className="cursor-pointer dark:text-green-600"
                   onClick={handleWhatsAppRedirect}
                 />
