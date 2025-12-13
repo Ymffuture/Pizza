@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { FaCoffee } from "react-icons/fa";
-
+import { FaWallet } from "react-icons/fa";
 const BUY_ME_A_COFFEE_URL = "https://www.buymeacoffee.com/ymffuture";
 
 const MenuCard = ({ name, price, tag, image, description }) => {
@@ -33,29 +33,30 @@ const MenuCard = ({ name, price, tag, image, description }) => {
 
         {/* Content */}
         <div className="p-5">
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition">
             {name}
           </h3>
 
           <p className="text-gray-700 font-bold text-md sm:text-lg">
-            {price}
+            From {price}
           </p>
 
           {/* Actions */}
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={() => setInfoOpen(true)}
-              className="text-blue-600 text-[24px] p-2 hover:scale-110 transition"
+              className="text-blue-600 text-[40px] p-2 hover:scale-110 transition cursor-pointer"
               aria-label="More information"
             >
               <IoInformationCircleOutline />
+             
             </button>
 
             <button
               onClick={() => setPayOpen(true)}
-              className="flex items-center gap-2 text-sm font-medium border px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+              className="flex items-center gap-2 text-sm font-medium  border-blue-500 border-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition cursor-pointer"
             >
-              <FaCoffee />
+              {/* <FaCoffee /> */}
               Buy
             </button>
           </div>
@@ -64,7 +65,7 @@ const MenuCard = ({ name, price, tag, image, description }) => {
 
       {/* INFO MODAL */}
       {infoOpen && (
-        <Modal onClose={() => setInfoOpen(false)} title={`About ${name}`}>
+        <Modal onClose={() => setInfoOpen(false)} title={`About ${name}`} >
           <img
             src={image}
             alt={name}
@@ -79,13 +80,13 @@ const MenuCard = ({ name, price, tag, image, description }) => {
 
       {/* PAYMENT MODAL */}
       {payOpen && (
-        <Modal onClose={() => setPayOpen(false)} title="Support with a Coffee">
+        <Modal onClose={() => setPayOpen(false)} title={`Make payments for: ${name.slice(0,10)}...`} >
           <div className="text-center space-y-4">
-            <FaCoffee className="mx-auto text-4xl text-amber-600" />
+            <FaWallet className="mx-auto text-4xl text-green-600" />
 
             <p className="text-gray-700">
               You're purchasing <strong>{name}</strong> for{" "}
-              <strong>{price}</strong>.
+              <strong>{price}.00</strong>.
             </p>
 
             <p className="text-sm text-gray-500">
@@ -94,7 +95,7 @@ const MenuCard = ({ name, price, tag, image, description }) => {
 
             <button
               onClick={openPayment}
-              className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-semibold transition"
+              className="w-full bg-blue-300 hover:bg-blue-400 text-black hover:text-white py-3 rounded-xl font-semibold transition"
             >
               Continue your payment
             </button>
@@ -122,7 +123,7 @@ const Modal = ({ title, children, onClose }) => {
         <div className="flex justify-end mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition"
+            className="px-4 py-2 rounded-lg bg-red-400 hover:bg-red-600 text-amber-100 transition cursor-pointer"
           >
             Close
           </button>
