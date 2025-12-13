@@ -8,7 +8,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast} from "react-hot-toast";
 const { TextArea } = Input;
-
+import { BotIcon } from "lucide-react";
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -152,7 +152,7 @@ const useConnectionStrength = () => {
       const aiMsg = { sender: "ai", text: res.data.reply };
       setMessages((prev) => [...prev, aiMsg]);
     } catch (err) {
-      setMessages((prev) => [...prev, { sender: "ai", text: "Oops! Something went wrong." }]);
+      setMessages((prev) => [...prev, { sender: "ai", text: "Oops! Something went wrong. Try again" }]);
     }
     setLoading(false);
   };
@@ -163,10 +163,10 @@ const useConnectionStrength = () => {
       {!open && (
         <Tooltip title="Chat with SwiftMeta AI">
           <Button
-            type="primary"
-            shape="circle"
-            size="large"
-            icon={<MessageCircle size={28} />}
+            type=""
+            shape=""
+            size=""
+            icon={<BotIcon size={20} />}
             className="flex top-0 right-[-2%] z-20 shadow-2xl hover:scale-110 transition-transform duration-200"
             onClick={() => setOpen(true)}
           />
@@ -178,10 +178,10 @@ const useConnectionStrength = () => {
         open={open}
         onCancel={() => setOpen(false)}
         footer={null}
-        closeIcon={<X size={20} />}
+        closeIcon={<X size={10} />}
         width={700}
-        style={{ top: 20, right: 12, position: "fixed", margin: 0, paddingBottom: 0 }}
-        bodyStyle={{ height: "600px", padding: "16px", display: "flex", flexDirection: "column" }}
+        style={{ top: 30, right: 20, position: "fixed", margin: 0, paddingBottom: 0 }}
+        bodyStyle={{ height: "600px", padding: "26px", display: "flex", flexDirection: "column" }}
         title={
   <div className="flex flex-col gap-1">
     <div className="flex justify-between items-center">
@@ -238,7 +238,7 @@ const useConnectionStrength = () => {
               <div
                 className={`max-w-[100%] rounded-2xl px-4 py-3 shadow ${
                   m.sender === "user"
-                    ? "bg-blue-300 text-white"
+                    ? "bg-blue-500 text-white"
                     : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
                 }`}
               >
@@ -282,7 +282,7 @@ const useConnectionStrength = () => {
             <div className="flex justify-start animation-fade">
               <div className="bg-white dark:bg-gray-800 rounded-2xl px-4 py-2 shadow-sm flex items-center gap-2">
                 <Loader />
-                <span className="text-gray-500 dark:text-gray-300 text-sm animation-pulse">Thinking...</span>
+                <span className="text-gray-500 dark:text-gray-300 text-sm animate-pulse">Thinking...</span>
               </div>
             </div>
           )}
@@ -297,7 +297,7 @@ const useConnectionStrength = () => {
             placeholder="Ask anything"
             autoSize={{ minRows: 3, maxRows: 5 }}
             onPressEnter={(e) => !e.shiftKey && (e.preventDefault(), sendMessage())}
-            className="rounded-lg border-gray-300 dark:border-gray-700"
+            className="rounded-lg border-gray-300 dark:border-gray-700 bg-gray-500"
           />
           <Tooltip title="Send Message">
             <Button
