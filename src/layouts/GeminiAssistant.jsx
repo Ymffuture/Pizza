@@ -167,7 +167,7 @@ const useConnectionStrength = () => {
             shape=""
             size=""
             icon={<BotIcon size={20} />}
-            className="flex top-0 right-[-2%] z-20 shadow-2xl hover:scale-110 transition-transform duration-200"
+            className="flex top-0 z-20 shadow-2xl hover:scale-110 transition-transform duration-200"
             onClick={() => setOpen(true)}
           />
         </Tooltip>

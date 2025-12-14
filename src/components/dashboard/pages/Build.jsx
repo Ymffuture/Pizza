@@ -12,7 +12,7 @@ body {
   padding: 20px;
   color: #222;
 }
-h1 { color: #202124; cursor: pointer; }
+h1 { color: #2021ff; cursor: pointer; }
 p{ color:#0ea5a4 ;} 
 `;
 
@@ -236,7 +236,7 @@ export default function Build() {
             <div className="rounded-xl overflow-hidden border dark:border-white/10 bg-white/30 dark:bg-white/5">
               <div className="px-4 py-2 flex justify-between border-b dark:border-white/10">
                 <span>Console</span>
-                <button onClick={clearLogs} className="text-xs text-gray-500">Clear</button>
+                <button onClick={clearLogs} className="text-xs text-gray-500">Close terminal</button>
               </div>
 
               <div className="p-3 h-40 overflow-y-auto font-mono text-xs">
@@ -245,7 +245,7 @@ export default function Build() {
                 ) : (
                   logs.map((l) => (
                     <p key={l.id} className="mb-1">
-                      <b className="capitalize">{l.type}:</b> {l.text}
+                      <b className="capitalize text-green-600">{l.type}:</b> {l.text}
                     </p>
                   ))
                 )}
