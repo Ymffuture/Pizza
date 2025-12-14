@@ -1,64 +1,35 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabaseClient";
-import {
-  Input,
-  Button,
-  Alert,
-  Card,
-  Tabs,
-  Divider,
-} from "antd";
-import {
-  MailOutlined,
-  LockOutlined,
-  GoogleOutlined,
-  GithubOutlined,
-  FacebookOutlined,
-} from "@ant-design/icons";
-import { SiSpotify } from "react-icons/si";
-import { FaGoogle } from "react-icons/fa6";
-import { useNavigate, Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-const { TabPane } = Tabs;
+import { Mail, Lock } from "lucide-react";
+import { FaGoogle, FaGithub } from "react-icons/fa";
 
 export default function SignIn_Up() {
   const navigate = useNavigate();
 
+  const [mode, setMode] = useState("login"); // login | signup
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState("");
+  const [error, setError] = useState("");
 
-  // ------------------------------------
-  // EMAIL SIGN UP
-  // ------------------------------------
-  const handleSignUp = async () => {
-    setError("");
+  // ---------------------------
+  // AUTH ACTIONS
+  // ---------------------------
+  const handleAuth = async () => {
     setLoading(true);
-
-    const { data, error } = await supabase.auth.signUp({ email, password });
-
-    setLoading(false);
-    if (error) return setError(error.message);
-
-    setUser(data.user ?? null);
-    navigate("/dashboard");
-  };
-
-  // ------------------------------------
-  // EMAIL LOGIN
-  // ------------------------------------
-  const handleLogin = async () => {
     setError("");
-    setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const fn =
+      mode === "login"
+        ? supabase.auth.signInWithPassword
+        : supabase.auth.signUp;
+
+    const { data, error } = await fn({ email, password });
 
     setLoading(false);
     if (error) return setError(error.message);
@@ -67,55 +38,36 @@ export default function SignIn_Up() {
     navigate("/dashboard/blog");
   };
 
-  // ------------------------------------
-  // SOCIAL LOGIN
-  // ------------------------------------
   const loginWithProvider = async (provider) => {
     try {
       setSocialLoading(provider);
       setError("");
 
-      const { error } = await supabase.auth.signInWithOAuth({
+      await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: "https://swiftmeta.vercel.app/dashboard",
         },
       });
-
-      if (error) setError(error.message);
     } finally {
       setSocialLoading("");
     }
   };
 
-  // ------------------------------------
-  // LOG OUT
-  // ------------------------------------
-  const handleLogOut = async () => {
-    setError("");
+  const handleLogout = async () => {
     setLoading(true);
-
-    const { error } = await supabase.auth.signOut();
-
-    setLoading(false);
-    if (error) return setError(error.message);
-
+    await supabase.auth.signOut();
     setUser(null);
+    setLoading(false);
   };
 
-  // ------------------------------------
-  // SESSION LISTENER
-  // ------------------------------------
+  // ---------------------------
+  // SESSION SYNC (Facebook-like)
+  // ---------------------------
   useEffect(() => {
-    const init = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      setUser(session?.user ?? null);
-    };
-
-    init();
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+    });
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => setUser(session?.user ?? null)
@@ -124,198 +76,179 @@ export default function SignIn_Up() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // ------------------------------------
-  // UI
-  // ------------------------------------
   return (
     <>
-    <Helmet>
-              <title>Log in </title>
-              <meta name="description" content="" />
-            </Helmet>
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-100 dark:bg-black">
-      
-      <Card
-        className="w-full max-w-md shadow-xl rounded-2xl border border-gray-300 dark:border-white/10 dark:bg-gray-900/80 backdrop-blur-xl"
-        style={{ borderRadius: "20px" }}
-      >
-        <span className="text-2xl text-center justify-center border-1 m-[140px] p-2 rounded-2xl">
+      <Helmet>
+        <title>Log in · SwiftMeta</title>
+      </Helmet>
+
+      <div className="min-h-screen flex items-center justify-center bg-[#f0f2f5] dark:bg-black px-4">
+        <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
           
-<span className="text-blue-500 dark:text-blue-600">Swift</span>
-            <span className="text-gray-700 dark:text-gray-400">Meta</span>
-
-        </span>
-
-        {error && (
-          <Alert
-            message={error}
-            type="error"
-            showIcon
-            className="mb-4 rounded-lg"
-          />
-        )}
-
-        {!user ? (
-          <>
-            <Tabs defaultActiveKey="login" centered tabBarStyle={{ marginBottom: 30 }}>
-              {/* LOGIN TAB */}
-              <TabPane tab="Login" key="login">
-                <Input
-                  size="large"
-                  prefix={<MailOutlined />}
-                  placeholder="Email"
-                  type="email"
-                  className="mb-3 rounded-lg"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-
-                <Input.Password
-                  size="large"
-                  prefix={<LockOutlined />}
-                  placeholder="Password"
-                  className="mb-4 rounded-lg"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <Button
-                  type="primary"
-                  size="large"
-                  block
-                  loading={loading}
-                  disabled={!email || !password}
-                  className="rounded-full bg-blue-600 hover:bg-blue-700"
-                  onClick={handleLogin}
-                >
-                  Sign In
-                </Button>
-              </TabPane>
-
-              {/* SIGNUP TAB */}
-              <TabPane tab="Create Account" key="signup">
-                <Input
-                  size="large"
-                  prefix={<MailOutlined />}
-                  placeholder="Email"
-                  className="mb-3 rounded-lg"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-
-                <Input.Password
-                  size="large"
-                  prefix={<LockOutlined />}
-                  placeholder="Password"
-                  className="mb-4 rounded-lg"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <Button
-                  type="primary"
-                  size="large"
-                  block
-                  loading={loading}
-                  disabled={!email || !password}
-                  className="rounded-full bg-blue-600 hover:bg-blue-700"
-                  onClick={handleSignUp}
-                >
-                  Create Account
-                </Button>
-              </TabPane>
-            </Tabs>
-
-            {/* SOCIAL LOGIN */}
-            <Divider>Or continue with</Divider>
-
-            <div className="grid grid-cols-1 gap-3 p-2">
-              <Button
-                icon={<FaGoogle/>}
-                loading={socialLoading === "google"}
-                className="rounded-full flex items-center justify-center"
-                onClick={() => loginWithProvider("google")}
-              >
-                Google
-              </Button>
-
-              <Button
-                icon={<GithubOutlined />}
-                loading={socialLoading === "github"}
-                className="rounded-full flex items-center justify-center"
-                onClick={() => loginWithProvider("github")}
-              >
-                GitHub
-              </Button>
-
-              {/* <Button
-                icon={<FacebookOutlined />}
-                loading={socialLoading === "facebook"}
-                className="rounded-full flex items-center justify-center"
-                onClick={() => loginWithProvider("facebook")}
-              >
-                Facebook
-              </Button>
-
-              <Button
-                icon={<SiSpotify size={18} />}
-                loading={socialLoading === "spotify"}
-                className="rounded-full flex items-center justify-center bg-amber-400"
-                onClick={() => loginWithProvider("spotify")}
-              >
-                Spotify
-              </Button> */}
+          {/* ERROR */}
+          {error && (
+            <div className="mb-4 text-sm text-red-600 bg-red-50 dark:bg-red-500/10 rounded-md px-3 py-2">
+              {error}
             </div>
+          )}
 
-            {/* TERMS */}
-            <p className="text-center text-xs mt-5 text-gray-600 dark:text-gray-400">
-              By signing in, you agree to SwiftMeta’s{" "}
-              <a href="/terms" className="text-blue-600 dark:text-blue-400">
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a href="/privacy" className="text-blue-600 dark:text-blue-400">
-                Privacy Policy
-              </a>
-              .
-            </p>
-          </>
-        ) : (
-          <>
-  <div className="flex flex-col items-center justify-center space-y-6 py-8">
-    <p className="text-lg text-center text-gray-800 dark:text-gray-200">
-      Welcome, <span className="font-semibold">{user.email}</span>
-    </p>
+          {!user ? (
+            <>
+              {/* TABS */}
+              <div className="flex mb-6 border-b border-gray-200 dark:border-gray-800">
+                {["login", "signup"].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setMode(tab)}
+                    className={`
+                      flex-1 py-2 text-sm font-medium
+                      ${
+                        mode === tab
+                          ? "border-b-2 border-blue-600 text-blue-600"
+                          : "text-gray-500"
+                      }
+                    `}
+                  >
+                    {tab === "login" ? "Log In" : "Create Account"}
+                  </button>
+                ))}
+              </div>
 
-    <div className="w-full max-w-sm flex flex-col gap-3">
-      <Button
-        danger
-        block
-        size="large"
-        loading={loading}
-        className="rounded-full h-12 text-base font-medium shadow-sm transition hover:scale-[1.01] active:scale-[0.97]"
-        onClick={handleLogOut}
-      >
-        Logout
-      </Button>
+              {/* FORM */}
+              <div className="space-y-4">
+                <InputField
+                  icon={<Mail size={18} />}
+                  placeholder="Email address"
+                  value={email}
+                  onChange={setEmail}
+                />
 
-      <Button
-        block
-        size="large"
-        loading={loading}
-        className="rounded-full h-12 text-base font-medium bg-black text-white dark:bg-white dark:text-black shadow-sm border-none transition hover:opacity-90 active:scale-[0.97]"
-      >
-        <Link to="/dashboard" className="w-full flex justify-center items-center">
-          Go to Dashboard
-        </Link>
-      </Button>
-    </div>
-  </div>
-</>
+                <InputField
+                  icon={<Lock size={18} />}
+                  placeholder="Password"
+                  type="password"
+                  value={password}
+                  onChange={setPassword}
+                />
 
-        )}
-      </Card>
-    </div>
+                <button
+                  disabled={!email || !password || loading}
+                  onClick={handleAuth}
+                  className="
+                    w-full h-11 rounded-md
+                    bg-blue-600 hover:bg-blue-700
+                    text-white font-semibold
+                    disabled:opacity-50
+                    transition
+                  "
+                >
+                  {loading
+                    ? "Please wait…"
+                    : mode === "login"
+                    ? "Log In"
+                    : "Create Account"}
+                </button>
+              </div>
+
+              {/* DIVIDER */}
+              <div className="my-6 flex items-center gap-3 text-sm text-gray-400">
+                <span className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
+                or
+                <span className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
+              </div>
+
+              {/* SOCIAL */}
+              <div className="space-y-3 dark:text-white">
+                <SocialButton
+                  icon={<FaGoogle  size={20}/>}
+                  label="Continue with Google"
+                  loading={socialLoading === "google"}
+                  onClick={() => loginWithProvider("google")}
+                />
+
+                <SocialButton
+                  icon={<FaGithub  size={20}/>}
+                  label="Continue with GitHub"
+                  loading={socialLoading === "github"}
+                  onClick={() => loginWithProvider("github")}
+                />
+              </div>
+
+              {/* TERMS */}
+              <p className="text-xs text-center text-gray-500 mt-6">
+                By continuing, you agree to SwiftMeta’s{" "}
+                <Link to="/terms" className="text-blue-600">
+                  Terms
+                </Link>{" "}
+                and{" "}
+                <Link to="/privacy" className="text-blue-600">
+                  Privacy Policy
+                </Link>
+              </p>
+            </>
+          ) : (
+            <>
+              {/* LOGGED IN */}
+              <div className="text-center space-y-4 py-6">
+                <p className="text-gray-800 dark:text-gray-200">
+                  Logged in as <strong>{user.email}</strong>
+                </p>
+
+                <button
+                  onClick={handleLogout}
+                  className="w-full h-11 rounded-md bg-red-500 text-white font-medium"
+                >
+                  Logout
+                </button>
+
+                <Link
+                  to="/dashboard"
+                  className="block w-full h-11 rounded-md bg-black dark:bg-white text-white dark:text-black text-center leading-[44px] font-medium"
+                >
+                  Go to Dashboard
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </>
+  );
+}
+
+/* ---------------------------
+   REUSABLE INPUT
+---------------------------- */
+function InputField({ icon, value, onChange, placeholder, type = "text" }) {
+  return (
+    <div className="flex items-center gap-2 border border-gray-300 dark:border-gray-700 rounded-md px-3 h-11 bg-gray-50 dark:bg-gray-800">
+      <span className="text-gray-400">{icon}</span>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="flex-1 bg-transparent outline-none text-sm text-gray-900 dark:text-white"
+      />
+    </div>
+  );
+}
+
+function SocialButton({ icon, label, onClick, loading }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={loading}
+      className="
+        w-full h-11 flex items-center justify-center gap-2
+        border border-gray-300 dark:border-gray-700
+        rounded-md text-sm font-medium
+        hover:bg-gray-50 dark:hover:bg-gray-800
+        transition
+      "
+    >
+      {icon}
+      {loading ? "Please wait…" : label}
+    </button>
   );
 }
