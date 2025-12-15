@@ -96,7 +96,7 @@ const GeminiAssistant = () => {
         <div className="flex items-center gap-2">
           <BotIcon className="text-blue-500" />
           <div>
-            <p className="text-sm font-semibold">SwiftMeta AI</p>
+            <p className="text-sm font-semibold">SwiftMeta</p>
             <p className="text-xs text-gray-500">AI Assistant</p>
           </div>
         </div>
@@ -143,7 +143,7 @@ const GeminiAssistant = () => {
                 ${
                   m.sender === "user"
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 dark:bg-gray-900 border"
+                    : "bg-gray-300 dark:bg-gray-900"
                 }
               `}
             >
@@ -186,7 +186,7 @@ const GeminiAssistant = () => {
       </main>
 
       {/* INPUT (sticky) */}
-      <footer className="border-t border-gray-200 dark:border-gray-800 p-4 flex gap-2">
+      <footer className="border-gray-200 dark:border-gray-800 p-4 flex gap-2">
         <textarea
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
