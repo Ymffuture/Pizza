@@ -176,7 +176,7 @@ const useConnectionStrength = () => {
           : connectionStrength === "Average"
           ? "bg-yellow-500"
           : "bg-red-500"
-      `}
+      }`} 
         
         >
         <div className="flex items-center gap-2">
@@ -289,7 +289,7 @@ const useConnectionStrength = () => {
         <button
           onClick={sendMessage}
           disabled={loading}
-          className="p-3 rounded-xl bg-blue-600 text-white disabled:opacity-50"
+          className="p-3 rounded-xl bg-black text-white disabled:opacity-50"
         >
           <Send size={18} />
         </button>
