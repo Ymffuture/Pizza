@@ -102,7 +102,7 @@ export default function GeminiAssistant() {
 
       {/* Fullscreen ChatGPT-style modal */}
       {open && (
-        <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
+        <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col h-20">
           
           {/* HEADER */}
           <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800">
