@@ -107,7 +107,7 @@ const useConnectionStrength = () => {
  // style: { background: "#000", color: "#fff", padding: "10px 14px" },
 // });
 
- //     }
+   }
       if (level === "Good") {
         toast((t) => (
   <span className="flex items-center justify-between gap-2 text-[10px]">
