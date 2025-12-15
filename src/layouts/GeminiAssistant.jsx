@@ -89,24 +89,25 @@ const useConnectionStrength = () => {
       setStrength(level);
 
       if (level === "Poor") {
-        toast((t) => (
-  <span className="flex items-center justify-between gap-2 text-[10px]">
-    <span>
-      NETWORK: <b className="text-red-600" >Your connection is weak. AI responses may be slow.</b>
-    </span>
+        console.error("Poor Network") 
+       // toast((t) => (
+ // <span className="flex items-center justify-between gap-2 text-[10px]">
+//    <span>
+ //     NETWORK: <b className="text-red-600" >Your connection is weak. AI responses may be slow.</b>
+//    </span>
+//
+ //  <button
+//      onClick={() => toast.dismiss(t.id)}
+ //     className="px-2 py-1 text-xs rounded bg-white text-black font-medium"
+//    >
+ //     Close
+//    </button>
+//  </span>
+//), {
+ // style: { background: "#000", color: "#fff", padding: "10px 14px" },
+// });
 
-    <button
-      onClick={() => toast.dismiss(t.id)}
-      className="px-2 py-1 text-xs rounded bg-white text-black font-medium"
-    >
-      Close
-    </button>
-  </span>
-), {
-  style: { background: "#000", color: "#fff", padding: "10px 14px" },
-});
-
-      }
+ //     }
       if (level === "Good") {
         toast((t) => (
   <span className="flex items-center justify-between gap-2 text-[10px]">
