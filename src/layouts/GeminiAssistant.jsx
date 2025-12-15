@@ -1,24 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { BotIcon, Send, X } from "lucide-react";
+import { MessageCircle, Send, X, BotIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-hot-toast";
 
-export default function GeminiAssistant() {
+const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
   const chatEndRef = useRef(null);
 
-  /* =============================
-     DO NOT TOUCH – loader kept
-     ============================= */
+  /* ---------------- LOADER (UNCHANGED) ---------------- */
   const Loader = () => (
-    <div className="flex items-center justify-center">
+    <div className="flex flex-col items-center justify-center bg-transparent">
       <svg
         width="30"
         height="30"
@@ -45,70 +43,125 @@ export default function GeminiAssistant() {
     </div>
   );
 
-  /* =============================
-     Scroll behavior
-     ============================= */
-  useEffect(() => {
+  const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  };
 
-  /* =============================
-     Lock body scroll
-     ============================= */
-  useEffect(() => {
-    if (open) document.body.style.overflow = "hidden";
-    return () => (document.body.style.overflow = "");
-  }, [open]);
+  useEffect(scrollToBottom, [messages, loading]);
 
-  /* =============================
-     Send message
-     ============================= */
+  /* ---------------- NETWORK STRENGTH (UNCHANGED LOGIC) ---------------- */
+  const useConnectionStrength = () => {
+    const [strength, setStrength] = useState("Checking...");
+
+    useEffect(() => {
+      const conn =
+        navigator.connection ||
+        navigator.webkitConnection ||
+        navigator.mozConnection;
+
+      if (!conn) {
+        setStrength("Unknown");
+        return;
+      }
+
+      const evaluate = () => {
+        const speed = conn.downlink;
+        const type = conn.effectiveType;
+
+        let level = "Good";
+        if (speed < 1 || type === "2g" || type === "slow-2g") level = "Poor";
+        else if (speed < 3 || type === "3g") level = "Average";
+
+        setStrength(level);
+
+        if (level === "Good") {
+          toast((t) => (
+            <span className="flex items-center gap-2 text-[10px]">
+              NETWORK: <b className="text-green-500">Connected</b>
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="ml-2 px-2 py-1 bg-white text-black rounded text-xs"
+              >
+                Close
+              </button>
+            </span>
+          ), { style: { background: "#000", color: "#fff" } });
+        }
+      };
+
+      evaluate();
+      conn.addEventListener("change", evaluate);
+      return () => conn.removeEventListener("change", evaluate);
+    }, []);
+
+    return strength;
+  };
+
+  const connectionStrength = useConnectionStrength();
+
+  /* ---------------- SEND MESSAGE ---------------- */
   const sendMessage = async () => {
     if (!msg.trim()) return;
 
     const userMsg = { sender: "user", text: msg };
-    setMessages((p) => [...p, userMsg]);
+    setMessages((prev) => [...prev, userMsg]);
     setMsg("");
     setLoading(true);
 
     try {
       const res = await axios.post(
         "https://swiftmeta.onrender.com/api/gemini",
-        { prompt: userMsg.text }
+        { prompt: msg }
       );
 
-      setMessages((p) => [...p, { sender: "ai", text: res.data.reply }]);
-    } catch {
-      setMessages((p) => [
-        ...p,
-        { sender: "ai", text: "Something went wrong. Please try again." },
+      setMessages((prev) => [
+        ...prev,
+        { sender: "ai", text: res.data.reply },
       ]);
-    } finally {
-      setLoading(false);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { sender: "ai", text: "Oops! Something went wrong." },
+      ]);
     }
+
+    setLoading(false);
   };
 
+  /* ---------------- UI ---------------- */
   return (
     <>
       {/* Floating Bot Button */}
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-40 p-4 rounded-full bg-black dark:bg-white text-white dark:text-black shadow-xl hover:scale-110 transition"
+          className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-black text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
         >
           <BotIcon size={22} />
         </button>
       )}
 
-      {/* Fullscreen ChatGPT-style modal */}
+      {/* FULLSCREEN MODAL */}
       {open && (
-        <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col h-20">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex flex-col">
           
           {/* HEADER */}
-          <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800">
-            <div className="flex items-center gap-2">
-              <BotIcon size={20} />
-              <span className="font-semibold">SwiftMeta AI</span>
+          <div className="flex items-center justify-between px-5 py-4 bg-white dark:bg-gray-900 border-b dark:border-gray-800">
+            <div>
+              <p className="text-sm text-blue-500 font-semibold">
+                SwiftMeta AI
+              </p>
+              <p
+                className={`text-xs font-medium ${
+                  connectionStrength === "Good"
+                    ? "text-green-500"
+                    : connectionStrength === "Average"
+                    ? "text-yellow-500"
+                    : "text-red-500"
+                }`}
+              >
+                Connection: {connectionStrength}
+              </p>
             </div>
 
             <button
@@ -117,32 +170,10 @@ export default function GeminiAssistant() {
             >
               <X size={18} />
             </button>
-          </header>
+          </div>
 
           {/* CHAT BODY */}
-          <main className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-            {messages.length === 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-3xl mx-auto">
-                {[
-                  "Explain React hooks",
-                  "Generate a startup idea",
-                  "Write a Python function",
-                  "How to learn AI fast",
-                ].map((p, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setMsg(p);
-                      setTimeout(sendMessage, 200);
-                    }}
-                    className="border rounded-xl px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-900"
-                  >
-                    {p}
-                  </button>
-                ))}
-              </div>
-            )}
-
+          <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 bg-gray-50 dark:bg-black">
             {messages.map((m, i) => (
               <div
                 key={i}
@@ -151,10 +182,10 @@ export default function GeminiAssistant() {
                 }`}
               >
                 <div
-                  className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 shadow ${
                     m.sender === "user"
                       ? "bg-blue-600 text-white"
-                      : "bg-gray-100 dark:bg-gray-900"
+                      : "bg-white dark:bg-gray-900 border dark:border-gray-800"
                   }`}
                 >
                   <ReactMarkdown
@@ -167,12 +198,16 @@ export default function GeminiAssistant() {
                           <SyntaxHighlighter
                             style={coldarkCold}
                             language={match[1]}
-                            PreTag="div"
+                            customStyle={{
+                              borderRadius: "10px",
+                              padding: "16px",
+                              fontSize: "0.85rem",
+                            }}
                           >
                             {String(children).replace(/\n$/, "")}
                           </SyntaxHighlighter>
                         ) : (
-                          <code className="bg-gray-300 dark:bg-gray-700 px-1 rounded">
+                          <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">
                             {children}
                           </code>
                         );
@@ -188,38 +223,39 @@ export default function GeminiAssistant() {
             {loading && (
               <div className="flex items-center gap-2">
                 <Loader />
-                <span className="text-sm text-gray-500">Thinking…</span>
+                <span className="text-sm text-gray-500 animate-pulse">
+                  Thinking…
+                </span>
               </div>
             )}
 
             <div ref={chatEndRef} />
-          </main>
+          </div>
 
-          {/* INPUT BAR */}
-          <footer className="border-t border-gray-200 dark:border-gray-800 px-4 py-3 flex gap-2">
+          {/* INPUT */}
+          <div className="px-4 py-3 bg-white dark:bg-gray-900 border-t dark:border-gray-800 flex gap-2">
             <textarea
               value={msg}
               onChange={(e) => setMsg(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  sendMessage();
-                }
-              }}
-              placeholder="Message SwiftMeta AI…"
-              rows={1}
-              className="flex-1 resize-none rounded-xl border px-3 py-2 focus:outline-none dark:bg-black"
+              placeholder="Ask anything…"
+              rows={2}
+              onKeyDown={(e) =>
+                e.key === "Enter" && !e.shiftKey && (e.preventDefault(), sendMessage())
+              }
+              className="flex-1 resize-none rounded-xl px-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 focus:outline-none"
             />
             <button
               onClick={sendMessage}
               disabled={loading}
-              className="p-3 rounded-xl bg-black dark:bg-white text-white dark:text-black"
+              className="w-11 h-11 rounded-full bg-blue-600 text-white flex items-center justify-center disabled:opacity-50"
             >
               <Send size={18} />
             </button>
-          </footer>
+          </div>
         </div>
       )}
     </>
   );
-}
+};
+
+export default GeminiAssistant;
