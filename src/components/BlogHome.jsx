@@ -141,7 +141,7 @@ const Loader = () => (
 
             {/* POST CONTENT */}
             <h2
-  className="text-xl font-bold mb-1 cursor-pointer text-blue-400"
+  className="text-[10px] mb-1 cursor-pointer text-blue-400"
   onClick={() => {
     setViewPostId(post._id);
     setShowViewModal(true);
@@ -182,6 +182,10 @@ const Loader = () => (
                     onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/pp.jpeg")}
                     alt="post media"
                     className="w-full min-h-[160px] object-cover rounded-2xl transition-all hover:scale-105 duration-300"
+                    onClick={() => {
+    setViewPostId(post._id);
+    setShowViewModal(true);
+  }}
                   />
                 ))}
               </div>
