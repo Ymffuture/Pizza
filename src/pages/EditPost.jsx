@@ -1,29 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Input, Button, Spin } from "antd";
+import React, { useEffect, useState } from "react";
 import { api } from "../api";
 import toast from "react-hot-toast";
+import { X } from "lucide-react";
 
-const { TextArea } = Input;
-
-export default function EditPostModal({ postId, visible, onClose, onUpdated }) {
+export default function EditPostModal({
+  postId,
+  visible,
+  onClose,
+  onUpdated,
+}) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [images, setImages] = useState([]);
 
+  // -------------------------------
+  // Lock body scroll (Facebook UX)
+  // -------------------------------
   useEffect(() => {
-    if (visible) loadPost();
+    if (visible) document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = "");
   }, [visible]);
+
+  // -------------------------------
+  // Load post on open
+  // -------------------------------
+  useEffect(() => {
+    if (visible && postId) loadPost();
+  }, [visible, postId]);
 
   async function loadPost() {
     setLoading(true);
     try {
       const r = await api.get(`/posts/${postId}`);
-      setTitle(r.data.title);
-      setBody(r.data.body);
-      setImages(r.data.images || []);
-    } catch (e) {
+      setTitle(r.data.title || "");
+      setBody(r.data.body || "");
+    } catch {
       toast.error("Failed to load post");
       onClose();
     } finally {
@@ -32,98 +44,107 @@ export default function EditPostModal({ postId, visible, onClose, onUpdated }) {
   }
 
   async function save() {
+    if (!title.trim() && !body.trim()) return;
+
     setSaving(true);
     try {
-      await api.put(`/posts/${postId}`, { title, body, images });
-      toast("Post updated");
-      onUpdated();
+      await api.put(`/posts/${postId}`, {
+        title: title.trim(),
+        body: body.trim(),
+      });
+
+      toast.success("Post updated");
+      onUpdated?.(); // refresh feed
       onClose();
-    } catch (e) {
-      toast.error("Failed to update");
+    } catch {
+      toast.error("Failed to update post");
     } finally {
       setSaving(false);
     }
   }
-  
-const Loader = () => (
-  <div className="flex flex-col items-center justify-center bg-transparent">
-    <svg
-      width="50"
-      height="50"
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
-      className="animate-spin text-gray-300 dark:text-gray-700"
-    >
-      <circle
-        cx="50"
-        cy="50"
-        r="40"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-        strokeDasharray="250"
-        strokeDashoffset="180"
-      />
-      <circle cx="50" cy="50" r="10" fill="#00E5FF">
-        <animate
-          attributeName="r"
-          values="10;14;10"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-        <animate
-          attributeName="opacity"
-          values="1;0.6;1"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-      </circle>
-    </svg>
-    <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide animate-fadeIn">
-      Loading ...
-    </p>
-  </div>
-);
+
+  if (!visible) return null;
+
   return (
-    <Modal
-      title="Edit Post"
-      open={visible}
-      destroyOnClose
-      onCancel={onClose}
-      footer={[
-        <Button key="cancel" onClick={onClose}>
-          Cancel
-        </Button>,
-        <Button
-          key="save"
-          type="primary"
-          loading={saving}
-          onClick={save}
-        >
-          Save Changes
-        </Button>,
-      ]}
-    >
-      {loading ? (
-        <div className="text-center py-10">
-          <Loader/>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* BACKDROP */}
+      <div
+        className="absolute inset-0 bg-black/40"
+        onClick={onClose}
+      />
+
+      {/* MODAL */}
+      <div className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-800">
+        
+        {/* HEADER */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+          <h2 className="text-lg font-semibold">Edit Post</h2>
+          <button
+            onClick={onClose}
+            className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <X size={18} />
+          </button>
         </div>
-      ) : (
-        <div className="space-y-4">
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
-          />
-          <TextArea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="Write something..."
-            rows={6}
-          />
+
+        {/* CONTENT */}
+        <div className="p-4 space-y-4">
+          {loading ? (
+            <div className="flex flex-col items-center py-10">
+              <span className="text-sm text-gray-500 animate-pulse">
+                Loading post…
+              </span>
+            </div>
+          ) : (
+            <>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Title"
+                className="
+                  w-full text-base font-medium px-3 py-2
+                  rounded-lg border border-gray-300 dark:border-gray-700
+                  bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500
+                "
+              />
+
+              <textarea
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                placeholder="What's on your mind?"
+                rows={5}
+                className="
+                  w-full text-sm px-3 py-2 resize-none
+                  rounded-lg border border-gray-300 dark:border-gray-700
+                  bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500
+                "
+              />
+            </>
+          )}
         </div>
-      )}
-    </Modal>
+
+        {/* FOOTER */}
+        <div className="flex justify-end gap-2 px-4 py-3 border-t border-gray-200 dark:border-gray-800">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            Cancel
+          </button>
+
+          <button
+            onClick={save}
+            disabled={saving}
+            className="
+              px-4 py-2 text-sm font-semibold rounded-md
+              bg-blue-600 text-white hover:bg-blue-700
+              disabled:opacity-50
+            "
+          >
+            {saving ? "Saving…" : "Save"}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
