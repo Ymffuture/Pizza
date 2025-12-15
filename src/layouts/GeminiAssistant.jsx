@@ -139,11 +139,11 @@ const GeminiAssistant = () => {
             className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm shadow
+              className={`max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow
                 ${
                   m.sender === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-300 dark:bg-gray-900"
+                    ? "bg-gray-300 text-white dark:bg-blue-300"
+                    : "bg-gray-200 dark:bg-gray-900"
                 }
               `}
             >
