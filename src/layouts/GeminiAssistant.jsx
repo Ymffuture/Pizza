@@ -15,6 +15,84 @@ const GeminiAssistant = () => {
   const chatEndRef = useRef(null);
 
   // -------------------------
+
+const useConnectionStrength = () => {
+  const [strength, setStrength] = useState("Checking...");
+
+  useEffect(() => {
+    const conn =
+      navigator.connection ||
+      navigator.webkitConnection ||
+      navigator.mozConnection;
+
+    if (!conn) {
+      setStrength("Unknown");
+      return;
+    }
+
+    const evaluate = () => {
+      const speed = conn.downlink; // Mbps
+      const type = conn.effectiveType; // 4g, 3g, etc.
+
+      let level = "Good";
+
+      if (speed < 1 || type === "2g" || type === "slow-2g") level = "Poor";
+      else if (speed < 3 || type === "3g") level = "Average";
+
+      setStrength(level);
+
+      if (level === "Poor") {
+        toast((t) => (
+  <span className="flex items-center justify-between gap-2 text-[10px]">
+    <span>
+      NETWORK: <b className="text-red-600" >Your connection is weak. AI responses may be slow.</b>
+    </span>
+
+    <button
+      onClick={() => toast.dismiss(t.id)}
+      className="px-2 py-1 text-xs rounded bg-white text-black font-medium"
+    >
+      Close
+    </button>
+  </span>
+), {
+  style: { background: "#000", color: "#fff", padding: "10px 14px" },
+});
+
+      }
+      if (level === "Good") {
+        toast((t) => (
+  <span className="flex items-center justify-between gap-2 text-[10px]">
+    <span>
+      NETWORK: <b className="text-green-600" >Connected</b>
+    </span>
+
+    <button
+      onClick={() => toast.dismiss(t.id)}
+      className="px-2 py-1 text-xs rounded bg-white text-black font-medium"
+    >
+      Close
+    </button>
+  </span>
+), {
+  style: { background: "#000", color: "#fff", padding: "10px 14px" },
+});
+
+      }
+    };
+
+    evaluate();
+    conn.addEventListener("change", evaluate);
+
+    return () => conn.removeEventListener("change", evaluate);
+  }, []);
+
+  return strength;
+};
+
+ const connectionStrength = useConnectionStrength();
+  
+  
   // Loader (UNCHANGED)
   // -------------------------
   const Loader = () => (
@@ -92,7 +170,15 @@ const GeminiAssistant = () => {
     <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
       
       {/* HEADER (ChatGPT style) */}
-      <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+      <header className={`flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 ${
+        connectionStrength === "Good"
+          ? "bg-green-500"
+          : connectionStrength === "Average"
+          ? "bg-yellow-500"
+          : "bg-red-500"
+      `}
+        
+        >
         <div className="flex items-center gap-2">
           <BotIcon className="text-blue-500" />
           <div>
