@@ -186,7 +186,7 @@ const GeminiAssistant = () => {
       </main>
 
       {/* INPUT (sticky) */}
-      <footer className="border-gray-200 dark:border-gray-800 p-4 flex gap-2">
+      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2">
         <textarea
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
@@ -198,7 +198,7 @@ const GeminiAssistant = () => {
           }}
           placeholder="Ask anything…"
           rows={1}
-          className="flex-1 resize-none rounded-xl border px-4 py-2 bg-transparent focus:outline-none"
+          className="flex-1 resize-none rounded-xl px-4 py-2 bg-transparent focus:outline-none"
         />
         <button
           onClick={sendMessage}
