@@ -115,8 +115,8 @@ const GeminiAssistant = () => {
           <div className="grid sm:grid-cols-2 gap-3 mt-10">
             {[
               "Explain React hooks",
-              "Generate a website idea",
-              "Write a Python snippet",
+              "Generate a website idea 💡 for business",
+              "Write a nestjs snippet ",
               "Tips for learning AI",
             ].map((p, i) => (
               <button
@@ -125,7 +125,7 @@ const GeminiAssistant = () => {
                   setMsg(p);
                   setTimeout(sendMessage, 200);
                 }}
-                className="border rounded-xl p-4 text-sm hover:bg-gray-50 dark:hover:bg-gray-900"
+                className="border-gray-100 shadow-2xl rounded-xl p-4 text-sm hover:bg-gray-50 dark:hover:bg-gray-900"
               >
                 {p}
               </button>
@@ -142,7 +142,7 @@ const GeminiAssistant = () => {
               className={`max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow
                 ${
                   m.sender === "user"
-                    ? "bg-gray-300 text-white dark:bg-blue-300"
+                    ? "bg-[#87CEEB] text-white dark:bg-blue-300"
                     : "bg-gray-200 dark:bg-gray-900"
                 }
               `}
