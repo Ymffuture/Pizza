@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-hot-toast";
+import { MdMic, MdMicOff } from "react-icons/md";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -15,37 +16,74 @@ const GeminiAssistant = () => {
   const chatEndRef = useRef(null);
 
 
-  const placeholders = [
-  "Ask anything",
-  "Explain React hooks",
-  "Generate a startup idea",
-  "Write clean JavaScript code",
-  "Help me debug this issue",
+  const basePlaceholders = [
+  "Ask anything…",
+  "Explain this code",
+  "Generate an idea",
+  "Debug my issue",
 ];
 
+const contextualMap = {
+  code: [
+    "Optimize this code",
+    "Explain this function",
+    "Convert to TypeScript",
+  ],
+  explanation: [
+    "Give a real-world example",
+    "Simplify this explanation",
+    "Show best practices",
+  ],
+};
+
 const [placeholder, setPlaceholder] = useState("");
-const [index, setIndex] = useState(0);
-const [charIndex, setCharIndex] = useState(0);
+const [fade, setFade] = useState(true);
+const [placeholderIndex, setPlaceholderIndex] = useState(0);
+const [isListening, setIsListening] = useState(false);
 
-useEffect(() => {
-  if (msg) return; // stop animation when user types
+const textareaRef = useRef(null);
 
-  const current = placeholders[index];
-  const timeout = setTimeout(() => {
-    setPlaceholder(current.slice(0, charIndex + 1));
-    setCharIndex((prev) => prev + 1);
+const getContextualPlaceholders = () => {
+  const lastAI = [...messages].reverse().find(m => m.sender === "ai");
+  if (!lastAI) return basePlaceholders;
 
-    if (charIndex === current.length) {
-      setTimeout(() => {
-        setCharIndex(0);
-        setIndex((prev) => (prev + 1) % placeholders.length);
-        setPlaceholder("");
-      }, 1500);
-    }
-  }, 60);
+  if (lastAI.text.includes("```")) return contextualMap.code;
+  if (lastAI.text.length > 300) return contextualMap.explanation;
 
-  return () => clearTimeout(timeout);
-}, [charIndex, index, msg]);
+  return basePlaceholders;
+};
+
+
+  useEffect(() => {
+  if (msg || isListening) return;
+
+  const list = getContextualPlaceholders();
+
+  const interval = setInterval(() => {
+    setFade(false);
+
+    setTimeout(() => {
+      setPlaceholder(list[placeholderIndex % list.length]);
+      setPlaceholderIndex(i => i + 1);
+      setFade(true);
+    }, 300);
+  }, 3000);
+
+  return () => clearInterval(interval);
+}, [msg, isListening, placeholderIndex, messages]);
+
+
+  const autoGrow = () => {
+  const el = textareaRef.current;
+  if (!el) return;
+  el.style.height = "auto";
+  el.style.height = el.scrollHeight + "px";
+};
+
+  const toggleVoice = () => {
+  setIsListening(v => !v);
+  setPlaceholder(isListening ? "Ask anything…" : "Listening… Speak now");
+};
 
   // -------------------------
 
@@ -287,7 +325,7 @@ const useConnectionStrength = () => {
               className={`max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow
                 ${
                   m.sender === "user"
-                    ? "bg-[#87CEEB] text-white dark:bg-blue-300"
+                    ? "bg-[#87CEEB] text-white dark:bg-blue-700 m-3"
                     : "bg-gray-200 dark:bg-gray-700 dark:text-white"
                 }
               `}
@@ -331,25 +369,43 @@ const useConnectionStrength = () => {
       </main>
 
       {/* INPUT (sticky) */}
-      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2 dark:text-white">
+      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2 items-end">
+
   <textarea
+    ref={textareaRef}
     value={msg}
-    onChange={(e) => setMsg(e.target.value)}
+    rows={1}
+    onChange={(e) => {
+      setMsg(e.target.value);
+      autoGrow();
+    }}
     onKeyDown={(e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
       }
     }}
-    placeholder={placeholder}
-    rows={1}
-    className="flex-1 resize-none rounded-xl px-4 py-2
+    placeholder={isListening ? "Listening… Speak now" : placeholder}
+    className={`flex-1 resize-none rounded-xl px-4 py-2
       bg-transparent focus:outline-none
       text-gray-900 dark:text-white
       placeholder-gray-500 dark:placeholder-gray-400
-      transition-all"
+      transition-opacity duration-300
+      ${fade ? "opacity-100" : "opacity-0"}
+    `}
   />
 
+  {/* Voice Button */}
+  <button
+    onClick={toggleVoice}
+    className={`p-3 rounded-xl transition
+      ${isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-300 dark:bg-gray-700"}
+    `}
+  >
+    <MdMic size={20} />
+  </button>
+
+  {/* Send */}
   <button
     onClick={sendMessage}
     disabled={loading}
