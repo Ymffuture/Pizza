@@ -14,6 +14,39 @@ const GeminiAssistant = () => {
   const [messages, setMessages] = useState([]);
   const chatEndRef = useRef(null);
 
+
+  const placeholders = [
+  "Ask anything",
+  "Explain React hooks",
+  "Generate a startup idea",
+  "Write clean JavaScript code",
+  "Help me debug this issue",
+];
+
+const [placeholder, setPlaceholder] = useState("");
+const [index, setIndex] = useState(0);
+const [charIndex, setCharIndex] = useState(0);
+
+useEffect(() => {
+  if (msg) return; // stop animation when user types
+
+  const current = placeholders[index];
+  const timeout = setTimeout(() => {
+    setPlaceholder(current.slice(0, charIndex + 1));
+    setCharIndex((prev) => prev + 1);
+
+    if (charIndex === current.length) {
+      setTimeout(() => {
+        setCharIndex(0);
+        setIndex((prev) => (prev + 1) % placeholders.length);
+        setPlaceholder("");
+      }, 1500);
+    }
+  }, 60);
+
+  return () => clearTimeout(timeout);
+}, [charIndex, index, msg]);
+
   // -------------------------
 
 const useConnectionStrength = () => {
@@ -222,7 +255,7 @@ const useConnectionStrength = () => {
 
 
       {/* MESSAGES */}
-      <main className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+      <main className="flex-1 overflow-y-auto px-4 py-6 space-my-4 dark:text-white">
         {messages.length === 0 && (
           <div className="grid sm:grid-cols-2 gap-3 mt-10">
             {[
@@ -298,28 +331,34 @@ const useConnectionStrength = () => {
       </main>
 
       {/* INPUT (sticky) */}
-      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2 dark:text-white ">
-        <textarea
-          value={msg}
-          onChange={(e) => setMsg(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              sendMessage();
-            }
-          }}
-          placeholder="Ask anything"
-          rows={1}
-          className="flex-1 resize-none rounded-xl px-4 py-2 bg-transparent focus:outline-none dark:text-white "
-        />
-        <button
-          onClick={sendMessage}
-          disabled={loading}
-          className="p-3 rounded-xl bg-black text-white disabled:opacity-50"
-        >
-          <Send size={18} />
-        </button>
-      </footer>
+      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2 dark:text-white">
+  <textarea
+    value={msg}
+    onChange={(e) => setMsg(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }}
+    placeholder={placeholder}
+    rows={1}
+    className="flex-1 resize-none rounded-xl px-4 py-2
+      bg-transparent focus:outline-none
+      text-gray-900 dark:text-white
+      placeholder-gray-500 dark:placeholder-gray-400
+      transition-all"
+  />
+
+  <button
+    onClick={sendMessage}
+    disabled={loading}
+    className="p-3 rounded-xl bg-black text-white disabled:opacity-50"
+  >
+    <Send size={18} />
+  </button>
+</footer>
+
     </div>
   );
 };
