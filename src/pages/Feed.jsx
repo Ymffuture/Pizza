@@ -6,7 +6,7 @@ import { api } from "../api";
 import PostCard from "../components/PostCard";
 import { CircleDashed } from "lucide-react";
 import toast from "react-hot-toast";
-import likeSound from "../assets/like-sound.mp3"; // Add a short like sound file
+import likeSound from "../assets/noty.mp3"; // Add a short like sound file
 
 const likeAudio = new Audio(likeSound);
 
