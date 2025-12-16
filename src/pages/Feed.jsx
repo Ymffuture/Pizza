@@ -6,7 +6,7 @@ import { api } from "../api";
 import PostCard from "../components/PostCard";
 import { CircleDashed } from "lucide-react";
 import toast from "react-hot-toast";
-import likeSound from "../assets/noty.mp3";
+import likeSound from "../assets/noty.mp3"; // short like sound
 
 const likeAudio = new Audio(likeSound);
 
@@ -14,19 +14,67 @@ export default function Feed() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Load posts
   useEffect(() => {
-    const load = async () => {
+    const loadPosts = async () => {
       try {
-        const res = await api.get("/posts");
+        const res = await api.get("/posts"); // fetch first page or all
         setPosts(res.data);
       } catch (err) {
-        console.error("Failed to load posts", err);
+        console.error(err);
+        toast.error("Failed to load posts");
       } finally {
         setLoading(false);
       }
     };
-    load();
+    loadPosts();
   }, []);
+
+  // Update post comments in state
+  const updatePostComments = (postId, newComments) => {
+    setPosts((prev) =>
+      prev.map((p) => (p._id === postId ? { ...p, comments: newComments } : p))
+    );
+  };
+
+  // Like a post
+  const handleLikePost = async (postId) => {
+    const isLoggedIn = !!localStorage.getItem("token");
+    if (!isLoggedIn) {
+      toast((t) => (
+        <div className="flex flex-col gap-3">
+          <span>You need to login to like posts</span>
+          <button
+            onClick={() => {
+              toast.dismiss(t.id);
+              window.location.href = "/login";
+            }}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium"
+          >
+            Login Now
+          </button>
+        </div>
+      ));
+      return;
+    }
+
+    likeAudio.currentTime = 0;
+    likeAudio.play().catch(() => {});
+
+    try {
+      const r = await api.post(`/posts/${postId}/toggle-like`);
+      setPosts((prev) =>
+        prev.map((p) =>
+          p._id === postId
+            ? { ...p, likes: Array(r.data.likesCount).fill(1) }
+            : p
+        )
+      );
+      toast(r.data.liked ? "Liked post" : "Unliked post");
+    } catch {
+      toast.error("Failed to like post");
+    }
+  };
 
   const sliderSettings = {
     dots: true,
@@ -40,45 +88,12 @@ export default function Feed() {
     arrows: false,
   };
 
-  const handleLike = (postId) => {
-    const isLoggedIn = !!localStorage.getItem("token");
-    if (!isLoggedIn) {
-      toast(
-        (t) => (
-          <div className="flex flex-col gap-3">
-            <span>You need to login to like posts</span>
-            <button
-              onClick={() => {
-                toast.dismiss(t.id);
-                window.location.href = "/login";
-              }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium"
-            >
-              Login Now
-            </button>
-          </div>
-        ),
-        { duration: 5000 }
-      );
-      return;
-    }
-
-    likeAudio.currentTime = 0;
-    likeAudio.play().catch((err) => console.error("Audio play error:", err));
-
-    // TODO: Call your like API
-    console.log("Liked post:", postId);
-  };
-
   return (
     <div className="bg-white dark:bg-black transition-colors duration-300 min-h-screen">
       <div className="mx-auto max-w-[470px] px-4 pt-6 pb-4">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-[26px] font-semibold text-gray-900 dark:text-white tracking-tight">
-            Feed
-          </h2>
-          <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800"></div>
-        </div>
+        <h2 className="text-[26px] font-semibold text-gray-900 dark:text-white mb-6">
+          Feed
+        </h2>
 
         {loading && (
           <div className="text-center gap-3 text-gray-500 dark:text-gray-400 animate-pulse">
@@ -92,12 +107,14 @@ export default function Feed() {
 
         {!loading && posts.length > 0 && (
           <Slider {...sliderSettings}>
-            {posts.map((p) => (
-              <div key={p._id} className="px-2">
+            {posts.map((post) => (
+              <div key={post._id} className="px-2">
                 <PostCard
-                  post={p}
-                  onLike={() => handleLike(p._id)}
-                  commentsCount={p.comments?.length || 0}
+                  post={post}
+                  onLike={() => handleLikePost(post._id)}
+                  commentsCount={post.comments?.length || 0}
+                  api={api}
+                  updatePostComments={updatePostComments}
                 />
               </div>
             ))}
