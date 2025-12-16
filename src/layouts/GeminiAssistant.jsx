@@ -191,7 +191,7 @@ const useConnectionStrength = () => {
           onClick={() => setOpen(false)}
           className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-          <X size={18} />
+          <X size={20} />
         </button>
       </header>
 
@@ -229,7 +229,7 @@ const useConnectionStrength = () => {
                 ${
                   m.sender === "user"
                     ? "bg-[#87CEEB] text-white dark:bg-blue-300"
-                    : "bg-gray-200 dark:bg-gray-900"
+                    : "bg-gray-200 dark:bg-gray-700 dark:text-white"
                 }
               `}
             >
@@ -264,7 +264,7 @@ const useConnectionStrength = () => {
         {loading && (
           <div className="flex justify-start gap-2 items-center">
             <Loader />
-            <span className="text-sm text-gray-500">Thinking…</span>
+            <span className="text-sm text-gray-500"></span>
           </div>
         )}
 
@@ -272,7 +272,7 @@ const useConnectionStrength = () => {
       </main>
 
       {/* INPUT (sticky) */}
-      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2">
+      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2 dark:text-white ">
         <textarea
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
@@ -282,9 +282,9 @@ const useConnectionStrength = () => {
               sendMessage();
             }
           }}
-          placeholder="Ask anything…"
+          placeholder="Ask anything"
           rows={1}
-          className="flex-1 resize-none rounded-xl px-4 py-2 bg-transparent focus:outline-none"
+          className="flex-1 resize-none rounded-xl px-4 py-2 bg-transparent focus:outline-none dark:text-white "
         />
         <button
           onClick={sendMessage}
