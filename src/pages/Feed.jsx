@@ -89,8 +89,8 @@ export default function Feed() {
   };
 
   return (
-    <div className="bg-white dark:bg-black transition-colors duration-300 min-h-screen">
-      <div className="mx-auto max-w-[470px] px-4 pt-6 pb-4">
+    <div className="bg-white dark:bg-black transition-colors duration-300">
+      <div className="mx-auto max-w-[490px] px-4 pt-6 pb-4">
         <h2 className="text-[26px] font-semibold text-gray-900 dark:text-white mb-6">
           Feed
         </h2>
