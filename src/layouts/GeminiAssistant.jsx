@@ -307,7 +307,7 @@ const useConnectionStrength = () => {
                         {String(children)}
                       </SyntaxHighlighter>
                     ) : (
-                      <code className="bg-gray-200 dark:bg-gray-700 px-1 rounded">
+                      <code className="bg-gray-200 dark:bg-gray-700 px-2 rounded">
                         {children}
                       </code>
                     );
@@ -321,7 +321,7 @@ const useConnectionStrength = () => {
         ))}
 
         {loading && (
-          <div className="flex justify-start gap-2 items-center">
+          <div className="flex justify-start gap-2 items-center animate-pulse">
             <Loader />
             <span className="text-sm text-gray-500"></span>
           </div>
