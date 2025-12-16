@@ -170,30 +170,56 @@ const useConnectionStrength = () => {
     <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
       
       {/* HEADER (ChatGPT style) */}
-      <header className={`flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-800 ${
-        connectionStrength === "Good"
-          ? "bg-green-500"
-          : connectionStrength === "Average"
-          ? "bg-yellow-500"
-          : "bg-red-500"
-      }`} 
-        
-        >
-        <div className="flex items-center gap-2">
-          <BotIcon className="text-blue-500" />
-          <div>
-            <p className="text-sm font-semibold">SwiftMeta</p>
-            <p className="text-xs text-gray-500">AI Assistant</p>
-          </div>
-        </div>
+      <header className="flex items-center justify-between px-5 py-3
+  backdrop-blur-xl bg-white/80 dark:bg-gray-900/70
+  border-b border-gray-200/70 dark:border-gray-800
+  sticky top-0 z-20"
+>
+  {/* Left: Bot Identity */}
+  <div className="flex items-center gap-3">
+    <div className="flex items-center justify-center w-9 h-9 rounded-full
+      bg-sky-500/10 text-sky-500">
+      <BotIcon size={20} />
+    </div>
 
-        <button
-          onClick={() => setOpen(false)}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-        >
-          <X size={20} />
-        </button>
-      </header>
+    <div className="leading-tight">
+      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+        SwiftMeta
+      </p>
+      <p className="text-xs text-gray-500 dark:text-gray-400">
+        AI Assistant
+      </p>
+    </div>
+  </div>
+
+  {/* Right: Connection + Close */}
+  <div className="flex items-center gap-3">
+    {/* Connection Badge */}
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium border
+        ${
+          connectionStrength === "Good"
+            ? "bg-green-500/10 text-green-600 border-green-500/20"
+            : connectionStrength === "Average"
+            ? "bg-yellow-500/10 text-yellow-600 border-yellow-500/20"
+            : "bg-red-500/10 text-red-600 border-red-500/20"
+        }`}
+    >
+      {connectionStrength}
+    </span>
+
+    {/* Close Button */}
+    <button
+      onClick={() => setOpen(false)}
+      className="p-2 rounded-full
+        hover:bg-gray-100 dark:hover:bg-gray-800
+        transition-colors"
+    >
+      <X size={18} className="text-gray-600 dark:text-gray-300" />
+    </button>
+  </div>
+</header>
+
 
       {/* MESSAGES */}
       <main className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
