@@ -130,7 +130,7 @@ const Loader = () => (
                   className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-700"
                 />
                 <div>
-                  <p className="text-sm font-semibold flex gap-3 ">{post.author?.name || "Anonymous"} <BsPatchCheckFill className="text-blue-600" /></p> 
+                  <p className="text-sm font-semibold flex gap-2">{post.author?.name || "Anonymous"} <BsPatchCheckFill className="text-blue-600 dark:text-white" /></p> 
                   <time className="text-[10px] opacity-60">{new Date(post.createdAt).toLocaleString()}</time>
                 </div>
               </div>
@@ -204,7 +204,7 @@ const Loader = () => (
                 }}
                 className="flex items-center gap-2 text-sm font-medium"
               >
-                <Heart size={20} fill={post.likes?.length ? "#000" : "none"} /> 
+                <Heart size={18} fill={post.likes?.length ? "#202124" : "none"} /> 
                 {post.likes?.length || 0}
               </button>
 
