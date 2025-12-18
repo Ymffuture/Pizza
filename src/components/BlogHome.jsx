@@ -10,6 +10,7 @@ import ViewPostModal from "../pages/ViewPost";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { FiThumbsUp } from "react-icons/fi";
+import { BsPatchCheckFill } from "react-icons/bs";
 
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
@@ -126,10 +127,10 @@ const Loader = () => (
                   src={post.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
                   onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/err.jpg")}
                   alt="author"
-                  className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700"
+                  className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-700"
                 />
                 <div>
-                  <p className="text-sm font-semibold">{post.author?.name || "Anonymous"}</p>
+                  <p className="text-sm font-semibold">{post.author?.name || "Anonymous"}</p> <BsPatchCheckFill />
                   <time className="text-[10px] opacity-60">{new Date(post.createdAt).toLocaleString()}</time>
                 </div>
               </div>
@@ -141,7 +142,7 @@ const Loader = () => (
 
             {/* POST CONTENT */}
             <h2
-  className="text-[10px] mb-1 cursor-pointer text-blue-400"
+  className="text-[18px] mb-1 cursor-pointer text-blue-400"
   onClick={() => {
     setViewPostId(post._id);
     setShowViewModal(true);
