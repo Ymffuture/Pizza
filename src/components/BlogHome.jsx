@@ -130,7 +130,7 @@ const Loader = () => (
                   className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-700"
                 />
                 <div>
-                  <p className="text-sm font-semibold flex">{post.author?.name || "Anonymous"} <BsPatchCheckFill className="text-blue-600" /></p> 
+                  <p className="text-sm font-semibold flex gap-3 ">{post.author?.name || "Anonymous"} <BsPatchCheckFill className="text-blue-600" /></p> 
                   <time className="text-[10px] opacity-60">{new Date(post.createdAt).toLocaleString()}</time>
                 </div>
               </div>
