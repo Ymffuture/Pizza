@@ -174,13 +174,13 @@ export default function SignIn_Up() {
         <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-m p-6">
 
           {error && (
-            <div className="mb-4 text-sm text-red-600 bg-red-50 rounded-md px-3 py-2">
+            <div className="mb-4 text-sm text-red-600 bg-red-500/10 rounded-md px-3 py-2">
               {error}
             </div>
           )}
 
           {sent && (
-            <div className="mb-4 text-sm text-green-600 bg-green-50 rounded-md px-3 py-2">
+            <div className="mb-4 text-sm text-green-600 bg-green-500/10 rounded-md px-3 py-2">
               {sent}
             </div>
           )}
