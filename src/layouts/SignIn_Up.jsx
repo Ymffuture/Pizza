@@ -2,42 +2,59 @@ import { useEffect, useState } from "react";
 import { supabase } from "./lib/supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, User, Image } from "lucide-react";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import toast from "react-hot-toast";
+
+const DEFAULT_AVATAR = "https://filebank.vercel.app/pp.jpeg";
 
 export default function SignIn_Up() {
   const navigate = useNavigate();
 
   const [mode, setMode] = useState("login");
-  const [username, setUsername] = useState(""); // ✅ NEW
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
   const [user, setUser] = useState(null);
 
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState("");
   const [error, setError] = useState("");
   const [sent, setSent] = useState("");
-  // ---------------------------
-  // EMAIL AUTH
-  // ---------------------------
+
+  /* ---------------------------
+     AVATAR UPLOAD
+  ---------------------------- */
+  const uploadAvatar = async (file, userId) => {
+    const ext = file.name.split(".").pop();
+    const filePath = `${userId}.${ext}`;
+
+    const { error } = await supabase.storage
+      .from("avatars")
+      .upload(filePath, file, { upsert: true });
+
+    if (error) throw error;
+
+    const { data } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
+
+  /* ---------------------------
+     EMAIL AUTH
+  ---------------------------- */
   const handleAuth = async () => {
-    if (!email) {
-      setError("Email is required");
-      return;
-    }
-    if (!password) {
-      setError("Password is required");
-      return;
-    }
-    if ((mode === "signup" && !username)) {
-      setError("Username is required");
-      return;
-    }
+    if (!email) return setError("Email is required");
+    if (!password) return setError("Password is required");
+    if (mode === "signup" && !username)
+      return setError("Username is required");
 
     setLoading(true);
     setError("");
+    setSent("");
 
     try {
       let result;
@@ -48,12 +65,14 @@ export default function SignIn_Up() {
           password,
         });
       } else {
+        // SIGN UP
         result = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: {
-              username, // ✅ stored in user_metadata
+              username,
+              avatar: DEFAULT_AVATAR,
             },
           },
         });
@@ -67,29 +86,43 @@ export default function SignIn_Up() {
         return;
       }
 
-      toast.success(mode === "login" ? "Welcome back!" : "Account created!");
+      // UPLOAD AVATAR AFTER SIGNUP
+      if (mode === "signup" && avatarFile) {
+        const avatarUrl = await uploadAvatar(
+          avatarFile,
+          data.user.id
+        );
+
+        await supabase.auth.updateUser({
+          data: { avatar: avatarUrl },
+        });
+      }
+
+      toast.success(
+        mode === "login" ? "Welcome back!" : "Account created!"
+      );
+
       setUser(data.user);
       navigate("/dashboard/blog");
     } catch (err) {
-  setSent("");
-  setError(err.message);
-} finally {
+      setSent("");
+      setError(err.message);
+    } finally {
       setLoading(false);
     }
   };
 
-  // ---------------------------
-  // OAUTH LOGIN
-  // ---------------------------
+  /* ---------------------------
+     OAUTH
+  ---------------------------- */
   const loginWithProvider = async (provider) => {
     try {
       setSocialLoading(provider);
-      setError("");
-
       await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: "https://swiftmeta.vercel.app/dashboard/blog",
+          redirectTo:
+            "https://swiftmeta.vercel.app/dashboard/blog",
         },
       });
     } catch {
@@ -99,31 +132,19 @@ export default function SignIn_Up() {
     }
   };
 
-  // ---------------------------
-  // LOGOUT
-  // ---------------------------
-  const handleLogout = async () => {
-    setLoading(true);
-    await supabase.auth.signOut();
-    setUser(null);
-    toast("Logged out");
-    setLoading(false);
-  };
-
-  // ---------------------------
-  // SESSION SYNC
-  // ---------------------------
+  /* ---------------------------
+     SESSION SYNC
+  ---------------------------- */
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+    const { data: listener } =
+      supabase.auth.onAuthStateChange((_e, session) => {
         setUser(session?.user ?? null);
         if (session?.user) navigate("/dashboard/blog");
-      }
-    );
+      });
 
     return () => listener.subscription.unsubscribe();
   }, [navigate]);
@@ -135,26 +156,23 @@ export default function SignIn_Up() {
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-[#f0f2f5] dark:bg-black px-4">
-        <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
+        <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md border p-6">
 
-          {/* ERROR MESSAGE */}
-{error && (
-  <div className="mb-4 text-sm text-red-600 bg-red-50 dark:bg-red-500/10 rounded-md px-3 py-2">
-    {error}
-  </div>
-)}
+          {error && (
+            <div className="mb-4 text-sm text-red-600 bg-red-50 rounded-md px-3 py-2">
+              {error}
+            </div>
+          )}
 
-{/* SUCCESS MESSAGE */}
-{sent && (
-  <div className="mb-4 text-sm text-green-600 bg-green-50 dark:bg-green-500/10 rounded-md px-3 py-2">
-    {sent}
-  </div>
-)}
+          {sent && (
+            <div className="mb-4 text-sm text-green-600 bg-green-50 rounded-md px-3 py-2">
+              {sent}
+            </div>
+          )}
 
-          {!user ? (
+          {!user && (
             <>
-              {/* TABS */}
-              <div className="flex mb-6 border-b border-gray-200 dark:border-gray-800">
+              <div className="flex mb-6 border-b">
                 {["login", "signup"].map((tab) => (
                   <button
                     key={tab}
@@ -162,6 +180,7 @@ export default function SignIn_Up() {
                       setMode(tab);
                       setError("");
                       setUsername("");
+                      setAvatarFile(null);
                     }}
                     className={`flex-1 py-2 text-sm font-medium ${
                       mode === tab
@@ -174,14 +193,30 @@ export default function SignIn_Up() {
                 ))}
               </div>
 
-              {/* FORM */}
               <div className="space-y-4">
                 {mode === "signup" && (
-                  <InputField
-                    placeholder="Username"
-                    value={username}
-                    onChange={setUsername}
-                  />
+                  <>
+                    <InputField
+                      icon={<User size={18} />}
+                      placeholder="Username"
+                      value={username}
+                      onChange={setUsername}
+                    />
+
+                    {/* AVATAR UPLOAD */}
+                    <label className="flex items-center gap-2 border rounded-md px-3 h-11 cursor-pointer text-sm text-gray-500">
+                      <Image size={18} />
+                      <span>
+                        {avatarFile ? avatarFile.name : "Upload avatar (optional)"}
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={(e) => setAvatarFile(e.target.files[0])}
+                      />
+                    </label>
+                  </>
                 )}
 
                 <InputField
@@ -202,7 +237,7 @@ export default function SignIn_Up() {
                 <button
                   disabled={loading}
                   onClick={handleAuth}
-                  className="w-full h-11 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50 transition"
+                  className="w-full h-11 rounded-md bg-blue-600 text-white font-semibold"
                 >
                   {loading
                     ? "Please wait…"
@@ -212,53 +247,25 @@ export default function SignIn_Up() {
                 </button>
               </div>
 
-              {/* DIVIDER */}
               <div className="my-6 flex items-center gap-3 text-sm text-gray-400">
-                <span className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
+                <span className="flex-1 h-px bg-gray-300" />
                 or
-                <span className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
+                <span className="flex-1 h-px bg-gray-300" />
               </div>
 
-              {/* SOCIAL */}
-              <div className="space-y-3 dark:text-white">
+              <div className="space-y-3">
                 <SocialButton
-                  icon={<FaGoogle size={20} />}
+                  icon={<FaGoogle />}
                   label="Continue with Google"
                   loading={socialLoading === "google"}
                   onClick={() => loginWithProvider("google")}
                 />
-
                 <SocialButton
-                  icon={<FaGithub size={20} />}
+                  icon={<FaGithub />}
                   label="Continue with GitHub"
                   loading={socialLoading === "github"}
                   onClick={() => loginWithProvider("github")}
                 />
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="text-center space-y-4 py-6">
-                <p className="text-gray-800 dark:text-gray-200">
-                  Logged in as{" "}
-                  <strong>
-                    {user.user_metadata?.username || user.email}
-                  </strong>
-                </p>
-
-                <button
-                  onClick={handleLogout}
-                  className="w-full h-11 rounded-md bg-red-500 text-white font-medium"
-                >
-                  Logout
-                </button>
-
-                <Link
-                  to="/dashboard/blog"
-                  className="block w-full h-11 rounded-md bg-black dark:bg-white text-white dark:text-black text-center leading-[44px] font-medium"
-                >
-                  Go to Dashboard
-                </Link>
               </div>
             </>
           )}
@@ -273,14 +280,14 @@ export default function SignIn_Up() {
 ---------------------------- */
 function InputField({ icon, value, onChange, placeholder, type = "text" }) {
   return (
-    <div className="flex items-center gap-2 border border-gray-300 dark:border-gray-700 rounded-md px-3 h-11 bg-gray-50 dark:bg-gray-800">
+    <div className="flex items-center gap-2 border rounded-md px-3 h-11 bg-gray-50">
       {icon && <span className="text-gray-400">{icon}</span>}
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 bg-transparent outline-none text-sm text-gray-900 dark:text-white"
+        className="flex-1 bg-transparent outline-none text-sm"
       />
     </div>
   );
@@ -291,7 +298,7 @@ function SocialButton({ icon, label, onClick, loading }) {
     <button
       onClick={onClick}
       disabled={loading}
-      className="w-full h-11 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+      className="w-full h-11 flex items-center justify-center gap-2 border rounded-md text-sm font-medium"
     >
       {icon}
       {loading ? "Please wait…" : label}
