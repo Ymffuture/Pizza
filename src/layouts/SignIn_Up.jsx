@@ -10,6 +10,7 @@ export default function SignIn_Up() {
   const navigate = useNavigate();
 
   const [mode, setMode] = useState("login");
+  const [username, setUsername] = useState(""); // ✅ NEW
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -17,48 +18,13 @@ export default function SignIn_Up() {
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState("");
   const [error, setError] = useState("");
-  
-const Loader = () => (
-  <div className="flex flex-col items-center justify-center min-h-[120px] bg-transparent overflow-hidden">
-    <svg
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
-      className="animate-spin text-gray-300 dark:text-gray-700 w-8 h-8 shrink-0"
-    >
-      <circle
-        cx="50"
-        cy="50"
-        r="40"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-        strokeDasharray="250"
-        strokeDashoffset="180"
-      />
-      <circle cx="50" cy="50" r="10" fill="currentColor">
-        <animate
-          attributeName="r"
-          values="10;14;10"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-        <animate
-          attributeName="opacity"
-          values="1;0.6;1"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-      </circle>
-    </svg>
-  </div>
-);
+
   // ---------------------------
   // EMAIL AUTH
   // ---------------------------
   const handleAuth = async () => {
-    if (!email || !password) {
-      toast.error("Email and password are required");
+    if (!email || !password || (mode === "signup" && !username)) {
+      toast.error("All fields are required");
       return;
     }
 
@@ -77,14 +43,17 @@ const Loader = () => (
         result = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              username, // ✅ stored in user_metadata
+            },
+          },
         });
       }
 
       const { data, error } = result;
-
       if (error) throw error;
 
-      // SIGNUP: email confirmation enabled
       if (mode === "signup" && !data.session) {
         toast.success("Account created! Check your email to verify.");
         return;
@@ -115,7 +84,7 @@ const Loader = () => (
           redirectTo: "https://swiftmeta.vercel.app/dashboard/blog",
         },
       });
-    } catch (err) {
+    } catch {
       toast.error("Social login failed");
     } finally {
       setSocialLoading("");
@@ -160,7 +129,6 @@ const Loader = () => (
       <div className="min-h-screen flex items-center justify-center bg-[#f0f2f5] dark:bg-black px-4">
         <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
 
-          {/* INLINE ERROR */}
           {error && (
             <div className="mb-4 text-sm text-red-600 bg-red-50 dark:bg-red-500/10 rounded-md px-3 py-2">
               {error}
@@ -177,6 +145,7 @@ const Loader = () => (
                     onClick={() => {
                       setMode(tab);
                       setError("");
+                      setUsername("");
                     }}
                     className={`flex-1 py-2 text-sm font-medium ${
                       mode === tab
@@ -191,6 +160,14 @@ const Loader = () => (
 
               {/* FORM */}
               <div className="space-y-4">
+                {mode === "signup" && (
+                  <InputField
+                    placeholder="Username"
+                    value={username}
+                    onChange={setUsername}
+                  />
+                )}
+
                 <InputField
                   icon={<Mail size={18} />}
                   placeholder="Email address"
@@ -227,7 +204,7 @@ const Loader = () => (
               </div>
 
               {/* SOCIAL */}
-              <div className="space-y-3 dark:text-white ">
+              <div className="space-y-3 dark:text-white">
                 <SocialButton
                   icon={<FaGoogle size={20} />}
                   label="Continue with Google"
@@ -247,7 +224,10 @@ const Loader = () => (
             <>
               <div className="text-center space-y-4 py-6">
                 <p className="text-gray-800 dark:text-gray-200">
-                  Logged in as <strong>{user.email}</strong>
+                  Logged in as{" "}
+                  <strong>
+                    {user.user_metadata?.username || user.email}
+                  </strong>
                 </p>
 
                 <button
@@ -278,7 +258,7 @@ const Loader = () => (
 function InputField({ icon, value, onChange, placeholder, type = "text" }) {
   return (
     <div className="flex items-center gap-2 border border-gray-300 dark:border-gray-700 rounded-md px-3 h-11 bg-gray-50 dark:bg-gray-800">
-      <span className="text-gray-400">{icon}</span>
+      {icon && <span className="text-gray-400">{icon}</span>}
       <input
         type={type}
         value={value}
@@ -298,7 +278,7 @@ function SocialButton({ icon, label, onClick, loading }) {
       className="w-full h-11 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 rounded-md text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition"
     >
       {icon}
-      {loading ? <Loader/> : label}
+      {loading ? "Please wait…" : label}
     </button>
   );
 }
