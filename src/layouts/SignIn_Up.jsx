@@ -18,13 +18,13 @@ export default function SignIn_Up() {
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState("");
   const [error, setError] = useState("");
-
+const [sent, setSent] = useState("");
   // ---------------------------
   // EMAIL AUTH
   // ---------------------------
   const handleAuth = async () => {
     if (!email || !password || (mode === "signup" && !username)) {
-      toast.error("All fields are required");
+      setError("All fields are required");
       return;
     }
 
@@ -55,7 +55,7 @@ export default function SignIn_Up() {
       if (error) throw error;
 
       if (mode === "signup" && !data.session) {
-        toast.success("Account created! Check your email to verify.");
+        setSent("Account created! Check your email to verify.");
         return;
       }
 
@@ -64,7 +64,7 @@ export default function SignIn_Up() {
       navigate("/dashboard/blog");
     } catch (err) {
       setError(err.message);
-      toast.error(err.message);
+      // toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,7 @@ export default function SignIn_Up() {
     setLoading(true);
     await supabase.auth.signOut();
     setUser(null);
-    toast.success("Logged out");
+    toast("Logged out");
     setLoading(false);
   };
 
@@ -130,8 +130,8 @@ export default function SignIn_Up() {
         <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
 
           {error && (
-            <div className="mb-4 text-sm text-red-600 bg-red-50 dark:bg-red-500/10 rounded-md px-3 py-2">
-              {error}
+            <div className={`mb-4 text-sm ${sent? "text-green-600 bg-green-50 dark:bg-green-500/10 " : "text-red-600 bg-red-50 dark:bg-red-500/10"} rounded-md px-3 py-2`} >
+              {error || sent} 
             </div>
           )}
 
