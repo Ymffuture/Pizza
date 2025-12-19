@@ -130,7 +130,7 @@ const [sent, setSent] = useState("");
         <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
 
           {error && (
-            <div className={`mb-4 text-sm ${sent? "text-green-600 bg-green-50 dark:bg-green-500/10 " : "text-red-600 bg-red-50 dark:bg-red-500/10"} rounded-md px-3 py-2`} >
+            <div className={`mb-4 text-sm ${!error? "text-green-600 bg-green-50 dark:bg-green-500/10 " : "text-red-600 bg-red-50 dark:bg-red-500/10"} rounded-md px-3 py-2`} >
               {error || sent} 
             </div>
           )}
