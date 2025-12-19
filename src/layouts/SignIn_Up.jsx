@@ -18,13 +18,21 @@ export default function SignIn_Up() {
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState("");
   const [error, setError] = useState("");
-const [sent, setSent] = useState("");
+  const [sent, setSent] = useState("");
   // ---------------------------
   // EMAIL AUTH
   // ---------------------------
   const handleAuth = async () => {
-    if (!email || !password || (mode === "signup" && !username)) {
-      setError("All fields are required");
+    if (!email) {
+      setError("Email is required");
+      return;
+    }
+    if (!password) {
+      setError("Password is required");
+      return;
+    }
+    if ((mode === "signup" && !username)) {
+      setError("Username is required");
       return;
     }
 
@@ -63,9 +71,9 @@ const [sent, setSent] = useState("");
       setUser(data.user);
       navigate("/dashboard/blog");
     } catch (err) {
-      setError(err.message);
-      // toast.error(err.message);
-    } finally {
+  setSent("");
+  setError(err.message);
+} finally {
       setLoading(false);
     }
   };
@@ -129,11 +137,19 @@ const [sent, setSent] = useState("");
       <div className="min-h-screen flex items-center justify-center bg-[#f0f2f5] dark:bg-black px-4">
         <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
 
-          {error && (
-            <div className={`mb-4 text-sm ${!error? "text-green-600 bg-green-50 dark:bg-green-500/10 " : "text-red-600 bg-red-50 dark:bg-red-500/10"} rounded-md px-3 py-2`} >
-              {error && sent} 
-            </div>
-          )}
+          {/* ERROR MESSAGE */}
+{error && (
+  <div className="mb-4 text-sm text-red-600 bg-red-50 dark:bg-red-500/10 rounded-md px-3 py-2">
+    {error}
+  </div>
+)}
+
+{/* SUCCESS MESSAGE */}
+{sent && (
+  <div className="mb-4 text-sm text-green-600 bg-green-50 dark:bg-green-500/10 rounded-md px-3 py-2">
+    {sent}
+  </div>
+)}
 
           {!user ? (
             <>
