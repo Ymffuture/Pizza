@@ -3,7 +3,7 @@ import { supabase } from "./lib/supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Mail, Lock, User, Image } from "lucide-react";
-import { FaGoogle, FaGithub } from "react-icons/fa";
+import { FaGoogle, FaGithub, FaApple } from "react-icons/fa";
 import toast from "react-hot-toast";
 
 const DEFAULT_AVATAR = "https://filebank.vercel.app/pp.jpeg";
@@ -65,7 +65,6 @@ export default function SignIn_Up() {
           password,
         });
       } else {
-        // SIGN UP
         result = await supabase.auth.signUp({
           email,
           password,
@@ -86,7 +85,6 @@ export default function SignIn_Up() {
         return;
       }
 
-      // UPLOAD AVATAR AFTER SIGNUP
       if (mode === "signup" && avatarFile) {
         const avatarUrl = await uploadAvatar(
           avatarFile,
@@ -127,6 +125,23 @@ export default function SignIn_Up() {
       });
     } catch {
       toast.error("Social login failed");
+    } finally {
+      setSocialLoading("");
+    }
+  };
+
+  const loginWithApple = async () => {
+    try {
+      setSocialLoading("apple");
+      await supabase.auth.signInWithOAuth({
+        provider: "apple",
+        options: {
+          redirectTo:
+            "https://swiftmeta.vercel.app/dashboard/blog",
+        },
+      });
+    } catch {
+      toast.error("Apple login failed");
     } finally {
       setSocialLoading("");
     }
@@ -203,17 +218,20 @@ export default function SignIn_Up() {
                       onChange={setUsername}
                     />
 
-                    {/* AVATAR UPLOAD */}
                     <label className="flex items-center gap-2 border rounded-md px-3 h-11 cursor-pointer text-sm text-gray-500">
                       <Image size={18} />
                       <span>
-                        {avatarFile ? avatarFile.name : "Upload avatar (optional)"}
+                        {avatarFile
+                          ? avatarFile.name
+                          : "Upload avatar (optional)"}
                       </span>
                       <input
                         type="file"
                         accept="image/*"
                         hidden
-                        onChange={(e) => setAvatarFile(e.target.files[0])}
+                        onChange={(e) =>
+                          setAvatarFile(e.target.files[0])
+                        }
                       />
                     </label>
                   </>
@@ -260,12 +278,25 @@ export default function SignIn_Up() {
                   loading={socialLoading === "google"}
                   onClick={() => loginWithProvider("google")}
                 />
+
                 <SocialButton
                   icon={<FaGithub />}
                   label="Continue with GitHub"
                   loading={socialLoading === "github"}
                   onClick={() => loginWithProvider("github")}
                 />
+
+                {/* APPLE UI BUTTON */}
+                <button
+                  onClick={loginWithApple}
+                  disabled={socialLoading === "apple"}
+                  className="w-full h-11 flex items-center justify-center gap-2 rounded-md bg-black text-white text-sm font-medium hover:bg-neutral-800 transition"
+                >
+                  <FaApple size={18} />
+                  {socialLoading === "apple"
+                    ? "Please wait…"
+                    : "Continue with Apple"}
+                </button>
               </div>
             </>
           )}
