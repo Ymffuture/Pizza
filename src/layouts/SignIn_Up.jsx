@@ -171,7 +171,7 @@ export default function SignIn_Up() {
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-[#f0f2f5] dark:bg-black px-4">
-        <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-md border p-6">
+        <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-m p-6">
 
           {error && (
             <div className="mb-4 text-sm text-red-600 bg-red-50 rounded-md px-3 py-2">
@@ -187,7 +187,7 @@ export default function SignIn_Up() {
 
           {!user && (
             <>
-              <div className="flex mb-6 border-b">
+              <div className="flex mb-6">
                 {["login", "signup"].map((tab) => (
                   <button
                     key={tab}
@@ -199,7 +199,7 @@ export default function SignIn_Up() {
                     }}
                     className={`flex-1 py-2 text-sm font-medium ${
                       mode === tab
-                        ? "border-b-2 border-blue-600 text-blue-600"
+                        ? "border-b-4 border-blue-600 text-blue-600"
                         : "text-gray-500"
                     }`}
                   >
@@ -218,7 +218,7 @@ export default function SignIn_Up() {
                       onChange={setUsername}
                     />
 
-                    <label className="flex items-center gap-2 border rounded-md px-3 h-11 cursor-pointer text-sm text-gray-500">
+                    <label className="flex items-center gap-2 rounded-md px-3 h-11 cursor-pointer text-sm text-gray-500">
                       <Image size={18} />
                       <span>
                         {avatarFile
@@ -255,7 +255,7 @@ export default function SignIn_Up() {
                 <button
                   disabled={loading}
                   onClick={handleAuth}
-                  className="w-full h-11 rounded-md bg-blue-600 text-white font-semibold"
+                  className="w-full h-11 rounded-md bg-[#202124] text-white font-semibold"
                 >
                   {loading
                     ? "Please wait…"
@@ -271,12 +271,13 @@ export default function SignIn_Up() {
                 <span className="flex-1 h-px bg-gray-300" />
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 dark:text-white">
                 <SocialButton
                   icon={<FaGoogle />}
                   label="Continue with Google"
                   loading={socialLoading === "google"}
                   onClick={() => loginWithProvider("google")}
+                  className="w-full h-11 flex items-center justify-center gap-2 rounded-md bg-red-500 text-white text-sm font-medium hover:bg-neutral-800 transition"
                 />
 
                 <SocialButton
@@ -284,9 +285,10 @@ export default function SignIn_Up() {
                   label="Continue with GitHub"
                   loading={socialLoading === "github"}
                   onClick={() => loginWithProvider("github")}
+                  className="w-full h-11 flex items-center justify-center gap-2 rounded-md bg-black text-white text-sm font-medium hover:bg-neutral-800 transition"
                 />
 
-                {/* APPLE UI BUTTON */}
+                {/* APPLE UI BUTTON 
                 <button
                   onClick={loginWithApple}
                   disabled={socialLoading === "apple"}
@@ -295,8 +297,9 @@ export default function SignIn_Up() {
                   <FaApple size={18} />
                   {socialLoading === "apple"
                     ? "Please wait…"
-                    : "Continue with Apple"}
+                    : "Continue with Apple( is disable) "}
                 </button>
+                */} 
               </div>
             </>
           )}
