@@ -131,7 +131,7 @@ const [sent, setSent] = useState("");
 
           {error && (
             <div className={`mb-4 text-sm ${!error? "text-green-600 bg-green-50 dark:bg-green-500/10 " : "text-red-600 bg-red-50 dark:bg-red-500/10"} rounded-md px-3 py-2`} >
-              {error || sent} 
+              {error && sent} 
             </div>
           )}
 
