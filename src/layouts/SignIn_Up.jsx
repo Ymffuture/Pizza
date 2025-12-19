@@ -227,7 +227,7 @@ const Loader = () => (
               </div>
 
               {/* SOCIAL */}
-              <div className="space-y-3">
+              <div className="space-y-3 dark:text-white ">
                 <SocialButton
                   icon={<FaGoogle size={20} />}
                   label="Continue with Google"
