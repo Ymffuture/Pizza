@@ -268,7 +268,7 @@ export default function Build() {
 
                     return (
                       <p key={l.id} className={`mb-1 flex items-center gap-2 ${getTypeColor(l.type)}`} >
-                        <span className="text-gray-500 text-xs w-40 shrink-0">
+                        <span className="text-gray-500 text-[8px] w-20 shrink-0">
                           {timestamp}
                         </span>
                         {getIcon(l.type)}
