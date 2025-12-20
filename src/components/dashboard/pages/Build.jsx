@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Code2, Palette, FileCode, Play, Download, Eye } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import {defaultHTML, defaultCSS, defaultJS} from "./Playground" ;
-
+import { FiInfo, FiAlertTriangle, FiXCircle } from 'react-icons/fi';
 
 export default function Build() {
   const [html, setHtml] = useState(defaultHTML);
@@ -158,10 +158,10 @@ export default function Build() {
       <div className="max-w-7xl mx-auto space-y-8">
 
         <div className="justify-between items-center">
-          <div className="gap-2 p-2" >
-            <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">Build a Website and make it yours. </h1>
+          <div className="gap-4 p-2" >
+            <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">Start building your website. </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              HTML / CSS & tailwindcss / JS Playground — SwiftMeta
+              HTML / CSS & <span className="text-blue-600" ><a href="https://tailwindcss.com/docs/installation/using-vite" >tailwindcss</a></span> / JS Playground — SwiftMeta
             </p>
           </div>
 
@@ -237,24 +237,41 @@ export default function Build() {
                 <Eye size={16} /> Live Preview
               </div>
 
-              <iframe ref={iframeRef} className="w-full h-80 bg-white dark:bg-black" />
+              <iframe ref={iframeRef} className="w-full h-90 bg-white dark:bg-black" />
             </div>
 
             <div className="rounded-xl overflow-hidden border dark:border-white/10 bg-white/30 dark:bg-white/5">
               <div className="px-4 py-2 flex justify-between border-b dark:border-white/10">
-                <span>Console</span>
-                <button onClick={clearLogs} className="text-xs text-gray-500">Clear</button>
+                <span>Terminal (console) </span>
+                <button onClick={clearLogs} className="text-xs text-gray-500">Clear terminal</button>
               </div>
 
               <div className="p-3 h-40 overflow-y-auto font-mono text-xs">
                 {logs.length === 0 ? (
                   <p className="text-gray-400">No logs yet...</p>
                 ) : (
-                  logs.map((l) => (
-                    <p key={l.id} className="mb-1">
-                      <b className="capitalize">{l.type}:</b> {l.text}
-                    </p>
-                  ))
+                  logs.map((l) => {
+  const isInfo = l.type === 'log';
+  const isWarn = l.type === 'warn';
+  const isError = l.type === 'error';
+
+  return (
+    <p key={l.id} className="mb-1 flex items-center gap-2">
+      {isInfo && <FiInfo className="text-blue-500" />}
+      {isWarn && <FiAlertTriangle className="text-yellow-500" />}
+      {isError && <FiXCircle className="text-red-500" />}
+      <b className={`
+        capitalize text-sm
+        ${isInfo ? 'text-blue-500' : ''}
+        ${isWarn ? 'text-yellow-500' : ''}
+        ${isError ? 'text-red-500' : ''}
+      `}>
+        {l.type}:
+      </b>{' '}
+      {l.text}
+    </p>
+  );
+})
                 )}
               </div>
             </div>
