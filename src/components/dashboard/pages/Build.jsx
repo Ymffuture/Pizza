@@ -1,29 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Code2, Palette, FileCode, Play, Download, Eye } from "lucide-react";
 import Editor from "@monaco-editor/react";
+import {defaultHtml, defaultCSS, defaultJS} from "./Playground" ;
 
-const defaultHTML = `<!-- index.html -->
-<h1 id="title">Hello from SwiftMeta Build</h1>
-<p>Click the title or change code above.</p>`;
-
-const defaultCSS = `/* style.css */
-body {
-  font-family: system-ui;
-  padding: 20px;
-  color: #222;
-}
-h1 { color: #202124; cursor: pointer; }
-p{ color:#0ea5a4 ;} 
-`;
-
-const defaultJS = `// script.js
-const el = document.getElementById("title");
-console.log("Page Loaded. Title:", el?.textContent);
-
-el?.addEventListener("click", () => {
-  console.log("Title clicked!");
-  alert("You clicked the title.");
-});`;
 
 export default function Build() {
   const [html, setHtml] = useState(defaultHTML);
