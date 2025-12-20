@@ -213,3 +213,7 @@ linkBtn?.addEventListener("click", (e) => {
   console.log("Learn more clicked");
 });
 `;
+
+
+
+export {defaultHtml, defaultJS , defaultCSS} ;
