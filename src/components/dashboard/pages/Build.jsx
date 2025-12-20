@@ -267,14 +267,11 @@ export default function Build() {
                     const timestamp = dayjs(l.timestamp).format("MMM D, YYYY HH:mm:ss");
 
                     return (
-                      <p key={l.id} className="mb-1 flex items-center gap-2">
+                      <p key={l.id} className={`mb-1 flex items-center gap-2 ${getTypeColor(l.type)}`} >
                         <span className="text-gray-500 text-xs w-40 shrink-0">
                           {timestamp}
                         </span>
                         {getIcon(l.type)}
-                        <span className={`font-semibold ${getTypeColor(l.type)}`}>
-                          {l.type.toUpperCase()}:
-                        </span>
                         <span>{l.text}</span>
                       </p>
                     );
