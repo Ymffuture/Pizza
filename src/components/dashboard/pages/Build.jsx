@@ -36,17 +36,45 @@ export default function Build() {
       `;
 
       return `
-        <!doctype html>
-        <html>
-        <head>
-          <style>${css}</style>
-        </head>
-        <body>
-          ${html}
-          <script>${js}</script>
-          ${bridge}
-        </body>
-        </html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Optional: Tailwind config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              accent: '#0ea5a4',
+            },
+          },
+        },
+      }
+    </script>
+
+    <!-- User CSS -->
+    <style>
+      ${css}
+    </style>
+  </head>
+
+  <body class="bg-gray-50 text-gray-900">
+    ${html}
+
+    <!-- User JS -->
+    <script>
+      ${js}
+    </script>
+
+    ${bridge}
+  </body>
+</html>
       `;
     },
     []
