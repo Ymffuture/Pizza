@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Code2, Palette, FileCode, Play, Download, Eye } from "lucide-react";
 import Editor from "@monaco-editor/react";
-import {defaultHTML, defaultCSS, defaultJS} from "./Playground" ;
-import { FiInfo, FiAlertTriangle, FiXCircle } from 'react-icons/fi';
+import { defaultHTML, defaultCSS, defaultJS } from "./Playground";
+import { FiInfo, FiAlertTriangle, FiXCircle } from "react-icons/fi";
+import dayjs from "dayjs";
 
 export default function Build() {
   const [html, setHtml] = useState(defaultHTML);
@@ -41,11 +42,7 @@ export default function Build() {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Optional: Tailwind config -->
     <script>
       tailwind.config = {
         theme: {
@@ -57,21 +54,11 @@ export default function Build() {
         },
       }
     </script>
-
-    <!-- User CSS -->
-    <style>
-      ${css}
-    </style>
+    <style>${css}</style>
   </head>
-
   <body class="bg-gray-50 text-gray-900">
     ${html}
-
-    <!-- User JS -->
-    <script>
-      ${js}
-    </script>
-
+    <script>${js}</script>
     ${bridge}
   </body>
 </html>
@@ -98,9 +85,14 @@ export default function Build() {
   useEffect(() => {
     const handler = (e) => {
       if (!e.data?.__bridge) return;
-      setLogs((l) => [
-        ...l,
-        { id: Date.now() + Math.random(), type: e.data.type, text: e.data.args.join(" ") },
+      setLogs((prev) => [
+        ...prev,
+        {
+          id: Date.now() + Math.random(),
+          timestamp: Date.now(),
+          type: e.data.type,
+          text: e.data.args.join(" "),
+        },
       ]);
     };
     window.addEventListener("message", handler);
@@ -126,9 +118,24 @@ export default function Build() {
     a.href = url;
     a.download = "swiftmeta-playground.html";
     a.click();
+    URL.revokeObjectURL(url);
   };
 
   const clearLogs = () => setLogs([]);
+
+  const getIcon = (type) => {
+    if (type === "log") return <FiInfo className="text-blue-500 shrink-0" />;
+    if (type === "warn") return <FiAlertTriangle className="text-yellow-500 shrink-0" />;
+    if (type === "error") return <FiXCircle className="text-red-500 shrink-0" />;
+    return null;
+  };
+
+  const getTypeColor = (type) => {
+    if (type === "log") return "text-blue-500";
+    if (type === "warn") return "text-yellow-500";
+    if (type === "error") return "text-red-500";
+    return "";
+  };
 
   const tabBtn = (id, label, Icon) => (
     <button
@@ -146,22 +153,27 @@ export default function Build() {
 
   const editorOptions = {
     minimap: { enabled: false },
-    scrollbar: { vertical: 'auto' },
-    wordWrap: 'on',
+    scrollbar: { vertical: "auto" },
+    wordWrap: "on",
     fontSize: 14,
-    lineNumbers: 'on',
+    lineNumbers: "on",
     automaticLayout: true,
   };
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto space-y-8">
-
-        <div className="justify-between items-center">
-          <div className="gap-4 p-2" >
-            <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">Start building your website. </h1>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">
+              Start building your website.
+            </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              HTML / CSS & <span className="text-blue-600" ><a href="https://tailwindcss.com/docs/installation/using-vite" >tailwindcss</a></span> / JS Playground — SwiftMeta
+              HTML / CSS &{" "}
+              <span className="text-blue-600">
+                <a href="https://tailwindcss.com/docs/installation/using-vite">tailwindcss</a>
+              </span>{" "}
+              / JS Playground — SwiftMeta
             </p>
           </div>
 
@@ -172,7 +184,7 @@ export default function Build() {
                 checked={livePreview}
                 onChange={(e) => setLivePreview(e.target.checked)}
               />
-            <span className="animate-pulse transaction duration-300" >🔴</span> Live Preview
+              <span className="animate-pulse">🔴</span> Live Preview
             </label>
 
             <button
@@ -236,14 +248,15 @@ export default function Build() {
               <div className="px-4 py-2 bg-gray-200 dark:bg-white/10 flex items-center gap-2">
                 <Eye size={16} /> Live Preview
               </div>
-
-              <iframe ref={iframeRef} className="w-full h-90 bg-white dark:bg-black" />
+              <iframe ref={iframeRef} className="w-full h-96 bg-white" />
             </div>
 
             <div className="rounded-xl overflow-hidden border dark:border-white/10 bg-white/30 dark:bg-white/5">
               <div className="px-4 py-2 flex justify-between border-b dark:border-white/10">
-                <span>Terminal (console) </span>
-                <button onClick={clearLogs} className="text-xs text-gray-500">Clear terminal</button>
+                <span>Terminal (console)</span>
+                <button onClick={clearLogs} className="text-xs text-gray-500">
+                  Clear terminal
+                </button>
               </div>
 
               <div className="p-3 h-40 overflow-y-auto font-mono text-xs">
@@ -251,23 +264,21 @@ export default function Build() {
                   <p className="text-gray-400">No logs yet...</p>
                 ) : (
                   logs.map((l) => {
-  const isInfo = l.type === 'log';
-  const isWarn = l.type === 'warn';
-  const isError = l.type === 'error';
+                    const timestamp = dayjs(l.timestamp).format("MMM D, YYYY HH:mm:ss");
 
-  return (
-    <p key={l.id} className={`mb-1 flex items-center gap-1
-        ${isInfo ? 'text-white' : ''}
-        ${isWarn ? 'text-yellow-500' : ''}
-        ${isError ? 'text-red-500' : ''} `} >
-      {isInfo && <FiInfo className="text-blue-500" />}
-      {isWarn && <FiAlertTriangle className="text-yellow-500" />}
-      {isError && <FiXCircle className="text-red-500" />}
-      {' '}
-      {l.text}
-    </p>
-  );
-})
+                    return (
+                      <p key={l.id} className="mb-1 flex items-center gap-2">
+                        <span className="text-gray-500 text-xs w-40 shrink-0">
+                          {timestamp}
+                        </span>
+                        {getIcon(l.type)}
+                        <span className={`font-semibold ${getTypeColor(l.type)}`}>
+                          {l.type.toUpperCase()}:
+                        </span>
+                        <span>{l.text}</span>
+                      </p>
+                    );
+                  })
                 )}
               </div>
             </div>
