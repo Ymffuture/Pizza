@@ -124,16 +124,16 @@ export default function Build() {
   const clearLogs = () => setLogs([]);
 
   const getIcon = (type) => {
-    if (type === "log") return <FiInfo className="text-blue-500 shrink-0" />;
+    if (type === "log") return <FiInfo className="text-blue-400 shrink-0" />;
     if (type === "warn") return <FiAlertTriangle className="text-yellow-500 shrink-0" />;
     if (type === "error") return <FiXCircle className="text-red-500 shrink-0" />;
     return null;
   };
 
   const getTypeColor = (type) => {
-    if (type === "log") return "text-blue-500";
-    if (type === "warn") return "text-yellow-500";
-    if (type === "error") return "text-red-500";
+    if (type === "log") return "text-white";
+    if (type === "warn") return "text-yellow-500 bg-yellow-500/10";
+    if (type === "error") return "text-red-500 bg-red-500/10";
     return "";
   };
 
@@ -267,7 +267,7 @@ export default function Build() {
                     const timestamp = dayjs(l.timestamp).format("MMM D, YYYY HH:mm:ss");
 
                     return (
-                      <p key={l.id} className={`mb-1 flex items-center gap-2 ${getTypeColor(l.type)}`} >
+                      <p key={l.id} className={`mb-1 flex items-center gap-1 ${getTypeColor(l.type)}`} >
                         <span className="text-gray-500 text-[8px] w-20 shrink-0">
                           {timestamp}
                         </span>
