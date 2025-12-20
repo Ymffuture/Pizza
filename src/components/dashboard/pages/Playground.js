@@ -34,6 +34,13 @@ const defaultHTML = `
       >
         Secondary Action
       </button>
+      
+      <button
+        id="errorBtn"
+        class="px-5 py-2 rounded-xl border border-black text-gray-700 bg-black hover:bg-gray-100 transition"
+      >
+        Connect Demo
+      </button>
     </div>
 
     <div
@@ -47,6 +54,7 @@ const defaultHTML = `
         <li>Tailwind utility styling</li>
       </ul>
     </div>
+    
   </div>
 </section>
 `;
@@ -72,6 +80,7 @@ const defaultJS = `
 const heroTitle = document.getElementById("heroTitle");
 const primaryBtn = document.getElementById("primaryBtn");
 const secondaryBtn = document.getElementById("secondaryBtn");
+const errorBtn = document.getElementById("errorBtn");
 
 // ===============================
 // INITIAL LOGS
@@ -109,6 +118,10 @@ primaryBtn?.addEventListener("click", () => {
 
 secondaryBtn?.addEventListener("click", () => {
   console.warn("Secondary action is not implemented yet");
+});
+
+errorBtn?.addEventListener("click", () => {
+  console.error("Connection to server failed. ");
 });
 `;
 
