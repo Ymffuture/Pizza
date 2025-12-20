@@ -158,15 +158,15 @@ export default function Build() {
       <div className="max-w-7xl mx-auto space-y-8">
 
         <div className="justify-between items-center">
-          <div>
+          <div className="gap-2 p-2>
             <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">Build a Website and make it yours. </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              HTML / CSS / JS Playground — SwiftMeta
+              HTML / CSS & tailwindcss / JS Playground — SwiftMeta
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 text-sm">
+            <label className="flex items-center gap-2 text-sm animate-pulse">
               <input
                 type="checkbox"
                 checked={livePreview}
