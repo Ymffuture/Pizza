@@ -131,7 +131,7 @@ export default function Build() {
   };
 
   const getTypeColor = (type) => {
-    if (type === "log") return "text-white";
+    if (type === "log") return "text-gray-900 dark:text-white";
     if (type === "warn") return "text-yellow-500 bg-yellow-500/10";
     if (type === "error") return "text-red-500 bg-red-500/10";
     return "";
@@ -268,7 +268,7 @@ export default function Build() {
 
                     return (
                       <p key={l.id} className={`mb-1 flex items-center gap-1 ${getTypeColor(l.type)}`} >
-                        <span className="text-gray-500 text-[8px] w-20 shrink-0">
+                        <span className="text-gray-500 text-[8px] w-full shrink-0">
                           {timestamp}
                         </span>
                         {getIcon(l.type)}
