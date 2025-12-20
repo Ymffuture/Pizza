@@ -216,4 +216,4 @@ linkBtn?.addEventListener("click", (e) => {
 
 
 
-export {defaultHtml, defaultJS , defaultCSS} ;
+export {defaultHTML, defaultJS , defaultCSS} ;
