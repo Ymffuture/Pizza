@@ -256,18 +256,14 @@ export default function Build() {
   const isError = l.type === 'error';
 
   return (
-    <p key={l.id} className="mb-1 flex items-center gap-2">
+    <p key={l.id} className={`mb-1 flex items-center gap-1
+        ${isInfo ? 'text-white' : ''}
+        ${isWarn ? 'text-yellow-500' : ''}
+        ${isError ? 'text-red-500' : ''} `} >
       {isInfo && <FiInfo className="text-blue-500" />}
       {isWarn && <FiAlertTriangle className="text-yellow-500" />}
       {isError && <FiXCircle className="text-red-500" />}
-      <b className={`
-        capitalize text-sm
-        ${isInfo ? 'text-blue-500' : ''}
-        ${isWarn ? 'text-yellow-500' : ''}
-        ${isError ? 'text-red-500' : ''}
-      `}>
-        {l.type}:
-      </b>{' '}
+      {' '}
       {l.text}
     </p>
   );
