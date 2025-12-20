@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Code2, Palette, FileCode, Play, Download, Eye } from "lucide-react";
 import Editor from "@monaco-editor/react";
-import {defaultHtml, defaultCSS, defaultJS} from "./Playground" ;
+import {defaultHTML, defaultCSS, defaultJS} from "./Playground" ;
 
 
 export default function Build() {
