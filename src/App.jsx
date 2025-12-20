@@ -30,7 +30,7 @@ const Pricing = lazy(() => import("./components/dashboard/pages/Pricing"));
 const FreeProjects = lazy(() => import("./components/dashboard/pages/FreeProjects"));
 const Edit =lazy(() =>import("./pages/EditPost")) ;
 const ViewPost = lazy(() => import("./pages/ViewPost")) ;
-
+const ResetPassword =lazy(() =>import("./components/ResetPassword")) ;
 const Loader = () => (
   <div className="flex flex-col items-center justify-center bg-transparent">
     <svg
@@ -104,6 +104,7 @@ const App = () => {
           <Route path="/signup" element={<SignApp />} />
           <Route path="/weather" element={<Weather />} />
           <Route path="/about" element={<About />} />
+          <Route path="/resetpassword" element={<ResetPassword/>} />
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
