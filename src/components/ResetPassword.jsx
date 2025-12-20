@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "./layouts/lib/supabaseClient";
+import { supabase } from "../layouts/lib/supabaseClient";
 import toast from "react-hot-toast";
 import { Lock } from "lucide-react";
 
