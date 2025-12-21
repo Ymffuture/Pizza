@@ -60,7 +60,7 @@ export default function Build() {
     ${html}
     ${bridge}
     <script>${js}</script>
-    
+    ${bridge}
   </body>
 </html>
       `;
