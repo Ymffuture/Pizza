@@ -153,13 +153,34 @@ export default function Build() {
   );
 
   const editorOptions = {
-    minimap: { enabled: false },
-    scrollbar: { vertical: "auto" },
-    wordWrap: "on",
-    fontSize: 14,
-    lineNumbers: "on",
-    automaticLayout: true,
-  };
+  minimap: { enabled: false },
+  scrollbar: { vertical: "auto" },
+  wordWrap: "on",
+  fontSize: 14,
+  lineHeight: 22,
+  lineNumbers: "on",
+  automaticLayout: true,
+
+  padding: { top: 12 },
+
+  cursorBlinking: "smooth",
+  cursorSmoothCaretAnimation: "on",
+
+  scrollBeyondLastLine: false,
+  smoothScrolling: true,
+
+  occurrencesHighlight: false,
+  selectionHighlight: false,
+  overviewRulerBorder: false,
+
+  quickSuggestions: {
+    other: true,
+    comments: false,
+    strings: true,
+  },
+  suggestOnTriggerCharacters: true,
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
@@ -185,7 +206,28 @@ export default function Build() {
                 checked={livePreview}
                 onChange={(e) => setLivePreview(e.target.checked)}
               />
-              <span className="animate-pulse">🔴</span> Live Preview
+              <span className="animate-pulse">
+                
+                <svg width="12" height="12" viewBox="0 0 12 12">
+  <circle cx="6" cy="6" r="3" fill="#dc2626" />
+  <circle cx="6" cy="6" r="3" fill="none" stroke="#dc2626" stroke-width="1">
+    <animate
+      attributeName="r"
+      from="3"
+      to="6"
+      dur="1.5s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="opacity"
+      from="0.8"
+      to="0"
+      dur="1.5s"
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg>
+</span> Live Preview
             </label>
 
             <button
