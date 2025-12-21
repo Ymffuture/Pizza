@@ -58,17 +58,14 @@ export default function Build() {
   </head>
   <body class="bg-gray-50 text-gray-900">
 ${html}
-${bridge} 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
       try {
         ${js}
       } catch (err) {
         console.error(err);
       }
-    });
   </script> 
-
+${bridge} 
   </body>
 </html>
       `;
