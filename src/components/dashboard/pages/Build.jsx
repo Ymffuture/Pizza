@@ -60,11 +60,7 @@ export default function Build() {
     ${bridge}
 ${html}
 <script>
-try {
-  ${js}
-} catch (e) {
-  console.error(e);
-}
+${js} 
 </script>
  
   </body>
