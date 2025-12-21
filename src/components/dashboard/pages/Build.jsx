@@ -57,10 +57,10 @@ export default function Build() {
     <style>${css}</style>
   </head>
   <body class="bg-gray-50 text-gray-900">
-    
+   ${bridge} 
 ${html}
 <script>
-${bridge} 
+
 ${js} 
 </script>
  
@@ -307,7 +307,7 @@ ${js}
 
               <div className="p-3 h-40 overflow-y-auto font-mono text-xs">
                 {logs.length === 0 ? (
-                  <p className="text-gray-200">console.log("Hello swiftmeta")</p>
+                  <p className="text-gray-300 dark:opacity-100 ">console.log("Hello swiftmeta")</p>
                 ) : (
                   logs.map((l) => {
                     const timestamp = dayjs(l.timestamp).format("MMM D, YYYY HH:mm:ss");
