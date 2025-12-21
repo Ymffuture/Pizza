@@ -37,7 +37,7 @@ const defaultHTML = `
       
       <button
         id="errorBtn"
-        class="px-5 py-2 rounded-xl border border-black text-gray-700 bg-black hover:bg-gray-100 transition"
+        class="px-5 py-2 rounded-xl border border-gray-200 text-gray-700 bg-gray-50 hover:bg-gray-300 transition"
       >
         Connect Demo
       </button>
