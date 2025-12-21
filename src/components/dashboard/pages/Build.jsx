@@ -57,9 +57,10 @@ export default function Build() {
     <style>${css}</style>
   </head>
   <body class="bg-gray-50 text-gray-900">
+  ${bridge}
     ${html}
     <script>${js}</script>
-    ${bridge}
+    
   </body>
 </html>
       `;
