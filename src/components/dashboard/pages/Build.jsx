@@ -58,7 +58,7 @@ export default function Build() {
   </head>
   <body class="bg-gray-50 text-gray-900">
 ${html}
-
+${bridge} 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
       try {
@@ -68,7 +68,7 @@ ${html}
       }
     });
   </script> 
- ${bridge} 
+
   </body>
 </html>
       `;
