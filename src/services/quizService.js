@@ -1,16 +1,15 @@
-export const requestVerification = (email) =>
-  fetch("/api/quiz/verify-email", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  });
+import api from "../api";
 
-export const submitQuiz = async (payload) => {
-  const res = await fetch("/api/quiz/submit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-  return res.json();
+/**
+ * Request email verification
+ */
+export const requestVerification = (email) => {
+  return api.post("/quiz/verify-email", { email });
 };
- 
+
+/**
+ * Submit quiz answers
+ */
+export const submitQuiz = (payload) => {
+  return api.post("/quiz/submit", payload);
+};
