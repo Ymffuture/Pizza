@@ -36,7 +36,7 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
                   transition
                   ${
                     isSelected
-                      ? "border-gray-900 bg-gray-100"
+                      ? "border-gray-900 bg-gray-100 dark:text-black "
                       : "border-gray-300 hover:bg-gray-50"
                   }
                 `}
