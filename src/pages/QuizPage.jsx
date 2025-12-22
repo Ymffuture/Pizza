@@ -1,14 +1,18 @@
 import { useState } from "react";
+import Slider from "react-slick";
 import { FiCheckCircle, FiMail, FiXCircle } from "react-icons/fi";
 import { toast } from "react-hot-toast";
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 import quizzes from "../data/quizzes.json";
 import QuizQuestion from "../components/QuizQuestion";
 import { submitQuiz, requestVerification } from "../services/quizService";
 
-/**
- * Extract useful error messages from Axios errors
- * This is critical for debugging email + backend issues
- */
+/* ======================
+   UTILS
+   ====================== */
 const extractErrorMessage = (err) => {
   if (err?.response) {
     return (
@@ -25,6 +29,22 @@ const extractErrorMessage = (err) => {
   return err?.message || "Unexpected error occurred";
 };
 
+/* ======================
+   SLIDER SETTINGS
+   ====================== */
+const sliderSettings = {
+  dots: true,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: true,
+  adaptiveHeight: true,
+  swipe: true,
+  draggable: true,
+  accessibility: true,
+};
+
 export default function QuizPage() {
   const [email, setEmail] = useState("");
   const [answers, setAnswers] = useState({});
@@ -34,10 +54,14 @@ export default function QuizPage() {
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState("");
 
+  /* ======================
+     ANSWERS
+     ====================== */
   const answerQuestion = (id, value) => {
     setAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
+  const answeredCount = Object.keys(answers).length;
   const allAnswered = quizzes.every(
     (q) => answers[q.id] !== undefined && answers[q.id] !== ""
   );
@@ -63,8 +87,6 @@ export default function QuizPage() {
       const message = extractErrorMessage(err);
       setError(message);
       toast.error(message);
-
-      // DEV DEBUG (remove in production)
       console.error("Email verification error:", err);
     } finally {
       setVerifying(false);
@@ -97,7 +119,6 @@ export default function QuizPage() {
       const message = extractErrorMessage(err);
       setError(message);
       toast.error(message);
-
       console.error("Quiz submission error:", err);
     } finally {
       setLoading(false);
@@ -156,22 +177,13 @@ export default function QuizPage() {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="
-              w-full rounded-xl px-4 py-3
-              focus:outline-none focus:ring-2 focus:ring-gray-900/10
-              dark:bg-gray-700 dark:text-white transition
-            "
+            className="w-full rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:bg-gray-700 dark:text-white"
           />
 
           <button
             onClick={handleVerify}
             disabled={verifying}
-            className="
-              flex items-center justify-center gap-2 w-full
-              rounded-xl bg-gray-900 py-2.5 text-white
-              hover:bg-gray-800 transition
-              disabled:opacity-50
-            "
+            className="flex items-center justify-center gap-2 w-full rounded-xl bg-gray-900 py-2.5 text-white hover:bg-gray-800 transition disabled:opacity-50"
           >
             {verifying ? "Sending..." : "Verify Email"}
             {verified && <FiCheckCircle />}
@@ -184,24 +196,27 @@ export default function QuizPage() {
           )}
         </div>
 
-        {/* Questions */}
-        <div className="space-y-6">
-          {quizzes.map((q, index) => (
-            <div
-              key={q.id}
-              className="rounded-2xl bg-white dark:bg-gray-800 p-6 shadow-md"
-            >
-              <div className="text-sm text-gray-500">
-                Question {index + 1} of {quizzes.length}
-              </div>
+        {/* QUESTIONS SLIDER */}
+        <div className="rounded-2xl bg-white dark:bg-gray-800 p-4 shadow-md">
+          <Slider {...sliderSettings}>
+            {quizzes.map((q, index) => (
+              <div key={q.id} className="px-2">
+                <div className="space-y-4">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Question {index + 1} of {quizzes.length}
+                  </div>
 
-              <QuizQuestion
-                q={q}
-                selected={answers[q.id]}
-                onAnswer={(v) => answerQuestion(q.id, v)}
-              />
-            </div>
-          ))}
+                  <div className="rounded-2xl bg-gray-50 dark:bg-gray-900 p-6">
+                    <QuizQuestion
+                      q={q}
+                      selected={answers[q.id]}
+                      onAnswer={(v) => answerQuestion(q.id, v)}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Slider>
         </div>
 
         {/* Error Message */}
@@ -215,19 +230,20 @@ export default function QuizPage() {
         {/* Submit */}
         <button
           onClick={handleSubmit}
-          disabled={loading}
-          className={`
-            flex items-center justify-center gap-2 w-full
-            rounded-2xl py-4 text-white text-lg transition
+          disabled={loading || !allAnswered}
+          className={`flex items-center justify-center gap-2 w-full rounded-2xl py-4 text-white text-lg transition
             ${
-              error
-                ? "bg-red-700 hover:bg-red-600"
+              !allAnswered
+                ? "bg-gray-400 cursor-not-allowed"
                 : "bg-gray-900 hover:bg-gray-800"
             }
-            disabled:opacity-50
-          `}
+            disabled:opacity-50`}
         >
-          {loading ? "Submitting..." : "Submit Quiz"}
+          {loading
+            ? "Submitting..."
+            : allAnswered
+            ? "Submit Quiz"
+            : `Answer all questions (${answeredCount}/${quizzes.length})`}
         </button>
       </div>
     </main>
