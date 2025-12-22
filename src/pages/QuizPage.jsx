@@ -135,7 +135,7 @@ export default function QuizPage() {
               key={q.id}
               className="rounded-2xl bg-white dark:bg-gray-800 p-6 shadow-md"
             >
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-gray-500 dark:text-gray-500">
                 Question {index + 1} of {quizzes.length}
               </div>
               <QuizQuestion
