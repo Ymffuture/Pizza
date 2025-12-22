@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { FiCheckCircle, FiMail, FiXCircle } from "react-icons/fi";
+import { toast } from "react-hot-toast";
 import quizzes from "../data/quizzes.json";
 import QuizQuestion from "../components/QuizQuestion";
 import { submitQuiz, requestVerification } from "../services/quizService";
-import {toast} from "react-hot-toast" ;
+
 export default function QuizPage() {
   const [email, setEmail] = useState("");
   const [answers, setAnswers] = useState({});
@@ -31,9 +33,9 @@ export default function QuizPage() {
       setError("");
       await requestVerification(email);
       setVerified(true);
-      toast("Verification email sent. Check your inbox.");
+      toast.success("Verification email sent!");
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Failed to send verification email");
     } finally {
       setVerifying(false);
     }
@@ -55,8 +57,9 @@ export default function QuizPage() {
       setError("");
       const res = await submitQuiz({ email, answers });
       setResult(res);
+      toast.success(res.passed ? "You passed!" : "You failed ❌");
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Submission failed");
     } finally {
       setLoading(false);
     }
@@ -65,10 +68,19 @@ export default function QuizPage() {
   if (result) {
     return (
       <div className="pt-24 max-w-xl mx-auto px-6">
-        <div className="rounded-2xl border border-gray-200 bg-white p-8 space-y-4">
-          <h2 className="text-xl font-semibold">Quiz Result</h2>
-          <p>Score: {result.percentage}%</p>
-          <p className={result.passed ? "text-green-600" : "text-red-600"}>
+        <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 space-y-4 shadow-lg">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            Quiz Result
+          </h2>
+          <p className="text-gray-700 dark:text-gray-300">
+            Score: <span className="font-medium">{result.percentage}%</span>
+          </p>
+          <p
+            className={`flex items-center gap-2 font-medium ${
+              result.passed ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {result.passed ? <FiCheckCircle /> : <FiXCircle />}
             {result.passed ? "Passed 🎉" : "Failed ❌"}
           </p>
         </div>
@@ -77,63 +89,77 @@ export default function QuizPage() {
   }
 
   return (
-    <main className="pt-24 pb-16">
+    <main className="pt-24 pb-16 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors">
       <div className="max-w-3xl mx-auto px-6 space-y-10">
-        <header>
-          <h1 className="text-3xl font-semibold">Coding Assessment</h1>
-          <p className="text-gray-600">
+        <header className="space-y-2">
+          <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
+            Coding Assessment
+          </h1>
+          <p className="text-gray-600 dark:text-gray-300">
             You must score at least 50% to pass.
           </p>
         </header>
 
         {/* Email */}
-        <div className="rounded-2xl bg-white p-6 space-y-4">
+        <div className="rounded-2xl border-gray-400 bg-white dark:bg-gray-800 p-6 space-y-4 shadow-md">
+          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+            <FiMail />
+            <span>Email Address</span>
+          </div>
           <input
             type="email"
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:bg-gray-700 dark:text-white transition"
           />
-
           <button
             onClick={handleVerify}
             disabled={verifying}
-            className="rounded-xl bg-gray-900 px-5 py-2.5 text-white"
+            className="flex items-center justify-center gap-2 w-full rounded-xl bg-gray-900 py-2.5 text-white hover:bg-gray-800 transition"
           >
             {verifying ? "Sending..." : "Verify Email"}
+            {verified && <FiCheckCircle />}
           </button>
-
           {verified && (
-            <p className="text-sm text-green-600">✔ Email verification sent</p>
+            <p className="text-sm text-green-500 flex items-center gap-1">
+              <FiCheckCircle /> Email verification sent
+            </p>
           )}
-
-          
+        </div>
 
         {/* Questions */}
-        {quizzes.map((q, index) => (
-          <div
-            key={q.id}
-            className="rounded-2xl bg-white p-6 space-y-4"
-          >
-            <div className="text-sm text-gray-500">
-              Question {index + 1} of {quizzes.length}
+        <div className="space-y-6">
+          {quizzes.map((q, index) => (
+            <div
+              key={q.id}
+              className="rounded-2xl bg-white dark:bg-gray-800 p-6 shadow-md"
+            >
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Question {index + 1} of {quizzes.length}
+              </div>
+              <QuizQuestion
+                q={q}
+                selected={answers[q.id]}
+                onAnswer={(v) => answerQuestion(q.id, v)}
+              />
             </div>
-
-            <QuizQuestion
-              q={q}
-              selected={answers[q.id]}
-              onAnswer={(v) => answerQuestion(q.id, v)}
-            />
-          </div>
-        ))}
-{error && <p className="text-sm text-red-600 bg-red-500/10 p-2 m-2">{error}</p>}
+          ))}
         </div>
+
+        {error && (
+          <p className="text-sm text-red-600 dark:text-red-400 bg-red-500/10 p-2 rounded">
+            {error}
+          </p>
+        )}
+
         {/* Submit */}
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className={` ${error? "bg-red-900" :"bg-gray-900" } w-full rounded-2xl py-4 text-white text-lg`} 
+          className={`flex items-center justify-center gap-2 w-full rounded-2xl py-4 text-white text-lg transition ${
+            error ? "bg-red-700 hover:bg-red-600" : "bg-gray-900 hover:bg-gray-800"
+          }`}
         >
           {loading ? "Submitting..." : "Submit Quiz"}
         </button>
