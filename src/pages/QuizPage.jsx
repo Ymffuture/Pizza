@@ -5,6 +5,26 @@ import quizzes from "../data/quizzes.json";
 import QuizQuestion from "../components/QuizQuestion";
 import { submitQuiz, requestVerification } from "../services/quizService";
 
+/**
+ * Extract useful error messages from Axios errors
+ * This is critical for debugging email + backend issues
+ */
+const extractErrorMessage = (err) => {
+  if (err?.response) {
+    return (
+      err.response.data?.message ||
+      err.response.data?.error ||
+      `Server error (${err.response.status})`
+    );
+  }
+
+  if (err?.request) {
+    return "No response from server. Backend may be down.";
+  }
+
+  return err?.message || "Unexpected error occurred";
+};
+
 export default function QuizPage() {
   const [email, setEmail] = useState("");
   const [answers, setAnswers] = useState({});
@@ -22,6 +42,9 @@ export default function QuizPage() {
     (q) => answers[q.id] !== undefined && answers[q.id] !== ""
   );
 
+  /* ======================
+     EMAIL VERIFICATION
+     ====================== */
   const handleVerify = async () => {
     if (!email) {
       setError("Please enter your email first");
@@ -31,16 +54,26 @@ export default function QuizPage() {
     try {
       setVerifying(true);
       setError("");
+
       await requestVerification(email);
+
       setVerified(true);
-      toast.success("Verification email sent!");
+      toast.success("Verification email sent. Check inbox or spam.");
     } catch (err) {
-      setError(err.message || "Failed to send verification email");
+      const message = extractErrorMessage(err);
+      setError(message);
+      toast.error(message);
+
+      // DEV DEBUG (remove in production)
+      console.error("Email verification error:", err);
     } finally {
       setVerifying(false);
     }
   };
 
+  /* ======================
+     QUIZ SUBMISSION
+     ====================== */
   const handleSubmit = async () => {
     if (!verified) {
       setError("Please verify your email before submitting");
@@ -55,26 +88,35 @@ export default function QuizPage() {
     try {
       setLoading(true);
       setError("");
+
       const res = await submitQuiz({ email, answers });
+
       setResult(res);
-      toast.success(res.passed ? "You passed!" : "You failed ❌");
+      toast.success(res.passed ? "You passed 🎉" : "You failed ❌");
     } catch (err) {
-      setError(err.message || "Submission failed");
+      const message = extractErrorMessage(err);
+      setError(message);
+      toast.error(message);
+
+      console.error("Quiz submission error:", err);
     } finally {
       setLoading(false);
     }
   };
 
+  /* ======================
+     RESULT VIEW
+     ====================== */
   if (result) {
     return (
       <div className="pt-24 max-w-xl mx-auto px-6 dark:text-white">
         <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 space-y-4 shadow-lg">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Quiz Result
-          </h2>
+          <h2 className="text-xl font-semibold">Quiz Result</h2>
+
           <p className="text-gray-700 dark:text-gray-300">
             Score: <span className="font-medium">{result.percentage}%</span>
           </p>
+
           <p
             className={`flex items-center gap-2 font-medium ${
               result.passed ? "text-green-600" : "text-red-600"
@@ -88,42 +130,56 @@ export default function QuizPage() {
     );
   }
 
+  /* ======================
+     MAIN VIEW
+     ====================== */
   return (
-    <main className="pt-24 pb-16 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors dark:text-white">
+    <main className="pt-24 pb-16 min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors dark:text-white">
       <div className="max-w-3xl mx-auto px-6 space-y-10">
+        {/* Header */}
         <header className="space-y-2">
-          <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
-            Coding Assessment
-          </h1>
+          <h1 className="text-3xl font-semibold">Coding Assessment</h1>
           <p className="text-gray-600 dark:text-gray-300">
             You must score at least 50% to pass.
           </p>
         </header>
 
-        {/* Email */}
-        <div className="rounded-2xl border-gray-400 bg-white dark:bg-gray-800 p-6 space-y-4 shadow-md">
+        {/* Email Verification */}
+        <div className="rounded-2xl bg-white dark:bg-gray-800 p-6 space-y-4 shadow-md">
           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
             <FiMail />
             <span>Email Address</span>
           </div>
+
           <input
             type="email"
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-gray-900/10 dark:bg-gray-700 dark:text-white transition"
+            className="
+              w-full rounded-xl px-4 py-3
+              focus:outline-none focus:ring-2 focus:ring-gray-900/10
+              dark:bg-gray-700 dark:text-white transition
+            "
           />
+
           <button
             onClick={handleVerify}
             disabled={verifying}
-            className="flex items-center justify-center gap-2 w-full rounded-xl bg-gray-900 py-2.5 text-white hover:bg-gray-800 transition"
+            className="
+              flex items-center justify-center gap-2 w-full
+              rounded-xl bg-gray-900 py-2.5 text-white
+              hover:bg-gray-800 transition
+              disabled:opacity-50
+            "
           >
             {verifying ? "Sending..." : "Verify Email"}
             {verified && <FiCheckCircle />}
           </button>
+
           {verified && (
             <p className="text-sm text-green-500 flex items-center gap-1">
-              <FiCheckCircle /> Email verification sent
+              <FiCheckCircle /> Verification email sent
             </p>
           )}
         </div>
@@ -135,9 +191,10 @@ export default function QuizPage() {
               key={q.id}
               className="rounded-2xl bg-white dark:bg-gray-800 p-6 shadow-md"
             >
-              <div className="text-sm text-gray-500 dark:text-gray-500">
+              <div className="text-sm text-gray-500">
                 Question {index + 1} of {quizzes.length}
               </div>
+
               <QuizQuestion
                 q={q}
                 selected={answers[q.id]}
@@ -147,19 +204,28 @@ export default function QuizPage() {
           ))}
         </div>
 
+        {/* Error Message */}
         {error && (
-          <p className="text-sm text-red-600 dark:text-red-400 bg-red-500/10 p-2 rounded">
-            {error}
-          </p>
+          <div className="flex items-start gap-2 rounded-xl bg-red-500/10 p-3 text-sm text-red-600 dark:text-red-400">
+            <FiXCircle className="mt-0.5 shrink-0" />
+            <span>{error}</span>
+          </div>
         )}
 
         {/* Submit */}
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className={`flex items-center justify-center gap-2 w-full rounded-2xl py-4 text-white text-lg transition ${
-            error ? "bg-red-700 hover:bg-red-600" : "bg-gray-900 hover:bg-gray-800"
-          }`}
+          className={`
+            flex items-center justify-center gap-2 w-full
+            rounded-2xl py-4 text-white text-lg transition
+            ${
+              error
+                ? "bg-red-700 hover:bg-red-600"
+                : "bg-gray-900 hover:bg-gray-800"
+            }
+            disabled:opacity-50
+          `}
         >
           {loading ? "Submitting..." : "Submit Quiz"}
         </button>
