@@ -98,7 +98,7 @@ const Hero = () => {
             whileHover={{ scale: 1.05 }}
             className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold rounded-full px-7 py-3 shadow-lg shadow-blue-500/20 w-full sm:w-auto"
           >
-            Get A Website
+            <Link to="start-quiz" >Start Your Class</Link>
           </motion.button>
 
           <motion.button
