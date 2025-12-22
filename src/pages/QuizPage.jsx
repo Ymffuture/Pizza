@@ -175,7 +175,7 @@ export default function QuizPage() {
         {/* Progress */}
         <div className="flex justify-between text-sm text-gray-500">
           <span>
-            Question {currentIndex + 1} / {total}
+            Question {currentIndex + 1} / {total} <span className="text-gray-600 dark:bg-white dark:text-white" >{Math.round(((currentIndex + 1) / total) * 100)===100? "completed" :"in progress" }%</span>
           </span>
           <span>{Math.round(((currentIndex + 1) / total) * 100)}%</span>
         </div>
