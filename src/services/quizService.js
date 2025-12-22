@@ -1,15 +1,17 @@
-import {api} from "../api";
+import { api } from "../api";
 
 /**
  * Request email verification
  */
-export const requestVerification = (email) => {
-  return api.post("/quiz/verify-email", { email });
+export const requestVerification = async (email) => {
+  const { data } = await api.post("/quiz/verify-email", { email });
+  return data;
 };
 
 /**
  * Submit quiz answers
  */
-export const submitQuiz = (payload) => {
-  return api.post("/quiz/submit", payload);
+export const submitQuiz = async (payload) => {
+  const { data } = await api.post("/quiz/submit", payload);
+  return data;
 };
