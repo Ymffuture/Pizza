@@ -1,33 +1,33 @@
 [
   {
-    "id": 1,
-    "type": "output",
-    "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log([] + []);",
-    "correctAnswer": "",
-    "explanation": "Both arrays are converted to strings, resulting in an empty string."
-  },
-  {
-    "id": 2,
-    "type": "mcq",
-    "language": "python",
-    "question": "What will this output?",
-    "code": "x = [1, 2]\nx.append([3,4])\nprint(len(x))",
-    "options": ["2", "3", "4", "Error"],
-    "correctAnswer": 1,
-    "explanation": "append adds the list as one element, making length 3."
-  },
-  {
-    "id": 3,
-    "type": "mcq",
-    "language": "html",
-    "question": "What does this HTML do?",
-    "code": "<a href="#">Click</a>",
-    "options": ["Reloads page", "Does nothing", "Scrolls top", "Throws error"],
-    "correctAnswer": 2,
-    "explanation": "An empty hash navigates to the top of the page."
-  }, 
+    "id": 1,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log([] + []);",
+    "correctAnswer": "",
+    "explanation": "Both arrays are converted to strings, resulting in an empty string."
+  },
+  {
+    "id": 2,
+    "type": "mcq",
+    "language": "python",
+    "question": "What will this output?",
+    "code": "x = [1, 2]\nx.append([3,4])\nprint(len(x))",
+    "options": ["2", "3", "4", "Error"],
+    "correctAnswer": 1,
+    "explanation": "append adds the list as one element, making length 3."
+  },
+  {
+    "id": 3,
+    "type": "mcq",
+    "language": "html",
+    "question": "What does this HTML do?",
+    "code": "<a href=\"#\">Click</a>",
+    "options": ["Reloads page", "Does nothing", "Scrolls top", "Throws error"],
+    "correctAnswer": 2,
+    "explanation": "An empty hash navigates to the top of the page."
+  },
   {
     "id": 4,
     "type": "output",
@@ -146,8 +146,8 @@
     "language": "javascript",
     "question": "What is the output?",
     "code": "console.log({} + []);",
-    "correctAnswer": "[object Object]",
-    "explanation": "Object to string first in some contexts, but unary + coerces."
+    "correctAnswer": "0",
+    "explanation": "In most environments, {} is treated as empty block, so +[] coerces empty array to 0."
   },
   {
     "id": 17,
@@ -228,9 +228,9 @@
     "id": 25,
     "type": "mcq",
     "language": "python",
-    "question": "What will this output?",
+    "question": "What will this code do?",
     "code": "print('5' + 5)",
-    "options": ["10", "55", "Error", "None"],
+    "options": ["Print 10", "Print 55", "Raise TypeError", "Print None"],
     "correctAnswer": 2,
     "explanation": "TypeError: cannot concatenate str and int."
   },
@@ -273,12 +273,11 @@
   },
   {
     "id": 30,
-    "type": "mcq",
+    "type": "output",
     "language": "python",
-    "question": "What will this output?",
+    "question": "What is the output?",
     "code": "print(max([] or [0]))",
-    "options": ["0", "Error", "None", "[]"],
-    "correctAnswer": 1,
-    "explanation": "max on empty sequence raises ValueError."
+    "correctAnswer": "0",
+    "explanation": "[] is falsy, so [] or [0] evaluates to [0]; max([0]) is 0."
   }
 ]
