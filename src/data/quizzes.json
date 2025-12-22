@@ -1,31 +1,284 @@
 [
   {
-    "id": 1,
+    "id": 1,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log([] + []);",
+    "correctAnswer": "",
+    "explanation": "Both arrays are converted to strings, resulting in an empty string."
+  },
+  {
+    "id": 2,
+    "type": "mcq",
+    "language": "python",
+    "question": "What will this output?",
+    "code": "x = [1, 2]\nx.append([3,4])\nprint(len(x))",
+    "options": ["2", "3", "4", "Error"],
+    "correctAnswer": 1,
+    "explanation": "append adds the list as one element, making length 3."
+  },
+  {
+    "id": 3,
+    "type": "mcq",
+    "language": "html",
+    "question": "What does this HTML do?",
+    "code": "<a href="#">Click</a>",
+    "options": ["Reloads page", "Does nothing", "Scrolls top", "Throws error"],
+    "correctAnswer": 2,
+    "explanation": "An empty hash navigates to the top of the page."
+  }, 
+  {
+    "id": 4,
     "type": "output",
     "language": "javascript",
     "question": "What is the output?",
-    "code": "console.log([] + []);",
-    "correctAnswer": "",
-    "explanation": "Both arrays are converted to strings, resulting in an empty string."
+    "code": "console.log(typeof NaN);",
+    "correctAnswer": "number",
+    "explanation": "NaN is of type 'number' in JavaScript."
   },
   {
-    "id": 2,
+    "id": 5,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(0.1 + 0.2 == 0.3)",
+    "correctAnswer": "False",
+    "explanation": "Floating point precision error makes 0.1 + 0.2 ≈ 0.30000000000000004."
+  },
+  {
+    "id": 6,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log([] + {});",
+    "correctAnswer": "[object Object]",
+    "explanation": "Empty array to string is '', object to string is '[object Object]'."
+  },
+  {
+    "id": 7,
     "type": "mcq",
     "language": "python",
     "question": "What will this output?",
-    "code": "x = [1, 2]\nx.append([3,4])\nprint(len(x))",
-    "options": ["2", "3", "4", "Error"],
-    "correctAnswer": 1,
-    "explanation": "append adds the list as one element, making length 3."
+    "code": "print([1,2] + [3,4])",
+    "options": ["[1, 2, 3, 4]", "[1,2,[3,4]]", "1234", "Error"],
+    "correctAnswer": 0,
+    "explanation": "List concatenation joins elements."
   },
   {
-    "id": 3,
+    "id": 8,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(1 < 2 < 3);",
+    "correctAnswer": "true",
+    "explanation": "Chaining compares left to right: (1<2) is true, true < 3 is true."
+  },
+  {
+    "id": 9,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(3 > 2 > 1);",
+    "correctAnswer": "false",
+    "explanation": "(3>2) is true, true > 1 is false."
+  },
+  {
+    "id": 10,
+    "type": "mcq",
+    "language": "python",
+    "question": "What will this output?",
+    "code": "x = [1,2,3]\ny = x\ny.append(4)\nprint(len(x))",
+    "options": ["3", "4", "Error", "None"],
+    "correctAnswer": 1,
+    "explanation": "Lists are mutable; y is reference to same list."
+  },
+  {
+    "id": 11,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log([1,2,3].map(parseInt));",
+    "correctAnswer": "[1, NaN, NaN]",
+    "explanation": "parseInt receives index as radix: parseInt('1',0)=1, ('2',1)=NaN, ('3',2)=NaN."
+  },
+  {
+    "id": 12,
     "type": "mcq",
     "language": "html",
-    "question": "What does this HTML do?",
-    "code": "<a href=\"#\">Click</a>",
-    "options": ["Reloads page", "Does nothing", "Scrolls top", "Throws error"],
+    "question": "What does this HTML display?",
+    "code": "<p hidden>Hello</p>",
+    "options": ["Hello", "Nothing visible", "Hidden text gray", "Error"],
+    "correctAnswer": 1,
+    "explanation": "hidden attribute hides the element."
+  },
+  {
+    "id": 13,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print('a' in {'a':1})",
+    "correctAnswer": "True",
+    "explanation": "'in' checks keys in dict."
+  },
+  {
+    "id": 14,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(!!'false');",
+    "correctAnswer": "true",
+    "explanation": "Non-empty string is truthy, double ! coerces to boolean."
+  },
+  {
+    "id": 15,
+    "type": "mcq",
+    "language": "python",
+    "question": "What will this output?",
+    "code": "print(2 ** 3 ** 2)",
+    "options": ["512", "64", "9", "Error"],
+    "correctAnswer": 0,
+    "explanation": "Exponentiation right-associative: 2**(3**2) = 2**9 = 512."
+  },
+  {
+    "id": 16,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log({} + []);",
+    "correctAnswer": "[object Object]",
+    "explanation": "Object to string first in some contexts, but unary + coerces."
+  },
+  {
+    "id": 17,
+    "type": "mcq",
+    "language": "html",
+    "question": "What happens on click?",
+    "code": "<button onclick='alert(1)'>Click</button>",
+    "options": ["Shows alert 1", "Nothing", "Reloads", "Error"],
+    "correctAnswer": 0,
+    "explanation": "onclick attribute runs JavaScript code."
+  },
+  {
+    "id": 18,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print([1,2] * 3)",
+    "correctAnswer": "[1, 2, 1, 2, 1, 2]",
+    "explanation": "List multiplication repeats elements."
+  },
+  {
+    "id": 19,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(0.1 + 0.2);",
+    "correctAnswer": "0.30000000000000004",
+    "explanation": "Floating point precision issue."
+  },
+  {
+    "id": 20,
+    "type": "mcq",
+    "language": "python",
+    "question": "What will this output?",
+    "code": "def f(): pass\nprint(type(f))",
+    "options": ["<class 'function'>", "<class 'NoneType'>", "Error", "pass"],
+    "correctAnswer": 0,
+    "explanation": "Functions are objects of type function."
+  },
+  {
+    "id": 21,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log([] == ![]);",
+    "correctAnswer": "true",
+    "explanation": "![] is false, [] coerces to '' which == false."
+  },
+  {
+    "id": 22,
+    "type": "mcq",
+    "language": "html",
+    "question": "What color is the text?",
+    "code": "<span style='color: red'>Text</span>",
+    "options": ["Black", "Red", "Blue", "None"],
+    "correctAnswer": 1,
+    "explanation": "Inline style sets color to red."
+  },
+  {
+    "id": 23,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(bool([]))",
+    "correctAnswer": "False",
+    "explanation": "Empty list is falsy."
+  },
+  {
+    "id": 24,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log('b' + 'a' + + 'a' + 'a');",
+    "correctAnswer": "baNaNa",
+    "explanation": "Unary + on 'a' is NaN, 'ba' + NaN + 'a' = 'baNaNa'."
+  },
+  {
+    "id": 25,
+    "type": "mcq",
+    "language": "python",
+    "question": "What will this output?",
+    "code": "print('5' + 5)",
+    "options": ["10", "55", "Error", "None"],
     "correctAnswer": 2,
-    "explanation": "An empty hash navigates to the top of the page."
+    "explanation": "TypeError: cannot concatenate str and int."
+  },
+  {
+    "id": 26,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(null == undefined);",
+    "correctAnswer": "true",
+    "explanation": "Loose equality treats null and undefined as equal."
+  },
+  {
+    "id": 27,
+    "type": "mcq",
+    "language": "html",
+    "question": "What does this input do?",
+    "code": "<input type='checkbox' checked>",
+    "options": ["Unchecked box", "Checked box", "Text input", "Error"],
+    "correctAnswer": 1,
+    "explanation": "checked attribute makes checkbox selected by default."
+  },
+  {
+    "id": 28,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(1 if False else 2)",
+    "correctAnswer": "2",
+    "explanation": "Ternary expression returns else value when condition false."
+  },
+  {
+    "id": 29,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log([] instanceof Array);",
+    "correctAnswer": "true",
+    "explanation": "Empty array is instance of Array constructor."
+  },
+  {
+    "id": 30,
+    "type": "mcq",
+    "language": "python",
+    "question": "What will this output?",
+    "code": "print(max([] or [0]))",
+    "options": ["0", "Error", "None", "[]"],
+    "correctAnswer": 1,
+    "explanation": "max on empty sequence raises ValueError."
   }
 ]
