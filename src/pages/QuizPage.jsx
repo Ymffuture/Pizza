@@ -173,7 +173,7 @@ export default function QuizPage() {
         </div>
 
         {/* Progress */}
-        <div className="flex justify-between text-sm text-gray-500">
+        <div className="flex justify-between text-xs text-gray-500">
           <span>
             Question {currentIndex + 1} / {total} {''} <span className={`dark:bg-white dark:text-black rounded p-1 ${Math.round(((currentIndex + 1) / total) * 100)===100? "bg-green-600 bg-white" :"text-yellow-400 bg-black"}`} >{Math.round(((currentIndex + 1) / total) * 100)===100? "Completed" :"In progress" }</span>
           </span>
