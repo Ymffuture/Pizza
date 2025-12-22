@@ -87,7 +87,7 @@ export default function QuizPage() {
         </header>
 
         {/* Email */}
-        <div className="rounded-2xl border bg-white p-6 space-y-4">
+        <div className="rounded-2xl bg-white p-6 space-y-4">
           <input
             type="email"
             placeholder="you@example.com"
@@ -108,14 +108,13 @@ export default function QuizPage() {
             <p className="text-sm text-green-600">✔ Email verification sent</p>
           )}
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
-        </div>
+          
 
         {/* Questions */}
         {quizzes.map((q, index) => (
           <div
             key={q.id}
-            className="rounded-2xl border bg-white p-6 space-y-4"
+            className="rounded-2xl bg-white p-6 space-y-4"
           >
             <div className="text-sm text-gray-500">
               Question {index + 1} of {quizzes.length}
@@ -128,12 +127,13 @@ export default function QuizPage() {
             />
           </div>
         ))}
-
+{error && <p className="text-sm text-red-600 bg-red-500/10 p-2 m-2">{error}</p>}
+        </div>
         {/* Submit */}
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full rounded-2xl bg-gray-900 py-4 text-white text-lg"
+          className={` ${error? "bg-red-900" :"bg-gray-900" } w-full rounded-2xl py-4 text-white text-lg`} 
         >
           {loading ? "Submitting..." : "Submit Quiz"}
         </button>
