@@ -2,7 +2,7 @@ import { useState } from "react";
 import quizzes from "../data/quizzes.json";
 import QuizQuestion from "../components/QuizQuestion";
 import { submitQuiz, requestVerification } from "../services/quizService";
-
+import {toast} from "react-hot-toast" ;
 export default function QuizPage() {
   const [email, setEmail] = useState("");
   const [answers, setAnswers] = useState({});
@@ -31,7 +31,7 @@ export default function QuizPage() {
       setError("");
       await requestVerification(email);
       setVerified(true);
-      alert("Verification email sent. Check your inbox.");
+      toast("Verification email sent. Check your inbox.");
     } catch (err) {
       setError(err.message);
     } finally {
