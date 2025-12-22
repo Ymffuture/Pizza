@@ -3,24 +3,64 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function QuizQuestion({ q, onAnswer }) {
   return (
-    <div className="space-y-4">
-      <h2>{q.question}</h2>
+    <div className="space-y-6">
+      {/* Question text */}
+      <h2 className="text-lg font-medium text-gray-900">
+        {q.question}
+      </h2>
 
-      <SyntaxHighlighter language={q.language} style={oneDark}>
-        {q.code}
-      </SyntaxHighlighter>
+      {/* Code block */}
+      {q.code && (
+        <SyntaxHighlighter
+          language={q.language}
+          style={oneDark}
+          customStyle={{ borderRadius: 12 }}
+        >
+          {q.code}
+        </SyntaxHighlighter>
+      )}
 
-      {q.type === "mcq" ? (
-        q.options.map((opt, i) => (
-          <button key={i} onClick={() => onAnswer(i)}>
-            {opt}
-          </button>
-        ))
-      ) : (
+      {/* MCQ OPTIONS */}
+      {q.type === "mcq" && Array.isArray(q.options) && (
+        <div className="space-y-3">
+          {q.options.map((opt, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => onAnswer(index)}
+              className="
+                w-full text-left px-4 py-3 rounded-xl
+                border border-gray-300
+                hover:bg-gray-50
+                transition
+              "
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* OUTPUT QUESTION */}
+      {q.type === "output" && (
         <input
-          placeholder="Enter output"
+          type="text"
+          placeholder="Type the output here"
           onChange={(e) => onAnswer(e.target.value)}
+          className="
+            w-full rounded-xl border border-gray-300
+            px-4 py-3
+            focus:outline-none
+            focus:ring-2 focus:ring-gray-900/10
+          "
         />
+      )}
+
+      {/* SAFETY FALLBACK */}
+      {!q.type && (
+        <p className="text-sm text-red-500">
+          Question type missing. Check quizzes.json
+        </p>
       )}
     </div>
   );
