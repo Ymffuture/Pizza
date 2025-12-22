@@ -111,7 +111,7 @@ export default function QuizPage() {
   ====================== */
   if (result) {
     return (
-      <div className="pt-24 max-w-xl mx-auto px-6">
+      <div className="pt-24 max-w-xl mx-auto px-6 dark:text-white">
         <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-lg space-y-4">
           <h2 className="text-xl font-semibold">Quiz Result</h2>
 
@@ -134,12 +134,12 @@ export default function QuizPage() {
      MAIN VIEW
   ====================== */
   return (
-    <main className="pt-24 pb-16 min-h-screen bg-gray-50 dark:bg-gray-900">
+    <main className="pt-24 pb-16 min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-white">
       <div className="max-w-3xl mx-auto px-6 space-y-8">
 
         {/* Header */}
         <header>
-          <h1 className="text-3xl font-semibold">Coding Assessment</h1>
+          <h1 className="text-3xl font-semibold text-gray-800 ">Coding Assessment</h1>
           <p className="text-gray-500">Minimum pass: 50%</p>
         </header>
 
@@ -188,9 +188,15 @@ export default function QuizPage() {
             onAnswer={(v) => answerQuestion(currentQuestion.id, v)}
           />
         </div>
-
+{/* Error */}
+        {error && (
+          <div className="flex gap-2 bg-red-500/10 p-3 rounded-xl text-red-600">
+            <FiXCircle className="text-2xl animate-pulse" />
+            {error}
+          </div>
+        )}
         {/* Navigation */}
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex justify-between items-center gap-4 dark:text-white">
           <button
             disabled={currentIndex === 0}
             onClick={() => setCurrentIndex((i) => i - 1)}
@@ -209,22 +215,24 @@ export default function QuizPage() {
             </button>
           ) : (
             <button
-              onClick={handleSubmit}
-              disabled={loading}
-              className="px-6 py-3 rounded-xl bg-green-600 text-white"
-            >
-              {loading ? "Submitting..." : "Submit Quiz"}
-            </button>
+  onClick={handleSubmit}
+  disabled={loading}
+  className={`px-6 py-3 rounded-xl text-white transition
+    ${error ? "bg-red-600" : "bg-green-600"}
+    disabled:opacity-50
+  `}
+>
+  {loading
+    ? "Submitting..."
+    : error
+    ? "Try Again"
+    : "Submit Quiz"}
+</button>
+
           )}
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="flex gap-2 bg-red-500/10 p-3 rounded-xl text-red-600">
-            <FiXCircle />
-            {error}
-          </div>
-        )}
+        
       </div>
     </main>
   );
