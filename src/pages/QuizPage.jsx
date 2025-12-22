@@ -67,7 +67,7 @@ export default function QuizPage() {
 
   if (result) {
     return (
-      <div className="pt-24 max-w-xl mx-auto px-6">
+      <div className="pt-24 max-w-xl mx-auto px-6 dark:text-white">
         <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 space-y-4 shadow-lg">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             Quiz Result
@@ -89,7 +89,7 @@ export default function QuizPage() {
   }
 
   return (
-    <main className="pt-24 pb-16 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors">
+    <main className="pt-24 pb-16 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors dark:text-white">
       <div className="max-w-3xl mx-auto px-6 space-y-10">
         <header className="space-y-2">
           <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
