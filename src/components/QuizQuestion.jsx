@@ -5,7 +5,7 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
   return (
     <div className="space-y-6">
       {/* Question */}
-      <h2 className="text-lg font-medium text-gray-900">
+      <h2 className="text-lg font-medium text-gray-900 dark:text-white">
         {q.question}
       </h2>
 
