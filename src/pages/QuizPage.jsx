@@ -260,7 +260,7 @@ const completed = progress === 100;
               exit={{ opacity: 0 }}
               className="flex gap-2 bg-red-500/10 p-3 rounded-xl text-red-600"
             >
-              <FiXCircle className="mt-0.5 shrink-0" />
+              <FiXCircle className="mt-0.5 shrink-0 text-xl" />
               <span>{error}</span>
             </motion.div>
           )}
