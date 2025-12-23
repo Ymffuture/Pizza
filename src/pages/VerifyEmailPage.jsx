@@ -14,6 +14,7 @@ export default function VerifyEmailPage() {
   useEffect(() => {
     if (!token) {
       setStatus("error");
+      toast.error("Invalid verification link");
       return;
     }
 
@@ -21,8 +22,10 @@ export default function VerifyEmailPage() {
 
     const verifyEmail = async () => {
       try {
+        // Increased timeout to 15 seconds
         await api.get(`/quiz/verify-email`, {
           params: { token },
+          timeout: 15000,
         });
 
         if (!isMounted) return;
@@ -30,22 +33,22 @@ export default function VerifyEmailPage() {
         setStatus("success");
         toast.success("Email verified successfully");
 
-        setTimeout(() => navigate("/"), 2500);
+        setTimeout(() => navigate("/quiz"), 2000); // Redirect to quiz directly
       } catch (err) {
         if (!isMounted) return;
 
         setStatus("error");
-        toast.error(
-          err?.response?.data?.message || "Verification link is invalid or expired"
-        );
+        const msg = err?.response?.data?.message || "Verification failed";
+        toast.error(msg);
+
+        // Add button to request new link on error
+        setTimeout(() => navigate("/?resend=true"), 3000);
       }
     };
 
     verifyEmail();
 
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [token, navigate]);
 
   return (
@@ -53,8 +56,8 @@ export default function VerifyEmailPage() {
       <div className="w-full max-w-md rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-lg text-center space-y-5">
         {status === "loading" && (
           <>
-            <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-gray-900" />
-            <p className="text-gray-600 dark:text-gray-300">
+            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-gray-900" />
+            <p className="text-lg text-gray-600 dark:text-gray-300">
               Verifying your email…
             </p>
           </>
@@ -62,20 +65,20 @@ export default function VerifyEmailPage() {
 
         {status === "success" && (
           <>
-            <FiCheckCircle className="mx-auto text-4xl text-green-500" />
-            <h2 className="text-xl font-semibold">Email Verified</h2>
+            <FiCheckCircle className="mx-auto text-6xl text-green-500" />
+            <h2 className="text-2xl font-bold">Email Verified!</h2>
             <p className="text-gray-600 dark:text-gray-300">
-              You can now continue to the quiz.
+              Redirecting to the quiz...
             </p>
           </>
         )}
 
         {status === "error" && (
           <>
-            <FiXCircle className="mx-auto text-4xl text-red-500" />
-            <h2 className="text-xl font-semibold">Verification Failed</h2>
+            <FiXCircle className="mx-auto text-6xl text-red-500" />
+            <h2 className="text-2xl font-bold">Verification Failed</h2>
             <p className="text-gray-600 dark:text-gray-300">
-              This verification link is invalid or has expired.
+              The link is invalid or expired. Redirecting to request a new one...
             </p>
           </>
         )}
