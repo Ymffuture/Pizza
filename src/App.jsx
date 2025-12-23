@@ -33,7 +33,7 @@ const ViewPost = lazy(() => import("./pages/ViewPost")) ;
 const ResetPassword =lazy(() =>import("./components/ResetPassword")) ;
 const QuizPage = lazy(() => import("./pages/QuizPage")) ;
 const QuizQuestion =lazy(() =>import("./components/QuizQuestion")) ;
-
+const VerifyEmailPage =lazy(() =>import("./pages/VerifyEmail Page"));
 
 
 
@@ -112,6 +112,8 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/quiz-question" element={<QuizQuestion />} />
           <Route path="/start-quiz" element={<QuizPage />} />
+          <Route path="/verify" element={<VerifyEmailPage />} />
+
           <Route path="/resetpassword" element={<ResetPassword/>} />
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
