@@ -33,7 +33,7 @@ const ViewPost = lazy(() => import("./pages/ViewPost")) ;
 const ResetPassword =lazy(() =>import("./components/ResetPassword")) ;
 const QuizPage = lazy(() => import("./pages/QuizPage")) ;
 const QuizQuestion =lazy(() =>import("./components/QuizQuestion")) ;
-const VerifyEmailPage =lazy(() =>import("./pages/VerifyEmail Page"));
+const VerifyEmailPage =lazy(() =>import("./pages/VerifyEmailPage"));
 
 
 
