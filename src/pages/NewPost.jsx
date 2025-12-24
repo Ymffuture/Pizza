@@ -69,11 +69,7 @@ export default function NewPost() {
   const canPost = body.trim().length > 0 || files.length > 0;
 
   return (
-<<<<<<< HEAD
-    <main className="min-h-screen bg-[#f0f2f5] dark:bg-black flex justify-center pt-12 px-4">
-=======
     <main className="bg-[#f0f2f5] dark:bg-black flex justify-center pt-12 px-4">
->>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
       <section className="w-full max-w-xl bg-white dark:bg-gray-900 rounded-xl shadow border border-gray-200 dark:border-gray-800">
         
         {/* HEADER */}

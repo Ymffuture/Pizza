@@ -1,35 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Code2, Palette, FileCode, Play, Download, Eye } from "lucide-react";
 import Editor from "@monaco-editor/react";
-<<<<<<< HEAD
-
-const defaultHTML = `<!-- index.html -->
-<h1 id="title">Hello from SwiftMeta Build</h1>
-<p>Click the title or change code above.</p>`;
-
-const defaultCSS = `/* style.css */
-body {
-  font-family: system-ui;
-  padding: 20px;
-  color: #222;
-}
-h1 { color: #2021ff; cursor: pointer; }
-p{ color:#0ea5a4 ;} 
-`;
-
-const defaultJS = `// script.js
-const el = document.getElementById("title");
-console.log("Page Loaded. Title:", el?.textContent);
-
-el?.addEventListener("click", () => {
-  console.log("Title clicked!");
-  alert("You clicked the title.");
-});`;
-=======
 import { defaultHTML, defaultCSS, defaultJS } from "./Playground";
 import { FiInfo, FiAlertTriangle, FiXCircle } from "react-icons/fi";
 import dayjs from "dayjs";
->>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
 
 export default function Build() {
   const [html, setHtml] = useState(defaultHTML);
@@ -337,13 +311,6 @@ ${bridge}
                 {logs.length === 0 ? (
                   <p className="text-gray-300 dark:opacity-100 ">console.log("Hello swiftmeta")</p>
                 ) : (
-<<<<<<< HEAD
-                  logs.map((l) => (
-                    <p key={l.id} className="mb-1">
-                      <b className="capitalize text-green-600">{l.type}:</b> {l.text}
-                    </p>
-                  ))
-=======
                   logs.map((l) => {
                     const timestamp = dayjs(l.timestamp).format("MMM D, YYYY HH:mm:ss");
 
@@ -357,7 +324,6 @@ ${bridge}
                       </p>
                     );
                   })
->>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
                 )}
               </div>
             </div>

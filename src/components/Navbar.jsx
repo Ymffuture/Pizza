@@ -107,18 +107,22 @@ const Navbar = () => {
     <>
       {/* DESKTOP NAVBAR */}
       <header className="fixed top-0 w-full z-50 bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center px-2 py-1">
+       <div className="max-w-7xl mx-auto flex items-center justify-between px-3 py-2">
+
 
           {/* LOGO */}
    
 
-    <div
-      onClick={() => navigate("/")}
-      className="cursor-pointer select-none"
+    
+     <div
+  onClick={() => navigate("/")}
+  className="cursor-pointer select-none flex items-center max-w-[160px] md:max-w-none"
+
+
       aria-label="swiftMeta home"
     >
       <svg
-        width="190"
+        width="170"
         height="48"
         viewBox="0 0 460 100"
         xmlns="http://www.w3.org/2000/svg"
@@ -254,11 +258,11 @@ const Navbar = () => {
             {/*<GeminiAssistant />*/} 
             {/* Mobile Hamburger */}
             <button
-              className="md:hidden p-2 rounded-full border-amber-50"
+              className="md:hidden p-2 rounded-full border-amber-50 flex justify-end"
               onClick={() => setMenuOpen(true)}
             >
               <svg
-                className="h-7 w-7 dark:text-white cursor-pointer"
+                className="h-7 w-7 dark:text-white cursor-pointer flex "
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="1.1"
