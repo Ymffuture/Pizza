@@ -231,22 +231,6 @@ const GeminiAssistant = () => {
   }
 
   return (
-<<<<<<< HEAD
-    <>
-      {/* Floating Chat Button */}
-      {!open && (
-        <Tooltip title="Chat with SwiftMeta AI">
-          <Button
-            type=""
-            shape=""
-            size=""
-            icon={<BotIcon size={20} />}
-            className="flex top-0 z-20 shadow-2xl hover:scale-110 transition-transform duration-200"
-            onClick={() => setOpen(true)}
-          />
-        </Tooltip>
-      )}
-=======
     <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
       {/* HEADER unchanged */}
       <header className="flex items-center justify-between px-5 py-3 backdrop-blur-xl bg-white/80 dark:bg-gray-900/70 border-b border-gray-200/70 dark:border-gray-800 sticky top-0 z-20">
@@ -268,7 +252,6 @@ const GeminiAssistant = () => {
           </button>
         </div>
       </header>
->>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
 
       {/* MESSAGES unchanged */}
       <main className="flex-1 overflow-y-auto px-4 py-6 space-my-4 dark:text-white">

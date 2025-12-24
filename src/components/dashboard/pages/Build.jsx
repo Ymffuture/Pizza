@@ -327,15 +327,10 @@ ${bridge}
 
             <div className="rounded-xl overflow-hidden border dark:border-white/10 bg-white/30 dark:bg-white/5">
               <div className="px-4 py-2 flex justify-between border-b dark:border-white/10">
-<<<<<<< HEAD
-                <span>Console</span>
-                <button onClick={clearLogs} className="text-xs text-gray-500">Close terminal</button>
-=======
                 <span>Terminal (console)</span>
                 <button onClick={clearLogs} className="text-xs text-gray-500">
                   Clear terminal
                 </button>
->>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
               </div>
 
               <div className="p-3 h-40 overflow-y-auto font-mono text-xs">
