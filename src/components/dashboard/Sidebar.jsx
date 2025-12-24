@@ -49,13 +49,13 @@ export default function Sidebar() {
     <>
       {/* TOP LOADING BAR */}
       {showLoading && (
-        <div className="fixed top-0 left-0 w-full h-[3px] bg-transparent z-50">
+        <div className="fixed top-0 left-0 w-full h-[8px] bg-transparent z-50">
           <div className="h-full bg-black dark:bg-white animate-loading-bar" />
         </div>
       )}
 
       {/* DESKTOP */}
-      <aside className="w-80 hidden md:flex flex-col justify-between bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-6">
+      <aside className="w-60 hidden md:flex flex-col justify-between dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-6 ">
         <div>
           {user && (
             <div className="flex items-center gap-3 mb-8">
@@ -75,7 +75,7 @@ export default function Sidebar() {
             </div>
           )}
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 ">
             <div onClick={triggerLoading}>
               <SidebarItem label="Build Website" to="/dashboard/build" icon={<Globe />} />
             </div>
