@@ -14,7 +14,7 @@ import { FaWhatsapp, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
-import GeminiAssistant from "../layouts/GeminiAssistant";
+// import GeminiAssistant from "../layouts/GeminiAssistant";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoreHorizontal } from "lucide-react";
 import { Dropdown, Menu } from "antd";
@@ -251,7 +251,7 @@ const Navbar = () => {
             <div className="hidden md:block cursor-pointer">
               <ThemeToggle />
             </div>
-<GeminiAssistant />
+            {/*<GeminiAssistant />*/} 
             {/* Mobile Hamburger */}
             <button
               className="md:hidden p-2 rounded-full border-amber-50"

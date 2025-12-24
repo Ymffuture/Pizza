@@ -118,7 +118,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-black p-5">
+    <div className="flex justify-center items-center dark:bg-black p-5">
       <div className="bg-white dark:bg-gray-900 w-full max-w-sm rounded-3xl p-6 shadow-xl border dark:border-gray-800">
         <h2 className="text-2xl text-center font-semibold mb-5 text-black dark:text-white">
           Welcome Back

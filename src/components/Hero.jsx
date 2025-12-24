@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FaCode, FaPalette } from "react-icons/fa";
 import { MdDevices } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
+import {Link} from "react-router-dom";
 //import Ai from "../layouts/GeminiAssistant" 
 const Hero = () => {
   const [heroImg, setHeroImg] = useState("");
@@ -98,7 +99,7 @@ const Hero = () => {
             whileHover={{ scale: 1.05 }}
             className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold rounded-full px-7 py-3 shadow-lg shadow-blue-500/20 w-full sm:w-auto"
           >
-            Get A Website
+            <Link to="/start-quiz" >Start Your Class</Link>
           </motion.button>
 
           <motion.button

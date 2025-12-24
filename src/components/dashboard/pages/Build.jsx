@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Code2, Palette, FileCode, Play, Download, Eye } from "lucide-react";
 import Editor from "@monaco-editor/react";
+<<<<<<< HEAD
 
 const defaultHTML = `<!-- index.html -->
 <h1 id="title">Hello from SwiftMeta Build</h1>
@@ -24,6 +25,11 @@ el?.addEventListener("click", () => {
   console.log("Title clicked!");
   alert("You clicked the title.");
 });`;
+=======
+import { defaultHTML, defaultCSS, defaultJS } from "./Playground";
+import { FiInfo, FiAlertTriangle, FiXCircle } from "react-icons/fi";
+import dayjs from "dayjs";
+>>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
 
 export default function Build() {
   const [html, setHtml] = useState(defaultHTML);
@@ -57,17 +63,37 @@ export default function Build() {
       `;
 
       return `
-        <!doctype html>
-        <html>
-        <head>
-          <style>${css}</style>
-        </head>
-        <body>
-          ${html}
-          <script>${js}</script>
-          ${bridge}
-        </body>
-        </html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              accent: '#0ea5a4',
+            },
+          },
+        },
+      }
+    </script>
+    <style>${css}</style>
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+${html}
+<script>
+      try {
+        ${js}
+      } catch (err) {
+        console.error(err);
+      }
+  </script> 
+${bridge} 
+  </body>
+</html>
       `;
     },
     []
@@ -91,9 +117,14 @@ export default function Build() {
   useEffect(() => {
     const handler = (e) => {
       if (!e.data?.__bridge) return;
-      setLogs((l) => [
-        ...l,
-        { id: Date.now() + Math.random(), type: e.data.type, text: e.data.args.join(" ") },
+      setLogs((prev) => [
+        ...prev,
+        {
+          id: Date.now() + Math.random(),
+          timestamp: Date.now(),
+          type: e.data.type,
+          text: e.data.args.join(" "),
+        },
       ]);
     };
     window.addEventListener("message", handler);
@@ -119,9 +150,24 @@ export default function Build() {
     a.href = url;
     a.download = "swiftmeta-playground.html";
     a.click();
+    URL.revokeObjectURL(url);
   };
 
   const clearLogs = () => setLogs([]);
+
+  const getIcon = (type) => {
+    if (type === "log") return <FiInfo className="text-blue-400 shrink-0" />;
+    if (type === "warn") return <FiAlertTriangle className="text-yellow-500 shrink-0" />;
+    if (type === "error") return <FiXCircle className="text-red-500 shrink-0" />;
+    return null;
+  };
+
+  const getTypeColor = (type) => {
+    if (type === "log") return "text-gray-900 dark:text-white";
+    if (type === "warn") return "text-yellow-500 bg-yellow-500/10";
+    if (type === "error") return "text-red-500 bg-red-500/10";
+    return "";
+  };
 
   const tabBtn = (id, label, Icon) => (
     <button
@@ -138,23 +184,49 @@ export default function Build() {
   );
 
   const editorOptions = {
-    minimap: { enabled: false },
-    scrollbar: { vertical: 'auto' },
-    wordWrap: 'on',
-    fontSize: 14,
-    lineNumbers: 'on',
-    automaticLayout: true,
-  };
+  minimap: { enabled: false },
+  scrollbar: { vertical: "auto" },
+  wordWrap: "on",
+  fontSize: 14,
+  lineHeight: 22,
+  lineNumbers: "on",
+  automaticLayout: true,
+
+  padding: { top: 12 },
+
+  cursorBlinking: "smooth",
+  cursorSmoothCaretAnimation: "on",
+
+  scrollBeyondLastLine: false,
+  smoothScrolling: true,
+
+  occurrencesHighlight: false,
+  selectionHighlight: false,
+  overviewRulerBorder: false,
+
+  quickSuggestions: {
+    other: true,
+    comments: false,
+    strings: true,
+  },
+  suggestOnTriggerCharacters: true,
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
       <div className="max-w-7xl mx-auto space-y-8">
-
-        <div className="justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">Build a Website and make it yours. </h1>
+            <h1 className="text-4xl font-semibold text-gray-600 dark:text-white">
+              Start building your website.
+            </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              HTML / CSS / JS Playground — SwiftMeta
+              HTML / CSS &{" "}
+              <span className="text-blue-600">
+                <a href="https://tailwindcss.com/docs/installation/using-vite">tailwindcss</a>
+              </span>{" "}
+              / JS Playground — SwiftMeta
             </p>
           </div>
 
@@ -165,7 +237,28 @@ export default function Build() {
                 checked={livePreview}
                 onChange={(e) => setLivePreview(e.target.checked)}
               />
-              🔴 Live Preview
+              <span className="animate-pulse">
+                
+                <svg width="12" height="12" viewBox="0 0 12 12">
+  <circle cx="6" cy="6" r="3" fill="#dc2626" />
+  <circle cx="6" cy="6" r="3" fill="none" stroke="#dc2626" stroke-width="1">
+    <animate
+      attributeName="r"
+      from="3"
+      to="6"
+      dur="1.5s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="opacity"
+      from="0.8"
+      to="0"
+      dur="1.5s"
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg>
+</span> Live Preview
             </label>
 
             <button
@@ -229,33 +322,55 @@ export default function Build() {
               <div className="px-4 py-2 bg-gray-200 dark:bg-white/10 flex items-center gap-2">
                 <Eye size={16} /> Live Preview
               </div>
-
-              <iframe ref={iframeRef} className="w-full h-80 bg-white dark:bg-black" />
+              <iframe ref={iframeRef} className="w-full h-96 bg-white" />
             </div>
 
             <div className="rounded-xl overflow-hidden border dark:border-white/10 bg-white/30 dark:bg-white/5">
               <div className="px-4 py-2 flex justify-between border-b dark:border-white/10">
+<<<<<<< HEAD
                 <span>Console</span>
                 <button onClick={clearLogs} className="text-xs text-gray-500">Close terminal</button>
+=======
+                <span>Terminal (console)</span>
+                <button onClick={clearLogs} className="text-xs text-gray-500">
+                  Clear terminal
+                </button>
+>>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
               </div>
 
               <div className="p-3 h-40 overflow-y-auto font-mono text-xs">
                 {logs.length === 0 ? (
-                  <p className="text-gray-400">No logs yet...</p>
+                  <p className="text-gray-300 dark:opacity-100 ">console.log("Hello swiftmeta")</p>
                 ) : (
+<<<<<<< HEAD
                   logs.map((l) => (
                     <p key={l.id} className="mb-1">
                       <b className="capitalize text-green-600">{l.type}:</b> {l.text}
                     </p>
                   ))
+=======
+                  logs.map((l) => {
+                    const timestamp = dayjs(l.timestamp).format("MMM D, YYYY HH:mm:ss");
+
+                    return (
+                      <p key={l.id} className={`mb-1 flex items-center gap-1 ${getTypeColor(l.type)}`} >
+                        <span className="text-gray-500 text-[8px] shrink-0">
+                          {timestamp}
+                        </span>
+                        {getIcon(l.type)}
+                        <span>{l.text}</span>
+                      </p>
+                    );
+                  })
+>>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
                 )}
               </div>
             </div>
           </div>
         </div>
 
-        <p className="text-xs text-gray-400">
-          Tip: Press <b>Ctrl/Cmd + Enter</b> to run your code.
+        <p className="text-xs text-gray-500">
+          Tip: Press <b className="rounded border border-gray-200 shadow-lg p-1" >Ctrl/Cmd + Enter</b> to run your code.
         </p>
       </div>
     </div>

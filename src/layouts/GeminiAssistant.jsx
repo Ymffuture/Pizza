@@ -1,14 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { Modal, Input, Button, Spin, Tooltip } from "antd";
-import { MessageCircle, Send, X } from "lucide-react";
+import { MessageCircle, Send, X, BotIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { toast} from "react-hot-toast";
-const { TextArea } = Input;
-import { BotIcon } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { MdMic, MdMicOff } from "react-icons/md";
+
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -16,45 +15,185 @@ const GeminiAssistant = () => {
   const [messages, setMessages] = useState([]);
   const chatEndRef = useRef(null);
 
+  const basePlaceholders = [
+    "Ask anything…",
+    "Explain this code",
+    "Generate an idea",
+    "Debug my issue",
+  ];
+
+  const contextualMap = {
+    code: [
+      "Optimize this code",
+      "Explain this function",
+      "Convert to TypeScript",
+    ],
+    explanation: [
+      "Give a real-world example",
+      "Simplify this explanation",
+      "Show best practices",
+    ],
+  };
+
+  const [placeholder, setPlaceholder] = useState("");
+  const [fade, setFade] = useState(true);
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [isListening, setIsListening] = useState(false);
+
+  const textareaRef = useRef(null);
+  const recognitionRef = useRef(null);
+
+  const getContextualPlaceholders = () => {
+    const lastAI = [...messages].reverse().find(m => m.sender === "ai");
+    if (!lastAI) return basePlaceholders;
+
+    if (lastAI.text.includes("```")) return contextualMap.code;
+    if (lastAI.text.length > 300) return contextualMap.explanation;
+
+    return basePlaceholders;
+  };
+
+  useEffect(() => {
+    if (msg || isListening) return;
+
+    const list = getContextualPlaceholders();
+
+    const interval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setPlaceholder(list[placeholderIndex % list.length]);
+        setPlaceholderIndex(i => i + 1);
+        setFade(true);
+      }, 300);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [msg, isListening, placeholderIndex, messages]);
+
+  const autoGrow = () => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = el.scrollHeight + "px";
+  };
+
+  const toggleVoice = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        toast.error("Speech recognition not supported");
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
+
+      recognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join("");
+        setMsg(transcript);
+      };
+
+      recognition.onerror = () => {
+        setIsListening(false);
+        setPlaceholder("Ask anything…");
+        toast.error("Voice recognition failed");
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+        setPlaceholder("Ask anything…");
+      };
+
+      recognition.start();
+      recognitionRef.current = recognition;
+    }
+    setIsListening(prev => !prev);
+  };
+
+  useEffect(() => {
+    setPlaceholder(isListening ? "Listening… Speak now" : "Ask anything…");
+  }, [isListening]);
+
+  // ... (rest of the code unchanged: connectionStrength hook, Loader, scrollToBottom, sendMessage, etc.)
+
+  const useConnectionStrength = () => {
+    const [strength, setStrength] = useState("Checking...");
+
+    useEffect(() => {
+      const conn =
+        navigator.connection ||
+        navigator.webkitConnection ||
+        navigator.mozConnection;
+
+      if (!conn) {
+        setStrength("Unknown");
+        return;
+      }
+
+      const evaluate = () => {
+        const speed = conn.downlink;
+        const type = conn.effectiveType;
+
+        let level = "Good";
+
+        if (speed < 1 || type === "2g" || type === "slow-2g") level = "Poor";
+        else if (speed < 3 || type === "3g") level = "Average";
+
+        setStrength(level);
+
+        if (level === "Poor") {
+          toast((t) => (
+            <span className="flex items-center justify-between gap-2 text-[10px]">
+              <span>
+                NETWORK: <b className="text-red-600">Your connection is weak. AI responses may be slow.</b>
+              </span>
+              <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
+                Close
+              </button>
+            </span>
+          ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+        }
+        if (level === "Good") {
+          toast((t) => (
+            <span className="flex items-center justify-between gap-2 text-[10px]">
+              <span>
+                NETWORK: <b className="text-green-600">Connected</b>
+              </span>
+              <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
+                Close
+              </button>
+            </span>
+          ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+        }
+      };
+
+      evaluate();
+      conn.addEventListener("change", evaluate);
+      return () => conn.removeEventListener("change", evaluate);
+    }, []);
+
+    return strength;
+  };
+
+  const connectionStrength = useConnectionStrength();
 
   const Loader = () => (
-  <div className="flex flex-col items-center justify-center bg-transparent">
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
-      className="animate-spin text-gray-300 dark:text-gray-700"
-    >
-      <circle
-        cx="50"
-        cy="50"
-        r="40"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-        strokeDasharray="250"
-        strokeDashoffset="190"
-      />
-      <circle cx="50" cy="50" r="10" fill="#00E5FF">
-        <animate
-          attributeName="r"
-          values="10;14;10"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-        <animate
-          attributeName="opacity"
-          values="1;0.6;1"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-      </circle>
-    </svg>
-
-  </div>
-);
+    <div className="flex items-center justify-center">
+      <svg width="30" height="30" viewBox="0 0 100 100" className="animate-spin text-gray-300 dark:text-gray-700">
+        <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="6" strokeLinecap="round" fill="none" strokeDasharray="250" strokeDashoffset="190" />
+        <circle cx="50" cy="50" r="10" fill="#00E5FF">
+          <animate attributeName="r" values="10;14;10" dur="1.6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0.6;1" dur="1.6s" repeatCount="indefinite" />
+        </circle>
+      </svg>
+    </div>
+  );
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -62,102 +201,37 @@ const GeminiAssistant = () => {
 
   useEffect(scrollToBottom, [messages, loading]);
 
-
-const useConnectionStrength = () => {
-  const [strength, setStrength] = useState("Checking...");
-
-  useEffect(() => {
-    const conn =
-      navigator.connection ||
-      navigator.webkitConnection ||
-      navigator.mozConnection;
-
-    if (!conn) {
-      setStrength("Unknown");
-      return;
-    }
-
-    const evaluate = () => {
-      const speed = conn.downlink; // Mbps
-      const type = conn.effectiveType; // 4g, 3g, etc.
-
-      let level = "Good";
-
-      if (speed < 1 || type === "2g" || type === "slow-2g") level = "Poor";
-      else if (speed < 3 || type === "3g") level = "Average";
-
-      setStrength(level);
-
-      if (level === "Poor") {
-        toast((t) => (
-  <span className="flex items-center justify-between gap-2 text-[10px]">
-    <span>
-      NETWORK: <b className="text-red-600" >Your connection is weak. AI responses may be slow.</b>
-    </span>
-
-    <button
-      onClick={() => toast.dismiss(t.id)}
-      className="px-2 py-1 text-xs rounded bg-white text-black font-medium"
-    >
-      Close
-    </button>
-  </span>
-), {
-  style: { background: "#000", color: "#fff", padding: "10px 14px" },
-});
-
-      }
-      if (level === "Good") {
-        toast((t) => (
-  <span className="flex items-center justify-between gap-2 text-[10px]">
-    <span>
-      NETWORK: <b className="text-green-600" >Connected</b>
-    </span>
-
-    <button
-      onClick={() => toast.dismiss(t.id)}
-      className="px-2 py-1 text-xs rounded bg-white text-black font-medium"
-    >
-      Close
-    </button>
-  </span>
-), {
-  style: { background: "#000", color: "#fff", padding: "10px 14px" },
-});
-
-      }
-    };
-
-    evaluate();
-    conn.addEventListener("change", evaluate);
-
-    return () => conn.removeEventListener("change", evaluate);
-  }, []);
-
-  return strength;
-};
-
- const connectionStrength = useConnectionStrength();
-  
   const sendMessage = async () => {
     if (!msg.trim()) return;
 
     const userMsg = { sender: "user", text: msg };
-    setMessages((prev) => [...prev, userMsg]);
-    setLoading(true);
+    setMessages((p) => [...p, userMsg]);
     setMsg("");
+    setLoading(true);
 
     try {
-      const res = await axios.post("https://swiftmeta.onrender.com/api/gemini", { prompt: msg });
-      const aiMsg = { sender: "ai", text: res.data.reply };
-      setMessages((prev) => [...prev, aiMsg]);
-    } catch (err) {
-      setMessages((prev) => [...prev, { sender: "ai", text: "Oops! Something went wrong. Try again" }]);
+      const res = await axios.post(
+        "https://swiftmeta.onrender.com/api/gemini",
+        { prompt: userMsg.text }
+      );
+      setMessages((p) => [...p, { sender: "ai", text: res.data.reply }]);
+    } catch {
+      setMessages((p) => [...p, { sender: "ai", text: "Something went wrong." }]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
+  if (!open) {
+    return (
+      <button onClick={() => setOpen(true)} className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-black text-white shadow-xl hover:scale-110 transition">
+        <BotIcon size={22} />
+      </button>
+    );
+  }
+
   return (
+<<<<<<< HEAD
     <>
       {/* Floating Chat Button */}
       {!open && (
@@ -172,147 +246,94 @@ const useConnectionStrength = () => {
           />
         </Tooltip>
       )}
+=======
+    <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
+      {/* HEADER unchanged */}
+      <header className="flex items-center justify-between px-5 py-3 backdrop-blur-xl bg-white/80 dark:bg-gray-900/70 border-b border-gray-200/70 dark:border-gray-800 sticky top-0 z-20">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-9 h-9 rounded-full bg-sky-500/10 text-sky-500">
+            <BotIcon size={20} />
+          </div>
+          <div className="leading-tight">
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">SwiftMeta</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">AI Assistant</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${connectionStrength === "Good" ? "bg-green-500/10 text-green-600 border-green-500/20" : connectionStrength === "Average" ? "bg-yellow-500/10 text-yellow-600 border-yellow-500/20" : "bg-red-500/10 text-red-600 border-red-500/20"}`}>
+            {connectionStrength}
+          </span>
+          <button onClick={() => setOpen(false)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <X size={18} className="text-gray-600 dark:text-gray-300" />
+          </button>
+        </div>
+      </header>
+>>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
 
-      {/* Chat Modal */}
-      <Modal
-        open={open}
-        onCancel={() => setOpen(false)}
-        footer={null}
-        closeIcon={<X size={10} />}
-        width={700}
-        style={{ top: 30, right: 20, position: "fixed", margin: 0, paddingBottom: 0 }}
-        bodyStyle={{ height: "600px", padding: "26px", display: "flex", flexDirection: "column" }}
-        title={
-  <div className="flex flex-col gap-1">
-    <div className="flex justify-between items-center">
-      <span className="text-blue-300 text-sm">SwiftMeta AI-Powered</span>
-      <Button type="text" icon={<X />} onClick={() => setOpen(false)} />
-    </div>
+      {/* MESSAGES unchanged */}
+      <main className="flex-1 overflow-y-auto px-4 py-6 space-my-4 dark:text-white">
+        {/* ... messages rendering unchanged ... */}
+        {messages.length === 0 && (
+          <div className="grid sm:grid-cols-2 gap-3 mt-10">
+            {["Explain React hooks", "Generate a website idea 💡 for business", "Write a nestjs snippet ", "Tips for learning AI"].map((p, i) => (
+              <button key={i} onClick={() => { setMsg(p); setTimeout(sendMessage, 200); }} className="border-gray-100 shadow-2xl rounded-xl p-4 text-sm hover:bg-gray-50 dark:hover:bg-gray-900">
+                {p}
+              </button>
+            ))}
+          </div>
+        )}
+        {messages.map((m, i) => (
+          <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow ${m.sender === "user" ? "bg-[#87CEEB] text-white dark:bg-blue-700 m-3" : "bg-gray-200 dark:bg-gray-700 dark:text-white"}`}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} className="prose prose-sm max-w-none dark:prose-invert" components={{
+                code({ inline, className, children }) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  return !inline && match ? (
+                    <SyntaxHighlighter style={coldarkCold} language={match[1]} PreTag="div">
+                      {String(children)}
+                    </SyntaxHighlighter>
+                  ) : (
+                    <code className="bg-gray-200 dark:bg-gray-700 px-2 rounded">{children}</code>
+                  );
+                },
+              }}>
+                {m.text}
+              </ReactMarkdown>
+            </div>
+          </div>
+        ))}
+        {loading && (
+          <div className="flex justify-start gap-2 items-center animate-pulse">
+            <Loader />
+          </div>
+        )}
+        <div ref={chatEndRef} />
+      </main>
 
-    {/* Connection Strength Display */}
-    <div
-      className={`text-xs font-semibold ${
-        connectionStrength === "Good"
-          ? "text-green-500"
-          : connectionStrength === "Average"
-          ? "text-yellow-500"
-          : "text-red-500"
-      }`}
-    >
-      Connection: {connectionStrength}
-    </div>
-  </div>
-}
+      {/* INPUT */}
+      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2 items-end">
+        <textarea
+          ref={textareaRef}
+          value={msg}
+          rows={1}
+          onChange={(e) => { setMsg(e.target.value); autoGrow(); }}
+          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+          placeholder={isListening ? "Listening… Speak now" : placeholder}
+          className={`flex-1 resize-none rounded-xl px-4 py-2 bg-transparent focus:outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-opacity duration-300 ${fade ? "opacity-100" : "opacity-0"}`}
+        />
 
-        className="rounded-xl overflow-hidden"
-      >
-        {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto pr-2 space-y-3">
-          
-{messages.length === 0 && (
-  <div className="grid grid-cols-2 gap-3 mt-6 px-2">
-    {[
-      "Explain React hooks",
-      "Generate a website idea",
-      "Write a Python snippet",
-      "Tips for learning AI"
-    ].map((prompt, idx) => (
-      <div
-        key={idx}
-        onClick={() => {
-          setMsg(prompt);
-          setTimeout(() => sendMessage(), 300); // slight delay to update input
-        }}
-        className="cursor-pointer bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow hover:shadow-lg transition hover:bg-blue-50 dark:hover:bg-gray-700"
-      >
-        <p className="text-gray-700 dark:text-gray-100 font-medium text-sm text-center">{prompt}</p>
-      </div>
-    ))}
-  </div>
-)}
-
-
-          
-          {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
-              <div
-                className={`max-w-[100%] rounded-2xl px-4 py-3 shadow ${
-                  m.sender === "user"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
-                }`}
-              >
-                <ReactMarkdown
-  remarkPlugins={[remarkGfm]}
-  className="prose prose-sm max-w-none dark:prose-invert break-words"
-  components={{
-    code({ inline, className, children, ...props }) {
-      const match = /language-(\w+)/.exec(className || "");
-
-      return !inline && match ? (
-        <SyntaxHighlighter
-          style={coldarkCold}
-          language={match[1]}
-          PreTag="div"
-          customStyle={{
-            borderRadius: "10px",
-            padding: "18px",
-            fontSize: "0.85rem",
-          }}
-          {...props}
+        <button
+          onClick={toggleVoice}
+          className={`p-3 rounded-xl transition ${isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-300 dark:bg-gray-700"}`}
         >
-          {String(children).replace(/\n$/, "")}
-        </SyntaxHighlighter>
-      ) : (
-        <code className="bg-gray-200 dark:bg-gray-700 px-1.5 py-0.5 rounded text-sm" {...props}>
-          {children}
-        </code>
-      );
-    },
-  }}
->
-  {m.text}
-</ReactMarkdown>
+          {isListening ? <MdMicOff size={20} /> : <MdMic size={20} />}
+        </button>
 
-              </div>
-            </div>
-          ))}
-
-          {loading && (
-            <div className="flex justify-start animation-fade">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl px-4 py-2 shadow-sm flex items-center gap-2">
-                <Loader />
-                <span className="text-gray-500 dark:text-gray-300 text-sm animate-pulse">Thinking...</span>
-              </div>
-            </div>
-          )}
-          <div ref={chatEndRef} />
-        </div>
-
-        {/* Input Area */}
-        <div className="flex gap-2 mt-4 pt-4">
-          <TextArea
-            value={msg}
-            onChange={(e) => setMsg(e.target.value)}
-            placeholder="Ask anything"
-            autoSize={{ minRows: 3, maxRows: 5 }}
-            onPressEnter={(e) => !e.shiftKey && (e.preventDefault(), sendMessage())}
-            className="rounded-lg border-gray-300 dark:border-gray-700 bg-gray-500"
-          />
-          <Tooltip title="Send Message">
-            <Button
-              type="primary"
-              shape="circle"
-              icon={<Send size={18} />}
-              onClick={sendMessage}
-              loading={loading}
-              size="large"
-            />
-          </Tooltip>
-        </div>
-      </Modal>
-      
-    </>
+        <button onClick={sendMessage} disabled={loading} className="p-3 rounded-xl bg-black text-white disabled:opacity-50">
+          <Send size={18} />
+        </button>
+      </footer>
+    </div>
   );
 };
 

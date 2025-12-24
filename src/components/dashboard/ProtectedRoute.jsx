@@ -58,7 +58,11 @@ export default function ProtectedRoute({ children }) {
       (_event, session) => {
         if (!session) {
           toast("You’ve been signed out", {
+<<<<<<< HEAD
             icon: "",
+=======
+            icon: "🔒",
+>>>>>>> a1f812244aa98a624e6dcfc663437e3bfa12c954
             id: "signed-out",
           });
           setStatus("unauthenticated");

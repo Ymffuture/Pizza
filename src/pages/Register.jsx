@@ -68,7 +68,7 @@ export default function Register() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 dark:bg-black p-5">
+    <div className="flex flex-col justify-center items-center bg-gray-100 dark:bg-black p-5">
       <div className="bg-white dark:bg-gray-900 w-full max-w-sm p-6 rounded-3xl shadow-xl">
         <h2 className="text-2xl font-semibold text-center mb-4 text-black dark:text-white">
           Create Account

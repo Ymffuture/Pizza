@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Input, Button, Spin } from "antd";
+import { X, Send } from "lucide-react";
 import { api } from "../api";
 import toast from "react-hot-toast";
-
-const { TextArea } = Input;
 
 export default function ViewPostModal({ postId, visible, onClose }) {
   const [post, setPost] = useState(null);
@@ -18,7 +16,6 @@ export default function ViewPostModal({ postId, visible, onClose }) {
   async function loadPost() {
     if (!postId) return;
     setLoading(true);
-
     try {
       const r = await api.get(`/posts/${postId}`);
       setPost(r.data);
@@ -36,12 +33,10 @@ export default function ViewPostModal({ postId, visible, onClose }) {
 
     try {
       const r = await api.post(`/posts/${postId}/comments`, { text });
-
       setPost(prev => ({
         ...prev,
-        comments: [...(prev?.comments || []), r.data]
+        comments: [...(prev?.comments || []), r.data],
       }));
-
       setText("");
     } catch {
       toast.error("Failed to comment");
@@ -49,125 +44,113 @@ export default function ViewPostModal({ postId, visible, onClose }) {
       setCommenting(false);
     }
   }
-const Loader = () => (
-  <div className="flex flex-col items-center justify-center bg-transparent">
-    <svg
-      width="60"
-      height="60"
-      viewBox="0 0 100 100"
-      xmlns="http://www.w3.org/2000/svg"
-      className="animate-spin text-gray-300 dark:text-gray-700"
-    >
-      <circle
-        cx="50"
-        cy="50"
-        r="40"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-        strokeDasharray="250"
-        strokeDashoffset="180"
-      />
-      <circle cx="50" cy="50" r="10" fill="#00E5FF">
-        <animate
-          attributeName="r"
-          values="10;14;10"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-        <animate
-          attributeName="opacity"
-          values="1;0.6;1"
-          dur="1.6s"
-          repeatCount="indefinite"
-        />
-      </circle>
-    </svg>
-    <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide animate-fadeIn">
-      Loading comments...
-    </p>
-  </div>
-);
-  
+
+  if (!visible) return null;
+
   return (
-    <Modal
-      title={post?.title || "Post"}
-      open={visible}
-      onCancel={onClose}
-      footer={null}
-      width={600}
-      centered
-    >
-      {loading ? (
-        <div className="text-center py-10 animate-pulse">
-          <Loader />
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-xl flex flex-col overflow-hidden">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-gray-800">
+          <h2 className="text-lg font-semibold truncate">
+            {post?.title || "Post"}
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          >
+            <X size={18} />
+          </button>
         </div>
-      ) : (
-        <>
-          {/* POST BODY */}
-          <p className="mb-4 opacity-80 whitespace-pre-line">
-            {post.body}
-          </p>
 
-          {/* POST IMAGES */}
-          {Array.isArray(post.images) && post.images.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-5">
-              {post.images.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  className="w-full rounded-xl object-cover min-h-[150px]"
-                  onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/err.jpg")}
-                  alt="post media"
-                />
-              ))}
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+          {loading ? (
+            <div className="flex justify-center py-16 text-gray-500">
+              Loading post...
             </div>
-          )}
+          ) : (
+            <>
+              {/* Body */}
+              <p className="whitespace-pre-line text-gray-800 dark:text-gray-200">
+                {post.body}
+              </p>
 
-          <hr className="my-4" />
+              {/* Images */}
+              {Array.isArray(post.images) && post.images.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {post.images.map((img, i) => (
+                    <img
+                      key={i}
+                      src={img}
+                      alt="post"
+                      className="rounded-xl object-cover w-full max-h-80"
+                      onError={e =>
+                        (e.currentTarget.src =
+                          "https://swiftmeta.vercel.app/err.jpg")
+                      }
+                    />
+                  ))}
+                </div>
+              )}
 
-          {/* COMMENTS */}
-          <h3 className="text-lg font-bold mb-2">Comments</h3>
+              {/* Comments */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
+                <h3 className="font-semibold mb-3">Comments</h3>
 
-          {/* COMMENT INPUT */}
-          <div className="flex items-center gap-2 mb-3">
-            <Input
-              placeholder="Write a comment..."
-              value={text}
-              onChange={e => setText(e.target.value)}
-              disabled={commenting}
-              allowClear
-            />
-            <Button
-              type="primary"
-              onClick={sendComment}
-              loading={commenting}
-              disabled={!text.trim()}
-            >
-              Send
-            </Button>
-          </div>
-
-          {/* COMMENT LIST */}
-          <div className="space-y-3 max-h-64 overflow-y-auto">
-            {(post.comments || []).map(c => (
-              <div key={c._id} className="flex gap-2 items-start">
-                <img
-                  src={c.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
-                  className="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-700"
-                  onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/err.jpg")}
-                  alt="avatar"
-                />
-                <div className="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-xl text-sm">
-                  <b className="block text-[12px]">{c.author?.name || "User"}</b>
-                  <p>{c.text}</p>
+                <div className="space-y-3">
+                  {(post.comments || []).map(c => (
+                    <div key={c._id} className="flex gap-2">
+                      <img
+                        src={
+                          c.author?.avatar ||
+                          "https://swiftmeta.vercel.app/pp.jpeg"
+                        }
+                        className="w-8 h-8 rounded-full object-cover"
+                        alt="avatar"
+                      />
+                      <div className="bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-2xl text-sm max-w-[85%]">
+                        <p className="font-semibold text-xs mb-0.5">
+                          {c.author?.name || "User"}
+                        </p>
+                        <p className="leading-snug">{c.text}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
+            </>
+          )}
+        </div>
+
+        {/* Comment Input (Sticky like Facebook) */}
+        {!loading && (
+          <div className="border-t border-gray-200 dark:border-gray-800 px-4 py-3 flex gap-2">
+            <input
+              value={text}
+              onChange={e => setText(e.target.value)}
+              placeholder="Write a comment..."
+              disabled={commenting}
+              className="flex-1 px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              onClick={sendComment}
+              disabled={!text.trim() || commenting}
+              className="p-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-40 transition"
+            >
+              <Send size={16} />
+            </button>
           </div>
-        </>
-      )}
-    </Modal>
+        )}
+      </div>
+    </div>
   );
 }

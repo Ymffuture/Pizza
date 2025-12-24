@@ -64,19 +64,19 @@ export default function Pricing() {
   return (
     <div className="text-gray-900 dark:text-white mx-auto w-full">
 
-      {/* Hero 
+      {/* Hero */} 
       <header className="text-center space-y-4 mb-8">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">SwiftMeta</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">Blog</h1>
         <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
-          Explore our plans, features, and smart website-building tools.
+          Explore our plans, features, and share smart website-building tools.
         </p>
-      </header>*/} 
+      </header>
 
       {/* Nav */}
       <nav className="bg-white/70 dark:bg-gray-900/60 backdrop-blur-2xl border border-gray-200 dark:border-gray-800 p-3 sm:p-4 rounded-2xl shadow-md flex justify-between items-center">
 
         <Link to="/" className="text-lg font-semibold hover:opacity-80">
-          SwiftMeta Blog
+          Back to Home
         </Link>
 
         {/* Desktop */}
