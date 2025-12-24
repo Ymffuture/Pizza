@@ -1,44 +1,110 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Preconnect to key third-party origins (improves performance) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Favicon (Vite logo → SwiftMeta logo) -->
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" href="/vite.svg" type="image/png" sizes="96x96" />
+    <!-- DNS Prefetch for faster resource loading -->
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com" />
+
+    <!-- Favicon Set (Modern formats + fallback) -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Primary Meta Tags -->
-    <title>SwiftMeta – Your Website Done in Seconds</title>
-    <meta name="description" content="SwiftMeta instantly creates stunning, professional websites in seconds – no coding required." />
-<meta name="google-site-verification" content="xXWElQQdEb1YSMqAy524N-B58KqSZqsf5zc0O8fWg3A" />
-  <meta name="google-adsense-account" content="ca-pub-2722864790738174" />
-    <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="SwiftMeta – Your Website Done in Seconds" />
-    <meta property="og:description" content="Instant professional websites. Powered by AI. Launch in seconds." />
-    <meta property="og:image" content="https://swiftmeta.vercel.app/vite.svg" />
-    <meta property="og:url" content="https://swiftmeta.vercel.app" />
+    <title>SwiftMeta – Instant AI-Powered Professional Websites</title>
+    <meta name="description" content="SwiftMeta uses AI to generate stunning, fully functional professional websites in seconds — no coding required." />
+
+    <!-- Verification & Analytics -->
+    <meta name="google-site-verification" content="xXWElQQdEb1YSMqAy524N-B58KqSZqsf5zc0O8fWg3A" />
+    <meta name="google-adsense-account" content="ca-pub-2722864790738174" />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="SwiftMeta" />
+    <meta property="og:title" content="SwiftMeta – Your Professional Website in Seconds" />
+    <meta property="og:description" content="Launch a beautiful, responsive website instantly with AI. No code, no hassle." />
+    <meta property="og:url" content="https://swiftmeta.vercel.app" />
+    <meta property="og:image" content="https://swiftmeta.vercel.app/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="SwiftMeta – AI-powered instant website builder" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SwiftMeta – Your Website Done in Seconds" />
-    <meta name="twitter:description" content="Instant professional websites. Powered by AI." />
-    <meta name="twitter:image" content="https://swiftmeta.vercel.app/vite.svg" />
+    <meta name="twitter:title" content="SwiftMeta – Instant AI-Powered Websites" />
+    <meta name="twitter:description" content="Create professional websites in seconds with the power of AI." />
+    <meta name="twitter:image" content="https://swiftmeta.vercel.app/og-image.jpg" />
+    <meta name="twitter:image:alt" content="SwiftMeta preview – fast, beautiful websites" />
+    <meta name="twitter:site" content="@yourtwitterhandle" /> <!-- Optional: replace if you have one -->
 
-    <!-- Theme Color (blue-500 ≈ #3B82F6) -->
-    <meta name="theme-color" content="#3B82F6" />
-    <meta name="msapplication-TileColor" content="#3B82F6" />
+    <!-- Theme & UI -->
+    <meta name="theme-color" content="#0ea5a4" /> <!-- Using your custom accent -->
+    <meta name="msapplication-TileColor" content="#0ea5a4" />
 
-    <!-- Manifest -->
-    <link rel="manifest" href="/site.webmanifest" />
+    <!-- Structured Data (JSON-LD) - Helps search engines understand your site -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "SwiftMeta",
+        "url": "https://swiftmeta.vercel.app",
+        "description": "AI-powered instant website builder",
+        "publisher": {
+          "@type": "Organization",
+          "name": "SwiftMeta",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://swiftmeta.vercel.app/logo.png"
+          }
+        }
+      }
+    </script>
+
+    <!-- Tailwind CDN with custom config (only for dev/prototyping) -->
+    <!-- In production, consider building Tailwind locally for better performance -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              accent: '#0ea5a4',
+              primary: '#0ea5a4',
+              'accent-dark': '#08918f',
+            },
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            },
+          },
+        },
+        plugins: [],
+      };
+    </script>
+
+    <!-- Optional: Preload critical assets (e.g., hero font or logo) -->
+    <link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossorigin />
   </head>
-  <body class="bg-gray-50 text-gray-900">
+
+  <body class="bg-gray-50 text-gray-900 antialiased min-h-screen">
+    <!-- Root for React hydration -->
     <div id="root"></div>
+
+    <!-- Vite module entry -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Optional: Analytics (e.g., Google Analytics, Plausible, etc.) -->
+    <!-- Example with Plausible (privacy-friendly) -->
+    <script defer data-domain="swiftmeta.vercel.app" src="https://plausible.io/js/script.js"></script>
+
+    <!-- Optional: Performance monitoring (e.g., Sentry) -->
+    <script src="https://browser.sentry-cdn.com/.../bundle.min.js" crossorigin="anonymous"></script>
   </body>
 </html>

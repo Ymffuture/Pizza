@@ -7,6 +7,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-hot-toast";
 import { MdMic, MdMicOff } from "react-icons/md";
+import { Copy } from "lucide-react";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -42,6 +43,11 @@ const GeminiAssistant = () => {
 
   const textareaRef = useRef(null);
   const recognitionRef = useRef(null);
+  
+const copyAll = (text) => {
+  navigator.clipboard.writeText(text);
+  toast.success("Response copied!");
+};
 
   const getContextualPlaceholders = () => {
     const lastAI = [...messages].reverse().find(m => m.sender === "ai");
@@ -224,8 +230,8 @@ const GeminiAssistant = () => {
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-black text-white shadow-xl hover:scale-110 transition">
-        <BotIcon size={22} />
+      <button onClick={() => setOpen(true)} className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-[#212024] text-gray-200 shadow-xl hover:scale-110 transition">
+        <BotIcon size={35} />
       </button>
     );
   }
@@ -265,26 +271,56 @@ const GeminiAssistant = () => {
             ))}
           </div>
         )}
-        {messages.map((m, i) => (
-          <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow ${m.sender === "user" ? "bg-[#87CEEB] text-white dark:bg-blue-700 m-3" : "bg-gray-200 dark:bg-gray-700 dark:text-white"}`}>
-              <ReactMarkdown remarkPlugins={[remarkGfm]} className="prose prose-sm max-w-none dark:prose-invert" components={{
-                code({ inline, className, children }) {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline && match ? (
-                    <SyntaxHighlighter style={coldarkCold} language={match[1]} PreTag="div">
-                      {String(children)}
-                    </SyntaxHighlighter>
-                  ) : (
-                    <code className="bg-gray-200 dark:bg-gray-700 px-2 rounded">{children}</code>
-                  );
-                },
-              }}>
-                {m.text}
-              </ReactMarkdown>
-            </div>
-          </div>
-        ))}
+      {messages.map((m, i) => (
+  <div
+    key={i}
+    className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}
+  >
+    <div
+      className={`relative max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow ${
+        m.sender === "user"
+          ? "bg-[#87CEEB] text-white dark:bg-blue-700 m-3"
+          : "bg-gray-200 dark:bg-gray-700 dark:text-white"
+      }`}
+    >
+      {/* COPY FULL MESSAGE (AI ONLY) */}
+      {m.sender === "ai" && (
+        <button
+          onClick={() => copyAll(m.text)}
+          className="absolute top-2 right-2 opacity-0 hover:opacity-100 group-hover:opacity-100 transition bg-black/70 text-white p-1.5 rounded-lg"
+        >
+          <Copy size={16} />
+        </button>
+      )}
+
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        className="prose prose-sm max-w-none dark:prose-invert"
+        components={{
+          code({ inline, className, children }) {
+            const match = /language-(\w+)/.exec(className || "");
+            return !inline && match ? (
+              <SyntaxHighlighter
+                style={coldarkCold}
+                language={match[1]}
+                PreTag="div"
+              >
+                {String(children)}
+              </SyntaxHighlighter>
+            ) : (
+              <code className="bg-gray-300 dark:bg-gray-600 px-1 rounded">
+                {children}
+              </code>
+            );
+          },
+        }}
+      >
+        {m.text}
+      </ReactMarkdown>
+    </div>
+  </div>
+))}
+
         {loading && (
           <div className="flex justify-start gap-2 items-center animate-pulse">
             <Loader />
