@@ -5,7 +5,13 @@ import { Helmet } from "react-helmet";
 import { Mail, Lock, User, Image } from "lucide-react";
 import { FaGoogle, FaGithub, FaApple } from "react-icons/fa";
 import toast from "react-hot-toast";
-
+import {
+  FiCheckCircle,
+  FiMail,
+  FiXCircle,
+  FiArrowLeft,
+  FiArrowRight,
+} from "react-icons/fi";
 const DEFAULT_AVATAR = "https://filebank.vercel.app/pp.jpeg";
 
 export default function SignIn_Up() {
@@ -174,8 +180,8 @@ export default function SignIn_Up() {
         <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-m p-6">
 
           {error && (
-            <div className="mb-4 text-sm text-red-600 bg-red-500/10 rounded-md px-3 py-2">
-              {error}
+            <div className="mb-4 text-sm text-red-600 bg-red-500/10 rounded-md px-3 py-2 gap-2 flex items-center">
+             <FiXCircle/> {error}
             </div>
           )}
 
@@ -271,13 +277,13 @@ export default function SignIn_Up() {
                 <span className="flex-1 h-px bg-gray-300" />
               </div>
 
-              <div className="space-y-3 dark:text-white">
+              <div className="space-y-3 dark:text-white border-none">
                 <SocialButton
                   icon={<FaGoogle />}
                   label="Continue with Google"
                   loading={socialLoading === "google"}
                   onClick={() => loginWithProvider("google")}
-                  className="w-full h-11 flex items-center justify-center gap-2 rounded-md bg-red-500 text-white text-sm font-medium hover:bg-neutral-800 transition"
+                  className="w-full h-11 flex items-center justify-center gap-2 rounded-md bg-red-500 text-white text-sm font-medium hover:bg-neutral-800 transition border-none"
                 />
 
                 <SocialButton
