@@ -203,7 +203,7 @@ const completed = progress === 100;
         {/* Progress */}
 <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
   <span>
-    Question {currentIndex + 1} / {total}
+    Question {currentIndex + 1} of {total}
   </span>
 
   <div className="flex items-center gap-2">
