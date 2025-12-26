@@ -9,10 +9,10 @@ export default function DashboardLayout() {
         <Sidebar />
 
         <main className="flex-1 p-6">
-          {/* <ProtectedRoute>
-     
-    </ProtectedRoute> */}
-           <Outlet />
+          <ProtectedRoute>
+      <Outlet />
+    </ProtectedRoute>
+          
         </main>
       </div>
     </div>
