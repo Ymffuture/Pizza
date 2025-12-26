@@ -230,8 +230,8 @@ const copyAll = (text) => {
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="fixed bottom-10 -right-6 z-50 p-2 rounded border-l-8 border-t-4 border-t-purple-400 border-b-4 border-b-purple-400 border-l-purple-800  bg-purple-800 text-gray-100  dark:bg-purple-800 shadow-xl hover:scale-40 transition">
-        <BotIcon size={35} />
+      <button onClick={() => setOpen(true)} className="fixed bottom-10 -right-6 z-50 p-2 rounded-full border-l-8 border-t-4 border-t-purple-400 border-b-4 border-b-purple-400 border-l-purple-800  bg-purple-800 text-gray-100  dark:bg-purple-800 shadow-xl hover:scale-100 transition">
+        <BotIcon size={35} className='right-3'/>
       </button>
     );
   }

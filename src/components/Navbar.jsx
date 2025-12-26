@@ -301,7 +301,7 @@ const Navbar = () => {
               {/* HEADER */}
               <div className="flex items-center justify-between mb-4">
                 {/* <GeminiAssistant /> */}
-                {/* <h2 className="text-xl text-blue-500 dark:text-gray-400">SwiftMeta AI</h2> */}
+                <h2 className="text-xl text-blue-500 dark:text-gray-400">Menu</h2>
                 <button
                   className="p-2 dark:text-gray-400"
                   onClick={() => setMenuOpen(false)}

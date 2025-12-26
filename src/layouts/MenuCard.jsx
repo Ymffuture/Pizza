@@ -45,7 +45,7 @@ const MenuCard = ({ name, price, tag, image, description }) => {
           <div className="flex justify-between items-center mt-4">
             <button
               onClick={() => setInfoOpen(true)}
-              className="text-blue-600 text-[40px] p-2 hover:scale-110 transition cursor-pointer"
+              className="text-blue-600 text-[20px] p-2 hover:scale-110 transition cursor-pointer"
               aria-label="More information"
             >
               <IoInformationCircleOutline />
@@ -54,7 +54,7 @@ const MenuCard = ({ name, price, tag, image, description }) => {
 
             <button
               onClick={() => setPayOpen(true)}
-              className="flex items-center gap-2 text-sm font-medium  border-blue-500 border-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition cursor-pointer"
+              className="flex items-center gap-2 text-sm font-medium  px-4 py-2 rounded-lg hover:bg-gray-100 transition cursor-pointer hover:bg-gray-300"
             >
               {/* <FaCoffee /> */}
               Buy
