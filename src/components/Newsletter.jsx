@@ -1,213 +1,279 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useReducer,
+  useTransition,
+  useCallback,
+  useId,
+  useMemo,
+} from "react";
 import emailjs from "@emailjs/browser";
-import { toast } from "react-hot-toast";
 
-const Newsletter = () => {
-  const [loading, setLoading] = useState(false);
-  const [cooldown, setCooldown] = useState(0);
+/* ----------------------------------
+   STATE MANAGEMENT (useReducer)
+----------------------------------- */
 
-  const [form, setForm] = useState({
+const initialState = {
+  form: {
     name: "",
     email: "",
     message: "",
-  });
+  },
+  status: "idle", // idle | loading | success | error
+  message: "",
+  cooldown: 0,
+};
 
-  // ---------------------------
-  // COOLDOWN INIT
-  // ---------------------------
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_FIELD":
+      return {
+        ...state,
+        form: { ...state.form, [action.field]: action.value },
+      };
+
+    case "LOADING":
+      return { ...state, status: "loading", message: "" };
+
+    case "SUCCESS":
+      return {
+        ...state,
+        status: "success",
+        message: action.message,
+        form: initialState.form,
+      };
+
+    case "ERROR":
+      return { ...state, status: "error", message: action.message };
+
+    case "SET_COOLDOWN":
+      return { ...state, cooldown: action.value };
+
+    case "TICK":
+      return { ...state, cooldown: Math.max(0, state.cooldown - 1) };
+
+    default:
+      return state;
+  }
+}
+
+/* ----------------------------------
+   COMPONENT
+----------------------------------- */
+
+export default function Newsletter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [isPending, startTransition] = useTransition();
+
+  const { form, status, message, cooldown } = state;
+
+  /* ----------------------------------
+     COOLDOWN INIT
+  ----------------------------------- */
   useEffect(() => {
     const lastSent = localStorage.getItem("newsletter_last_sent");
-    if (lastSent) {
-      const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
-      const remaining = 7200 - diff;
-      if (remaining > 0) setCooldown(remaining);
-    }
+    if (!lastSent) return;
+
+    const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
+    const remaining = 7200 - diff;
+    if (remaining > 0) dispatch({ type: "SET_COOLDOWN", value: remaining });
   }, []);
 
-  // ---------------------------
-  // COOLDOWN TICK
-  // ---------------------------
+  /* ----------------------------------
+     COOLDOWN TICK
+  ----------------------------------- */
   useEffect(() => {
     if (cooldown <= 0) return;
-    const timer = setInterval(() => setCooldown((c) => c - 1), 1000);
+    const timer = setInterval(() => dispatch({ type: "TICK" }), 1000);
     return () => clearInterval(timer);
   }, [cooldown]);
 
-  const formatTime = (sec) => {
-    const h = Math.floor(sec / 3600);
-    const m = Math.floor((sec % 3600) / 60);
-    const s = sec % 60;
-    return `${h}h ${m}m ${s}s`;
-  };
+  /* ----------------------------------
+     HANDLERS
+  ----------------------------------- */
 
-  // ---------------------------
-  // SUBMIT
-  // ---------------------------
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (cooldown > 0) return;
+  const updateField = useCallback((field, value) => {
+    dispatch({ type: "SET_FIELD", field, value });
+  }, []);
 
-    if (!form.name || !form.email || !form.message) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (cooldown > 0) return;
 
-    setLoading(true);
+      if (!form.name || !form.email || !form.message) {
+        dispatch({
+          type: "ERROR",
+          message: "Please fill in all fields.",
+        });
+        return;
+      }
 
-    try {
-      await emailjs.send(
-        "service_kw38oux",
-        "template_etyg50k",
-        {
-          from_name: form.name,
-          from_email: form.email,
-          message: form.message,
-        },
-        "IolitXztFVvhZg6PX"
-      );
+      dispatch({ type: "LOADING" });
 
-      toast.success("Message sent successfully");
-      setForm({ name: "", email: "", message: "" });
-      localStorage.setItem("newsletter_last_sent", Date.now().toString());
-      setCooldown(7200);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to send message");
-    } finally {
-      setLoading(false);
-    }
-  };
+      startTransition(async () => {
+        try {
+          await emailjs.send(
+            "service_kw38oux",
+            "template_etyg50k",
+            {
+              from_name: form.name,
+              from_email: form.email,
+              message: form.message,
+            },
+            "IolitXztFVvhZg6PX"
+          );
+
+          localStorage.setItem(
+            "newsletter_last_sent",
+            Date.now().toString()
+          );
+
+          dispatch({
+            type: "SUCCESS",
+            message: "Message sent successfully. Thank you!",
+          });
+
+          dispatch({ type: "SET_COOLDOWN", value: 7200 });
+        } catch (err) {
+          console.error(err);
+          dispatch({
+            type: "ERROR",
+            message: "Failed to send message. Please try again later.",
+          });
+        }
+      });
+    },
+    [form, cooldown]
+  );
+
+  /* ----------------------------------
+     DERIVED UI
+  ----------------------------------- */
+
+  const buttonText = useMemo(() => {
+    if (status === "loading" || isPending) return "Sending…";
+    if (cooldown > 0) return `Wait ${formatTime(cooldown)}`;
+    return "Send Message";
+  }, [status, cooldown, isPending]);
+
+  /* ----------------------------------
+     RENDER
+  ----------------------------------- */
 
   return (
     <section className="bg-[#f5f5f7] dark:bg-black py-24">
-      <div
-        className="
-          max-w-3xl mx-auto px-8 py-16
-          rounded-[32px]
-          bg-white/70 dark:bg-white/5
-          backdrop-blur-xl
-          border border-black/5 dark:border-white/10
-          shadow-[0_10px_40px_rgba(0,0,0,0.08)]
-        "
-      >
+      <div className="max-w-3xl mx-auto px-8 py-16 rounded-[32px] bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-lg">
         {/* HEADER */}
-        <div className="text-center mb-14">
-          <p className="text-sm font-semibold tracking-widest uppercase text-blue-500 mb-3">
+        <header className="text-center mb-10">
+          <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">
             Newsletter
           </p>
-
-          <h2 className="text-4xl md:text-5xl font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
             Stay Inspired
           </h2>
+        </header>
 
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-xl mx-auto">
-            Thoughtful updates, insights, and resources — delivered occasionally.
-          </p>
-        </div>
+        {/* STATUS MESSAGE */}
+        {message && (
+          <div
+            role="alert"
+            aria-live="polite"
+            className={`mb-6 rounded-xl px-4 py-3 text-sm font-medium ${
+              status === "success"
+                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+            }`}
+          >
+            {message}
+          </div>
+        )}
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* NAME */}
           <InputField
             label="Full Name"
-            placeholder="John Appleseed"
             value={form.name}
-            onChange={(v) => setForm({ ...form, name: v })}
+            onChange={(v) => updateField("name", v)}
+            placeholder="John Appleseed"
           />
 
-          {/* EMAIL */}
           <InputField
             label="Email Address"
             type="email"
-            placeholder="you@icloud.com"
             value={form.email}
-            onChange={(v) => setForm({ ...form, email: v })}
+            onChange={(v) => updateField("email", v)}
+            placeholder="you@icloud.com"
           />
 
-          {/* MESSAGE */}
           <TextareaField
             label="Message"
-            placeholder="Write something thoughtful…"
             value={form.message}
-            onChange={(v) => setForm({ ...form, message: v })}
+            onChange={(v) => updateField("message", v)}
+            placeholder="Write something thoughtful…"
           />
 
-          {/* BUTTON */}
           <button
             type="submit"
-            disabled={loading || cooldown > 0}
-            className={`
-              w-full h-12 rounded-2xl text-lg font-medium
-              transition-all duration-300
-              ${
-                cooldown > 0
-                  ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500"
-              }
-              text-white
-              focus:outline-none focus:ring-4 focus:ring-blue-500/30
-            `}
+            disabled={status === "loading" || cooldown > 0}
+            className="w-full h-12 rounded-2xl text-lg font-medium bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white transition focus:outline-none focus:ring-4 focus:ring-blue-500/30"
           >
-            {loading
-              ? "Sending…"
-              : cooldown > 0
-              ? `Wait ${formatTime(cooldown)}`
-              : "Send Message"}
+            {buttonText}
           </button>
         </form>
       </div>
     </section>
   );
-};
+}
 
 /* ----------------------------------
-   REUSABLE INPUTS (Apple-style)
+   REUSABLE INPUTS (Accessible)
 ----------------------------------- */
 
-const InputField = ({ label, type = "text", value, onChange, placeholder }) => (
-  <div className="space-y-2">
-    <label className="text-sm font-medium text-gray-800 dark:text-gray-200">
-      {label}
-    </label>
-    <input
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="
-        w-full h-12 px-4 rounded-2xl
-        bg-white/80 dark:bg-white/5
-        border border-black/10 dark:border-white/10
-        text-gray-900 dark:text-white
-        placeholder:text-gray-400
-        focus:outline-none focus:ring-4 focus:ring-blue-500/20
-        transition
-      "
-    />
-  </div>
-);
+function InputField({ label, type = "text", value, onChange, placeholder }) {
+  const id = useId();
+  return (
+    <div className="space-y-2">
+      <label htmlFor={id} className="text-sm font-medium">
+        {label}
+      </label>
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full h-12 px-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 focus:ring-4 focus:ring-blue-500/20 outline-none"
+      />
+    </div>
+  );
+}
 
-const TextareaField = ({ label, value, onChange, placeholder }) => (
-  <div className="space-y-2">
-    <label className="text-sm font-medium text-gray-800 dark:text-gray-200">
-      {label}
-    </label>
-    <textarea
-      rows={5}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className="
-        w-full px-4 py-3 rounded-2xl
-        bg-white/80 dark:bg-white/5
-        border border-black/10 dark:border-white/10
-        text-gray-900 dark:text-white
-        placeholder:text-gray-400
-        focus:outline-none focus:ring-4 focus:ring-blue-500/20
-        transition
-      "
-    />
-  </div>
-);
+function TextareaField({ label, value, onChange, placeholder }) {
+  const id = useId();
+  return (
+    <div className="space-y-2">
+      <label htmlFor={id} className="text-sm font-medium">
+        {label}
+      </label>
+      <textarea
+        id={id}
+        rows={5}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 focus:ring-4 focus:ring-blue-500/20 outline-none"
+      />
+    </div>
+  );
+}
 
-export default Newsletter;
+/* ----------------------------------
+   UTILS
+----------------------------------- */
+
+function formatTime(sec) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  return `${h}h ${m}m ${s}s`;
+}
