@@ -5,8 +5,34 @@ import React, {
   useCallback,
   useId,
   useMemo,
+  useDeferredValue,
+  useRef,
+  useSyncExternalStore,
+  Suspense,
+  memo,
 } from "react";
 import emailjs from "@emailjs/browser";
+
+/* ----------------------------------
+   useFormStatus (client polyfill)
+----------------------------------- */
+function useFormStatus(status) {
+  return {
+    pending: status === "loading",
+  };
+}
+
+/* ----------------------------------
+   LOCAL STORAGE STORE (Correct sync)
+----------------------------------- */
+function subscribe(callback) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function getSnapshot() {
+  return localStorage.getItem("newsletter_last_sent");
+}
 
 /* ----------------------------------
    STATE MANAGEMENT (useReducer)
@@ -18,7 +44,7 @@ const initialState = {
     email: "",
     message: "",
   },
-  status: "idle", // idle | loading | success | error
+  status: "idle",
   message: "",
   cooldown: 0,
 };
@@ -30,10 +56,8 @@ function reducer(state, action) {
         ...state,
         form: { ...state.form, [action.field]: action.value },
       };
-
     case "LOADING":
       return { ...state, status: "loading", message: "" };
-
     case "SUCCESS":
       return {
         ...state,
@@ -41,16 +65,12 @@ function reducer(state, action) {
         message: action.message,
         form: initialState.form,
       };
-
     case "ERROR":
       return { ...state, status: "error", message: action.message };
-
     case "SET_COOLDOWN":
       return { ...state, cooldown: action.value };
-
     case "TICK":
       return { ...state, cooldown: Math.max(0, state.cooldown - 1) };
-
     default:
       return state;
   }
@@ -63,29 +83,37 @@ function reducer(state, action) {
 export default function Newsletter() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isPending, startTransition] = useTransition();
+  const { pending } = useFormStatus(state.status);
 
-  const { form, status, message, cooldown } = state;
+  const abortRef = useRef(null);
+  const emailKeyRef = useRef("IolitXztFVvhZg6PX");
+
+  const deferredForm = {
+    name: useDeferredValue(state.form.name),
+    email: useDeferredValue(state.form.email),
+    message: useDeferredValue(state.form.message),
+  };
+
+  const lastSent = useSyncExternalStore(subscribe, getSnapshot);
 
   /* ----------------------------------
-     COOLDOWN INIT
+     COOLDOWN INIT (sync-safe)
   ----------------------------------- */
   useEffect(() => {
-    const lastSent = localStorage.getItem("newsletter_last_sent");
     if (!lastSent) return;
-
     const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
     const remaining = 7200 - diff;
     if (remaining > 0) dispatch({ type: "SET_COOLDOWN", value: remaining });
-  }, []);
+  }, [lastSent]);
 
   /* ----------------------------------
      COOLDOWN TICK
   ----------------------------------- */
   useEffect(() => {
-    if (cooldown <= 0) return;
+    if (state.cooldown <= 0) return;
     const timer = setInterval(() => dispatch({ type: "TICK" }), 1000);
     return () => clearInterval(timer);
-  }, [cooldown]);
+  }, [state.cooldown]);
 
   /* ----------------------------------
      HANDLERS
@@ -98,29 +126,33 @@ export default function Newsletter() {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      if (cooldown > 0) return;
+      if (state.cooldown > 0) return;
 
-      if (!form.name || !form.email || !form.message) {
-        dispatch({
-          type: "ERROR",
-          message: "Please fill in all fields.",
-        });
+      if (!state.form.name || !state.form.email || !state.form.message) {
+        dispatch({ type: "ERROR", message: "Please fill in all fields." });
         return;
       }
 
       dispatch({ type: "LOADING" });
 
+      abortRef.current?.abort();
+      abortRef.current = new AbortController();
+
       startTransition(async () => {
         try {
+          if (!navigator.onLine) {
+            localStorage.setItem(
+              "newsletter_offline_queue",
+              JSON.stringify(state.form)
+            );
+            throw new Error("Offline");
+          }
+
           await emailjs.send(
             "service_kw38oux",
             "template_etyg50k",
-            {
-              from_name: form.name,
-              from_email: form.email,
-              message: form.message,
-            },
-            "IolitXztFVvhZg6PX"
+            deferredForm,
+            emailKeyRef.current
           );
 
           localStorage.setItem(
@@ -135,15 +167,17 @@ export default function Newsletter() {
 
           dispatch({ type: "SET_COOLDOWN", value: 7200 });
         } catch (err) {
-          console.error(err);
           dispatch({
             type: "ERROR",
-            message: "Failed to send message. Please try again later.",
+            message:
+              err.message === "Offline"
+                ? "Offline — message queued."
+                : "Failed to send message.",
           });
         }
       });
     },
-    [form, cooldown]
+    [state.form, state.cooldown, deferredForm]
   );
 
   /* ----------------------------------
@@ -151,124 +185,84 @@ export default function Newsletter() {
   ----------------------------------- */
 
   const buttonText = useMemo(() => {
-    if (status === "loading" || isPending) return "Sending…";
-    if (cooldown > 0) return `Wait ${formatTime(cooldown)}`;
+    if (pending || isPending) return "Sending…";
+    if (state.cooldown > 0) return `Wait ${formatTime(state.cooldown)}`;
     return "Send Message";
-  }, [status, cooldown, isPending]);
+  }, [pending, isPending, state.cooldown]);
 
   /* ----------------------------------
      RENDER
   ----------------------------------- */
 
   return (
-    <section className="bg-[#f5f5f7] dark:bg-black py-24">
-      <div className="max-w-3xl mx-auto px-8 py-16 rounded-[32px] bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-lg">
-        {/* HEADER */}
-        <header className="text-center mb-10">
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">
-            Newsletter
-          </p>
-          <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
-            Stay Inspired
-          </h2>
-        </header>
+    <Suspense fallback={<div className="text-center py-20">Loading…</div>}>
+      <section className="bg-[#f5f5f7] dark:bg-black py-24">
+        <div className="max-w-3xl mx-auto px-8 py-16 rounded-[32px] bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-lg">
+          <header className="text-center mb-10">
+            <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">
+              Newsletter
+            </p>
+            <h2 className="text-4xl font-semibold">Stay Inspired</h2>
+            <p className="text-gray-600 mt-2">
+              Thoughtful updates — delivered occasionally.
+            </p>
+          </header>
 
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-xl mx-auto">
-            Thoughtful updates, insights, and resources — delivered occasionally.
-          </p>
-        {/* STATUS MESSAGE */}
-        {message && (
-          <div
-            role="alert"
-            aria-live="polite"
-            className={`mb-6 rounded-xl px-4 py-3 text-sm font-medium ${
-              status === "success"
-                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-            }`}
-          >
-            {message}
-          </div>
-        )}
+          {state.message && (
+            <div
+              role="alert"
+              className={`mb-6 rounded-xl px-4 py-3 ${
+                state.status === "success"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {state.message}
+            </div>
+          )}
 
-        {/* FORM */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <InputField
-            label="Full Name"
-            value={form.name}
-            onChange={(v) => updateField("name", v)}
-            placeholder="John Appleseed"
-          />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <MemoInputField
+              label="Full Name"
+              value={state.form.name}
+              onChange={(v) => updateField("name", v)}
+              placeholder="John Appleseed"
+            />
 
-          <InputField
-            label="Email Address"
-            type="email"
-            value={form.email}
-            onChange={(v) => updateField("email", v)}
-            placeholder="you@icloud.com"
-          />
+            <MemoInputField
+              label="Email Address"
+              type="email"
+              value={state.form.email}
+              onChange={(v) => updateField("email", v)}
+              placeholder="you@icloud.com"
+            />
 
-          <TextareaField
-            label="Message"
-            value={form.message}
-            onChange={(v) => updateField("message", v)}
-            placeholder="Write something thoughtful…"
-          />
+            <MemoTextareaField
+              label="Message"
+              value={state.form.message}
+              onChange={(v) => updateField("message", v)}
+              placeholder="Write something thoughtful…"
+            />
 
-          <button
-            type="submit"
-            disabled={status === "loading" || cooldown > 0}
-            className="w-full h-12 rounded-2xl text-lg font-medium bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white transition focus:outline-none focus:ring-4 focus:ring-blue-500/30"
-          >
-            {buttonText}
-          </button>
-        </form>
-      </div>
-    </section>
+            <button
+              disabled={pending || state.cooldown > 0}
+              className="w-full h-12 rounded-2xl bg-blue-600 text-white"
+            >
+              {buttonText}
+            </button>
+          </form>
+        </div>
+      </section>
+    </Suspense>
   );
 }
 
 /* ----------------------------------
-   REUSABLE INPUTS (Accessible)
+   MEMOIZED INPUTS
 ----------------------------------- */
 
-function InputField({ label, type = "text", value, onChange, placeholder }) {
-  const id = useId();
-  return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium">
-        {label}
-      </label>
-      <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full h-12 px-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 focus:ring-4 focus:ring-blue-500/20 outline-none"
-      />
-    </div>
-  );
-}
-
-function TextareaField({ label, value, onChange, placeholder }) {
-  const id = useId();
-  return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium">
-        {label}
-      </label>
-      <textarea
-        id={id}
-        rows={5}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 focus:ring-4 focus:ring-blue-500/20 outline-none"
-      />
-    </div>
-  );
-}
+const MemoInputField = memo(InputField);
+const MemoTextareaField = memo(TextareaField);
 
 /* ----------------------------------
    UTILS
