@@ -123,8 +123,16 @@ export default function Newsletter() {
       e.preventDefault();
       if (cooldown > 0) return;
 
-      if (!form.name || !form.email || !form.message) {
-        dispatch({ type: "ERROR", message: "Please fill in all fields." });
+      if (!form.name) {
+        dispatch({ type: "ERROR", message: "Please fill in the name fields." });
+        return;
+      }
+      if (!form.email) {
+        dispatch({ type: "ERROR", message: "Please fill in the email fields." });
+        return;
+      }
+      if (!form.message) {
+        dispatch({ type: "ERROR", message: "Please fill in the message fields." });
         return;
       }
 
