@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import emailjs from "@emailjs/browser";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, AlertCircle } from "lucide-react"; // Optional: use lucide-react for nice icons
+import { CheckCircle, AlertCircle } from "lucide-react";
 
 /* ----------------------------------
    STATE MANAGEMENT (useReducer)
@@ -20,7 +20,7 @@ const initialState = {
     email: "",
     message: "",
   },
-  status: "idle", // idle | loading | success | error
+  status: "idle",
   message: "",
   cooldown: 0,
 };
@@ -28,14 +28,9 @@ const initialState = {
 function reducer(state, action) {
   switch (action.type) {
     case "SET_FIELD":
-      return {
-        ...state,
-        form: { ...state.form, [action.field]: action.value },
-      };
-
+      return { ...state, form: { ...state.form, [action.field]: action.value } };
     case "LOADING":
       return { ...state, status: "loading", message: "" };
-
     case "SUCCESS":
       return {
         ...state,
@@ -43,19 +38,43 @@ function reducer(state, action) {
         message: action.message,
         form: initialState.form,
       };
-
     case "ERROR":
       return { ...state, status: "error", message: action.message };
-
     case "SET_COOLDOWN":
       return { ...state, cooldown: action.value };
-
     case "TICK":
       return { ...state, cooldown: Math.max(0, state.cooldown - 1) };
-
     default:
       return state;
   }
+}
+
+/* ----------------------------------
+   SVG LOADER (Accessible)
+----------------------------------- */
+function Spinner() {
+  return (
+    <svg
+      className="h-5 w-5 animate-spin text-white"
+      viewBox="0 0 24 24"
+      aria-hidden
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+        fill="none"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      />
+    </svg>
+  );
 }
 
 /* ----------------------------------
@@ -68,7 +87,6 @@ export default function Newsletter() {
 
   const { form, status, message, cooldown } = state;
 
-  // Check if user has started typing
   const hasTyped = form.name || form.email || form.message;
   const showTypingWarning = hasTyped || cooldown > 0;
 
@@ -78,9 +96,8 @@ export default function Newsletter() {
   useEffect(() => {
     const lastSent = localStorage.getItem("newsletter_last_sent");
     if (!lastSent) return;
-
     const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
-    const remaining = 7200 - diff;
+    const remaining = 7200/2 - diff;
     if (remaining > 0) dispatch({ type: "SET_COOLDOWN", value: remaining });
   }, []);
 
@@ -107,10 +124,7 @@ export default function Newsletter() {
       if (cooldown > 0) return;
 
       if (!form.name || !form.email || !form.message) {
-        dispatch({
-          type: "ERROR",
-          message: "Please fill in all fields.",
-        });
+        dispatch({ type: "ERROR", message: "Please fill in all fields." });
         return;
       }
 
@@ -136,9 +150,8 @@ export default function Newsletter() {
             message: "Message sent successfully. Thank you!",
           });
 
-          dispatch({ type: "SET_COOLDOWN", value: 7200 });
-        } catch (err) {
-          console.error(err);
+          dispatch({ type: "SET_COOLDOWN", value: 7200/2 });
+        } catch {
           dispatch({
             type: "ERROR",
             message: "Failed to send message. Please try again later.",
@@ -154,7 +167,7 @@ export default function Newsletter() {
   ----------------------------------- */
 
   const buttonText = useMemo(() => {
-    if (status === "loading" || isPending) return "Sending…";
+    if (status === "loading" || isPending) return "Sending";
     if (cooldown > 0) return `Wait ${formatTime(cooldown)}`;
     return "Send Message";
   }, [status, cooldown, isPending]);
@@ -166,66 +179,51 @@ export default function Newsletter() {
   return (
     <section className="bg-[#f5f5f7] dark:bg-black py-24">
       <div className="max-w-3xl mx-auto px-8 py-16 rounded-[32px] bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-lg">
-        {/* HEADER */}
         <header className="text-center mb-10">
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-500">
+          <p className="text-sm font-semibold uppercase tracking-widest text-purple-500">
             Newsletter
           </p>
           <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
             Stay Inspired
           </h2>
-
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-xl mx-auto">
-            Thoughtful updates, insights, and resources — delivered occasionally.
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
+            Thoughtful updates — delivered occasionally.
           </p>
         </header>
 
-        {/* Typing / Cooldown Warning */}
         <AnimatePresence>
           {showTypingWarning && (
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm font-medium flex items-center gap-2"
+              exit={{ opacity: 0, y: -8 }}
+              className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 flex gap-2"
             >
               <AlertCircle size={18} />
-              <span>
-                You have only <strong>one submission every 2 hours</strong>.
-                {cooldown > 0 && ` Please wait ${formatTime(cooldown)}.`}
-              </span>
+              One submission every 1 hours
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* STATUS MESSAGE with animation and icon */}
         <AnimatePresence mode="wait">
           {message && (
             <motion.div
-              key={status} // forces re-animation on status change
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.3 }}
-              role="alert"
-              aria-live="polite"
-              className={`mb-6 rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-2 ${
+              key={status}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className={`mb-6 rounded-xl px-4 py-3 flex gap-2 ${
                 status === "success"
                   ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                   : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
               }`}
             >
-              {status === "success" ? (
-                <CheckCircle size={18} />
-              ) : (
-                <AlertCircle size={18} />
-              )}
+              {status === "success" ? <CheckCircle /> : <AlertCircle />}
               {message}
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <InputField
             label="Full Name"
@@ -233,7 +231,6 @@ export default function Newsletter() {
             onChange={(v) => updateField("name", v)}
             placeholder="John Appleseed"
           />
-
           <InputField
             label="Email Address"
             type="email"
@@ -241,7 +238,6 @@ export default function Newsletter() {
             onChange={(v) => updateField("email", v)}
             placeholder="you@icloud.com"
           />
-
           <TextareaField
             label="Message"
             value={form.message}
@@ -252,8 +248,10 @@ export default function Newsletter() {
           <button
             type="submit"
             disabled={status === "loading" || cooldown > 0}
-            className="w-full h-12 rounded-2xl text-lg font-medium bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white transition focus:outline-none focus:ring-4 focus:ring-blue-500/30"
+            aria-busy={status === "loading"}
+            className="w-full h-12 rounded-2xl text-lg font-medium bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 disabled:bg-gray-400 text-white transition flex items-center justify-center gap-2"
           >
+            {(status === "loading" || isPending) && <Spinner />}
             {buttonText}
           </button>
         </form>
@@ -279,7 +277,15 @@ function InputField({ label, type = "text", value, onChange, placeholder }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full h-12 px-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 focus:ring-4 focus:ring-blue-500/20 outline-none transition"
+        className="
+          w-full h-12 px-4 rounded-2xl
+          border border-black/10 dark:border-white/10
+          bg-white/80 dark:bg-white/5
+          text-gray-900 dark:text-white
+          placeholder:text-purple-400 dark:placeholder:text-purple-500
+          focus:ring-4 focus:ring-purple-500/30
+          outline-none transition
+        "
       />
     </div>
   );
@@ -298,7 +304,15 @@ function TextareaField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 focus:ring-4 focus:ring-blue-500/20 outline-none transition resize-none"
+        className="
+          w-full px-4 py-3 rounded-2xl
+          border border-black/10 dark:border-white/10
+          bg-white/80 dark:bg-white/5
+          text-gray-900 dark:text-white
+          placeholder:text-purple-400 dark:placeholder:text-purple-500
+          focus:ring-4 focus:ring-purple-500/30
+          outline-none transition resize-none
+        "
       />
     </div>
   );
