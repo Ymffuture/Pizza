@@ -173,6 +173,9 @@ export default function Newsletter() {
           </h2>
         </header>
 
+          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-xl mx-auto">
+            Thoughtful updates, insights, and resources — delivered occasionally.
+          </p>
         {/* STATUS MESSAGE */}
         {message && (
           <div
