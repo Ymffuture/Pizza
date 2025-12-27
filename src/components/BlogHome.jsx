@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Heart, Trash2, Pencil, MoreHorizontal, Send } from "lucide-react";
-import { Dropdown } from "antd";
+import { Tooltip, Dropdown } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { api } from "../api";
 import toast from "react-hot-toast";
@@ -121,24 +121,62 @@ const Loader = () => (
           <article key={post._id} className="bg-white dark:bg-black/60 rounded-3xl shadow-lg border border-gray-200 dark:border-gray-800 mb-5 p-5 transition-all hover:shadow-xl mx-auto">
 
             {/* AUTHOR + MENU */}
-            <div className="flex justify-between items-start mb-3">
-              <div className="flex items-center gap-3">
-                <img
-                  src={post.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
-                  onError={e => (e.currentTarget.src = "https://swiftmeta.vercel.app/err.jpg")}
-                  alt="author"
-                  className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-700"
-                />
-                <div>
-                  <p className="text-sm font-semibold flex gap-2">{post.author?.name || "Anonymous"} <BsPatchCheckFill className="text-blue-600 dark:text-white" /></p> 
-                  <time className="text-[10px] opacity-60">{new Date(post.createdAt).toLocaleString()}</time>
-                </div>
-              </div>
+            
+<div className="flex justify-between items-start mb-3">
+  {/* LEFT: Avatar + Meta */}
+  <div className="flex items-start gap-3">
+    {/* Avatar */}
+    <img
+      src={post.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
+      onError={(e) =>
+        (e.currentTarget.src = "https://swiftmeta.vercel.app/err.jpg")
+      }
+      alt="author"
+      className="w-12 h-12 rounded-full object-cover cursor-pointer hover:opacity-90 transition"
+    />
 
-              <Dropdown overlay={menu(post)} trigger={["click"]} placement="bottomRight">
-                <MoreHorizontal size={24} className="cursor-pointer hover:opacity-70 transition"/>
-              </Dropdown>
-            </div>
+    {/* Name & time */}
+    <div className="leading-tight">
+      {/* Name row */}
+      <div className="flex items-center gap-1">
+        <span className="text-sm font-semibold hover:underline cursor-pointer">
+          {post.author?.name || "Anonymous"}
+        </span>
+
+        {/* Verified badge */}
+        <BsPatchCheckFill className="text-blue-500 text-sm" />
+      </div>
+
+      {/* Username + time */}
+      <div className="flex items-center gap-1 text-xs text-gray-500">
+        <span>@{post.author?.username || "user"}</span>
+        <span>·</span>
+
+        {/* Tooltip for exact time */}
+        <Tooltip
+          title={new Date(post.createdAt).toLocaleString()}
+          placement="bottom"
+        >
+          <time className="cursor-pointer hover:underline">
+            {formatRelativeTime(post.createdAt)}
+          </time>
+        </Tooltip>
+      </div>
+    </div>
+  </div>
+
+  {/* RIGHT: More menu */}
+  <Dropdown
+    overlay={menu(post)}
+    trigger={["click"]}
+    placement="bottomRight"
+  >
+    <div className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition">
+      <MoreHorizontal size={18} />
+    </div>
+  </Dropdown>
+</div>
+
 
             {/* POST CONTENT */}
             <h2
@@ -506,3 +544,13 @@ function CommentBox({ postId, onCommentUpdate }) {
     </section>
   );
 }
+
+function formatRelativeTime(date) {
+  const diff = Math.floor((Date.now() - new Date(date)) / 1000);
+
+  if (diff < 60) return `${diff}s`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+  return `${Math.floor(diff / 86400)}d`;
+}
+
