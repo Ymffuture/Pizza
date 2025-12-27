@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import emailjs from "@emailjs/browser";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, AlertCircle, Clock, AlertTriangle } from "lucide-react";
+import { CheckCircle, AlertCircle } from "lucide-react"; // Optional: use lucide-react for nice icons
 
 /* ----------------------------------
    STATE MANAGEMENT (useReducer)
@@ -23,7 +23,6 @@ const initialState = {
   status: "idle", // idle | loading | success | error
   message: "",
   cooldown: 0,
-  hasTyped: false, // Track if user has started typing
 };
 
 function reducer(state, action) {
@@ -32,7 +31,6 @@ function reducer(state, action) {
       return {
         ...state,
         form: { ...state.form, [action.field]: action.value },
-        hasTyped: true,
       };
 
     case "LOADING":
@@ -44,7 +42,6 @@ function reducer(state, action) {
         status: "success",
         message: action.message,
         form: initialState.form,
-        hasTyped: false,
       };
 
     case "ERROR":
@@ -55,9 +52,6 @@ function reducer(state, action) {
 
     case "TICK":
       return { ...state, cooldown: Math.max(0, state.cooldown - 1) };
-
-    case "RESET_TYPED":
-      return { ...state, hasTyped: false };
 
     default:
       return state;
@@ -72,7 +66,11 @@ export default function Newsletter() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isPending, startTransition] = useTransition();
 
-  const { form, status, message, cooldown, hasTyped } = state;
+  const { form, status, message, cooldown } = state;
+
+  // Check if user has started typing
+  const hasTyped = form.name || form.email || form.message;
+  const showTypingWarning = hasTyped || cooldown > 0;
 
   /* ----------------------------------
      COOLDOWN INIT
@@ -161,9 +159,6 @@ export default function Newsletter() {
     return "Send Message";
   }, [status, cooldown, isPending]);
 
-  // Show warning only when typing AND cooldown is active (meaning next send will trigger 2hr wait)
-  const showTypingWarning = hasTyped && cooldown === 0;
-
   /* ----------------------------------
      RENDER
   ----------------------------------- */
@@ -179,39 +174,38 @@ export default function Newsletter() {
           <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
             Stay Inspired
           </h2>
+
           <p className="text-gray-600 dark:text-gray-400 text-lg max-w-xl mx-auto">
             Thoughtful updates, insights, and resources — delivered occasionally.
           </p>
         </header>
 
-        {/* WARNING: Appears when user starts typing (before first submission) */}
+        {/* Typing / Cooldown Warning */}
         <AnimatePresence>
           {showTypingWarning && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              role="alert"
-              className="mb-6 rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-2 bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
+              className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm font-medium flex items-center gap-2"
             >
-              <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+              <AlertCircle size={18} />
               <span>
-                You have <strong>one submission</strong> now. After sending, you'll need to wait{" "}
-                <strong>2 hours</strong> before sending again.
+                You have only <strong>one submission every 2 hours</strong>.
+                {cooldown > 0 && ` Please wait ${formatTime(cooldown)}.`}
               </span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* STATUS MESSAGE (success / error) */}
+        {/* STATUS MESSAGE with animation and icon */}
         <AnimatePresence mode="wait">
           {message && (
             <motion.div
-              key={message} // Ensures exit animation triggers on change
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              key={status} // forces re-animation on status change
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.3 }}
               role="alert"
               aria-live="polite"
@@ -222,22 +216,14 @@ export default function Newsletter() {
               }`}
             >
               {status === "success" ? (
-                <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                <CheckCircle size={18} />
               ) : (
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <AlertCircle size={18} />
               )}
-              <span>{message}</span>
+              {message}
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* COOLDOWN DISPLAY */}
-        {cooldown > 0 && (
-          <div className="mb-6 rounded-xl px-4 py-3 text-sm font-medium flex items-center gap-2 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-            <Clock className="w-5 h-5 flex-shrink-0" />
-            <span>Next submission available in {formatTime(cooldown)}</span>
-          </div>
-        )}
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -266,17 +252,9 @@ export default function Newsletter() {
           <button
             type="submit"
             disabled={status === "loading" || cooldown > 0}
-            className="w-full h-12 rounded-2xl text-lg font-medium bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white transition focus:outline-none focus:ring-4 focus:ring-blue-500/30 flex items-center justify-center gap-2"
+            className="w-full h-12 rounded-2xl text-lg font-medium bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white transition focus:outline-none focus:ring-4 focus:ring-blue-500/30"
           >
-            {status === "loading" || isPending ? (
-              <>
-                <span className="animate-spin">⟳</span> Sending…
-              </>
-            ) : cooldown > 0 ? (
-              `Wait ${formatTime(cooldown)}`
-            ) : (
-              "Send Message"
-            )}
+            {buttonText}
           </button>
         </form>
       </div>
@@ -330,9 +308,9 @@ function TextareaField({ label, value, onChange, placeholder }) {
    UTILS
 ----------------------------------- */
 
-function formatTime(sec: number): string {
+function formatTime(sec) {
   const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);
   const s = sec % 60;
-  return `${h > 0 ? `${h}h ` : ""}${m}m ${s}s`;
+  return `${h ? h + "h " : ""}${m}m ${s}s`;
 }
