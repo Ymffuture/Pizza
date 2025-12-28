@@ -105,7 +105,7 @@ export default function Feed() {
   role="progressbar"
   aria-busy="true"
 >
-  <!-- Track -->
+  
   <rect
     x="0"
     y="9"
@@ -114,7 +114,7 @@ export default function Feed() {
     fill="#e0e0e0"
   />
 
-  <!-- Bar 1 -->
+  
   <rect y="9" height="2" fill="#1a73e8">
     <animate
       attributeName="x"
@@ -136,7 +136,7 @@ export default function Feed() {
     />
   </rect>
 
-  <!-- Bar 2 -->
+  
   <rect y="9" height="2" fill="#1a73e8" opacity="0.6">
     <animate
       attributeName="x"
