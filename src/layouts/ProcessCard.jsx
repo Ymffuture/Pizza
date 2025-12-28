@@ -1,9 +1,9 @@
 import React from "react";
 
-const ProcessCard = ({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) => {
+const ProcessCard = ({ icon, title, desc }) => {
   return (
-    <div className="group relative p-1 rounded-3xl"> {/* Wrapper for glowing border */}
-      {/* Animated Glowing Border + Outer Glow */}
+    <div className="group relative p-1 rounded-3xl">
+      {/* Outer soft glow */}
       <div
         className="absolute inset-0 rounded-3xl opacity-70 blur-xl pointer-events-none"
         style={{
@@ -13,6 +13,7 @@ const ProcessCard = ({ icon, title, desc }: { icon: React.ReactNode; title: stri
         }}
       />
 
+      {/* Sharp colorful border (using mask to show only the border area) */}
       <div
         className="absolute inset-0 rounded-3xl"
         style={{
@@ -25,42 +26,28 @@ const ProcessCard = ({ icon, title, desc }: { icon: React.ReactNode; title: stri
         }}
       />
 
-      {/* Main Card Content (your original glassmorphic card) */}
+      {/* Main card content - your original glassmorphic style */}
       <div
         className="
-          relative 
-          h-full 
-          p-8 
-          rounded-3xl 
-          bg-white/60 
-          dark:bg-white/5 
-          backdrop-blur-xl 
-          border border-gray-200/60 
-          dark:border-white/10 
+          relative h-full p-8 rounded-3xl
+          bg-white/60 dark:bg-white/5
+          backdrop-blur-xl
+          border border-gray-200/60 dark:border-white/10
           shadow-[0_8px_30px_rgb(0,0,0,0.06)]
           group-hover:shadow-[0_12px_45px_rgb(0,0,0,0.12)]
-          transition-all 
-          duration-500 
-          group-hover:-translate-y-1 
-          group-hover:scale-[1.02]
+          transition-all duration-500
+          group-hover:-translate-y-1 group-hover:scale-[1.02]
         "
       >
-        {/* ICON */}
+        {/* Icon container */}
         <div className="w-full flex items-center justify-center mb-6">
           <div
             className="
-              p-6 
-              rounded-2xl 
-              bg-gradient-to-br 
-              from-blue-500/10 
-              to-purple-500/10 
-              dark:from-blue-400/10 
-              dark:to-purple-400/10 
-              group-hover:from-blue-500/20 
-              group-hover:to-purple-500/20
-              transition-all 
-              duration-500 
-              shadow-inner
+              p-6 rounded-2xl
+              bg-gradient-to-br from-blue-500/10 to-purple-500/10
+              dark:from-blue-400/10 dark:to-purple-400/10
+              group-hover:from-blue-500/20 group-hover:to-purple-500/20
+              transition-all duration-500 shadow-inner
             "
           >
             {icon}
@@ -68,16 +55,7 @@ const ProcessCard = ({ icon, title, desc }: { icon: React.ReactNode; title: stri
         </div>
 
         {/* Title */}
-        <h3
-          className="
-            text-2xl 
-            font-semibold 
-            text-gray-900 
-            dark:text-gray-100 
-            tracking-tight 
-            mb-2
-          "
-        >
+        <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight mb-2">
           {title}
         </h3>
 
