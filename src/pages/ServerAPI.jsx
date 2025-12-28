@@ -37,7 +37,7 @@ function CopyButton({ text }) {
     <button
       onClick={onCopy}
       aria-label="Copy code"
-      className="inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs bg-gray-100 dark:bg-white/6 hover:bg-gray-200 dark:hover:bg-white/8 transition"
+      className="inline-flex items-center gap-2 px-3 py-1 text-white rounded-md text-xs bg-gray-100 dark:bg-white/6 hover:bg-gray-200 dark:hover:bg-white/8 transition"
     >
       <Copy size={14} />
       {copied ? "Copied" : "Copy"}
@@ -129,7 +129,7 @@ app.listen(5000, () => console.log("Server running on port 5000"));
   );
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black py-12 px-6">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black py-12 px-6 dark:text-white">
       <Helmet>
         <title>Server & API Services | SwiftMeta</title>
         <meta
