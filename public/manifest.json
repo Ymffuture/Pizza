@@ -1,47 +1,71 @@
 {
-  "name": "SwiftMeta",
+  "name": "SwiftMeta — Secure File Platform",
   "short_name": "SwiftMeta",
-  "start_url": ".",
+  "description": "SwiftMeta is a secure, fast file sharing and storage platform with modern APIs, automation, and AI-powered workflows.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000",
-  "background_color": "gray",
-  "description": "Secure, fast file sharing & storage powered by AI.",
   "orientation": "portrait-primary",
+  "theme_color": "#0ea5e9",
+  "background_color": "#0b0f14",
+  "categories": ["productivity", "developer", "cloud", "storage"],
+  "lang": "en",
+  "dir": "ltr",
+
   "icons": [
     {
-      "src": "/vite.svg",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/vite.svg",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ], 
-  
-  "shortcuts": [
-  {
-    "name": "Upload Files",
-    "short_name": "Upload",
-    "description": "Quickly upload new files",
-    "url": "/upload",
-    "icons": [{ "src": "/Branded.svg", "sizes": "96x96", "type": "image/png" }]
-  },
-  {
-    "name": "My Files",
-    "short_name": "Files",
-    "description": "Access your stored files",
-    "url": "/files",
-    "icons": [{ "src": "/vite.svg", "sizes": "96x96", "type": "image/png" }]
-  },
-  {
-    "name": "Profile",
-    "short_name": "Profile",
-    "description": "View your profile",
-    "url": "/profile",
-    "icons": [{ "src": "/vite.svg", "sizes": "96x96", "type": "image/png" }]
-  }
-]
+  ],
 
+  "shortcuts": [
+    {
+      "name": "Upload Files",
+      "short_name": "Upload",
+      "description": "Upload new files securely",
+      "url": "/upload",
+      "icons": [
+        {
+          "src": "/icons/upload-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "My Files",
+      "short_name": "Files",
+      "description": "View and manage your stored files",
+      "url": "/files",
+      "icons": [
+        {
+          "src": "/icons/files-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "short_name": "Profile",
+      "description": "View account and security settings",
+      "url": "/profile",
+      "icons": [
+        {
+          "src": "/icons/profile-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
 }
