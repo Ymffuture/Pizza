@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 const Loader = () => (
   <div className="flex flex-col items-center justify-center min-h-screen">
     <svg
-    <svg
   viewBox="0 0 100 100"
   xmlns="http://www.w3.org/2000/svg"
   width="64"
