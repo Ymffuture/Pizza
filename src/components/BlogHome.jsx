@@ -112,7 +112,7 @@ const Loader = () => (
   </circle>
 
   
-  <circle cx="25" cy="25" r="4" fill="#1a73e8">
+  <circle cx="50" cy="50" r="8" fill="#1a73e8">
     <animate
       attributeName="r"
       values="8;12;8"
