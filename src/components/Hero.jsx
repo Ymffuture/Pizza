@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaCode, FaPalette, FaHtml5, FaJsSquare, FaReact } from "react-icons/fa";
+import { 
+  FaNodeJs, FaPython, FaGitAlt, FaDatabase, FaCss3Alt, FaLaptopCode, 
+  FaAngular, FaVuejs, FaDocker, FaPhp 
+} from "react-icons/fa";
+import { MdDevices, MdSecurity } from "react-icons/md";
+import { SiNextdotjs, SiTailwindcss } from "react-icons/si";
+
 import { MdDevices } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -54,11 +60,22 @@ const Hero = () => {
       min-h-[90vh] flex flex-col-reverse lg:flex-row items-center justify-center
       px-4 md:px-10 lg:px-16 gap-14 pt-24 transition-colors duration-300 relative overflow-hidden">
 
-      {/* Floating code icons in background */}
-      <FaCode className="absolute text-blue-500/20 text-6xl top-10 left-5 animate-bounce-slow" />
-      <FaJsSquare className="absolute text-yellow-400/20 text-6xl top-1/2 left-1/4 animate-spin-slow" />
-      <FaReact className="absolute text-cyan-400/20 text-7xl bottom-10 right-10 animate-pulse-slow" />
-      <FaHtml5 className="absolute text-red-400/20 text-6xl bottom-20 left-20 animate-bounce-slow" />
+<FaNodeJs className="absolute text-green-500/20 text-6xl top-10 right-20 animate-bounce-slow" />
+<FaPython className="absolute text-blue-400/20 text-6xl bottom-1/4 left-5 animate-spin-slow" />
+<FaGitAlt className="absolute text-red-500/20 text-5xl top-1/3 left-1/4 animate-pulse-slow" />
+<FaDatabase className="absolute text-indigo-400/20 text-5xl bottom-32 right-1/3 animate-bounce-slow" />
+<FaCss3Alt className="absolute text-blue-600/20 text-6xl top-1/4 right-10 animate-spin-slow" />
+<FaLaptopCode className="absolute text-purple-400/20 text-5xl bottom-20 left-1/2 animate-pulse-slow" />
+<FaAngular className="absolute text-red-400/20 text-5xl top-20 left-3/4 animate-bounce-slow" />
+<FaVuejs className="absolute text-green-400/20 text-6xl bottom-10 right-1/4 animate-pulse-slow" />
+<FaDocker className="absolute text-blue-500/20 text-5xl top-1/2 left-3/4 animate-spin-slow" />
+<FaPhp className="absolute text-indigo-500/20 text-6xl bottom-1/3 right-10 animate-bounce-slow" />
+
+{/* Bonus icons for diversity */}
+<MdDevices className="absolute text-green-300/20 text-6xl top-5 left-1/2 animate-pulse-slow" />
+<MdSecurity className="absolute text-red-300/20 text-5xl bottom-1/4 right-1/2 animate-spin-slow" />
+<SiNextdotjs className="absolute text-black/20 text-6xl top-3/4 left-20 animate-bounce-slow" />
+<SiTailwindcss className="absolute text-cyan-400/20 text-5xl bottom-5 left-3/4 animate-pulse-slow" />
 
       {/* LEFT SIDE */}
       <motion.div
