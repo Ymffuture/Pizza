@@ -1,20 +1,49 @@
 import React from "react";
-import { Lightbulb, Code2, Rocket } from "lucide-react";
+import { Lightbulb, Code2, ShieldCheck, Rocket } from "lucide-react";
 import ProcessCard from "../layouts/ProcessCard";
 
 const processSteps = [
   {
-    icon: <Lightbulb size={70} strokeWidth={1.5} className="text-blue-600 dark:text-blue-400 mx-auto" />,
+    icon: (
+      <Lightbulb
+        size={70}
+        strokeWidth={1.5}
+        className="text-blue-600 dark:text-blue-400 mx-auto"
+      />
+    ),
     title: "Planning & Strategy",
     desc: "We analyze your goals, audience, and brand to craft a strong project roadmap.",
   },
   {
-    icon: <Code2 size={70} strokeWidth={1.5} className="text-green-600 dark:text-green-400 mx-auto" />,
+    icon: (
+      <Code2
+        size={70}
+        strokeWidth={1.5}
+        className="text-green-600 dark:text-green-400 mx-auto"
+      />
+    ),
     title: "Design & Development",
     desc: "We design modern, responsive, high-converting websites using the latest technologies.",
   },
   {
-    icon: <Rocket size={70} strokeWidth={1.5} className="text-purple-600 dark:text-purple-400 mx-auto" />,
+    icon: (
+      <ShieldCheck
+        size={70}
+        strokeWidth={1.5}
+        className="text-orange-600 dark:text-orange-400 mx-auto"
+      />
+    ),
+    title: "Testing & Optimization",
+    desc: "We rigorously test performance, security, and usability, then optimize for speed, SEO, and scalability.",
+  },
+  {
+    icon: (
+      <Rocket
+        size={70}
+        strokeWidth={1.5}
+        className="text-purple-600 dark:text-purple-400 mx-auto"
+      />
+    ),
     title: "Launch & Support",
     desc: "After deployment, we provide updates, maintenance, and continuous improvements.",
   },
@@ -28,7 +57,9 @@ const Process = () => {
           Our Process
         </p>
 
-        <h2 className="text-3xl md:text-4xl font-bold">How We Build Your Website</h2>
+        <h2 className="text-3xl md:text-4xl font-bold">
+          How We Build Your Website
+        </h2>
 
         <p className="mt-3 text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           A simple, transparent workflow that ensures quality, speed, and
@@ -36,7 +67,7 @@ const Process = () => {
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 text-center">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
         {processSteps.map((step, index) => (
           <ProcessCard key={index} {...step} />
         ))}
