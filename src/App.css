@@ -40,3 +40,20 @@
 .read-the-docs {
   color: #888;
 }
+
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate {
+  to {
+    --angle: 360deg;
+  }
+}
+
+.animate-rotate {
+  animation: rotate 8s linear infinite;
+}
