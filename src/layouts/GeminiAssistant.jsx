@@ -1,28 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { MessageCircle, X, BotIcon, ArrowUp, Copy } from "lucide-react";
+import { MessageCircle, Send, X, BotIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-hot-toast";
 import { MdMic, MdMicOff } from "react-icons/md";
-
-/* ======================================================
-   GEMINI ASSISTANT – FULL PRODUCTION COMPONENT
-====================================================== */
+import { Copy } from "lucide-react";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
-
   const chatEndRef = useRef(null);
-  const textareaRef = useRef(null);
-  const recognitionRef = useRef(null);
-
-  /* ================= PLACEHOLDERS ================= */
 
   const basePlaceholders = [
     "Ask anything…",
@@ -49,19 +41,29 @@ const GeminiAssistant = () => {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isListening, setIsListening] = useState(false);
 
+  const textareaRef = useRef(null);
+  const recognitionRef = useRef(null);
+  
+const copyAll = (text) => {
+  navigator.clipboard.writeText(text);
+  toast.success("Response copied!");
+};
+
   const getContextualPlaceholders = () => {
     const lastAI = [...messages].reverse().find(m => m.sender === "ai");
     if (!lastAI) return basePlaceholders;
+
     if (lastAI.text.includes("```")) return contextualMap.code;
     if (lastAI.text.length > 300) return contextualMap.explanation;
+
     return basePlaceholders;
   };
 
-  /* STOP placeholder animation when suggestions are visible */
   useEffect(() => {
-    if (msg || isListening || messages.length === 0) return;
+    if (msg || isListening) return;
 
     const list = getContextualPlaceholders();
+
     const interval = setInterval(() => {
       setFade(false);
       setTimeout(() => {
@@ -74,8 +76,6 @@ const GeminiAssistant = () => {
     return () => clearInterval(interval);
   }, [msg, isListening, placeholderIndex, messages]);
 
-  /* ================= TEXTAREA AUTOGROW ================= */
-
   const autoGrow = () => {
     const el = textareaRef.current;
     if (!el) return;
@@ -83,53 +83,50 @@ const GeminiAssistant = () => {
     el.style.height = el.scrollHeight + "px";
   };
 
-  /* ================= VOICE INPUT ================= */
-
   const toggleVoice = () => {
     if (isListening) {
       recognitionRef.current?.stop();
-      return;
+    } else {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        toast.error("Speech recognition not supported");
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
+
+      recognition.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0])
+          .map(result => result.transcript)
+          .join("");
+        setMsg(transcript);
+      };
+
+      recognition.onerror = () => {
+        setIsListening(false);
+        setPlaceholder("Ask anything…");
+        toast.error("Voice recognition failed");
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+        setPlaceholder("Ask anything…");
+      };
+
+      recognition.start();
+      recognitionRef.current = recognition;
     }
-
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-      toast.error("Speech recognition not supported");
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.lang = "en-US";
-
-    recognition.onresult = (event) => {
-      const transcript = Array.from(event.results)
-        .map(result => result[0].transcript)
-        .join("");
-      setMsg(transcript);
-    };
-
-    recognition.onerror = () => {
-      toast.error("Voice recognition failed");
-      setIsListening(false);
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-
-    recognition.start();
-    recognitionRef.current = recognition;
-    setIsListening(true);
+    setIsListening(prev => !prev);
   };
 
   useEffect(() => {
     setPlaceholder(isListening ? "Listening… Speak now" : "Ask anything…");
   }, [isListening]);
 
-  /* ================= CONNECTION STRENGTH ================= */
+  // ... (rest of the code unchanged: connectionStrength hook, Loader, scrollToBottom, sendMessage, etc.)
 
   const useConnectionStrength = () => {
     const [strength, setStrength] = useState("Checking...");
@@ -150,10 +147,36 @@ const GeminiAssistant = () => {
         const type = conn.effectiveType;
 
         let level = "Good";
-        if (speed < 1 || type.includes("2g")) level = "Poor";
+
+        if (speed < 1 || type === "2g" || type === "slow-2g") level = "Poor";
         else if (speed < 3 || type === "3g") level = "Average";
 
         setStrength(level);
+
+        if (level === "Poor") {
+          toast((t) => (
+            <span className="flex items-center justify-between gap-2 text-[10px]">
+              <span>
+                NETWORK: <b className="text-red-600">Your connection is weak. AI responses may be slow.</b>
+              </span>
+              <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
+                Close
+              </button>
+            </span>
+          ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+        }
+        if (level === "Good") {
+          toast((t) => (
+            <span className="flex items-center justify-between gap-2 text-[10px]">
+              <span>
+                NETWORK: <b className="text-green-600">Connected</b>
+              </span>
+              <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
+                Close
+              </button>
+            </span>
+          ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+        }
       };
 
       evaluate();
@@ -166,48 +189,29 @@ const GeminiAssistant = () => {
 
   const connectionStrength = useConnectionStrength();
 
-  /* ================= COPY ================= */
-
-  const copyAll = (text) => {
-    navigator.clipboard.writeText(text);
-    toast.success("Response copied!");
-  };
-
-  /* ================= LOADER ================= */
-
   const Loader = () => (
     <div className="flex items-center justify-center">
-      <svg width="30" height="30" viewBox="0 0 100 100" className="animate-spin">
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          stroke="currentColor"
-          strokeWidth="6"
-          fill="none"
-          strokeDasharray="250"
-          strokeDashoffset="190"
-        />
+      <svg width="30" height="30" viewBox="0 0 100 100" className="animate-spin text-gray-300 dark:text-gray-700">
+        <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="6" strokeLinecap="round" fill="none" strokeDasharray="250" strokeDashoffset="190" />
         <circle cx="50" cy="50" r="10" fill="#00E5FF">
           <animate attributeName="r" values="10;14;10" dur="1.6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0.6;1" dur="1.6s" repeatCount="indefinite" />
         </circle>
       </svg>
     </div>
   );
 
-  /* ================= SCROLL ================= */
-
-  useEffect(() => {
+  const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  };
 
-  /* ================= SEND MESSAGE ================= */
+  useEffect(scrollToBottom, [messages, loading]);
 
   const sendMessage = async () => {
     if (!msg.trim()) return;
 
     const userMsg = { sender: "user", text: msg };
-    setMessages(p => [...p, userMsg]);
+    setMessages((p) => [...p, userMsg]);
     setMsg("");
     setLoading(true);
 
@@ -216,145 +220,136 @@ const GeminiAssistant = () => {
         "https://swiftmeta.onrender.com/api/gemini",
         { prompt: userMsg.text }
       );
-      setMessages(p => [...p, { sender: "ai", text: res.data.reply }]);
+      setMessages((p) => [...p, { sender: "ai", text: res.data.reply }]);
     } catch {
-      setMessages(p => [...p, { sender: "ai", text: "Something went wrong." }]);
+      setMessages((p) => [...p, { sender: "ai", text: "Something went wrong." }]);
     } finally {
       setLoading(false);
     }
   };
 
-  /* ================= CLOSED STATE ================= */
-
   if (!open) {
     return (
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-10 right-6 z-50 p-3 rounded-full bg-purple-700 text-white shadow-xl hover:scale-105 transition"
-      >
-        <BotIcon size={30} />
+      <button onClick={() => setOpen(true)} className="fixed bottom-10 -right-6 z-50 p-2 rounded-full border-l-8 border-t-4 border-t-purple-400 border-b-4 border-b-purple-400 border-l-purple-800  bg-purple-800 text-gray-100  dark:bg-purple-800 shadow-xl hover:scale-100 transition">
+        <BotIcon size={35} className='right-3'/>
       </button>
     );
   }
 
-  /* ================= UI ================= */
-
   return (
-    <div className="fixed inset-0 z-50 bg-black flex flex-col overflow-hidden">
-
-      {/* STAR BACKGROUND */}
-      <div className="absolute inset-0 -z-10">
-        <div className="stars" />
-        <div className="stars2" />
-        <div className="stars3" />
-      </div>
-
-      {/* HEADER */}
-      <header className="flex items-center justify-between px-5 py-3 backdrop-blur bg-black/70 border-b border-white/10">
+    <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
+      {/* HEADER unchanged */}
+      <header className="flex items-center justify-between px-5 py-3 backdrop-blur-xl bg-white/80 dark:bg-gray-900/70 border-b border-gray-200/70 dark:border-gray-800 sticky top-0 z-20">
         <div className="flex items-center gap-3">
-          <BotIcon className="text-cyan-400" />
-          <div>
-            <p className="text-white font-semibold">SwiftMeta</p>
-            <p className="text-xs text-gray-400">AI Assistant</p>
+          <div className="flex items-center justify-center w-9 h-9 rounded-full bg-sky-500/10 text-sky-500">
+            <BotIcon size={20} />
+          </div>
+          <div className="leading-tight">
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">SwiftMeta</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">AI Assistant</p>
           </div>
         </div>
-        <button onClick={() => setOpen(false)}>
-          <X className="text-gray-400 hover:text-white" />
-        </button>
+        <div className="flex items-center gap-3">
+          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${connectionStrength === "Good" ? "bg-green-500/10 text-green-600 border-green-500/20" : connectionStrength === "Average" ? "bg-yellow-500/10 text-yellow-600 border-yellow-500/20" : "bg-red-500/10 text-red-600 border-red-500/20"}`}>
+            {connectionStrength}
+          </span>
+          <button onClick={() => setOpen(false)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <X size={18} className="text-gray-600 dark:text-gray-300" />
+          </button>
+        </div>
       </header>
 
-      {/* MESSAGES */}
-      <main className="flex-1 overflow-y-auto px-4 py-6">
+      {/* MESSAGES unchanged */}
+      <main className="flex-1 overflow-y-auto px-4 py-6 space-my-4 dark:text-white">
+        {/* ... messages rendering unchanged ... */}
         {messages.length === 0 && (
-          <div className="grid sm:grid-cols-2 gap-4 mt-10">
-            {[
-              "Explain React hooks",
-              "Generate a business idea",
-              "Write NestJS snippet",
-              "Tips for learning AI"
-            ].map((p, i) => (
-              <button
-                key={i}
-                onClick={() => { setMsg(p); setTimeout(sendMessage, 200); }}
-                className="relative rounded-xl p-4 bg-white/5 hover:scale-105 transition hover:shadow-[0_0_30px_rgba(0,229,255,0.4)]"
-              >
+          <div className="grid sm:grid-cols-2 gap-3 mt-10">
+            {["Explain React hooks", "Generate a website idea 💡 for business", "Write a nestjs snippet ", "Tips for learning AI"].map((p, i) => (
+              <button key={i} onClick={() => { setMsg(p); setTimeout(sendMessage, 200); }} className="border-gray-100 shadow-2xl rounded-xl p-4 text-sm hover:bg-gray-50 dark:hover:bg-gray-900">
                 {p}
               </button>
             ))}
           </div>
         )}
+      {messages.map((m, i) => (
+  <div
+    key={i}
+    className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}
+  >
+    <div
+      className={`relative max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow ${
+        m.sender === "user"
+          ? "bg-[#87CEEB] text-white dark:bg-blue-700 m-3"
+          : "bg-gray-200 dark:bg-gray-700 dark:text-white"
+      }`}
+    >
+      {/* COPY FULL MESSAGE (AI ONLY) */}
+      {m.sender === "ai" && (
+        <button
+          onClick={() => copyAll(m.text)}
+          className="absolute top-2 right-2 opacity-0 hover:opacity-100 group-hover:opacity-100 transition bg-black/70 text-white p-1.5 rounded-lg"
+        >
+          <Copy size={16} />
+        </button>
+      )}
 
-        {messages.map((m, i) => (
-          <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} mb-4`}>
-            <div className={`relative max-w-[80%] p-4 rounded-2xl ${
-              m.sender === "user"
-                ? "bg-blue-600 text-white"
-                : "bg-white/10 text-white"
-            }`}>
-              {m.sender === "ai" && (
-                <button
-                  onClick={() => copyAll(m.text)}
-                  className="absolute top-2 right-2 opacity-0 hover:opacity-100"
-                >
-                  <Copy size={16} />
-                </button>
-              )}
-
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  code({ inline, className, children }) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline && match ? (
-                      <SyntaxHighlighter style={coldarkCold} language={match[1]}>
-                        {String(children)}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code className="bg-black/30 px-1 rounded">{children}</code>
-                    );
-                  },
-                }}
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        className="prose prose-sm max-w-none dark:prose-invert"
+        components={{
+          code({ inline, className, children }) {
+            const match = /language-(\w+)/.exec(className || "");
+            return !inline && match ? (
+              <SyntaxHighlighter
+                style={coldarkCold}
+                language={match[1]}
+                PreTag="div"
               >
-                {m.text}
-              </ReactMarkdown>
-            </div>
-          </div>
-        ))}
+                {String(children)}
+              </SyntaxHighlighter>
+            ) : (
+              <code className="bg-gray-300 dark:bg-gray-600 px-1 rounded">
+                {children}
+              </code>
+            );
+          },
+        }}
+      >
+        {m.text}
+      </ReactMarkdown>
+    </div>
+  </div>
+))}
 
-        {loading && <Loader />}
+        {loading && (
+          <div className="flex justify-start gap-2 items-center animate-pulse">
+            <Loader />
+          </div>
+        )}
         <div ref={chatEndRef} />
       </main>
 
       {/* INPUT */}
-      <footer className="flex gap-2 p-4 bg-black/80">
+      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2 items-end">
         <textarea
           ref={textareaRef}
           value={msg}
           rows={1}
           onChange={(e) => { setMsg(e.target.value); autoGrow(); }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              sendMessage();
-            }
-          }}
-          placeholder={placeholder}
-          className={`flex-1 resize-none rounded-xl px-4 py-2 bg-transparent text-white focus:ring-2 focus:ring-cyan-400 transition-opacity ${fade ? "opacity-100" : "opacity-0"}`}
+          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+          placeholder={isListening ? "Listening… Speak now" : placeholder}
+          className={`flex-1 resize-none rounded-xl px-4 py-2 bg-transparent focus:outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-opacity duration-300 ${fade ? "opacity-100" : "opacity-0"}`}
         />
 
         <button
           onClick={toggleVoice}
-          className={`p-3 rounded-xl ${isListening ? "bg-red-500 animate-pulse" : "bg-white/10"}`}
+          className={`p-3 rounded-xl transition ${isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-300 dark:bg-gray-700"}`}
         >
-          {isListening ? <MdMicOff /> : <MdMic />}
+          {isListening ? <MdMicOff size={20} /> : <MdMic size={20} />}
         </button>
 
-        <button
-          onClick={sendMessage}
-          disabled={loading}
-          className="p-3 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 hover:shadow-[0_0_20px_rgba(0,229,255,0.6)]"
-        >
-          <ArrowUp />
+        <button onClick={sendMessage} disabled={loading} className="p-3 rounded-xl bg-black text-white disabled:opacity-50">
+          <Send size={18} />
         </button>
       </footer>
     </div>
