@@ -6,18 +6,18 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#0ea5e9",
-  "background_color": "#0b0f14",
+  "theme_color": "#000",
+  "background_color": "#fff",
   "categories": ["productivity", "business", "design", "developer tools"],
   "lang": "en",
   "dir": "ltr",
   "icons": [
     {
-      "src": "/vite.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
+  "src": "/vite.svg",
+  "sizes": "512x512",
+  "type": "image/svg+xml",
+  "purpose": "any maskable"
+},
     {
       "src": "/Logo.svg",
       "sizes": "512x512",
@@ -45,23 +45,23 @@
   ],
   "shortcuts": [
     {
-      "name": "Browse Services",
-      "short_name": "Services",
+      "name": "Browse About Us",
+      "short_name": "About Us",
       "description": "Explore website types and order professional builds",
-      "url": "/services?source=pwa",
+      "url": "/about?source=pwa",
       "icons": [
         {
-          "src": "/icons/services-96.svg",
+          "src": "Logo.svg",
           "sizes": "96x96",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Community Feed",
-      "short_name": "Feed",
+      "name": "Community Blog",
+      "short_name": "Blog",
       "description": "Join discussions, share ideas, and collaborate with developers",
-      "url": "/feed?source=pwa",
+      "url": "/dashboard/blog?source=pwa",
       "icons": [
         {
           "src": "/icons/feed-96.svg",
