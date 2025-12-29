@@ -1,18 +1,43 @@
-<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="100" cy="100" r="80" fill="#000" stroke="#000" stroke-width="3"/>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer circle -->
+  <circle
+    cx="256"
+    cy="256"
+    r="220"
+    fill="#000"
+    stroke="#000"
+    stroke-width="6"
+  />
 
-  <!-- Inner circle (static) -->
-  <circle cx="100" cy="100" r="20" fill="#fff"/>
+  <!-- Inner circle -->
+  <circle
+    cx="256"
+    cy="256"
+    r="48"
+    fill="#fff"
+    stroke="#1E90FF" 
+    stroke-width="8" 
+  />
 
-  <!-- Left arc (static) -->
-  <path d="M100 100 Q70 70 70 100 Q70 130 100 130" 
-        fill="none" 
-        stroke="#fff" 
-        stroke-width="8"/>
+  <!-- Left arc -->
+  <path
+    d="M256 256
+       Q190 190 190 256
+       Q190 322 256 322"
+    fill="#1677ff"
+    stroke="#fff"
+    stroke-width="20"
+    stroke-linecap="round"
+  />
 
-  <!-- Right arc (static) -->
-  <path d="M100 100 Q130 70 130 100 Q130 130 100 130" 
-        fill="none" 
-        stroke=" #fff" 
-        stroke-width="8"/>
+  <!-- Right arc -->
+  <path
+    d="M256 256
+       Q322 190 322 256
+       Q322 322 256 322"
+    fill="#1E90FF"
+    stroke="#fff"
+    stroke-width="20"
+    stroke-linecap="round"
+  />
 </svg>
