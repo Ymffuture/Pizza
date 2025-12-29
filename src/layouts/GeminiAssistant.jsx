@@ -274,7 +274,7 @@ const copyAll = (text) => {
         {/* ... messages rendering unchanged ... */}
         {messages.length === 0 && (
           <div className="grid sm:grid-cols-2 gap-3 mt-10">
-            {["Explain React hooks", "Generate a website idea 💡 for business", "Write a nestjs snippet ", "Tips for learning AI"].map((p, i) => (
+            {["Explain React hooks", "Generate a website idea for business", "Write a nestjs snippet ", "Tips for learning AI"].map((p, i) => (
               <button
   key={i}
   onClick={() => {
@@ -282,7 +282,7 @@ const copyAll = (text) => {
     setTimeout(sendMessage, 200);
   }}
   className="
-    relative rounded-xl p-4 text-sm text-left
+    relative rounded-xl p-4 text-sm text-center 
     bg-white/60 dark:bg-white/5 backdrop-blur-xl
     transition-all duration-300
     hover:scale-[1.03]
@@ -375,8 +375,8 @@ const copyAll = (text) => {
         </button>
 
         <button onClick={sendMessage} disabled={loading} 
-        className="flex-1 resize-none rounded-xl px-4 py-2
-  bg-transparent
+        className="flex-1 resize-none rounded-full
+  bg-black
   focus:outline-none
   focus:ring-2 focus:ring-cyan-400/40
   text-gray-900 dark:text-white
