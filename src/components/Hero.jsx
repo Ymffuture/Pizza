@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaCode, FaPalette, FaHtml5, FaJsSquare, FaReact } from "react-icons/fa";
-import { MdDevices } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { 
