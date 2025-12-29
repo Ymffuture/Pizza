@@ -2,52 +2,62 @@ import React from "react";
 
 const ProcessCard = ({ icon, title, desc }) => {
   return (
-    <div className="group relative p-1 rounded-3xl">
-      {/* Outer soft glow */}
-      <div
-        className="absolute inset-0 rounded-3xl opacity-70 blur-xl pointer-events-none"
-        style={{
-          background: `conic-gradient(from var(--angle), 
-            #ff006e, #8b5cf6, #3b82f6, #10b981, #f59e0b, #ef4444, #ff006e)`,
-          animation: "rotate 8s linear infinite",
-        }}
-      />
-
-      {/* Sharp colorful border (using mask to show only the border area) */}
-      <div
-        className="absolute inset-0 rounded-3xl"
-        style={{
-          background: `conic-gradient(from var(--angle), 
-            #ff006e, #8b5cf6, #3b82f6, #10b981, #f59e0b, #ef4444, #ff006e)`,
-          mask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
-          maskComposite: "exclude",
-          WebkitMaskComposite: "xor",
-          animation: "rotate 8s linear infinite",
-        }}
-      />
-
-      {/* Main card content - your original glassmorphic style */}
+    <div className="relative group p-[2px] rounded-3xl isolate">
+      {/* Soft animated glow */}
       <div
         className="
-          relative h-full p-8 rounded-3xl
-          bg-white/60 dark:bg-white/5
+          absolute inset-0 rounded-3xl
+          opacity-70 blur-xl
+          animate-rotate
+          pointer-events-none
+        "
+        style={{
+          background:
+            "conic-gradient(from var(--angle), #ff006e, #8b5cf6, #3b82f6, #10b981, #f59e0b, #ef4444, #ff006e)",
+        }}
+      />
+
+      {/* Sharp animated border */}
+      <div
+        className="
+          absolute inset-0 rounded-3xl
+          animate-rotate
+        "
+        style={{
+          background:
+            "conic-gradient(from var(--angle), #ff006e, #8b5cf6, #3b82f6, #10b981, #f59e0b, #ef4444, #ff006e)",
+          WebkitMask:
+            "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+          WebkitMaskComposite: "xor",
+          maskComposite: "exclude",
+          padding: "2px",
+        }}
+      />
+
+      {/* Card content */}
+      <div
+        className="
+          relative h-full rounded-3xl p-8
+          bg-white/70 dark:bg-white/5
           backdrop-blur-xl
           border border-gray-200/60 dark:border-white/10
-          shadow-[0_8px_30px_rgb(0,0,0,0.06)]
-          group-hover:shadow-[0_12px_45px_rgb(0,0,0,0.12)]
+          shadow-[0_8px_30px_rgba(0,0,0,0.08)]
           transition-all duration-500
-          group-hover:-translate-y-1 group-hover:scale-[1.02]
+          group-hover:-translate-y-1
+          group-hover:shadow-[0_14px_50px_rgba(0,0,0,0.18)]
         "
       >
-        {/* Icon container */}
-        <div className="w-full flex items-center justify-center mb-6">
+        {/* Icon */}
+        <div className="flex justify-center mb-6">
           <div
             className="
               p-6 rounded-2xl
-              bg-gradient-to-br from-blue-500/10 to-purple-500/10
+              bg-gradient-to-br
+              from-blue-500/10 to-purple-500/10
               dark:from-blue-400/10 dark:to-purple-400/10
-              group-hover:from-blue-500/20 group-hover:to-purple-500/20
-              transition-all duration-500 shadow-inner
+              group-hover:from-blue-500/20
+              group-hover:to-purple-500/20
+              transition-all duration-500
             "
           >
             {icon}
@@ -55,7 +65,7 @@ const ProcessCard = ({ icon, title, desc }) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 tracking-tight mb-2">
+        <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
           {title}
         </h3>
 
