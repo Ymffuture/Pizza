@@ -374,15 +374,12 @@ const copyAll = (text) => {
           {isListening ? <MdMicOff size={20} /> : <MdMic size={20} />}
         </button>
 
-        <button onClick={sendMessage} disabled={loading} 
-        className="flex-1 resize-none rounded-full
-  bg-black
-  focus:outline-none
-  focus:ring-2 focus:ring-cyan-400/40
-  text-gray-900 dark:text-white
-"
->
-          <ArrowUp size={18} />
+        <button
+          onClick={sendMessage}
+          disabled={loading}
+          className="p-3 rounded-full bg-gradient-to-tr from-purple-500 to-gray-600"
+        >
+          <ArrowUp size={28} />
         </button>
       </footer>
     </div>
