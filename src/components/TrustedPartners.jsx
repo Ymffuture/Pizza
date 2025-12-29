@@ -80,7 +80,7 @@ const TrustedPartners = () => {
                   opacity-60 grayscale
                   transition-all duration-300
                   hover:opacity-100 hover:grayscale-0 hover:scale-110
-                  dark:opacity-70
+                  dark:opacity-70 dark:invert hover:invert-0
                 "
               />
             </a>
