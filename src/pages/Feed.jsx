@@ -139,11 +139,11 @@ export default function Feed() {
      RENDER
   ====================================================== */
   return (
-    <div className="min-h-screen bg-white dark:bg-black transition-colors duration-300">
+    <div className="bg-white dark:bg-black transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 py-8">
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Feed
+            🔹Feeds
           </h1>
           <p className="text-gray-500 dark:text-gray-400">
             Latest posts from the community
