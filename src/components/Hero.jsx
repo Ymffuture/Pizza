@@ -66,6 +66,12 @@ const Hero = () => {
 <FaPython className="absolute text-blue-400/20 text-6xl bottom-1/4 left-5 animate-spin-slow" />
 <FaGitAlt className="absolute text-red-500/20 text-5xl top-1/3 left-1/4 animate-pulse-slow" />
 <FaDatabase className="absolute text-indigo-400/20 text-5xl bottom-32 right-1/3 animate-bounce-slow" />
+<FaCss3Alt className="absolute text-blue-600/20 text-6xl top-1/4 right-10 animate-spin-slow" />
+<FaLaptopCode className="absolute text-purple-400/20 text-5xl bottom-20 left-1/2 animate-pulse-slow" />
+<FaAngular className="absolute text-red-400/20 text-5xl top-20 left-3/4 animate-bounce-slow" />
+<FaVuejs className="absolute text-green-400/20 text-6xl bottom-10 right-1/4 animate-pulse-slow" />
+<FaDocker className="absolute text-blue-500/20 text-5xl top-1/2 left-3/4 animate-spin-slow" />
+<FaPhp className="absolute text-indigo-500/20 text-6xl bottom-1/3 right-10 animate-bounce-slow" />
 
       {/* LEFT SIDE */}
       <motion.div
