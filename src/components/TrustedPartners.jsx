@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// === IMPORT IMAGES FROM ASSETS ===
+// Logos
 import Cloudinary from "../assets/partners/Cloudinary.png";
 import MongoDB from "../assets/partners/MongoDB.png";
 import Gemini from "../assets/partners/Gemini.png";
@@ -15,7 +15,6 @@ import SupabaseLogo from "../assets/partners/supabase.png";
 import NetlifyLogo from "../assets/partners/Netlify.png";
 import TailwindLogo from "../assets/partners/Tailwindcss.png";
 
-// === PARTNER DATA ===
 const partners = [
   { name: "Cloudinary", href: "https://cloudinary.com", logo: Cloudinary },
   { name: "MongoDB", href: "https://mongodb.com", logo: MongoDB },
@@ -30,79 +29,63 @@ const partners = [
 ];
 
 const TrustedPartners = () => {
-  // === SLIDER SETTINGS (SMOOTH APPLE STYLE) ===
   const settings = {
     infinite: true,
-    speed: 4000,
+    speed: 6000,
     autoplay: true,
     autoplaySpeed: 0,
     cssEase: "linear",
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     arrows: false,
     pauseOnHover: true,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 1024, settings: { slidesToShow: 4 } },
       { breakpoint: 640, settings: { slidesToShow: 2 } },
     ],
   };
 
   return (
-    <section className="py-20 bg-white dark:bg-black relative overflow-hidden">
-      {/* Apple Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-b
-        from-white via-gray-100/80 to-white
-        dark:from-[#0A0A0A] dark:via-black/40 dark:to-black" />
+    <section className="relative py-20 bg-white dark:bg-black overflow-hidden">
+      {/* Edge fades */}
+      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white dark:from-black to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white dark:from-black to-transparent z-10 pointer-events-none" />
 
-      {/* Left & Right Fade Edges */}
-      <div className="absolute left-0 top-0 w-32 h-full 
-        bg-gradient-to-r from-white dark:from-black to-transparent z-20 pointer-events-none" />
-      <div className="absolute right-0 top-0 w-32 h-full 
-        bg-gradient-to-l from-white dark:from-black to-transparent z-20 pointer-events-none" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-
-        {/* Title */}
-        <div className="text-center mb-12">
+      <div className="relative max-w-7xl mx-auto px-6">
+        {/* Heading */}
+        <div className="text-center mb-14">
           <h3 className="text-4xl font-semibold text-gray-900 dark:text-white">
-            Powered by Leading Innovators
+            Trusted by Modern Platforms
           </h3>
-          <p className="text-gray-500 dark:text-gray-400 mt-3">
-            Empowering our ecosystem through world-class partners
+          <p className="mt-3 text-gray-500 dark:text-gray-400">
+            Technologies powering our ecosystem
           </p>
         </div>
 
-        {/* Slider */}
-        <div className="px-4">
-          <Slider {...settings}>
-            {partners.map((p, idx) => (
-              <div key={idx} className="flex justify-center">
-                <a
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center justify-center p-6 
-                   transition-all duration-300 hover:-translate-y-1
-                  hover:scale-[1.05] bg-white/60 dark:bg-white/5 backdrop-blur-xl 
-                  shadow-lg border border-gray-200/40 dark:border-white/10"
-                >
-                  <img
-  src={p.logo}
-  alt={p.name}
-  className="
-    h-20 md:h-24 object-contain opacity-80 
-    grayscale group-hover:opacity-100 group-hover:grayscale-0 
-    dark:invert dark:grayscale-0 
-    transition-all duration-300
-  "
-/>
-
-                </a>
-              </div>
-            ))}
-          </Slider>
-        </div>
-
+        {/* Logos */}
+        <Slider {...settings}>
+          {partners.map((p, idx) => (
+            <a
+              key={idx}
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center px-8"
+            >
+              <img
+                src={p.logo}
+                alt={p.name}
+                className="
+                  h-16 md:h-20 object-contain
+                  opacity-60 grayscale
+                  transition-all duration-300
+                  hover:opacity-100 hover:grayscale-0 hover:scale-110
+                  dark:opacity-70
+                "
+              />
+            </a>
+          ))}
+        </Slider>
       </div>
     </section>
   );
