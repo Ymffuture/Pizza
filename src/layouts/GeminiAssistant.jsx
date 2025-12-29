@@ -8,6 +8,7 @@ import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-hot-toast";
 import { MdMic, MdMicOff } from "react-icons/md";
 import { Copy } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -60,7 +61,8 @@ const copyAll = (text) => {
   };
 
   useEffect(() => {
-    if (msg || isListening) return;
+    if (msg || isListening || messages.length === 0) return;
+
 
     const list = getContextualPlaceholders();
 
@@ -238,6 +240,14 @@ const copyAll = (text) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
+
+      {/* Stars background */}
+<div className="absolute inset-0 -z-10 overflow-hidden">
+  <div className="stars" />
+  <div className="stars2" />
+  <div className="stars3" />
+</div>
+
       {/* HEADER unchanged */}
       <header className="flex items-center justify-between px-5 py-3 backdrop-blur-xl bg-white/80 dark:bg-gray-900/70 border-b border-gray-200/70 dark:border-gray-800 sticky top-0 z-20">
         <div className="flex items-center gap-3">
@@ -265,9 +275,25 @@ const copyAll = (text) => {
         {messages.length === 0 && (
           <div className="grid sm:grid-cols-2 gap-3 mt-10">
             {["Explain React hooks", "Generate a website idea 💡 for business", "Write a nestjs snippet ", "Tips for learning AI"].map((p, i) => (
-              <button key={i} onClick={() => { setMsg(p); setTimeout(sendMessage, 200); }} className="border-gray-100 shadow-2xl rounded-xl p-4 text-sm hover:bg-gray-50 dark:hover:bg-gray-900">
-                {p}
-              </button>
+              <button
+  key={i}
+  onClick={() => {
+    setMsg(p);
+    setTimeout(sendMessage, 200);
+  }}
+  className="
+    relative rounded-xl p-4 text-sm text-left
+    bg-white/60 dark:bg-white/5 backdrop-blur-xl
+    transition-all duration-300
+    hover:scale-[1.03]
+    hover:shadow-[0_0_30px_rgba(0,229,255,0.35)]
+    border border-white/10
+  "
+>
+  <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400/20 to-purple-500/20 opacity-0 hover:opacity-100 transition" />
+  <span className="relative z-10">{p}</span>
+</button>
+
             ))}
           </div>
         )}
@@ -348,8 +374,15 @@ const copyAll = (text) => {
           {isListening ? <MdMicOff size={20} /> : <MdMic size={20} />}
         </button>
 
-        <button onClick={sendMessage} disabled={loading} className="p-3 rounded-xl bg-black text-white disabled:opacity-50">
-          <Send size={18} />
+        <button onClick={sendMessage} disabled={loading} 
+        className="flex-1 resize-none rounded-xl px-4 py-2
+  bg-transparent
+  focus:outline-none
+  focus:ring-2 focus:ring-cyan-400/40
+  text-gray-900 dark:text-white
+"
+>
+          <ArrowUp size={18} />
         </button>
       </footer>
     </div>
