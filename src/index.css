@@ -179,3 +179,36 @@ body {
 .dark .feed-3d-card::after {
   opacity: 0.25;
 }
+
+@keyframes moveStars {
+  from { transform: translateY(0); }
+  to { transform: translateY(-2000px); }
+}
+
+.stars, .stars2, .stars3 {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  background-size: contain;
+}
+
+.stars {
+  background-image: radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+                    radial-gradient(1px 1px at 40px 70px, #fff, transparent),
+                    radial-gradient(1px 1px at 90px 40px, #fff, transparent);
+  animation: moveStars 120s linear infinite;
+  opacity: 0.3;
+}
+
+.stars2 {
+  background-image: radial-gradient(1px 1px at 10px 20px, #9ff, transparent),
+                    radial-gradient(1px 1px at 80px 60px, #9ff, transparent);
+  animation: moveStars 180s linear infinite;
+  opacity: 0.2;
+}
+
+.stars3 {
+  background-image: radial-gradient(2px 2px at 50px 50px, #6cf, transparent);
+  animation: moveStars 240s linear infinite;
+  opacity: 0.15;
+}
