@@ -6,8 +6,6 @@ import {
 } from "react-icons/fa";
 import { MdDevices, MdSecurity } from "react-icons/md";
 import { SiNextdotjs, SiTailwindcss } from "react-icons/si";
-
-import { MdDevices } from "react-icons/md";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
