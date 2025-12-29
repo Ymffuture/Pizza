@@ -168,16 +168,18 @@ export default function Feed() {
         {!loading && posts.length > 0 && (
           <Slider {...sliderSettings}>
             {posts.map((post) => (
-              <div key={post._id} className="px-2">
-                <PostCard
-                  post={post}
-                  onLike={() => handleLikePost(post._id)}
-                  commentsCount={post.comments?.length || 0}
-                  api={api}
-                  updatePostComments={updatePostComments}
-                />
-              </div>
-            ))}
+  <div key={post._id} className="px-2">
+    <div className="feed-3d-card">
+      <PostCard
+        post={post}
+        onLike={() => handleLikePost(post._id)}
+        commentsCount={post.comments?.length || 0}
+        api={api}
+        updatePostComments={updatePostComments}
+      />
+    </div>
+  </div>
+))}
           </Slider>
         )}
 
