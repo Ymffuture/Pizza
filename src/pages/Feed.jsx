@@ -173,7 +173,7 @@ export default function Feed() {
                     <div className="flex items-center justify-between mb-3">
                       <h2 className="comment-glow text-xl font-bold flex items-center gap-2">
                         <MessageCircle size={20} />
-                        {post.comments?.length || 0} Comments
+                        {post.comments?.length || "Log in to see"} Comments
                       </h2>
 
                       <div className="flex items-center gap-2 text-pink-500">
