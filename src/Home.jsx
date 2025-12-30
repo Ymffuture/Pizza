@@ -52,11 +52,11 @@ const Home = () => {
 
   return (
     <>
+      <Hero />
+      <Process /> 
       <LazyLoadOnView>
-        <Hero />
-        <Process />
+        <Feed/>
       </LazyLoadOnView>
-<Feed/>
       {/* Menu Skeleton */}
       <div className="px-5 lg:px-14 py-10">
         {menuLoading ? (
@@ -65,7 +65,7 @@ const Home = () => {
               <Col xs={24} sm={12} md={12} lg={6} key={idx}>
                 <Card>
                   <Skeleton.Image style={{ width: "100%", height: "100%" }} active />
-                  <Skeleton active paragraph={{ rows: 2 }} />
+                  <Skeleton active paragraph={{ rows: 4 }} />
                 </Card>
               </Col>
             ))}
@@ -74,14 +74,13 @@ const Home = () => {
           <Menu />
         )}
       </div>
-
-      <LazyLoadOnView>
-        <Testimonial />
+       <Testimonial />
         <GetApp />
+      <LazyLoadOnView>   
         <Newsletter />
         <Chat/>
       </LazyLoadOnView>
-<TrustedPartners/>
+      <TrustedPartners/>
     </>
   );
 };
