@@ -143,7 +143,7 @@ const statusMap = {
   Good: {
     color: "text-green-400",
     bg: "bg-green-500/10",
-    ring: "ring-green-600",
+    ring: "ring-black",
     label: "Connection speed: 80%+",
   },
   Average: {
