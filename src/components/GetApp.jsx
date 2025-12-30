@@ -70,15 +70,21 @@ const GetApp = () => {
       dark:drop-shadow-[0_25px_80px_rgba(0,0,0,0.8)]
       hover:scale-[1.02]
       transition-all duration-500
-      p-6
+      p-6 scale-110
     "
   >
     <Lottie
-      animationData={appAnimation}
-      loop
-      autoplay
-      className="w-full h-full"
-    />
+  animationData={appAnimation}
+  loop
+  autoplay
+  speed={0.5}
+  rendererSettings={{
+    preserveAspectRatio: "xMidYMid meet",
+    progressiveLoad: true
+  }}
+  className="w-full h-full"
+/>
+
   </div>
 </div>
 
