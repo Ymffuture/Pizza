@@ -29,11 +29,13 @@ const GeminiAssistant = () => {
       "Explain this function",
       "Convert to TypeScript",
     ],
+
     explanation: [
       "Give a real-world example",
       "Simplify this explanation",
       "Show best practices",
     ],
+    
   };
 
   const [placeholder, setPlaceholder] = useState("");
