@@ -300,16 +300,16 @@ const statusMap = {
     onClick={handleOpen}
     aria-label="Open AI Assistant"
     className={`
-      p-4 rounded-full
+      p-2 rounded-full
       bg-black text-white
       ring-4 ${statusMap[connectionStrength]?.ring}
       shadow-xl
       transition
       hover:scale-105
-      active:scale-95
+      active:scale-75
     `}
   >
-    <BotIcon size={30} />
+    <BotIcon size={20} />
   </button>
 </div>
 
