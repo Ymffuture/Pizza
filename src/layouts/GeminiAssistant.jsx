@@ -49,7 +49,7 @@ const handleOpen = () => {
 
   setTimeout(() => {
     setShowStatus(false);
-  }, 2500);
+  }, 5000);
 };
 
   const textareaRef = useRef(null);
@@ -144,19 +144,19 @@ const statusMap = {
     color: "text-green-400",
     bg: "bg-green-500/10",
     ring: "ring-green-400",
-    label: "AI Network: Good",
+    label: "Connection speed: 80%+",
   },
   Average: {
     color: "text-orange-400",
     bg: "bg-orange-500/10",
     ring: "ring-orange-400",
-    label: "AI Network: Average",
+    label: "Connection speed: 50%+",
   },
   Poor: {
     color: "text-red-400",
     bg: "bg-red-500/10",
     ring: "ring-red-400",
-    label: "AI Network: Poor",
+    label: "Connection speed: 40%",
   },
 };
 
@@ -299,7 +299,7 @@ const statusMap = {
       active:scale-95
     `}
   >
-    <BotIcon size={28} />
+    <BotIcon size={24} />
   </button>
 </div>
 
