@@ -201,6 +201,9 @@ const statusMap = {
           console.log("bad network") 
           
   setShowStatus(true);
+          setTimeout(() => {
+    setShowStatus(false);
+  }, 10000);
         }
         if (level === "Good") {
         //  toast((t) => (
@@ -216,6 +219,9 @@ const statusMap = {
           console.log("good networking") 
           
   setShowStatus(true);
+          setTimeout(() => {
+    setShowStatus(false);
+  }, 10000);
         }
       };
 
