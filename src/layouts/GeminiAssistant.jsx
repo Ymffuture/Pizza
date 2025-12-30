@@ -129,7 +129,13 @@ const copyAll = (text) => {
   }, [isListening]);
 
   // ... (rest of the code unchanged: connectionStrength hook, Loader, scrollToBottom, sendMessage, etc.)
+const connectionStyles = {
+  Good: "ring-green-400 shadow-green-500/40",
+  Average: "ring-orange-400 shadow-orange-500/40",
+  Poor: "ring-red-400 shadow-red-500/40",
+};
 
+  
   const useConnectionStrength = () => {
     const [strength, setStrength] = useState("Checking...");
 
@@ -234,9 +240,25 @@ const copyAll = (text) => {
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className={`fixed bottom-10 right-3 z-50 p-2 rounded-full border-l-8 border-t-4 ${connectionStrength==="Good"? "border-t-green-400 border-b-green-400" : connectionStrength==="Average"? : "border-t-orange-400 border-b-orange-400" : "border-t-red-400 border-b-red-400" }  border-b-4  border-l-purple-800  bg-purple-800 text-gray-100  dark:bg-purple-800 shadow-xl hover:scale-100 transition`} >
-        <BotIcon size={35} className='right-3'/>
-      </button>
+      <button
+  onClick={() => setOpen(true)}
+  aria-label="Open AI Assistant"
+  title={`Connection: ${connectionStrength}`}
+  className={`
+    fixed bottom-6 right-4 z-50
+    p-4 rounded-full
+    bg-purple-800 text-white
+    ring-4 ${connectionStyles[connectionStrength] || "ring-gray-400"}
+    shadow-xl
+    transition
+    active:scale-95
+    hover:scale-105
+    focus:outline-none focus:ring-2 focus:ring-purple-400
+  `}
+>
+  <BotIcon size={28} />
+</button>
+
     );
   }
 
