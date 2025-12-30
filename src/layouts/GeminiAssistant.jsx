@@ -41,6 +41,16 @@ const GeminiAssistant = () => {
   const [fade, setFade] = useState(true);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isListening, setIsListening] = useState(false);
+const [showStatus, setShowStatus] = useState(false);
+
+const handleOpen = () => {
+  setOpen(true);
+  setShowStatus(true);
+
+  setTimeout(() => {
+    setShowStatus(false);
+  }, 2500);
+};
 
   const textareaRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -129,11 +139,27 @@ const copyAll = (text) => {
   }, [isListening]);
 
   // ... (rest of the code unchanged: connectionStrength hook, Loader, scrollToBottom, sendMessage, etc.)
-const connectionStyles = {
-  Good: "ring-green-400 shadow-green-500/40",
-  Average: "ring-orange-400 shadow-orange-500/40",
-  Poor: "ring-red-400 shadow-red-500/40",
+const statusMap = {
+  Good: {
+    color: "text-green-400",
+    bg: "bg-green-500/10",
+    ring: "ring-green-400",
+    label: "AI Network: Good",
+  },
+  Average: {
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
+    ring: "ring-orange-400",
+    label: "AI Network: Average",
+  },
+  Poor: {
+    color: "text-red-400",
+    bg: "bg-red-500/10",
+    ring: "ring-red-400",
+    label: "AI Network: Poor",
+  },
 };
+
 
   
   const useConnectionStrength = () => {
@@ -240,24 +266,42 @@ const connectionStyles = {
 
   if (!open) {
     return (
-      <button
-  onClick={() => setOpen(true)}
-  aria-label="Open AI Assistant"
-  title={`Connection: ${connectionStrength}`}
-  className={`
-    fixed bottom-6 right-4 z-50
-    p-4 rounded-full
-    bg-purple-800 text-white
-    ring-4 ${connectionStyles[connectionStrength] || "ring-gray-400"}
-    shadow-xl
-    transition
-    active:scale-95
-    hover:scale-105
-    focus:outline-none focus:ring-2 focus:ring-purple-400
-  `}
->
-  <BotIcon size={28} />
-</button>
+<div className="fixed bottom-6 right-4 z-50 flex items-center gap-3">
+  {/* Slide-out status */}
+  <div
+    className={`
+      px-4 py-2 rounded-full
+      text-sm font-medium
+      backdrop-blur
+      border
+      transition-all duration-300 ease-out
+      ${statusMap[connectionStrength]?.bg}
+      ${statusMap[connectionStrength]?.color}
+      ${showStatus
+        ? "opacity-100 translate-x-0"
+        : "opacity-0 translate-x-6 pointer-events-none"}
+    `}
+  >
+    {statusMap[connectionStrength]?.label}
+  </div>
+
+  {/* AI Button */}
+  <button
+    onClick={handleOpen}
+    aria-label="Open AI Assistant"
+    className={`
+      p-4 rounded-full
+      bg-purple-800 text-white
+      ring-4 ${statusMap[connectionStrength]?.ring}
+      shadow-xl
+      transition
+      hover:scale-105
+      active:scale-95
+    `}
+  >
+    <BotIcon size={28} />
+  </button>
+</div>
 
     );
   }
