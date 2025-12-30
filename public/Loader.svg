@@ -1,0 +1,63 @@
+<svg
+  width="300"
+  height="20"
+  viewBox="0 0 300 20"
+  xmlns="http://www.w3.org/2000/svg"
+  role="progressbar"
+  aria-busy="true"
+>
+  <!-- Track -->
+  <rect
+    x="0"
+    y="9"
+    width="300"
+    height="2"
+    fill="#e0e0e0"
+  />
+
+  <!-- Bar 1 -->
+  <rect y="9" height="2" fill="#1a73e8">
+    <animate
+      attributeName="x"
+      values="-150;300"
+      dur="2s"
+      repeatCount="indefinite"
+      keyTimes="0;1"
+      keySplines="0.4 0 0.2 1"
+      calcMode="spline"
+    />
+    <animate
+      attributeName="width"
+      values="30;180;30"
+      dur="2s"
+      repeatCount="indefinite"
+      keyTimes="0;0.5;1"
+      keySplines="0.4 0 0.2 1;0.4 0 0.2 1"
+      calcMode="spline"
+    />
+  </rect>
+
+  <!-- Bar 2 -->
+  <rect y="9" height="2" fill="#1a73e8" opacity="0.6">
+    <animate
+      attributeName="x"
+      values="-200;300"
+      dur="2s"
+      begin="0.9s"
+      repeatCount="indefinite"
+      keyTimes="0;1"
+      keySplines="0.4 0 0.2 1"
+      calcMode="spline"
+    />
+    <animate
+      attributeName="width"
+      values="20;120;20"
+      dur="2s"
+      begin="0.9s"
+      repeatCount="indefinite"
+      keyTimes="0;0.5;1"
+      keySplines="0.4 0 0.2 1;0.4 0 0.2 1"
+      calcMode="spline"
+    />
+  </rect>
+</svg>

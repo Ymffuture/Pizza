@@ -8,6 +8,7 @@ import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-hot-toast";
 import { MdMic, MdMicOff } from "react-icons/md";
 import { Copy } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -42,6 +43,16 @@ const GeminiAssistant = () => {
   const [fade, setFade] = useState(true);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isListening, setIsListening] = useState(false);
+const [showStatus, setShowStatus] = useState(false);
+
+const handleOpen = () => {
+  setOpen(true);
+  setShowStatus(true);
+
+  setTimeout(() => {
+    setShowStatus(false);
+  }, 10000);
+};
 
   const textareaRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -62,7 +73,8 @@ const copyAll = (text) => {
   };
 
   useEffect(() => {
-    if (msg || isListening) return;
+    if (msg || isListening || messages.length === 0) return;
+
 
     const list = getContextualPlaceholders();
 
@@ -129,7 +141,29 @@ const copyAll = (text) => {
   }, [isListening]);
 
   // ... (rest of the code unchanged: connectionStrength hook, Loader, scrollToBottom, sendMessage, etc.)
+const statusMap = {
+  Good: {
+    color: "text-green-400",
+    bg: "bg-green-500/10",
+    ring: "ring-black",
+    label: "Connection speed: 80%+",
+  },
+  Average: {
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
+    ring: "ring-orange-600",
+    label: "Connection speed: 50%+",
+  },
+  Poor: {
+    color: "text-red-400",
+    bg: "bg-red-500/10",
+    ring: "ring-red-600",
+    label: "Connection speed: 40%",
+  },
+};
 
+
+  
   const useConnectionStrength = () => {
     const [strength, setStrength] = useState("Checking...");
 
@@ -156,28 +190,40 @@ const copyAll = (text) => {
         setStrength(level);
 
         if (level === "Poor") {
-          toast((t) => (
-            <span className="flex items-center justify-between gap-2 text-[10px]">
-              <span>
-                NETWORK: <b className="text-red-600">Your connection is weak. AI responses may be slow.</b>
-              </span>
-              <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
-                Close
-              </button>
-            </span>
-          ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+        //  toast((t) => (
+         //   <span className="flex items-center justify-between gap-2 text-[10px]">
+         //     <span>
+           //     NETWORK: <b className="text-red-600">Your connection is weak. AI responses may be slow.</b>
+          //    </span>
+       //       <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
+         //       Close
+         //     </button>
+        //    </span>
+       //   ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+          console.log("bad network") 
+          
+  setShowStatus(true);
+          setTimeout(() => {
+    setShowStatus(false);
+  }, 10000);
         }
         if (level === "Good") {
-          toast((t) => (
-            <span className="flex items-center justify-between gap-2 text-[10px]">
-              <span>
-                NETWORK: <b className="text-green-600">Connected</b>
-              </span>
-              <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
-                Close
-              </button>
-            </span>
-          ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+        //  toast((t) => (
+        //    <span className="flex items-center justify-between gap-2 text-[10px]">
+          //    <span>
+          //      NETWORK: <b className="text-green-600">Connected</b>
+          //    </span>
+           //   <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
+           //     Close
+         //     </button>
+      //      </span>
+        //  ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+          console.log("good networking") 
+          
+  setShowStatus(true);
+          setTimeout(() => {
+    setShowStatus(false);
+  }, 10000);
         }
       };
 
@@ -232,14 +278,56 @@ const copyAll = (text) => {
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="fixed bottom-10 -right-6 z-50 p-2 rounded-full border-l-8 border-t-4 border-t-purple-400 border-b-4 border-b-purple-400 border-l-purple-800  bg-purple-800 text-gray-100  dark:bg-purple-800 shadow-xl hover:scale-100 transition">
-        <BotIcon size={35} className='right-3'/>
-      </button>
+<div className="fixed bottom-6 right-4 z-50 flex items-center gap-3">
+  {/* Slide-out status */}
+  <div
+    className={`
+      px-4 py-2 rounded-full
+      text-sm font-medium
+      backdrop-blur
+      border
+      transition-all duration-300 ease-out
+      ${statusMap[connectionStrength]?.bg}
+      ${statusMap[connectionStrength]?.color}
+      ${showStatus
+        ? "opacity-100 translate-x-0"
+        : "opacity-0 translate-x-6 pointer-events-none"}
+    `}
+  >
+    {statusMap[connectionStrength]?.label}
+  </div>
+
+  {/* AI Button */}
+  <button
+    onClick={handleOpen}
+    aria-label="Open AI Assistant"
+    className={`
+      p-2 rounded-full
+      bg-black text-white
+      ring-4 ${statusMap[connectionStrength]?.ring}
+      shadow-xl
+      transition
+      hover:scale-105
+      active:scale-75
+    `}
+  >
+    <BotIcon size={20} />
+  </button>
+</div>
+
     );
   }
 
   return (
     <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
+
+      {/* Stars background */}
+<div className="absolute inset-0 -z-10 overflow-hidden">
+  <div className="stars" />
+  <div className="stars2" />
+  <div className="stars3" />
+</div>
+
       {/* HEADER unchanged */}
       <header className="flex items-center justify-between px-5 py-3 backdrop-blur-xl bg-white/80 dark:bg-gray-900/70 border-b border-gray-200/70 dark:border-gray-800 sticky top-0 z-20">
         <div className="flex items-center gap-3">
@@ -266,10 +354,26 @@ const copyAll = (text) => {
         {/* ... messages rendering unchanged ... */}
         {messages.length === 0 && (
           <div className="grid sm:grid-cols-2 gap-3 mt-10">
-            {["Explain React hooks", "Generate a website idea 💡 for business", "Write a nestjs snippet ", "Tips for learning AI"].map((p, i) => (
-              <button key={i} onClick={() => { setMsg(p); setTimeout(sendMessage, 200); }} className="border-gray-100 shadow-2xl rounded-xl p-4 text-sm hover:bg-gray-50 dark:hover:bg-gray-900">
-                {p}
-              </button>
+            {["Explain React hooks", "Generate a website idea for business", "Write a nestjs snippet ", "Tips for learning AI"].map((p, i) => (
+              <button
+  key={i}
+  onClick={() => {
+    setMsg(p);
+    setTimeout(sendMessage, 200);
+  }}
+  className="
+    relative rounded-xl p-4 text-sm text-center 
+    bg-white/60 dark:bg-white/5 backdrop-blur-xl
+    transition-all duration-300
+    hover:scale-[1.03]
+    hover:shadow-[0_0_30px_rgba(0,229,255,0.35)]
+    border border-white/10
+  "
+>
+  <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400/20 to-purple-500/20 opacity-0 hover:opacity-100 transition" />
+  <span className="relative z-10">{p}</span>
+</button>
+
             ))}
           </div>
         )}
@@ -345,13 +449,17 @@ const copyAll = (text) => {
 
         <button
           onClick={toggleVoice}
-          className={`p-3 rounded-xl transition ${isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-300 dark:bg-gray-700"}`}
+          className={`p-3 rounded-full transition ${isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-300 dark:bg-gray-700"}`}
         >
-          {isListening ? <MdMicOff size={20} /> : <MdMic size={20} />}
+          {isListening ? <MdMicOff size={28} /> : <MdMic size={28} />}
         </button>
 
-        <button onClick={sendMessage} disabled={loading} className="p-3 rounded-xl bg-black text-white disabled:opacity-50">
-          <Send size={18} />
+        <button
+          onClick={sendMessage}
+          disabled={loading}
+          className="p-3 rounded-full bg-gradient-to-tr from-purple-500 to-gray-600"
+        >
+          <ArrowUp size={28} />
         </button>
       </footer>
     </div>

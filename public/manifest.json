@@ -1,47 +1,123 @@
 {
-  "name": "SwiftMeta",
+  "name": "SwiftMeta — Professional Web Design Platform",
   "short_name": "SwiftMeta",
-  "start_url": ".",
+  "description": "Get your modern, responsive website built in seconds with expert developers using React, Next.js, Tailwind, and cutting-edge UI/UX design.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "theme_color": "#000",
-  "background_color": "gray",
-  "description": "Secure, fast file sharing & storage powered by AI.",
-  "orientation": "portrait-primary",
+  "background_color": "#fff",
+  "categories": ["productivity", "business", "design", "developer tools"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "/vite.svg",
-      "sizes": "192x192",
-      "type": "image/png"
+  "src": "/vite.svg",
+  "sizes": "512x512",
+  "type": "image/svg+xml",
+  "purpose": "any maskable"
+},
+    {
+      "src": "/Logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
-      "src": "/vite.svg",
+      "src": "/icons/logo-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/logo-maskable-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/logo-monochrome-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "monochrome"
     }
-  ], 
-  
+  ],
   "shortcuts": [
-  {
-    "name": "Upload Files",
-    "short_name": "Upload",
-    "description": "Quickly upload new files",
-    "url": "/upload",
-    "icons": [{ "src": "/Branded.svg", "sizes": "96x96", "type": "image/png" }]
-  },
-  {
-    "name": "My Files",
-    "short_name": "Files",
-    "description": "Access your stored files",
-    "url": "/files",
-    "icons": [{ "src": "/vite.svg", "sizes": "96x96", "type": "image/png" }]
-  },
-  {
-    "name": "Profile",
-    "short_name": "Profile",
-    "description": "View your profile",
-    "url": "/profile",
-    "icons": [{ "src": "/vite.svg", "sizes": "96x96", "type": "image/png" }]
-  }
-]
-
+    {
+      "name": "Browse About Us",
+      "short_name": "About Us",
+      "description": "Explore website types and order professional builds",
+      "url": "/about?source=pwa",
+      "icons": [
+        {
+          "src": "Logo.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Community Blog",
+      "short_name": "Blog",
+      "description": "Join discussions, share ideas, and collaborate with developers",
+      "url": "/dashboard/blog?source=pwa",
+      "icons": [
+        {
+          "src": "/icons/feed-96.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Manage your projects, orders, and profile",
+      "url": "/dashboard?source=pwa",
+      "icons": [
+        {
+          "src": "/icons/dashboard-96.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Profile & Settings",
+      "short_name": "Profile",
+      "description": "Account, preferences, and security settings",
+      "url": "/profile?source=pwa",
+      "icons": [
+        {
+          "src": "/icons/profile-96.svg",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "SwiftMeta Dashboard – Manage Your Projects"
+    },
+    {
+      "src": "/screenshots/services-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Browse Services on Mobile"
+    },
+    {
+      "src": "/screenshots/feed-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Community Feed – Collaborate with Developers"
+    }
+  ]
 }

@@ -3,9 +3,9 @@ import { MdSunny } from "react-icons/md";
 import { LuMoonStar } from "react-icons/lu";
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem("theme") || "light"
-  );
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "dark"; // Default to dark
+  });
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
