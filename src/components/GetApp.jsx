@@ -1,5 +1,7 @@
 import React from "react";
-import img from "../assets/img/order.png";
+import Lottie from "lottie-react";
+import appAnimation from "../assets/app.json";
+
 
 const googlePlayIcon =
   "https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg";
@@ -58,19 +60,28 @@ const GetApp = () => {
 
           {/* RIGHT IMAGE — Apple-style floating device */}
           <div className="relative flex justify-center items-center z-10">
-            <img
-              src={img}
-              alt="App Preview"
-              className="
-                w-[260px] md:w-[340px] lg:w-[420px]
-                drop-shadow-[0_25px_60px_rgba(0,0,0,0.15)]
-                dark:drop-shadow-[0_25px_80px_rgba(0,0,0,0.8)]
-                rounded-2xl
-                hover:scale-[1.02]
-                transition-all duration-500
-              "
-            />
-          </div>
+  <div
+    className="
+      w-[260px] md:w-[340px] lg:w-[420px]
+      rounded-3xl
+      bg-white/60 dark:bg-white/5
+      backdrop-blur-xl
+      drop-shadow-[0_25px_60px_rgba(0,0,0,0.15)]
+      dark:drop-shadow-[0_25px_80px_rgba(0,0,0,0.8)]
+      hover:scale-[1.02]
+      transition-all duration-500
+      p-6
+    "
+  >
+    <Lottie
+      animationData={appAnimation}
+      loop
+      autoplay
+      className="w-full h-full"
+    />
+  </div>
+</div>
+
 
         </div>
       </div>
