@@ -49,7 +49,7 @@ const handleOpen = () => {
 
   setTimeout(() => {
     setShowStatus(false);
-  }, 5000);
+  }, 10000);
 };
 
   const textareaRef = useRef(null);
@@ -143,19 +143,19 @@ const statusMap = {
   Good: {
     color: "text-green-400",
     bg: "bg-green-500/10",
-    ring: "ring-green-400",
+    ring: "ring-green-600",
     label: "Connection speed: 80%+",
   },
   Average: {
     color: "text-orange-400",
     bg: "bg-orange-500/10",
-    ring: "ring-orange-400",
+    ring: "ring-orange-600",
     label: "Connection speed: 50%+",
   },
   Poor: {
     color: "text-red-400",
     bg: "bg-red-500/10",
-    ring: "ring-red-400",
+    ring: "ring-red-600",
     label: "Connection speed: 40%",
   },
 };
@@ -199,6 +199,8 @@ const statusMap = {
         //    </span>
        //   ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
           console.log("bad network") 
+          
+  setShowStatus(true);
         }
         if (level === "Good") {
         //  toast((t) => (
@@ -212,6 +214,8 @@ const statusMap = {
       //      </span>
         //  ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
           console.log("good networking") 
+          
+  setShowStatus(true);
         }
       };
 
@@ -291,7 +295,7 @@ const statusMap = {
     aria-label="Open AI Assistant"
     className={`
       p-4 rounded-full
-      bg-purple-800 text-white
+      bg-black text-white
       ring-4 ${statusMap[connectionStrength]?.ring}
       shadow-xl
       transition
@@ -299,7 +303,7 @@ const statusMap = {
       active:scale-95
     `}
   >
-    <BotIcon size={24} />
+    <BotIcon size={30} />
   </button>
 </div>
 
