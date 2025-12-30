@@ -156,28 +156,30 @@ const copyAll = (text) => {
         setStrength(level);
 
         if (level === "Poor") {
-          toast((t) => (
-            <span className="flex items-center justify-between gap-2 text-[10px]">
-              <span>
-                NETWORK: <b className="text-red-600">Your connection is weak. AI responses may be slow.</b>
-              </span>
-              <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
-                Close
-              </button>
-            </span>
-          ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+        //  toast((t) => (
+         //   <span className="flex items-center justify-between gap-2 text-[10px]">
+         //     <span>
+           //     NETWORK: <b className="text-red-600">Your connection is weak. AI responses may be slow.</b>
+          //    </span>
+       //       <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
+         //       Close
+         //     </button>
+        //    </span>
+       //   ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+          console.log("bad network") 
         }
         if (level === "Good") {
-          toast((t) => (
-            <span className="flex items-center justify-between gap-2 text-[10px]">
-              <span>
-                NETWORK: <b className="text-green-600">Connected</b>
-              </span>
-              <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
-                Close
-              </button>
-            </span>
-          ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+        //  toast((t) => (
+        //    <span className="flex items-center justify-between gap-2 text-[10px]">
+          //    <span>
+          //      NETWORK: <b className="text-green-600">Connected</b>
+          //    </span>
+           //   <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
+           //     Close
+         //     </button>
+      //      </span>
+        //  ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
+          console.log("good networking") 
         }
       };
 
@@ -232,7 +234,7 @@ const copyAll = (text) => {
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="fixed bottom-10 -right-6 z-50 p-2 rounded-full border-l-8 border-t-4 border-t-purple-400 border-b-4 border-b-purple-400 border-l-purple-800  bg-purple-800 text-gray-100  dark:bg-purple-800 shadow-xl hover:scale-100 transition">
+      <button onClick={() => setOpen(true)} className={`fixed bottom-10 -right-0 z-50 p-2 rounded-full border-l-8 border-t-4 ${connectionStrength==="Good"? "border-t-green-400 border-b-green-400" :  "border-t-red-400 border-b-red-400" }  border-b-4  border-l-purple-800  bg-purple-800 text-gray-100  dark:bg-purple-800 shadow-xl hover:scale-100 transition`} >
         <BotIcon size={35} className='right-3'/>
       </button>
     );
@@ -369,9 +371,9 @@ const copyAll = (text) => {
 
         <button
           onClick={toggleVoice}
-          className={`p-3 rounded-xl transition ${isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-300 dark:bg-gray-700"}`}
+          className={`p-3 rounded-full transition ${isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-300 dark:bg-gray-700"}`}
         >
-          {isListening ? <MdMicOff size={20} /> : <MdMic size={20} />}
+          {isListening ? <MdMicOff size={28} /> : <MdMic size={28} />}
         </button>
 
         <button
