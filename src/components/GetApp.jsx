@@ -82,7 +82,7 @@ const GetApp = () => {
     preserveAspectRatio: "xMidYMid meet",
     progressiveLoad: true
   }}
-  className="w-full h-full"
+  className="w-full h-full scale-130"
 />
 
   </div>
