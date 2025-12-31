@@ -179,7 +179,7 @@ export default function Newsletter() {
     const lastSent = localStorage.getItem("newsletter_last_sent");
     if (!lastSent) return;
     const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
-    const remaining = 7200/2 - diff;
+    const remaining = 500 - diff;
     if (remaining > 0) dispatch({ type: "SET_COOLDOWN", value: remaining });
   }, []);
 
@@ -240,7 +240,7 @@ export default function Newsletter() {
             message: "Message sent successfully. Thank you!",
           });
 
-          dispatch({ type: "SET_COOLDOWN", value: 7200/2 });
+          dispatch({ type: "SET_COOLDOWN", value: 500 });
         } catch {
           dispatch({
             type: "ERROR",
@@ -295,7 +295,7 @@ export default function Newsletter() {
               className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 flex gap-2"
             >
               <AlertCircle size={18} />
-              One submission every 1 hours
+              One submission every 500 seconds
             </motion.div>
           )}
         </AnimatePresence>
