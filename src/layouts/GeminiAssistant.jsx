@@ -7,8 +7,9 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkCold } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "react-hot-toast";
 import { MdMic, MdMicOff } from "react-icons/md";
-import { Copy } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { ArrowUp } from "lucide-react";
+
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -44,6 +45,13 @@ const GeminiAssistant = () => {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [isListening, setIsListening] = useState(false);
 const [showStatus, setShowStatus] = useState(false);
+
+const cleanCode = (code) =>
+  code
+    .replace(/^\s*\d+\s?/gm, "") // remove line numbers
+    .trim();
+
+
 
 const handleOpen = () => {
   setOpen(true);
@@ -414,46 +422,89 @@ const StarBackground = () => (
    <ReactMarkdown
   remarkPlugins={[remarkGfm]}
   className="prose prose-sm max-w-none dark:prose-invert"
-  components={{
-    code({ inline, className, children }) {
-      const match = /language-(\w+)/.exec(className || "");
+ components={{
+  code({ inline, className, children }) {
+    const match = /language-(\w+)/.exec(className || "");
 
-      if (!inline && match) {
-        return (
-          <div className="relative group">
-            {/* COPY CODE BUTTON */}
-            <button
-              onClick={() => copyAll(String(children))}
-              className="
-                absolute top-2 right-2
-                opacity-0 group-hover:opacity-100
-                transition
-                bg-black/70 text-white
-                p-1.5 rounded-md
-                z-10
-              "
-            >
-              <Copy size={14} />
-            </button>
+    if (!inline && match) {
+      const [copied, setCopied] = React.useState(false);
 
-            <SyntaxHighlighter
-              style={coldarkCold}
-              language={match[1]}
-              PreTag="div"
-            >
-              {String(children).replace(/\n$/, "")}
-            </SyntaxHighlighter>
-          </div>
-        );
-      }
+      const handleCopy = () => {
+        const text = cleanCode(String(children));
+        navigator.clipboard.writeText(text);
+
+        // Mobile haptic feedback
+        if (navigator.vibrate) navigator.vibrate(20);
+
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      };
 
       return (
-        <code className="bg-gray-300 dark:bg-gray-600 px-1 rounded">
-          {children}
-        </code>
+        <div className="relative group">
+          {/* COPY BUTTON (sticky follows scroll) */}
+          <button
+            onClick={handleCopy}
+            aria-label="Copy code"
+            className={`
+              sticky top-2 ml-auto mr-2 z-20
+              flex items-center gap-1
+              px-2 py-1 rounded-md
+              text-xs font-medium
+              transition-all duration-200
+              ${
+                copied
+                  ? "bg-green-600 text-white animate-pop"
+                  : "bg-black/70 text-white"
+              }
+              opacity-0 group-hover:opacity-100
+            `}
+          >
+            {copied ? (
+              <>
+                <Check size={14} />
+                <span className="text-[10px]">Copied</span>
+              </>
+            ) : (
+              <Copy size={14} />
+            )}
+          </button>
+
+          {/* TOOLTIP */}
+          {copied && (
+            <div
+              className="
+                absolute -top-7 right-3
+                px-2 py-1 rounded-md
+                text-[10px]
+                bg-black text-white
+                shadow-lg
+                animate-pop
+              "
+            >
+             <Check/> Copied!
+            </div>
+          )}
+
+          <SyntaxHighlighter
+            style={coldarkCold}
+            language={match[1]}
+            PreTag="div"
+          >
+            {String(children).replace(/\n$/, "")}
+          </SyntaxHighlighter>
+        </div>
       );
-    },
-  }}
+    }
+
+    return (
+      <code className="bg-gray-300 dark:bg-gray-600 px-1 rounded">
+        {children}
+      </code>
+    );
+  },
+}}
+
 >
   {m.text}
 </ReactMarkdown>

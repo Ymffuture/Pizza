@@ -6,6 +6,7 @@ import MenuCard from "../layouts/MenuCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCube, Pagination, Navigation } from "swiper/modules";
 
+
 // Swiper Styles
 import "swiper/css";
 import "swiper/css/effect-cube";
