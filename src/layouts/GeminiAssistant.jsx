@@ -162,7 +162,13 @@ const statusMap = {
   },
 };
 
-
+const StarBackground = () => (
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+      <style>{`@keyframes moveStars {from { transform: translate3d(0,0,0);} to { transform: translate3d(-600px,-300px,0);} }`}</style>
+      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)', backgroundSize: '40px 40px, 80px 80px', opacity: 0.6, animation: 'moveStars 120s linear infinite' }} />
+      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px)', backgroundSize: '120px 120px', opacity: 0.3, animation: 'moveStars 220s linear infinite' }} />
+    </div>
+  );
   
   const useConnectionStrength = () => {
     const [strength, setStrength] = useState("Checking...");
@@ -323,11 +329,7 @@ const statusMap = {
     <div className="fixed inset-0 z-50 bg-white dark:bg-black flex flex-col">
 
       {/* Stars background */}
-<div className="absolute inset-0 -z-10 overflow-hidden">
-  <div className="stars" />
-  <div className="stars2" />
-  <div className="stars3" />
-</div>
+<StarBackground/>
 
       {/* HEADER unchanged */}
       <header className="flex items-center justify-between px-5 py-3 backdrop-blur-xl bg-white/80 dark:bg-gray-900/70 border-b border-gray-200/70 dark:border-gray-800 sticky top-0 z-20">
@@ -383,47 +385,79 @@ const statusMap = {
     key={i}
     className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}
   >
-    <div
-      className={`relative max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow ${
-        m.sender === "user"
-          ? "bg-[#87CEEB] text-white dark:bg-blue-700 m-3"
-          : "bg-gray-200 dark:bg-gray-700 dark:text-white"
-      }`}
-    >
+   <div
+  className={`
+    group relative max-w-[100%] rounded-2xl px-4 py-3 text-sm shadow
+    ${m.sender === "user"
+      ? "bg-[#87CEEB] text-white dark:bg-blue-700 m-3"
+      : "bg-gray-200 dark:bg-gray-700 dark:text-white"}
+  `}
+>
+
       {/* COPY FULL MESSAGE (AI ONLY) */}
-      {m.sender === "ai" && (
-        <button
-          onClick={() => copyAll(m.text)}
-          className="absolute top-2 right-2 opacity-0 hover:opacity-100 group-hover:opacity-100 transition bg-black/70 text-white p-1.5 rounded-lg"
-        >
-          <Copy size={16} />
-        </button>
+      {m.sender !== "user" && (
+       <button
+  onClick={() => copyAll(m.text)}
+  className="
+    absolute top-2 right-2
+    opacity-0 group-hover:opacity-100
+    transition
+    bg-black/70 text-white
+    p-1.5 rounded-lg
+  "
+>
+  <Copy size={16} />
+</button>
+
       )}
 
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        className="prose prose-sm max-w-none dark:prose-invert"
-        components={{
-          code({ inline, className, children }) {
-            const match = /language-(\w+)/.exec(className || "");
-            return !inline && match ? (
-              <SyntaxHighlighter
-                style={coldarkCold}
-                language={match[1]}
-                PreTag="div"
-              >
-                {String(children)}
-              </SyntaxHighlighter>
-            ) : (
-              <code className="bg-gray-300 dark:bg-gray-600 px-1 rounded">
-                {children}
-              </code>
-            );
-          },
-        }}
-      >
-        {m.text}
-      </ReactMarkdown>
+   <ReactMarkdown
+  remarkPlugins={[remarkGfm]}
+  className="prose prose-sm max-w-none dark:prose-invert"
+  components={{
+    code({ inline, className, children }) {
+      const match = /language-(\w+)/.exec(className || "");
+
+      if (!inline && match) {
+        return (
+          <div className="relative group">
+            {/* COPY CODE BUTTON */}
+            <button
+              onClick={() => copyAll(String(children))}
+              className="
+                absolute top-2 right-2
+                opacity-0 group-hover:opacity-100
+                transition
+                bg-black/70 text-white
+                p-1.5 rounded-md
+                z-10
+              "
+            >
+              <Copy size={14} />
+            </button>
+
+            <SyntaxHighlighter
+              style={coldarkCold}
+              language={match[1]}
+              PreTag="div"
+            >
+              {String(children).replace(/\n$/, "")}
+            </SyntaxHighlighter>
+          </div>
+        );
+      }
+
+      return (
+        <code className="bg-gray-300 dark:bg-gray-600 px-1 rounded">
+          {children}
+        </code>
+      );
+    },
+  }}
+>
+  {m.text}
+</ReactMarkdown>
+
     </div>
   </div>
 ))}
