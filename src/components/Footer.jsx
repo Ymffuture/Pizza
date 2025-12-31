@@ -150,7 +150,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
           </p>
 
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-            Location: <em>{weatherInfo.country}:<hr/>{weatherInfo.city}</em><br/>
+            Location: <em className='text-xs'>{weatherInfo.country}:{weatherInfo.city}</em><br/>
             Temperature: <b className="text-red-600">{weatherInfo.temp}°C</b><br />
             Feels like: <b className="text-green-600" >{weatherInfo.feelsLike}°C</b><br/>
             Condition: {weatherInfo.desc}

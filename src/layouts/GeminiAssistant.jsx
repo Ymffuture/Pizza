@@ -302,16 +302,17 @@ const statusMap = {
     onClick={handleOpen}
     aria-label="Open AI Assistant"
     className={`
-      p-2 rounded-full
-      bg-black text-white
-      ring-4 ${statusMap[connectionStrength]?.ring}
+      p-3 rounded-full
+      bg-black/10 text-white
+      ring-1 ${statusMap[connectionStrength]?.ring}
       shadow-xl
       transition
-      hover:scale-105
-      active:scale-75
+      hover:scale-120
+      active:scale-100
+      border-b-black
     `}
   >
-    <BotIcon size={20} />
+    <BotIcon size={20} className={`${statusMap[connectionStrength]?.color}`}/>
   </button>
 </div>
 
@@ -457,7 +458,7 @@ const statusMap = {
         <button
           onClick={sendMessage}
           disabled={loading}
-          className="p-3 rounded-full bg-gradient-to-tr from-purple-500 to-gray-600"
+          className="p-3 rounded-full bg-gradient-to-tr from-black to-black/10 text-white"
         >
           <ArrowUp size={28} />
         </button>

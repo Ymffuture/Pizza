@@ -77,6 +77,88 @@ function Spinner() {
   );
 }
 
+
+const Liner = ({
+  height = 3,
+  speed = 2,
+  color = "#1a73e8",
+  bgColor = "#e0e0e0",
+  className = "",
+}) => {
+  return (
+    <div
+      className={`absolute left-0 right-0 -top-4 flex justify-center ${className}`}
+    >
+      <svg
+        width="100%"
+        height="30"
+        viewBox="0 0 100 20"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+        role="progressbar"
+        aria-busy="true"
+        className="max-w-full"
+      >
+        {/* Background line */}
+        <rect
+          x="0"
+          y="9"
+          width="100"
+          height={height}
+          fill={bgColor}
+        />
+
+        {/* Main animated bar */}
+        <rect y="9" height={height} fill={color}>
+          <animate
+            attributeName="x"
+            values="-40;100"
+            dur={`${speed}s`}
+            repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1"
+            keyTimes="0;1"
+          />
+          <animate
+            attributeName="width"
+            values="10;40;10"
+            dur={`${speed}s`}
+            repeatCount="indefinite"
+            keyTimes="0;0.5;1"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1;0.4 0 0.2 1"
+          />
+        </rect>
+
+        {/* Secondary glow trail */}
+        <rect y="9" height={height} fill={color} opacity="0.5">
+          <animate
+            attributeName="x"
+            values="-60;100"
+            dur={`${speed}s`}
+            begin="0.8s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1"
+            keyTimes="0;1"
+          />
+          <animate
+            attributeName="width"
+            values="8;25;8"
+            dur={`${speed}s`}
+            begin="0.8s"
+            repeatCount="indefinite"
+            keyTimes="0;0.5;1"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1;0.4 0 0.2 1"
+          />
+        </rect>
+      </svg>
+    </div>
+  );
+};
+
+
 /* ----------------------------------
    COMPONENT
 ----------------------------------- */
@@ -175,9 +257,9 @@ export default function Newsletter() {
   ----------------------------------- */
 
   const buttonText = useMemo(() => {
-    if (status === "loading" || isPending) return "Sending";
+    if (status === "loading" || isPending) return "";
     if (cooldown > 0) return `Wait ${formatTime(cooldown)}`;
-    return "Send Message";
+    return "Email Us";
   }, [status, cooldown, isPending]);
 
   /* ----------------------------------
@@ -186,7 +268,12 @@ export default function Newsletter() {
 
   return (
     <section className="bg-[#f5f5f7] dark:bg-black py-24">
-      <div className="max-w-3xl mx-auto px-8 py-16 rounded-[32px] bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-lg">
+    
+   
+
+      <div className="max-w-3xl mx-auto px-8 py-16 rounded-[32px] bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-lg relative overflow-hidden" >
+{(status === "loading" || isPending) && <Liner />}
+
         <header className="text-center mb-10">
           <p className="text-sm font-semibold uppercase tracking-widest text-purple-500">
             Newsletter
