@@ -295,7 +295,7 @@ export default function Newsletter() {
               className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 flex gap-2"
             >
               <AlertCircle size={18} />
-              One submission every 500 seconds
+              One submission every 19
             </motion.div>
           )}
         </AnimatePresence>
