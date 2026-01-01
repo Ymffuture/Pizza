@@ -374,7 +374,7 @@ const StarBackground = () => (
 
       {/* Bottom */}
       <div className="border-t border-gray-200 dark:border-gray-700 text-center py-6 text-sm text-gray-500">
-        © {new Date().getFullYear()} SwiftMeta | All rights reserved. 
+        © 2025 - {new Date().getFullYear()} SwiftMeta | All rights reserved. 
         <br/>
         <br/>
         <span className="text-gray-600" >{weather?.countryFlag} {weather?.country || ""} · {weather?.city}</span>

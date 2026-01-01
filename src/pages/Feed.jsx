@@ -7,7 +7,10 @@ import { api } from "../api";
 import PostCard from "../components/PostCard";
 import { CircleDashed, MessageCircle, Heart } from "lucide-react";
 import toast from "react-hot-toast";
+ 
 import likeSound from "../assets/noty.mp3";
+import { FaInfoCircle, FaRss } from "react-icons/fa";
+
 
 const likeAudio = new Audio(likeSound);
 
@@ -135,6 +138,11 @@ export default function Feed() {
     []
   );
 
+  const [feed,setFeed] = useState('posts')
+
+  useEffect(()=>{
+setTimeout(()=>(setFeed('feeds')),3000) // show this in 3s
+  },[])
   /* ======================================================
      RENDER
   ====================================================== */
@@ -142,8 +150,8 @@ export default function Feed() {
     <div className="bg-white dark:bg-black transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 py-8">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            🔹Feeds
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex gap-3">
+            <FaRss/> Feeds
           </h1>
           <p className="text-gray-500 dark:text-gray-400">
             Latest posts from the community
@@ -200,8 +208,8 @@ export default function Feed() {
 
         {/* ===================== EMPTY ===================== */}
         {!loading && posts.length === 0 && (
-          <div className="text-center text-gray-500 dark:text-gray-400 py-20">
-            No posts yet.
+          <div className="text-center text-gray-500 dark:text-gray-400 py-2">
+          <span className="rounded-full p-2 flex gap-3 text-black/65 dark:text-amber-50"> <FaInfoCircle className="text-black dark:text-amber-50" size={24}/> No {feed} yet.</span>
           </div>
         )}
       </div>

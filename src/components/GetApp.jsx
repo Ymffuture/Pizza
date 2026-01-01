@@ -64,7 +64,6 @@ const GetApp = () => {
     className="
       w-[260px] md:w-[340px] lg:w-[420px]
       rounded-3xl
-      bg-white/60 dark:bg-white/5
       backdrop-blur-xl
       drop-shadow-[0_25px_60px_rgba(0,0,0,0.15)]
       dark:drop-shadow-[0_25px_80px_rgba(0,0,0,0.8)]
@@ -82,7 +81,7 @@ const GetApp = () => {
     preserveAspectRatio: "xMidYMid meet",
     progressiveLoad: true
   }}
-  className="w-full h-full scale-130"
+  className="w-full h-full scale-180"
 />
 
   </div>

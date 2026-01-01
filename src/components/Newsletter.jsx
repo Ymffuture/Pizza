@@ -9,6 +9,9 @@ import React, {
 import emailjs from "@emailjs/browser";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, AlertCircle } from "lucide-react";
+import { FiXCircle } from 'react-icons/fi';
+import { FaAddressBook, FaEdit, FaEnvelope, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
+import { MdChatBubble } from "react-icons/md";
 
 /* ----------------------------------
    STATE MANAGEMENT (useReducer)
@@ -275,7 +278,7 @@ export default function Newsletter() {
 {(status === "loading" || isPending) && <Liner />}
 
         <header className="text-center mb-10">
-          <p className="text-sm font-semibold uppercase tracking-widest text-purple-500">
+          <p className="text-[16px] font-semibold uppercase tracking-widest text-gray-200">
             Newsletter
           </p>
           <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
@@ -294,7 +297,7 @@ export default function Newsletter() {
               exit={{ opacity: 0, y: -8 }}
               className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 flex gap-2"
             >
-              <AlertCircle size={18} />
+              <AlertCircle size={22} />
               One submission every 10 mins
             </motion.div>
           )}
@@ -309,11 +312,11 @@ export default function Newsletter() {
               exit={{ opacity: 0, y: -10 }}
               className={`mb-6 rounded-xl px-4 py-3 flex gap-2 ${
                 status === "success"
-                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                  : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                  ? "bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-600"
+                  : "bg-red-100 text-red-700/55 dark:bg-red-500/10 dark:text-red-600"
               }`}
             >
-              {status === "success" ? <CheckCircle /> : <AlertCircle />}
+              {status === "success" ? <CheckCircle size={22}/> : <FiXCircle size={22}/>}
               {message}
             </motion.div>
           )}
@@ -325,6 +328,8 @@ export default function Newsletter() {
             value={form.name}
             onChange={(v) => updateField("name", v)}
             placeholder="John Appleseed"
+            icon={ <FaUserAlt size={18} className='text-gray-600' />}
+         
           />
           <InputField
             label="Email Address"
@@ -332,19 +337,21 @@ export default function Newsletter() {
             value={form.email}
             onChange={(v) => updateField("email", v)}
             placeholder="you@icloud.com"
+            icon={ <FaEnvelope size={18} className='text-gray-600'/>}
           />
           <TextareaField
             label="Message"
             value={form.message}
             onChange={(v) => updateField("message", v)}
             placeholder="Write something thoughtful…"
+                 icon={ <MdChatBubble size={18} className='text-gray-600'/>}
           />
 
           <button
             type="submit"
             disabled={status === "loading" || cooldown > 0}
             aria-busy={status === "loading"}
-            className="w-full h-12 rounded-2xl text-lg font-medium bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 disabled:bg-gray-400 text-white transition flex items-center justify-center gap-2"
+            className="w-full h-12 rounded-2xl text-lg font-medium bg-gray-800 hover:bg-purple-700 dark:bg-gray-800 dark:hover:bg-gray-600 disabled:bg-gray-400 text-white transition flex items-center justify-center gap-2 cursor-pointer"
           >
             {(status === "loading" || isPending) && <Spinner />}
             {buttonText}
@@ -359,39 +366,40 @@ export default function Newsletter() {
    REUSABLE INPUTS
 ----------------------------------- */
 
-function InputField({ label, type = "text", value, onChange, placeholder }) {
+function InputField({ label, type = "text", value, onChange, placeholder,icon }) {
   const id = useId();
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        {label}
+      <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300 flex gap-3">
+       {icon} {label}
       </label>
       <input
         id={id}
+        
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="
+        className={`
           w-full h-12 px-4 rounded-2xl
           border border-black/10 dark:border-white/10
           bg-white/80 dark:bg-white/5
           text-gray-900 dark:text-white
-          placeholder:text-purple-400 dark:placeholder:text-purple-500
+          placeholder:text-gray-400 dark:placeholder:text-gray-500
           focus:ring-4 focus:ring-purple-500/30
-          outline-none transition
-        "
+          outline-none transition 
+        `}
       />
     </div>
   );
 }
 
-function TextareaField({ label, value, onChange, placeholder }) {
+function TextareaField({ label, value, onChange, placeholder,icon }) {
   const id = useId();
   return (
     <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        {label}
+      <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300 flex gap-3">
+        {icon} {label}
       </label>
       <textarea
         id={id}
@@ -404,7 +412,7 @@ function TextareaField({ label, value, onChange, placeholder }) {
           border border-black/10 dark:border-white/10
           bg-white/80 dark:bg-white/5
           text-gray-900 dark:text-white
-          placeholder:text-purple-400 dark:placeholder:text-purple-500
+          placeholder:text-gray-400 dark:placeholder:text-gray-500
           focus:ring-4 focus:ring-purple-500/30
           outline-none transition resize-none
         "

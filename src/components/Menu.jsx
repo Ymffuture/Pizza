@@ -138,7 +138,7 @@ const Menu = () => {
   }, []);
 
   return (
-    <section className="transition-colors duration-300 text-black dark:text-black bg-white">
+    <section className="transition-colors duration-300">
       <div className="text-center mb-10">
         <p className="text-gray-500 dark:text-gray-700 uppercase tracking-wide text-sm">
           Our Services
