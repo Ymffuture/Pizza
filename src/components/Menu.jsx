@@ -77,7 +77,7 @@ const Menu = () => {
           Our Services
         </p>
 
-        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-black">
           Websites We Build
         </h2>
 
