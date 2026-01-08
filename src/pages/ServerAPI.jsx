@@ -129,7 +129,7 @@ app.listen(5000, () => console.log("Server running on port 5000"));
   );
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black py-12 px-6 dark:text-white mb-16">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-black py-12 px-6 dark:text-white mt-16">
       <Helmet>
         <title>Server & API Services | SwiftMeta</title>
         <meta
