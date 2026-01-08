@@ -68,7 +68,7 @@ export default function Contact() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 py-20 px-6">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 py-20 px-6 dark:text-white">
       <Helmet>
         <title>Contact Us | SwiftMeta</title>
       </Helmet>
@@ -114,7 +114,7 @@ export default function Contact() {
               <Textarea label="Message" value={form.message} onChange={v => updateField("message", v)} />
 
               {error && (
-                <p className="text-sm text-red-600">{error}</p>
+                <p className="text-sm text-red-600 bg-red-600/10 p-2">{error}</p>
               )}
 
               <button
@@ -145,7 +145,7 @@ export default function Contact() {
                   >
                     <User className="text-blue-600" size={18} />
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {item.name}
+                      {item.name} | {item.subject} 
                     </span>
                   </li>
                 ))}
