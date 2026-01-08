@@ -14,6 +14,10 @@ import Feed from "./pages/Feed";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin" ;
+import CreateTicket from "./pages/CreateTicket";
+import TrackTicket from "./pages/TrackTicket";
+import AdminTicket from "./pages/AdminTicket";
+
 //import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
 
@@ -144,6 +148,13 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/resetpassword" element={<ResetPassword/>} />
+<Route path="/ticket" element={<CreateTicket />} />
+        <Route path="/track" element={<TrackTicket />} />
+
+        {/* Admin Route (JWT guard later) */}
+        <Route path="/admin-ticket" element={<AdminTicket />} />
+
+          
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
