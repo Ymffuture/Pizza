@@ -73,7 +73,7 @@ export default function Contact() {
   // Status dot component
   const StatusDot = ({ status }) => {
     const color =
-      status === "pending" ? "bg-yellow-400 animate-pulse" :
+      status === "pending" ? "bg-yellow-400 animate-pulse " :
       status === "approved" ? "bg-green-500" :
       "bg-gray-400";
     const label =
@@ -82,7 +82,7 @@ export default function Contact() {
       "Unknown";
     return (
       <span className="flex items-center gap-1 text-xs">
-        <span className={`w-2 h-2 rounded-full ${color}`} />
+        <span className={`w-2 h-2 rounded-full dark:text-white  ${color}`} />
         {label}
       </span>
     );
@@ -138,7 +138,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full h-12 rounded-xl bg-[#666] hover:bg-gray-700 text-white flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? <Spin size={18}/> : "Send Message"}
                 {!loading && <Send size={16}/>}
@@ -182,7 +182,7 @@ export default function Contact() {
                 <div className="flex justify-center mt-4">
                   <button
                     onClick={()=>fetchHistory(false)}
-                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition"
+                    className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-xl transition"
                     disabled={fetching}
                   >
                     {fetching ? <Spin size={12}/> : "Load More"}
