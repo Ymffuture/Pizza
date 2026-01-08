@@ -8,47 +8,39 @@ import {
   ShieldCheck,
   Clock,
   User,
-  AlertCircle,
-  Loader2,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { api } from "../api";
 
-const PAGE_LIMIT = 5;
-
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
-  const [loadingHistory, setLoadingHistory] = useState(true);
   const [error, setError] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
-  const updateField = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
+  const updateField = (field, value) =>
+    setForm(prev => ({ ...prev, [field]: value }));
 
   /* -----------------------------
      FETCH CONTACT HISTORY
   ------------------------------ */
-  const fetchHistory = async (pageNumber = 1) => {
+  const fetchHistory = async () => {
     try {
-      setLoadingHistory(true);
-      const { data } = await api.get(`/contact?page=${pageNumber}&limit=${PAGE_LIMIT}`);
-      setHistory(data.data);
-      setPage(data.pagination.page);
-      setTotalPages(data.pagination.totalPages);
+      const { data } = await api.get("/contact");
+      setHistory(data); // expects array
     } catch (err) {
       console.error(err);
-      setError("Failed to fetch contact history.");
-    } finally {
-      setLoadingHistory(false);
     }
   };
 
   useEffect(() => {
-    fetchHistory(page);
-  }, [page]);
+    fetchHistory();
+  }, []);
 
   /* -----------------------------
      SUBMIT FORM
@@ -63,12 +55,13 @@ export default function Contact() {
 
     try {
       setLoading(true);
+
       await api.post("/contact", form);
+
       setForm({ name: "", email: "", subject: "", message: "" });
-      fetchHistory(1);
+      fetchHistory();
     } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || "Failed to send message.");
+      setError("Failed to send message. Try again.");
     } finally {
       setLoading(false);
     }
@@ -121,13 +114,7 @@ export default function Contact() {
               <Textarea label="Message" value={form.message} onChange={v => updateField("message", v)} />
 
               {error && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-sm text-red-600 flex items-center gap-1"
-                >
-                  <AlertCircle size={16} /> {error}
-                </motion.p>
+                <p className="text-sm text-red-600">{error}</p>
               )}
 
               <button
@@ -135,19 +122,8 @@ export default function Contact() {
                 disabled={loading}
                 className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 disabled:opacity-60"
               >
-                {loading ? (
-                  <motion.div
-                    className="flex items-center gap-2"
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                  >
-                    <Loader2 size={16} /> Sending...
-                  </motion.div>
-                ) : (
-                  <>
-                    Send Message <Send size={16} />
-                  </>
-                )}
+                {loading ? "Sending..." : "Send Message"}
+                <Send size={16} />
               </button>
             </form>
 
@@ -157,44 +133,23 @@ export default function Contact() {
                 Recent Contacts
               </h3>
 
-              <AnimatePresence>
-                {loadingHistory
-                  ? [...Array(PAGE_LIMIT)].map((_, i) => <SkeletonRow key={i} />)
-                  : history.length === 0
-                  ? (
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-sm text-gray-500 dark:text-gray-400"
-                    >
-                      No contacts yet.
-                    </motion.p>
-                  )
-                  : history.map(item => (
-                      <motion.li
-                        key={item._id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 rounded-xl bg-gray-50 dark:bg-white/10 mb-2"
-                      >
-                        <div className="flex items-center gap-3">
-                          <User className="text-blue-600" size={18} />
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium text-gray-900 dark:text-white">
-                              {item.name}
-                            </span>
-                            <span className="text-xs text-gray-500 dark:text-gray-300">
-                              {item.subject || "No subject"}
-                            </span>
-                          </div>
-                        </div>
-                        <span className="text-xs text-gray-400 dark:text-gray-400">
-                          {new Date(item.createdAt).toLocaleString()}
-                        </span>
-                      </motion.li>
-                    ))}
-              </AnimatePresence>
+              <ul className="space-y-3">
+                {history.length === 0 && (
+                  <p className="text-sm text-gray-500">No contacts yet.</p>
+                )}
+
+                {history.map(item => (
+                  <li
+                    key={item._id}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-white/10"
+                  >
+                    <User className="text-blue-600" size={18} />
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                      {item.name}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </section>
         </div>
@@ -222,13 +177,12 @@ function InfoCard({ icon: Icon, title, value }) {
 function Input({ label, type = "text", value, onChange }) {
   return (
     <div>
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{label}</label>
+      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
       <input
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
-        placeholder={label}
-        className="w-full h-12 mt-1 px-4 rounded-xl border bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-white"
+        className="w-full h-12 mt-1 px-4 rounded-xl border bg-white dark:bg-black"
       />
     </div>
   );
@@ -237,37 +191,13 @@ function Input({ label, type = "text", value, onChange }) {
 function Textarea({ label, value, onChange }) {
   return (
     <div>
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-400">{label}</label>
+      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
       <textarea
         rows={5}
         value={value}
         onChange={e => onChange(e.target.value)}
-        placeholder={label}
-        className="w-full mt-1 px-4 py-3 rounded-xl border bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-white resize-none"
+        className="w-full mt-1 px-4 py-3 rounded-xl border bg-white dark:bg-black resize-none"
       />
     </div>
-  );
-}
-
-/* -----------------------------
-   SKELETON LOADER
------------------------------- */
-function SkeletonRow() {
-  return (
-    <motion.li
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 rounded-xl bg-gray-100 dark:bg-gray-700 mb-2 animate-pulse"
-    >
-      <div className="flex items-center gap-3">
-        <div className="w-5 h-5 bg-gray-300 dark:bg-gray-500 rounded-full" />
-        <div className="flex flex-col gap-1">
-          <div className="h-3 w-24 bg-gray-300 dark:bg-gray-500 rounded" />
-          <div className="h-2 w-16 bg-gray-200 dark:bg-gray-600 rounded" />
-        </div>
-      </div>
-      <div className="h-3 w-12 bg-gray-300 dark:bg-gray-500 rounded" />
-    </motion.li>
   );
 }
