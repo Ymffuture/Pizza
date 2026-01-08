@@ -9,8 +9,9 @@ import {
   Clock,
   User,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import { api } from "../api";
-
+import { Spin} from "antd" 
 export default function Contact() {
   const [form, setForm] = useState({
     name: "",
@@ -21,6 +22,7 @@ export default function Contact() {
 
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
+  const [fetching, setFetching] = useState(true); // skeleton loader
   const [error, setError] = useState(null);
 
   const updateField = (field, value) =>
@@ -31,10 +33,13 @@ export default function Contact() {
   ------------------------------ */
   const fetchHistory = async () => {
     try {
+      setFetching(true);
       const { data } = await api.get("/contact");
-      setHistory(data); // expects array
+      setHistory(data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setFetching(false);
     }
   };
 
@@ -66,6 +71,19 @@ export default function Contact() {
       setLoading(false);
     }
   };
+
+  /* -----------------------------
+     Skeleton Loader Component
+  ------------------------------ */
+  const SkeletonItem = () => (
+    <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse">
+      <div className="w-6 h-6 bg-gray-400 dark:bg-gray-600 rounded-full" />
+      <div className="flex-1 space-y-2">
+        <div className="h-4 bg-gray-400 dark:bg-gray-600 rounded w-1/2" />
+        <div className="h-3 bg-gray-300 dark:bg-gray-500 rounded w-1/3" />
+      </div>
+    </div>
+  );
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 py-20 px-6">
@@ -101,8 +119,13 @@ export default function Contact() {
             <InfoCard icon={MapPin} title="Location" value="Johannesburg, SA" />
           </aside>
 
-          {/* FORM */}
-          <section className="lg:col-span-2 bg-white dark:bg-white/5 rounded-3xl p-8 shadow-xl border border-black/5 dark:border-white/10">
+          {/* FORM + HISTORY */}
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-2 bg-white dark:bg-white/5 rounded-3xl p-8 shadow-xl border border-black/5 dark:border-white/10"
+          >
             <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
               Send us a message
             </h2>
@@ -114,7 +137,7 @@ export default function Contact() {
               <Textarea label="Message" value={form.message} onChange={v => updateField("message", v)} />
 
               {error && (
-                <p className="text-sm text-red-600">{error}</p>
+                <p className="text-sm text-red-600 p-2 bg-red-600/10 rounded ">{error}</p>
               )}
 
               <button
@@ -123,7 +146,8 @@ export default function Contact() {
                 className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? "Sending..." : "Send Message"}
-                <Send size={16} />
+                {loading ? <Send size={16} /> : <Spin size={16} />}
+                
               </button>
             </form>
 
@@ -134,24 +158,36 @@ export default function Contact() {
               </h3>
 
               <ul className="space-y-3">
-                {history.length === 0 && (
-                  <p className="text-sm text-gray-500">No contacts yet.</p>
-                )}
-
-                {history.map(item => (
-                  <li
-                    key={item._id}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-white/10"
-                  >
-                    <User className="text-blue-600" size={18} />
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
+                {fetching
+                  ? Array(5)
+                      .fill(0)
+                      .map((_, idx) => <SkeletonItem key={idx} />)
+                  : history.length === 0
+                  ? <p className="text-sm text-gray-500 dark:text-gray-400">No contacts yet.</p>
+                  : history.map(item => (
+                      <motion.li
+                        key={item._id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-white/10"
+                      >
+                        <User className="text-gray-400 dark:text-gray-500" size={18} />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">
+                            {item.name}
+                          </span>
+                          {item.subject && (
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              {item.subject}
+                            </span>
+                          )}
+                        </div>
+                      </motion.li>
+                    ))}
               </ul>
             </div>
-          </section>
+          </motion.section>
         </div>
       </div>
     </main>
@@ -165,7 +201,7 @@ export default function Contact() {
 function InfoCard({ icon: Icon, title, value }) {
   return (
     <div className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-white/5 shadow border">
-      <Icon className="text-blue-600" size={22} />
+      <Icon className="text-blue-600 dark:text-gray-400" size={22} />
       <div>
         <h3 className="font-semibold text-gray-900 dark:text-white">{title}</h3>
         <p className="text-sm text-gray-600 dark:text-gray-300">{value}</p>
@@ -182,7 +218,8 @@ function Input({ label, type = "text", value, onChange }) {
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full h-12 mt-1 px-4 rounded-xl border bg-white dark:bg-black"
+        placeholder={label}
+        className="w-full h-12 mt-1 px-4 rounded-xl border bg-white dark:bg-black text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500"
       />
     </div>
   );
@@ -196,7 +233,8 @@ function Textarea({ label, value, onChange }) {
         rows={5}
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full mt-1 px-4 py-3 rounded-xl border bg-white dark:bg-black resize-none"
+        placeholder={label}
+        className="w-full mt-1 px-4 py-3 rounded-xl border bg-white dark:bg-black text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 resize-none"
       />
     </div>
   );
