@@ -73,16 +73,16 @@ export default function Contact() {
   // Status dot component
   const StatusDot = ({ status }) => {
     const color =
-      status === "pending" ? "bg-yellow-400 animate-pulse " :
-      status === "approved" ? "bg-green-500" :
+      status === "pending" ? "bg-yellow-400 animate-pulse dark:text-white" :
+      status === "approved" ? "big-green-500 dark:text-white" :
       "bg-gray-400";
     const label =
       status === "pending" ? "Pending" :
       status === "approved" ? "Approved" :
       "Unknown";
     return (
-      <span className="flex items-center gap-1 text-xs">
-        <span className={`w-2 h-2 rounded-full dark:text-white  ${color}`} />
+      <span className="flex items-center gap-1 text-xs dark:text-white">
+        <span className={`w-2 h-2 rounded-full dark:text-white ${color}`} />
         {label}
       </span>
     );
