@@ -13,6 +13,7 @@ import LoginPhone from "./pages/LoginPhone";
 import Feed from "./pages/Feed";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
+import Admin from "./pages/Admin" ;
 //import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
 
@@ -141,6 +142,7 @@ const App = () => {
           <Route path="/start-quiz" element={<QuizPage />} />
           <Route path="/verify" element={<VerifyEmailPage />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/resetpassword" element={<ResetPassword/>} />
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
