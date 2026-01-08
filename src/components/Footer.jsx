@@ -6,6 +6,13 @@ import { motion } from "framer-motion";
 import gsap from "gsap";
 import toast from "react-hot-toast";
 import { SunIcon, CloudIcon, MapPinIcon } from "@heroicons/react/24/outline";
+import { 
+  WiThermometer, 
+  WiHumidity, 
+  WiDaySunny, 
+  WiCloudy 
+} from "react-icons/wi";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 // SVG Loader
 const LoadingSVG = () => (
@@ -144,18 +151,63 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
         />
 
         {/* TEXT */}
-        <div className="flex-1">
-          <p className="text-sm font-semibold text-gray-900 dark:text-white">
-            Weather Updated
-          </p>
+        <div
+  className="
+    flex-1
+    rounded-xl
+    bg-gradient-to-br from-zinc-900 via-black to-zinc-900
+    border border-white/10
+    p-4
+    shadow-lg
+  "
+>
+  {/* Title */}
+  <p className="text-sm font-semibold tracking-wide text-red-500 uppercase">
+    Weather Update
+  </p>
 
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-            Location: <em className='text-xs'>{weatherInfo.country}:{weatherInfo.city}</em><br/>
-            Temperature: <b className="text-red-600">{weatherInfo.temp}°C</b><br />
-            Feels like: <b className="text-green-600" >{weatherInfo.feelsLike}°C</b><br/>
-            Condition: {weatherInfo.desc}
-          </p>
-        </div>
+  {/* Location */}
+  <div className="mt-3 flex items-center gap-2 text-sm text-gray-300">
+    <FaMapMarkerAlt className="text-red-500" />
+    <span className="truncate">
+      {weatherInfo.city}, {weatherInfo.country}
+    </span>
+  </div>
+
+  {/* Stats */}
+  <div className="mt-4 space-y-2 text-sm">
+    <div className="flex items-center gap-2 text-gray-200">
+      <WiThermometer className="text-2xl text-red-500" />
+      <span>
+        Temperature:
+        <b className="ml-1 text-white">
+          {weatherInfo.temp}°C
+        </b>
+      </span>
+    </div>
+
+    <div className="flex items-center gap-2 text-gray-200">
+      <WiThermometer className="text-2xl text-green-500" />
+      <span>
+        Feels like:
+        <b className="ml-1 text-white">
+          {weatherInfo.feelsLike}°C
+        </b>
+      </span>
+    </div>
+
+    <div className="flex items-center gap-2 text-gray-200">
+      <WiCloudy className="text-2xl text-blue-400" />
+      <span>
+        Condition:
+        <b className="ml-1 text-white capitalize">
+          {weatherInfo.desc}
+        </b>
+      </span>
+    </div>
+  </div>
+</div>
+
       </div>
     </div>
 
