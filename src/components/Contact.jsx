@@ -36,20 +36,24 @@ export default function Contact() {
     setForm(prev => ({ ...prev, [field]: value }));
 
   /* -----------------------------
-     FETCH HISTORY (PAGINATED)
+     FETCH HISTORY (SAFE)
   ------------------------------ */
   const fetchHistory = async (pageNumber = 1) => {
+    setLoadingHistory(true);
     try {
-      setLoadingHistory(true);
-      const { data } = await api.get(
+      const res = await api.get(
         `/contact?page=${pageNumber}&limit=${PAGE_LIMIT}`
       );
 
-      setHistory(data.data);
-      setPage(data.page);
-      setTotalPages(data.totalPages);
+      const payload = res?.data || {};
+      setHistory(Array.isArray(payload.data) ? payload.data : []);
+      setPage(payload.page ?? 1);
+      setTotalPages(payload.totalPages ?? 1);
     } catch (err) {
-      console.error(err);
+      console.error("History fetch failed:", err);
+      setHistory([]);
+      setPage(1);
+      setTotalPages(1);
     } finally {
       setLoadingHistory(false);
     }
@@ -80,6 +84,17 @@ export default function Contact() {
       setLoading(false);
     }
   };
+
+  /* -----------------------------
+     INITIAL LOADING GUARD
+  ------------------------------ */
+  if (loadingHistory && history.length === 0) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-black text-gray-400">
+        <p className="animate-pulse text-sm">Loading contact data…</p>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 py-20 px-6">
@@ -117,7 +132,7 @@ export default function Contact() {
 
           {/* FORM */}
           <motion.section
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="lg:col-span-2 bg-white dark:bg-white/5 rounded-3xl p-8 shadow-xl"
           >
@@ -126,7 +141,7 @@ export default function Contact() {
             </h2>
 
             {rateLimited && (
-              <div className="mb-4 text-sm text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-xl">
+              <div className="mb-4 text-sm bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 p-3 rounded-xl">
                 Too many requests. Please wait a moment.
               </div>
             )}
@@ -152,30 +167,41 @@ export default function Contact() {
                 Contact History
               </h3>
 
-              <AnimatePresence>
-                {loadingHistory
-                  ? [...Array(PAGE_LIMIT)].map((_, i) => (
-                      <SkeletonRow key={i} />
-                    ))
-                  : history.map(item => (
-                      <motion.div
-                        key={item._id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-white/10 mb-2"
-                      >
-                        <User className="text-gray-400" size={18} />
-                        <div>
-                          <p className="text-sm font-medium dark:text-white">
-                            {item.name}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {item.subject || "No subject"}
-                          </p>
-                        </div>
-                      </motion.div>
-                    ))}
+              <AnimatePresence mode="wait">
+                {loadingHistory ? (
+                  [...Array(PAGE_LIMIT)].map((_, i) => (
+                    <SkeletonRow key={i} />
+                  ))
+                ) : history.length === 0 ? (
+                  <motion.p
+                    key="empty"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-sm text-gray-500 dark:text-gray-400"
+                  >
+                    No contacts yet
+                  </motion.p>
+                ) : (
+                  history.map(item => (
+                    <motion.div
+                      key={item._id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-white/10 mb-2"
+                    >
+                      <User className="text-gray-400" size={18} />
+                      <div>
+                        <p className="text-sm font-medium dark:text-white">
+                          {item.name}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          {item.subject || "No subject"}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
               </AnimatePresence>
 
               {/* PAGINATION */}
@@ -183,7 +209,7 @@ export default function Contact() {
                 <button
                   disabled={page === 1}
                   onClick={() => setPage(p => p - 1)}
-                  className="flex items-center gap-1 text-sm disabled:opacity-40"
+                  className="flex items-center gap-1 text-sm disabled:opacity-40 dark:text-gray-300"
                 >
                   <ChevronLeft size={16} /> Prev
                 </button>
@@ -191,7 +217,7 @@ export default function Contact() {
                 <button
                   disabled={page === totalPages}
                   onClick={() => setPage(p => p + 1)}
-                  className="flex items-center gap-1 text-sm disabled:opacity-40"
+                  className="flex items-center gap-1 text-sm disabled:opacity-40 dark:text-gray-300"
                 >
                   Next <ChevronRight size={16} />
                 </button>
@@ -214,7 +240,7 @@ function InfoCard({ icon: Icon, title, value }) {
       <Icon className="text-blue-600" size={22} />
       <div>
         <h3 className="font-semibold dark:text-white">{title}</h3>
-        <p className="text-sm text-gray-500">{value}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{value}</p>
       </div>
     </div>
   );
@@ -223,11 +249,15 @@ function InfoCard({ icon: Icon, title, value }) {
 function Input({ label, value, onChange }) {
   return (
     <div>
-      <label className="text-sm text-gray-600 dark:text-gray-300">{label}</label>
+      <label className="text-sm text-gray-600 dark:text-gray-400">{label}</label>
       <input
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full h-12 mt-1 px-4 rounded-xl bg-white dark:bg-black border"
+        className="w-full h-12 mt-1 px-4 rounded-xl border
+        bg-white dark:bg-black
+        text-gray-900 dark:text-white
+        placeholder-gray-400 dark:placeholder-gray-600"
+        placeholder={`Enter ${label.toLowerCase()}`}
       />
     </div>
   );
@@ -236,19 +266,23 @@ function Input({ label, value, onChange }) {
 function Textarea({ label, value, onChange }) {
   return (
     <div>
-      <label className="text-sm text-gray-600 dark:text-gray-300">{label}</label>
+      <label className="text-sm text-gray-600 dark:text-gray-400">{label}</label>
       <textarea
         rows={5}
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full mt-1 px-4 py-3 rounded-xl bg-white dark:bg-black border"
+        className="w-full mt-1 px-4 py-3 rounded-xl border
+        bg-white dark:bg-black
+        text-gray-900 dark:text-white
+        placeholder-gray-400 dark:placeholder-gray-600"
+        placeholder={`Enter ${label.toLowerCase()}`}
       />
     </div>
   );
 }
 
 /* -----------------------------
-   SKELETON
+   SKELETON (DARK MODE SAFE)
 ------------------------------ */
 function SkeletonRow() {
   return (
