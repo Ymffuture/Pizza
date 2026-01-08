@@ -62,7 +62,7 @@ export default function AdminContacts() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 p-8">
+    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 p-8 mt-16">
       <Helmet>
         <title>Admin · Contact Messages</title>
       </Helmet>
