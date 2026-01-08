@@ -1,41 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Send,
-  ShieldCheck,
-  Clock,
-  User,
-} from "lucide-react";
+import { Mail, Phone, MapPin, Send, ShieldCheck, Clock, User } from "lucide-react";
 import { motion } from "framer-motion";
-import { api } from "../api";
-import { Spin} from "antd" 
-export default function Contact() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+import { Spin } from "antd";
+import { api } from "../api"; // axios instance
 
+export default function Contact() {
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
   const [fetching, setFetching] = useState(true); // skeleton loader
   const [error, setError] = useState(null);
+  const [skip, setSkip] = useState(0);
+  const LIMIT = 4;
 
-  const updateField = (field, value) =>
-    setForm(prev => ({ ...prev, [field]: value }));
+  const updateField = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
-  /* -----------------------------
-     FETCH CONTACT HISTORY
-  ------------------------------ */
-  const fetchHistory = async () => {
+  // ----------------------------
+  // Fetch contact history
+  // ----------------------------
+  const fetchHistory = async (reset = false) => {
     try {
       setFetching(true);
-      const { data } = await api.get("/contact");
-      setHistory(data);
+      const { data } = await api.get(`/contact?skip=${reset ? 0 : skip}&limit=${LIMIT}`);
+      if (reset) {
+        setHistory(data);
+        setSkip(LIMIT);
+      } else {
+        setHistory(prev => [...prev, ...data]);
+        setSkip(prev => prev + LIMIT);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -44,27 +38,24 @@ export default function Contact() {
   };
 
   useEffect(() => {
-    fetchHistory();
+    fetchHistory(true); // load first 4
   }, []);
 
-  /* -----------------------------
-     SUBMIT FORM
-  ------------------------------ */
+  // ----------------------------
+  // Submit form
+  // ----------------------------
   const handleSubmit = async e => {
     e.preventDefault();
     setError(null);
-
     if (!form.name || !form.email || !form.message) {
       return setError("Please fill in all required fields.");
     }
 
     try {
       setLoading(true);
-
       await api.post("/contact", form);
-
       setForm({ name: "", email: "", subject: "", message: "" });
-      fetchHistory();
+      fetchHistory(true); // refresh list
     } catch (err) {
       setError("Failed to send message. Try again.");
     } finally {
@@ -72,9 +63,9 @@ export default function Contact() {
     }
   };
 
-  /* -----------------------------
-     Skeleton Loader Component
-  ------------------------------ */
+  // ----------------------------
+  // Skeleton loader component
+  // ----------------------------
   const SkeletonItem = () => (
     <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-200 dark:bg-gray-700 animate-pulse">
       <div className="w-6 h-6 bg-gray-400 dark:bg-gray-600 rounded-full" />
@@ -136,17 +127,15 @@ export default function Contact() {
               <Input label="Subject" value={form.subject} onChange={v => updateField("subject", v)} />
               <Textarea label="Message" value={form.message} onChange={v => updateField("message", v)} />
 
-              {error && (
-                <p className="text-sm text-red-600 p-2 bg-red-600/10 rounded ">{error}</p>
-              )}
+              {error && <p className="text-sm text-red-600 p-2 bg-red-600/10 rounded">{error}</p>}
 
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 disabled:opacity-60"
               >
-                {loading ? "Sending..." : "Send Message"}
-                {loading ? <Send size={16} /> : <Spin size={16} />}
+                {loading ? "" : "Send Message"}
+                {loading ? <Spin size={18} /> : <Send size={16}/>}
                 
               </button>
             </form>
@@ -159,7 +148,7 @@ export default function Contact() {
 
               <ul className="space-y-3">
                 {fetching
-                  ? Array(5)
+                  ? Array(4)
                       .fill(0)
                       .map((_, idx) => <SkeletonItem key={idx} />)
                   : history.length === 0
@@ -186,6 +175,19 @@ export default function Contact() {
                       </motion.li>
                     ))}
               </ul>
+
+              {/* LOAD MORE BUTTON */}
+              {history.length % LIMIT === 0 && history.length > 0 && (
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={() => fetchHistory(false)}
+                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition"
+                    disabled={fetching}
+                  >
+                    {fetching ? <Spin size={12} /> : "Load More"}
+                  </button>
+                </div>
+              )}
             </div>
           </motion.section>
         </div>
