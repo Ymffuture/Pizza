@@ -75,7 +75,18 @@ export default function CreateTicket() {
           <Clock size={15} />
           <span>We usually respond within 24 hours</span>
         </div>
-
+<a
+                href={`/track`}
+                className="
+                  inline-flex items-center gap-1
+                  text-sm font-medium
+                  text-blue-600
+                  hover:underline
+                "
+              >
+                Track your ticket
+                <ArrowRight size={14} />
+              </a>
         {/* Inputs */}
         <div className="space-y-4 mt-6">
           <div>
