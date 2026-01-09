@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createTicket } from "../api/ticketApi";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Copy, Check, Loader2 } from "lucide-react";
 
 export default function CreateTicket() {
   const [data, setData] = useState({
@@ -11,6 +11,7 @@ export default function CreateTicket() {
   });
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const submit = async () => {
     if (!data.email || !data.message) return;
@@ -19,6 +20,13 @@ export default function CreateTicket() {
     const res = await createTicket(data);
     setTicket(res);
     setLoading(false);
+  };
+
+  const copyId = async () => {
+    if (!ticket) return;
+    await navigator.clipboard.writeText(ticket.ticketId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
@@ -47,30 +55,14 @@ export default function CreateTicket() {
             placeholder="Email address"
             value={data.email}
             onChange={e => setData({ ...data, email: e.target.value })}
-            className="
-              w-full px-4 py-3
-              rounded-xl
-              bg-neutral-100
-              focus:bg-white
-              focus:ring-2 focus:ring-blue-500
-              outline-none
-              transition
-            "
+            className="w-full px-4 py-3 rounded-xl bg-neutral-100 focus:ring-2 focus:ring-blue-500 outline-none"
           />
 
           <input
             placeholder="Subject"
             value={data.subject}
             onChange={e => setData({ ...data, subject: e.target.value })}
-            className="
-              w-full px-4 py-3
-              rounded-xl
-              bg-neutral-100
-              focus:bg-white
-              focus:ring-2 focus:ring-blue-500
-              outline-none
-              transition
-            "
+            className="w-full px-4 py-3 rounded-xl bg-neutral-100 focus:ring-2 focus:ring-blue-500 outline-none"
           />
 
           <textarea
@@ -78,34 +70,45 @@ export default function CreateTicket() {
             value={data.message}
             onChange={e => setData({ ...data, message: e.target.value })}
             rows={4}
-            className="
-              w-full px-4 py-3
-              rounded-xl
-              bg-neutral-100
-              focus:bg-white
-              focus:ring-2 focus:ring-blue-500
-              outline-none
-              transition resize-none
-            "
+            className="w-full px-4 py-3 rounded-xl bg-neutral-100 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
           />
         </div>
 
-        {/* Submit */}
+        {/* Submit Button */}
         <motion.button
           whileTap={{ scale: 0.97 }}
-          whileHover={{ scale: 1.01 }}
           disabled={loading}
           onClick={submit}
           className="
-            mt-6 w-full
-            py-3 rounded-xl
+            mt-6 w-full h-11
+            flex items-center justify-center
+            rounded-xl
             bg-black text-white
             font-medium
-            disabled:opacity-50
-            transition
+            disabled:opacity-60
           "
         >
-          {loading ? "Submitting..." : "Submit Ticket"}
+          <AnimatePresence mode="wait">
+            {loading ? (
+              <motion.span
+                key="loader"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Loader2 className="animate-spin" size={18} />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="text"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                Submit Ticket
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.button>
 
         {/* Success */}
@@ -124,15 +127,43 @@ export default function CreateTicket() {
               "
             >
               <CheckCircle className="text-green-500 mt-1" size={20} />
-              <div>
+
+              <div className="flex-1">
                 <p className="text-sm font-medium text-neutral-900">
                   Ticket created successfully
                 </p>
-                <p className="text-sm text-neutral-600 mt-1">
-                  Ticket ID:
-                  <span className="ml-1 font-mono font-semibold">
-                    {ticket.ticketId}
-                  </span>
+
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={copyId}
+                  onKeyDown={e => e.key === "Enter" && copyId()}
+                  className="
+                    mt-1
+                    flex items-center gap-2
+                    text-sm font-mono
+                    cursor-pointer
+                    select-none
+                  "
+                >
+                  <span>{ticket.ticketId}</span>
+
+                  <motion.span
+                    key={copied ? "check" : "copy"}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {copied ? (
+                      <Check size={16} className="text-green-600" />
+                    ) : (
+                      <Copy size={16} className="text-neutral-500" />
+                    )}
+                  </motion.span>
+                </div>
+
+                <p className="text-xs text-neutral-500 mt-1">
+                  Tap to copy your ticket ID
                 </p>
               </div>
             </motion.div>
