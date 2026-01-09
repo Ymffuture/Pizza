@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createTicket } from "../api/ticketApi";
-import { CheckCircle, Copy, Check, Loader2 } from "lucide-react";
+import {
+  CheckCircle,
+  Copy,
+  Check,
+  Loader2,
+  Clock,
+  ArrowRight,
+} from "lucide-react";
 
 export default function CreateTicket() {
   const [data, setData] = useState({
@@ -12,10 +19,23 @@ export default function CreateTicket() {
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [emailError, setEmailError] = useState("");
+
+  /* ----------------------------------
+     Simple email validation
+  ----------------------------------- */
+  const isValidEmail = email =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const submit = async () => {
     if (!data.email || !data.message) return;
 
+    if (!isValidEmail(data.email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    }
+
+    setEmailError("");
     setLoading(true);
     const res = await createTicket(data);
     setTicket(res);
@@ -45,18 +65,49 @@ export default function CreateTicket() {
         <h1 className="text-2xl font-semibold text-neutral-900 mb-2">
           Create Support Ticket
         </h1>
-        <p className="text-sm text-neutral-500 mb-6">
+
+        <p className="text-sm text-neutral-500">
           Describe your issue and we’ll get back to you.
         </p>
 
+        {/* SLA info (NEW) */}
+        <div className="mt-3 flex items-center gap-2 text-sm text-neutral-600">
+          <Clock size={15} />
+          <span>We usually respond within 24 hours</span>
+        </div>
+
         {/* Inputs */}
-        <div className="space-y-4">
-          <input
-            placeholder="Email address"
-            value={data.email}
-            onChange={e => setData({ ...data, email: e.target.value })}
-            className="w-full px-4 py-3 rounded-xl bg-neutral-100 focus:ring-2 focus:ring-blue-500 outline-none"
-          />
+        <div className="space-y-4 mt-6">
+          <div>
+            <input
+              placeholder="Email address"
+              value={data.email}
+              onChange={e => {
+                setData({ ...data, email: e.target.value });
+                setEmailError("");
+              }}
+              className="
+                w-full px-4 py-3 rounded-xl
+                bg-neutral-100
+                focus:ring-2 focus:ring-blue-500
+                outline-none
+              "
+            />
+
+            {/* Email error (NEW) */}
+            <AnimatePresence>
+              {emailError && (
+                <motion.p
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="text-xs text-red-500 mt-1"
+                >
+                  {emailError}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
 
           <input
             placeholder="Subject"
@@ -123,49 +174,66 @@ export default function CreateTicket() {
                 mt-6
                 p-4 rounded-2xl
                 bg-neutral-100
-                flex items-start gap-3
+                space-y-3
               "
             >
-              <CheckCircle className="text-green-500 mt-1" size={20} />
+              <div className="flex items-start gap-3">
+                <CheckCircle className="text-green-500 mt-1" size={20} />
 
-              <div className="flex-1">
-                <p className="text-sm font-medium text-neutral-900">
-                  Ticket created successfully
-                </p>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-neutral-900">
+                    Ticket created successfully
+                  </p>
 
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onClick={copyId}
-                  onKeyDown={e => e.key === "Enter" && copyId()}
-                  className="
-                    mt-1
-                    flex items-center gap-2
-                    text-sm font-mono
-                    cursor-pointer
-                    select-none
-                  "
-                >
-                  <span>{ticket.ticketId}</span>
-
-                  <motion.span
-                    key={copied ? "check" : "copy"}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.2 }}
+                  {/* Copyable ID */}
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={copyId}
+                    onKeyDown={e => e.key === "Enter" && copyId()}
+                    className="
+                      mt-1
+                      flex items-center gap-2
+                      text-sm font-mono
+                      cursor-pointer
+                      select-none
+                    "
                   >
-                    {copied ? (
-                      <Check size={16} className="text-green-600" />
-                    ) : (
-                      <Copy size={16} className="text-neutral-500" />
-                    )}
-                  </motion.span>
-                </div>
+                    <span>{ticket.ticketId}</span>
 
-                <p className="text-xs text-neutral-500 mt-1">
-                  Tap to copy your ticket ID
-                </p>
+                    <motion.span
+                      key={copied ? "check" : "copy"}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {copied ? (
+                        <Check size={16} className="text-green-600" />
+                      ) : (
+                        <Copy size={16} className="text-neutral-500" />
+                      )}
+                    </motion.span>
+                  </div>
+
+                  <p className="text-xs text-neutral-500">
+                    Tap to copy your ticket ID
+                  </p>
+                </div>
               </div>
+
+              {/* Track ticket link (NEW) */}
+              <a
+                href={`/track-ticket?id=${ticket.ticketId}`}
+                className="
+                  inline-flex items-center gap-1
+                  text-sm font-medium
+                  text-blue-600
+                  hover:underline
+                "
+              >
+                Track your ticket
+                <ArrowRight size={14} />
+              </a>
             </motion.div>
           )}
         </AnimatePresence>
