@@ -24,37 +24,59 @@ export default function AdminTicket() {
   const [ticket, setTicket] = useState(null);
   const [reply, setReply] = useState("");
   const [search, setSearch] = useState("");
+  const [loadingTickets, setLoadingTickets] = useState(true);
+  const [loadingTicket, setLoadingTicket] = useState(false);
 
-  /* ----------------------------------
-     Load all tickets
-  ----------------------------------- */
+  /* -----------------------------
+     Load all tickets on mount
+  ----------------------------- */
   useEffect(() => {
     (async () => {
-      const data = await getAllTickets();
-      setTickets(data);
+      try {
+        const data = await getAllTickets();
+        setTickets(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingTickets(false);
+      }
     })();
   }, []);
 
-  /* ----------------------------------
-     Search filter (memoized)
-  ----------------------------------- */
+  /* -----------------------------
+     Filter tickets by search
+  ----------------------------- */
   const filteredTickets = useMemo(() => {
     if (!search.trim()) return tickets;
 
     const q = search.toLowerCase();
-
-    return tickets.filter(t =>
-      t.ticketId.toLowerCase().includes(q) ||
-      t.subject.toLowerCase().includes(q) ||
-      t.email.toLowerCase().includes(q)
+    return tickets.filter(
+      t =>
+        t.ticketId.toLowerCase().includes(q) ||
+        t.subject?.toLowerCase().includes(q) ||
+        t.email?.toLowerCase().includes(q)
     );
   }, [tickets, search]);
 
+  /* -----------------------------
+     Open ticket by ID
+  ----------------------------- */
   const openTicket = async id => {
-    const data = await getTicket(id);
-    setTicket(data);
+    try {
+      setLoadingTicket(true);
+      const data = await getTicket(id);
+      setTicket(data);
+    } catch {
+      alert("Ticket not found");
+      setTicket(null);
+    } finally {
+      setLoadingTicket(false);
+    }
   };
 
+  /* -----------------------------
+     Send admin reply
+  ----------------------------- */
   const sendReply = async () => {
     if (!reply.trim()) return;
 
@@ -64,22 +86,26 @@ export default function AdminTicket() {
     });
 
     setTicket(updated);
+    setTickets(t =>
+      t.map(x => (x.ticketId === updated.ticketId ? updated : x))
+    );
     setReply("");
   };
 
+  /* -----------------------------
+     Close ticket
+  ----------------------------- */
   const closeCurrentTicket = async () => {
     const updated = await closeTicket(ticket.ticketId);
     setTicket(updated);
     setTickets(t =>
-      t.map(x =>
-        x.ticketId === updated.ticketId ? updated : x
-      )
+      t.map(x => (x.ticketId === updated.ticketId ? updated : x))
     );
   };
 
-  /* ----------------------------------
-     Stats
-  ----------------------------------- */
+  /* -----------------------------
+     Ticket stats
+  ----------------------------- */
   const stats = {
     total: tickets.length,
     open: tickets.filter(t => t.status === "open").length,
@@ -95,11 +121,7 @@ export default function AdminTicket() {
         <motion.aside
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="
-            col-span-12 lg:col-span-4
-            bg-white dark:bg-neutral-900
-            rounded-3xl shadow-xl p-5
-          "
+          className="col-span-12 lg:col-span-4 bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-5"
         >
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Inbox size={18} /> Tickets
@@ -109,18 +131,13 @@ export default function AdminTicket() {
           <div className="relative mb-4">
             <Search
               size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500"
             />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search by ticket ID, subject, email"
-              className="
-                w-full pl-9 pr-3 py-2 rounded-xl
-                bg-neutral-100 dark:bg-neutral-800
-                outline-none
-                text-sm
-              "
+              className="w-full pl-9 pr-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 outline-none text-sm"
             />
           </div>
 
@@ -132,50 +149,39 @@ export default function AdminTicket() {
             <Stat icon={XCircle} label="Closed" value={stats.closed} />
           </div>
 
-          {/* Ticket List */}
+          {/* Ticket list */}
           <div className="space-y-2 max-h-[55vh] overflow-y-auto">
-            {filteredTickets.map(t => {
-              const needsReply = t.lastReplyBy === "user";
+            {loadingTickets ? (
+              <p className="text-center text-neutral-500 mt-4">Loading tickets…</p>
+            ) : filteredTickets.length === 0 ? (
+              <p className="text-center text-neutral-500 mt-4">No tickets found</p>
+            ) : (
+              filteredTickets.map(t => {
+                const needsReply = t.lastReplyBy === "user";
 
-              return (
-                <button
-                  key={t.ticketId}
-                  onClick={() => openTicket(t.ticketId)}
-                  className={`
-                    w-full text-left p-3 rounded-xl transition
-                    ${
-                      needsReply
-                        ? "bg-yellow-50 dark:bg-yellow-900/20"
-                        : "bg-neutral-100 dark:bg-neutral-800"
-                    }
-                    hover:ring-2 hover:ring-blue-500
-                  `}
-                >
-                  <div className="flex justify-between text-sm font-mono">
-                    {t.ticketId}
-                    {needsReply && (
-                      <span className="text-xs text-yellow-600">
-                        needs reply
-                      </span>
-                    )}
-                  </div>
-
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
-                    {t.subject}
-                  </p>
-                </button>
-              );
-            })}
-
-            {filteredTickets.length === 0 && (
-              <p className="text-sm text-neutral-500 text-center mt-6">
-                No tickets found
-              </p>
+                return (
+                  <button
+                    key={t.ticketId}
+                    onClick={() => openTicket(t.ticketId)}
+                    className={`
+                      w-full text-left p-3 rounded-xl transition
+                      ${needsReply ? "bg-yellow-50 dark:bg-yellow-900/20" : "bg-neutral-100 dark:bg-neutral-800"}
+                      hover:ring-2 hover:ring-blue-500
+                    `}
+                  >
+                    <div className="flex justify-between text-sm font-mono">
+                      {t.ticketId}
+                      {needsReply && <span className="text-xs text-yellow-600">needs reply</span>}
+                    </div>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{t.subject}</p>
+                  </button>
+                );
+              })
             )}
           </div>
         </motion.aside>
 
-        {/* Ticket View */}
+        {/* Ticket view */}
         <AnimatePresence>
           {ticket && (
             <motion.section
@@ -183,20 +189,13 @@ export default function AdminTicket() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="
-                col-span-12 lg:col-span-8
-                bg-white dark:bg-neutral-900
-                rounded-3xl shadow-xl
-                flex flex-col overflow-hidden
-              "
+              className="col-span-12 lg:col-span-8 bg-white dark:bg-neutral-900 rounded-3xl shadow-xl flex flex-col overflow-hidden"
             >
               {/* Header */}
               <div className="p-6 border-b dark:border-neutral-800 flex justify-between">
                 <div>
                   <p className="font-mono text-sm">{ticket.ticketId}</p>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    {ticket.email}
-                  </p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">{ticket.email}</p>
                 </div>
 
                 {ticket.status !== "closed" && (
@@ -211,14 +210,13 @@ export default function AdminTicket() {
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-6 space-y-3">
-                {ticket.messages.map((m, i) => (
-                  <MessageBubble
-                    key={i}
-                    sender={m.sender}
-                    message={m.message}
-                    createdAt={m.createdAt}
-                  />
-                ))}
+                {loadingTicket ? (
+                  <p className="text-center text-neutral-500 mt-4">Loading ticket…</p>
+                ) : (
+                  ticket.messages.map((m, i) => (
+                    <MessageBubble key={i} sender={m.sender} message={m.message} createdAt={m.createdAt} />
+                  ))
+                )}
               </div>
 
               {/* Reply */}
@@ -228,12 +226,7 @@ export default function AdminTicket() {
                     value={reply}
                     onChange={e => setReply(e.target.value)}
                     placeholder="Admin reply…"
-                    className="
-                      flex-1 resize-none
-                      px-4 py-2 rounded-xl
-                      bg-neutral-100 dark:bg-neutral-800
-                      outline-none
-                    "
+                    className="flex-1 resize-none px-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 outline-none"
                     rows={1}
                   />
 
