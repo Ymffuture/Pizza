@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   getTicket,
@@ -10,16 +10,20 @@ import MessageBubble from "../components/MessageBubble";
 import {
   Send,
   Ticket,
+  Mail,
+  Info,
   XCircle,
   Inbox,
   AlertCircle,
   CheckCircle2,
+  Search,
 } from "lucide-react";
 
 export default function AdminTicket() {
   const [tickets, setTickets] = useState([]);
   const [ticket, setTicket] = useState(null);
   const [reply, setReply] = useState("");
+  const [search, setSearch] = useState("");
 
   /* ----------------------------------
      Load all tickets
@@ -30,6 +34,21 @@ export default function AdminTicket() {
       setTickets(data);
     })();
   }, []);
+
+  /* ----------------------------------
+     Search filter (memoized)
+  ----------------------------------- */
+  const filteredTickets = useMemo(() => {
+    if (!search.trim()) return tickets;
+
+    const q = search.toLowerCase();
+
+    return tickets.filter(t =>
+      t.ticketId.toLowerCase().includes(q) ||
+      t.subject.toLowerCase().includes(q) ||
+      t.email.toLowerCase().includes(q)
+    );
+  }, [tickets, search]);
 
   const openTicket = async id => {
     const data = await getTicket(id);
@@ -52,7 +71,9 @@ export default function AdminTicket() {
     const updated = await closeTicket(ticket.ticketId);
     setTicket(updated);
     setTickets(t =>
-      t.map(x => (x.ticketId === updated.ticketId ? updated : x))
+      t.map(x =>
+        x.ticketId === updated.ticketId ? updated : x
+      )
     );
   };
 
@@ -67,7 +88,7 @@ export default function AdminTicket() {
   };
 
   return (
-    <div className="min-h-screen mt-16 bg-neutral-100 dark:bg-neutral-950 p-6 text-neutral-900 dark:text-white">
+    <div className="min-h-screen mt-16 bg-neutral-100 dark:bg-neutral-950 p-6 text-neutral-900 dark:text-neutral-100">
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6">
 
         {/* Sidebar */}
@@ -84,6 +105,25 @@ export default function AdminTicket() {
             <Inbox size={18} /> Tickets
           </h2>
 
+          {/* Search */}
+          <div className="relative mb-4">
+            <Search
+              size={16}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
+            />
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search by ticket ID, subject, email"
+              className="
+                w-full pl-9 pr-3 py-2 rounded-xl
+                bg-neutral-100 dark:bg-neutral-800
+                outline-none
+                text-sm
+              "
+            />
+          </div>
+
           {/* Stats */}
           <div className="grid grid-cols-2 gap-3 mb-6">
             <Stat icon={Ticket} label="Total" value={stats.total} />
@@ -93,8 +133,8 @@ export default function AdminTicket() {
           </div>
 
           {/* Ticket List */}
-          <div className="space-y-2 max-h-[60vh] overflow-y-auto">
-            {tickets.map(t => {
+          <div className="space-y-2 max-h-[55vh] overflow-y-auto">
+            {filteredTickets.map(t => {
               const needsReply = t.lastReplyBy === "user";
 
               return (
@@ -114,7 +154,7 @@ export default function AdminTicket() {
                   <div className="flex justify-between text-sm font-mono">
                     {t.ticketId}
                     {needsReply && (
-                      <span className="text-xs text-yellow-600 dark:text-yellow-400">
+                      <span className="text-xs text-yellow-600">
                         needs reply
                       </span>
                     )}
@@ -126,6 +166,12 @@ export default function AdminTicket() {
                 </button>
               );
             })}
+
+            {filteredTickets.length === 0 && (
+              <p className="text-sm text-neutral-500 text-center mt-6">
+                No tickets found
+              </p>
+            )}
           </div>
         </motion.aside>
 
@@ -156,7 +202,7 @@ export default function AdminTicket() {
                 {ticket.status !== "closed" && (
                   <button
                     onClick={closeCurrentTicket}
-                    className="text-sm text-red-600 dark:text-red-400 hover:underline"
+                    className="text-sm text-red-600 hover:underline"
                   >
                     Close ticket
                   </button>
@@ -186,8 +232,6 @@ export default function AdminTicket() {
                       flex-1 resize-none
                       px-4 py-2 rounded-xl
                       bg-neutral-100 dark:bg-neutral-800
-                      text-neutral-900 dark:text-white
-                      placeholder:text-neutral-400
                       outline-none
                     "
                     rows={1}
