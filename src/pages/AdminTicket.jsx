@@ -1,34 +1,48 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getTicket, replyTicket } from "../api/ticketApi";
+import {
+  getTicket,
+  replyTicket,
+  getAllTickets,
+  closeTicket,
+} from "../api/ticketApi";
 import MessageBubble from "../components/MessageBubble";
-import { Send, Ticket, Mail, Info } from "lucide-react";
+import {
+  Send,
+  Ticket,
+  Mail,
+  Info,
+  XCircle,
+  Inbox,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function AdminTicket() {
-  const [ticketId, setTicketId] = useState("");
+  const [tickets, setTickets] = useState([]);
   const [ticket, setTicket] = useState(null);
   const [reply, setReply] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const fetchTicket = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const data = await getTicket(ticketId);
-      setTicket(data);
-    } catch {
-      setError("Ticket not found");
-      setTicket(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [ticketId]);
+  /* ----------------------------------
+     Load all tickets
+  ----------------------------------- */
+  useEffect(() => {
+    (async () => {
+      const data = await getAllTickets();
+      setTickets(data);
+    })();
+  }, []);
+
+  const openTicket = async id => {
+    const data = await getTicket(id);
+    setTicket(data);
+  };
 
   const sendReply = async () => {
     if (!reply.trim()) return;
 
-    const updated = await replyTicket(ticketId, {
+    const updated = await replyTicket(ticket.ticketId, {
       sender: "admin",
       message: reply,
     });
@@ -37,138 +51,178 @@ export default function AdminTicket() {
     setReply("");
   };
 
+  const closeCurrentTicket = async () => {
+    const updated = await closeTicket(ticket.ticketId);
+    setTicket(updated);
+    setTickets(t =>
+      t.map(x =>
+        x.ticketId === updated.ticketId ? updated : x
+      )
+    );
+  };
+
+  /* ----------------------------------
+     Stats
+  ----------------------------------- */
+  const stats = {
+    total: tickets.length,
+    open: tickets.filter(t => t.status === "open").length,
+    pending: tickets.filter(t => t.lastReplyBy === "user").length,
+    closed: tickets.filter(t => t.status === "closed").length,
+  };
+
   return (
-    <div className="min-h-screen bg-neutral-100 flex items-center justify-center p-6">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="bg-white w-full max-w-3xl rounded-3xl shadow-2xl flex flex-col overflow-hidden"
-      >
-        {/* Header */}
-        <div className="p-6 border-b">
-          <h1 className="text-xl font-semibold">Admin Ticket Panel</h1>
-          <p className="text-sm text-neutral-500">
-            Search and reply to tickets by ID
-          </p>
-        </div>
+    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 p-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6">
 
-        {/* Search */}
-        <div className="p-6 flex gap-2">
-          <input
-            placeholder="TCK-XXXXXX"
-            value={ticketId}
-            onChange={e => setTicketId(e.target.value)}
-            className="
-              flex-1 px-4 py-2
-              rounded-xl bg-neutral-100
-              focus:ring-2 focus:ring-blue-500
-              outline-none
-            "
-          />
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={fetchTicket}
-            className="px-5 py-2 rounded-xl bg-black text-white"
-          >
-            {loading ? "Loading..." : "Search"}
-          </motion.button>
-        </div>
+        {/* Sidebar */}
+        <motion.aside
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="
+            col-span-12 lg:col-span-4
+            bg-white dark:bg-neutral-900
+            rounded-3xl shadow-xl p-5
+          "
+        >
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Inbox size={18} /> Tickets
+          </h2>
 
-        {error && (
-          <p className="px-6 text-sm text-red-500">{error}</p>
-        )}
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <Stat icon={Ticket} label="Total" value={stats.total} />
+            <Stat icon={AlertCircle} label="Needs reply" value={stats.pending} />
+            <Stat icon={CheckCircle2} label="Open" value={stats.open} />
+            <Stat icon={XCircle} label="Closed" value={stats.closed} />
+          </div>
 
-        {/* Ticket Info */}
+          {/* Ticket List */}
+          <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+            {tickets.map(t => {
+              const needsReply = t.lastReplyBy === "user";
+
+              return (
+                <button
+                  key={t.ticketId}
+                  onClick={() => openTicket(t.ticketId)}
+                  className={`
+                    w-full text-left p-3 rounded-xl
+                    transition
+                    ${
+                      needsReply
+                        ? "bg-yellow-50 dark:bg-yellow-900/20"
+                        : "bg-neutral-100 dark:bg-neutral-800"
+                    }
+                    hover:ring-2 hover:ring-blue-500
+                  `}
+                >
+                  <div className="flex justify-between text-sm font-mono">
+                    {t.ticketId}
+                    {needsReply && (
+                      <span className="text-xs text-yellow-600">
+                        needs reply
+                      </span>
+                    )}
+                  </div>
+
+                  <p className="text-xs text-neutral-500 truncate">
+                    {t.subject}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </motion.aside>
+
+        {/* Ticket View */}
         <AnimatePresence>
           {ticket && (
-            <motion.div
+            <motion.section
+              key={ticket.ticketId}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="px-6 pb-4"
+              className="
+                col-span-12 lg:col-span-8
+                bg-white dark:bg-neutral-900
+                rounded-3xl shadow-xl
+                flex flex-col overflow-hidden
+              "
             >
-              <div className="bg-neutral-100 rounded-2xl p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 font-mono text-sm">
-                    <Ticket size={16} />
-                    {ticket.ticketId}
-                  </div>
+              {/* Header */}
+              <div className="p-6 border-b dark:border-neutral-800 flex justify-between">
+                <div>
+                  <p className="font-mono text-sm">{ticket.ticketId}</p>
+                  <p className="text-xs text-neutral-500">{ticket.email}</p>
+                </div>
 
-                  <span
-                    className={`text-xs px-3 py-1 rounded-full ${
-                      ticket.status === "open"
-                        ? "bg-green-100 text-green-700"
-                        : ticket.status === "pending"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-neutral-300 text-neutral-700"
-                    }`}
+                {ticket.status !== "closed" && (
+                  <button
+                    onClick={closeCurrentTicket}
+                    className="text-sm text-red-600 hover:underline"
                   >
-                    {ticket.status}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-sm text-neutral-600">
-                  <Mail size={14} />
-                  {ticket.email}
-                </div>
-
-                <div className="flex items-center gap-2 text-sm text-neutral-600">
-                  <Info size={14} />
-                  {ticket.subject}
-                </div>
+                    Close ticket
+                  </button>
+                )}
               </div>
-            </motion.div>
+
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-3">
+                {ticket.messages.map((m, i) => (
+                  <MessageBubble
+                    key={i}
+                    sender={m.sender}
+                    message={m.message}
+                    createdAt={m.createdAt}
+                  />
+                ))}
+              </div>
+
+              {/* Reply */}
+              {ticket.status !== "closed" && (
+                <div className="p-4 border-t dark:border-neutral-800 flex gap-2">
+                  <textarea
+                    value={reply}
+                    onChange={e => setReply(e.target.value)}
+                    placeholder="Admin reply…"
+                    className="
+                      flex-1 resize-none
+                      px-4 py-2 rounded-xl
+                      bg-neutral-100 dark:bg-neutral-800
+                      outline-none
+                    "
+                    rows={1}
+                  />
+
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    onClick={sendReply}
+                    className="p-3 rounded-full bg-blue-600 text-white"
+                  >
+                    <Send size={18} />
+                  </motion.button>
+                </div>
+              )}
+            </motion.section>
           )}
         </AnimatePresence>
+      </div>
+    </div>
+  );
+}
 
-        {/* Messages */}
-        {ticket && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="flex-1 overflow-y-auto px-6 space-y-3 pb-4"
-            >
-              {ticket.messages.map((msg, i) => (
-                <MessageBubble
-                  key={i}
-                  sender={msg.sender}
-                  message={msg.message}
-                  createdAt={msg.createdAt}
-                />
-              ))}
-            </motion.div>
-
-            {/* Reply */}
-            <div className="p-4 border-t flex items-center gap-2">
-              <textarea
-                value={reply}
-                onChange={e => setReply(e.target.value)}
-                placeholder="Type admin reply..."
-                className="
-                  flex-1 resize-none px-4 py-2
-                  rounded-xl bg-neutral-100
-                  focus:ring-2 focus:ring-blue-500
-                  outline-none
-                "
-                rows={1}
-              />
-
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                whileHover={{ scale: 1.05 }}
-                onClick={sendReply}
-                className="p-3 rounded-full bg-blue-500 text-white"
-              >
-                <Send size={18} />
-              </motion.button>
-            </div>
-          </>
-        )}
-      </motion.div>
+/* ----------------------------------
+   Small stat card
+----------------------------------- */
+function Stat({ icon: Icon, label, value }) {
+  return (
+    <div className="rounded-xl bg-neutral-100 dark:bg-neutral-800 p-3">
+      <div className="flex items-center gap-2 text-sm">
+        <Icon size={14} />
+        {label}
+      </div>
+      <p className="text-xl font-semibold">{value}</p>
     </div>
   );
 }
