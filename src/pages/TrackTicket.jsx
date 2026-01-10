@@ -67,7 +67,7 @@ export default function TrackTicket() {
               className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
             />
             <input
-              placeholder="TCK-XXXXXX"
+              placeholder="XXX-XXXXXX"
               value={id}
               onChange={e => setId(e.target.value)}
               className="
