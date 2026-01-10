@@ -1,43 +1,27 @@
-import axios from "axios";
+// === Option 1 - Most popular & clean (recommended) ===
 
 const API = "https://swiftmeta.onrender.com/api/tickets";
 
-/* -----------------------------
-   Create ticket (USER)
------------------------------- */
-export const createTicket = async data => {
-  const res = await axios.post(API, data);
-  return res.data;
-};
-
-/* -----------------------------
-   Get single ticket by ID
------------------------------- */
-export const getTicket = async id => {
-  const res = await axios.get(`${API}/${id}`);
-  return res.data;
-};
-
-/* -----------------------------
-   Reply to ticket
------------------------------- */
-export const replyTicket = async (id, data) => {
-  const res = await axios.post(`${API}/${id}/reply`, data);
-  return res.data;
-};
-
-/* -----------------------------
-   Get all tickets (ADMIN)
------------------------------- */
 export const getAllTickets = async () => {
-  const res = await axios.get(API);
-  return res.data;
+  const { data } = await axios.get(API);
+  return data;
 };
 
-/* -----------------------------
-   Close ticket (ADMIN)
------------------------------- */
-export const closeTicket = async id => {
-  const res = await axios.patch(`${API}/${id}/close`);
-  return res.data;
+export const getTicket = async (id) => {
+  const { data } = await axios.get(`${API}/${id}`);
+  return data;
+};
+
+// Modern style - POST to the ticket itself (most common today)
+export const replyToTicket = async (id, payload) => {
+  const { data } = await axios.post(`${API}/${id}`, payload);
+  return data;
+};
+
+// Most common today: PATCH on the ticket resource
+export const closeTicket = async (id) => {
+  const { data } = await axios.patch(`${API}/${id}`, { status: "closed" });
+  // or even better:
+  // return axios.patch(`${API}/${id}/close`);
+  return data;
 };
