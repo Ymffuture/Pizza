@@ -3,92 +3,99 @@ import axios from "axios";
 
 const API = "https://swiftmeta.onrender.com/api/tickets";
 
-// Optional: Create axios instance with defaults (recommended)
+/* ---------------------------------------
+   Axios instance (clean & reusable)
+---------------------------------------- */
 const ticketApi = axios.create({
   baseURL: API,
   headers: {
     "Content-Type": "application/json",
   },
-  // timeout: 10000,           // optional
-  // withCredentials: true,    // if you later add auth cookies
 });
 
-/**
- * Create a new support ticket
- * @param {Object} data - { email: string, subject?: string, message: string }
- */
-export const createTicket = async (data) => {
+/* ---------------------------------------
+   Helpers (normalization layer)
+---------------------------------------- */
+const extractTicket = (res) =>
+  res?.ticket || res?.data?.ticket || res;
+
+const extractTickets = (res) =>
+  res?.tickets || res?.data?.tickets || res || [];
+
+/* ---------------------------------------
+   Create Ticket
+---------------------------------------- */
+export const createTicket = async (payload) => {
   try {
-    const response = await ticketApi.post("/", data);
-    return response.data;
+    const { data } = await ticketApi.post("/", payload);
+    return extractTicket(data);
   } catch (error) {
     throw error.response?.data || { error: "Failed to create ticket" };
   }
 };
 
-/**
- * Get a single ticket by its ticketId
- * @param {string} id - Ticket ID
- */
-export const getTicket = async (id) => {
+/* ---------------------------------------
+   Get Single Ticket
+---------------------------------------- */
+export const getTicket = async (ticketId) => {
   try {
-    const response = await ticketApi.get(`/${id}`);
-    return response.data;
+    const { data } = await ticketApi.get(`/${ticketId}`);
+    return extractTicket(data);
   } catch (error) {
     throw error.response?.data || { error: "Failed to fetch ticket" };
   }
 };
 
-/**
- * Reply to an existing ticket (user or admin)
- * @param {string} id - Ticket ID
- * @param {Object} data - { message: string, sender: "user" | "admin" }
- */
-export const replyTicket = async (id, data) => {
+/* ---------------------------------------
+   Reply to Ticket
+---------------------------------------- */
+export const replyTicket = async (ticketId, payload) => {
   try {
-    const response = await ticketApi.post(`/${id}/reply`, data);
-    return response.data;
+    const { data } = await ticketApi.post(`/${ticketId}/reply`, payload);
+    return extractTicket(data);
   } catch (error) {
     throw error.response?.data || { error: "Failed to send reply" };
   }
 };
 
-/**
- * Get all tickets (usually for admin dashboard)
- * @param {Object} [params] - Optional query params e.g. { status: "open", page: 1, limit: 20 }
- */
+/* ---------------------------------------
+   Get All Tickets (Admin)
+---------------------------------------- */
 export const getAllTickets = async (params = {}) => {
   try {
-    const response = await ticketApi.get("/", { params });
-    return response.data;
+    const { data } = await ticketApi.get("/", { params });
+    return extractTickets(data);
   } catch (error) {
     throw error.response?.data || { error: "Failed to fetch tickets" };
   }
 };
 
-/**
- * Close a ticket (usually admin only)
- * @param {string} id - Ticket ID
- */
-export const closeTicket = async (id) => {
+/* ---------------------------------------
+   Close Ticket
+---------------------------------------- */
+export const closeTicket = async (ticketId) => {
   try {
-    const response = await ticketApi.patch(`/${id}/close`);
-    return response.data;
+    const { data } = await ticketApi.patch(`/${ticketId}/close`);
+    return extractTicket(data);
   } catch (error) {
     throw error.response?.data || { error: "Failed to close ticket" };
   }
 };
 
-// Optional: Add error interceptor (very useful in real apps)
+/* ---------------------------------------
+   Global API Error Interceptor
+---------------------------------------- */
 ticketApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    // You can show toast/notification here in the future
-    console.error("API Error:", error.response?.data || error.message);
+    console.error("Ticket API Error:", error.response?.data || error.message);
     return Promise.reject(error);
   }
 );
 
+/* ---------------------------------------
+   Named + default exports
+---------------------------------------- */
 export default {
   createTicket,
   getTicket,
