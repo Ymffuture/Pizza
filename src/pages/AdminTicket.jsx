@@ -10,12 +10,10 @@ import MessageBubble from "../components/MessageBubble";
 import {
   Send,
   Ticket,
-  Mail,
-  Info,
-  XCircle,
   Inbox,
   AlertCircle,
   CheckCircle2,
+  XCircle,
   Search,
 } from "lucide-react";
 
@@ -26,9 +24,10 @@ export default function AdminTicket() {
   const [search, setSearch] = useState("");
   const [loadingTickets, setLoadingTickets] = useState(true);
   const [loadingTicket, setLoadingTicket] = useState(false);
+  const [closing, setClosing] = useState(false);
 
   /* -----------------------------
-     Load all tickets on mount
+     Load tickets
   ----------------------------- */
   useEffect(() => {
     (async () => {
@@ -44,11 +43,10 @@ export default function AdminTicket() {
   }, []);
 
   /* -----------------------------
-     Filter tickets by search
+     Search filter
   ----------------------------- */
   const filteredTickets = useMemo(() => {
     if (!search.trim()) return tickets;
-
     const q = search.toLowerCase();
     return tickets.filter(
       t =>
@@ -59,7 +57,7 @@ export default function AdminTicket() {
   }, [tickets, search]);
 
   /* -----------------------------
-     Open ticket by ID
+     Open ticket
   ----------------------------- */
   const openTicket = async id => {
     try {
@@ -68,17 +66,16 @@ export default function AdminTicket() {
       setTicket(data);
     } catch {
       alert("Ticket not found");
-      setTicket(null);
     } finally {
       setLoadingTicket(false);
     }
   };
 
   /* -----------------------------
-     Send admin reply
+     Reply
   ----------------------------- */
   const sendReply = async () => {
-    if (!reply.trim()) return;
+    if (!reply.trim() || ticket.status === "closed") return;
 
     const updated = await replyTicket(ticket.ticketId, {
       sender: "admin",
@@ -93,150 +90,140 @@ export default function AdminTicket() {
   };
 
   /* -----------------------------
-     Close ticket
+     Close ticket (FIXED)
   ----------------------------- */
   const closeCurrentTicket = async () => {
-    const updated = await closeTicket(ticket.ticketId);
-    setTicket(updated);
-    setTickets(t =>
-      t.map(x => (x.ticketId === updated.ticketId ? updated : x))
-    );
+    try {
+      setClosing(true);
+      const updated = await closeTicket(ticket.ticketId);
+      setTicket(updated);
+      setTickets(t =>
+        t.map(x => (x.ticketId === updated.ticketId ? updated : x))
+      );
+    } finally {
+      setClosing(false);
+    }
   };
 
   /* -----------------------------
-     Ticket stats
+     Stats (FIXED)
   ----------------------------- */
   const stats = {
     total: tickets.length,
     open: tickets.filter(t => t.status === "open").length,
-    pending: tickets.filter(t => t.lastReplyBy === "user").length,
     closed: tickets.filter(t => t.status === "closed").length,
+    pending: tickets.filter(
+      t => t.status !== "closed" && t.lastReplyBy === "user"
+    ).length,
   };
 
   return (
-    <div className="min-h-screen mt-16 bg-neutral-100 dark:bg-neutral-950 p-6 text-neutral-900 dark:text-neutral-100">
+    <div className="min-h-screen mt-16 bg-neutral-100 dark:bg-neutral-950 p-6">
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6">
 
         {/* Sidebar */}
-        <motion.aside
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="col-span-12 lg:col-span-4 bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-5"
-        >
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+        <aside className="col-span-12 lg:col-span-4 bg-white dark:bg-neutral-900 rounded-3xl p-5 shadow-xl">
+          <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
             <Inbox size={18} /> Tickets
           </h2>
 
-          {/* Search */}
           <div className="relative mb-4">
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 dark:text-neutral-500"
-            />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Search by ticket ID, subject, email"
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 outline-none text-sm"
+              placeholder="Search tickets"
+              className="w-full pl-9 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800"
             />
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <Stat icon={Ticket} label="Total" value={stats.total} />
             <Stat icon={AlertCircle} label="Needs reply" value={stats.pending} />
             <Stat icon={CheckCircle2} label="Open" value={stats.open} />
             <Stat icon={XCircle} label="Closed" value={stats.closed} />
           </div>
 
-          {/* Ticket list */}
           <div className="space-y-2 max-h-[55vh] overflow-y-auto">
             {loadingTickets ? (
-              <p className="text-center text-neutral-500 mt-4">Loading tickets…</p>
-            ) : filteredTickets.length === 0 ? (
-              <p className="text-center text-neutral-500 mt-4">No tickets found</p>
+              <p className="text-center text-sm">Loading…</p>
             ) : (
               filteredTickets.map(t => {
-                const needsReply = t.lastReplyBy === "user";
+                const needsReply =
+                  t.status !== "closed" && t.lastReplyBy === "user";
 
                 return (
                   <button
                     key={t.ticketId}
                     onClick={() => openTicket(t.ticketId)}
                     className={`
-                      w-full text-left p-3 rounded-xl transition
-                      ${needsReply ? "bg-yellow-50 dark:bg-yellow-900/20" : "bg-neutral-100 dark:bg-neutral-800"}
-                      hover:ring-2 hover:ring-blue-500
+                      w-full p-3 rounded-xl text-left
+                      ${
+                        t.status === "closed"
+                          ? "opacity-50 bg-neutral-200 dark:bg-neutral-800"
+                          : needsReply
+                          ? "bg-yellow-50 dark:bg-yellow-900/20"
+                          : "bg-neutral-100 dark:bg-neutral-800"
+                      }
                     `}
                   >
-                    <div className="flex justify-between text-sm font-mono">
+                    <div className="flex justify-between font-mono text-sm">
                       {t.ticketId}
                       {needsReply && <span className="text-xs text-yellow-600">needs reply</span>}
                     </div>
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">{t.subject}</p>
+                    <p className="text-xs truncate">{t.subject}</p>
                   </button>
                 );
               })
             )}
           </div>
-        </motion.aside>
+        </aside>
 
-        {/* Ticket view */}
+        {/* Ticket View */}
         <AnimatePresence>
           {ticket && (
             <motion.section
-              key={ticket.ticketId}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="col-span-12 lg:col-span-8 bg-white dark:bg-neutral-900 rounded-3xl shadow-xl flex flex-col overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="col-span-12 lg:col-span-8 bg-white dark:bg-neutral-900 rounded-3xl shadow-xl flex flex-col"
             >
-              {/* Header */}
-              <div className="p-6 border-b dark:border-neutral-800 flex justify-between">
+              <div className="p-6 border-b flex justify-between">
                 <div>
                   <p className="font-mono text-sm">{ticket.ticketId}</p>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">{ticket.email}</p>
+                  <p className="text-xs text-neutral-500">{ticket.email}</p>
                 </div>
 
                 {ticket.status !== "closed" && (
                   <button
                     onClick={closeCurrentTicket}
-                    className="text-sm text-red-600 hover:underline"
+                    disabled={closing}
+                    className="text-sm text-red-600 disabled:opacity-50"
                   >
-                    Close ticket
+                    {closing ? "Closing…" : "Close ticket"}
                   </button>
                 )}
               </div>
 
-              {/* Messages */}
               <div className="flex-1 overflow-y-auto p-6 space-y-3">
-                {loadingTicket ? (
-                  <p className="text-center text-neutral-500 mt-4">Loading ticket…</p>
-                ) : (
-                  ticket.messages.map((m, i) => (
-                    <MessageBubble key={i} sender={m.sender} message={m.message} createdAt={m.createdAt} />
-                  ))
-                )}
+                {ticket.messages.map((m, i) => (
+                  <MessageBubble key={i} {...m} />
+                ))}
               </div>
 
-              {/* Reply */}
               {ticket.status !== "closed" && (
-                <div className="p-4 border-t dark:border-neutral-800 flex gap-2">
+                <div className="p-4 border-t flex gap-2">
                   <textarea
                     value={reply}
                     onChange={e => setReply(e.target.value)}
                     placeholder="Admin reply…"
-                    className="flex-1 resize-none px-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 outline-none"
-                    rows={1}
+                    className="flex-1 rounded-xl px-4 py-2 bg-neutral-100 dark:bg-neutral-800"
                   />
-
-                  <motion.button
-                    whileTap={{ scale: 0.9 }}
+                  <button
                     onClick={sendReply}
-                    className="p-3 rounded-full bg-blue-600 text-white"
+                    className="p-3 bg-blue-600 rounded-full text-white"
                   >
                     <Send size={18} />
-                  </motion.button>
+                  </button>
                 </div>
               )}
             </motion.section>
@@ -247,15 +234,11 @@ export default function AdminTicket() {
   );
 }
 
-/* ----------------------------------
-   Small stat card
------------------------------------ */
 function Stat({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-xl bg-neutral-100 dark:bg-neutral-800 p-3">
-      <div className="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
-        <Icon size={14} />
-        {label}
+    <div className="bg-neutral-100 dark:bg-neutral-800 rounded-xl p-3">
+      <div className="flex items-center gap-2 text-sm">
+        <Icon size={14} /> {label}
       </div>
       <p className="text-xl font-semibold">{value}</p>
     </div>
