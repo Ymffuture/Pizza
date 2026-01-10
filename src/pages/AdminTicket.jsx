@@ -26,9 +26,9 @@ export default function AdminTicket() {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [error, setError] = useState(null);
 
-  /* -------------------------
-     Load tickets
-  ------------------------- */
+  /* -------------------------------
+     Load all tickets
+  -------------------------------- */
   useEffect(() => {
     loadAllTickets();
   }, []);
@@ -38,54 +38,56 @@ export default function AdminTicket() {
       setLoadingTickets(true);
       setError(null);
 
-      const res = await getAllTickets();
+      const data = await getAllTickets();
 
-      // ✅ FIX: normalize backend response
-      setTickets(Array.isArray(res?.tickets) ? res.tickets : []);
+      // ✅ FIX: backend returns { tickets, pagination }
+      setTickets(Array.isArray(data?.tickets) ? data.tickets : []);
     } catch (err) {
-      console.error(err);
-      setError("Failed to load tickets");
+      console.error("Failed to load tickets:", err);
+      setError("Failed to load tickets.");
     } finally {
       setLoadingTickets(false);
     }
   };
 
-  /* -------------------------
+  /* -------------------------------
      Search filter
-  ------------------------- */
+  -------------------------------- */
   const filteredTickets = useMemo(() => {
     if (!search.trim()) return tickets;
 
     const q = search.toLowerCase();
-    return tickets.filter(
-      (t) =>
-        t.ticketId?.toLowerCase().includes(q) ||
-        t.subject?.toLowerCase().includes(q) ||
-        t.email?.toLowerCase().includes(q)
+    return tickets.filter((t) =>
+      [t.ticketId, t.subject, t.email].some((v) =>
+        v?.toLowerCase().includes(q)
+      )
     );
   }, [tickets, search]);
 
-  /* -------------------------
+  /* -------------------------------
      Open ticket
-  ------------------------- */
+  -------------------------------- */
   const openTicket = async (ticketId) => {
     try {
       setLoadingDetail(true);
+      setError(null);
+
       const data = await getTicket(ticketId);
       setSelectedTicket(data);
       setReplyText("");
     } catch {
-      setError("Failed to load ticket");
+      setError("Ticket not found.");
+      setSelectedTicket(null);
     } finally {
       setLoadingDetail(false);
     }
   };
 
-  /* -------------------------
-     Reply (ADMIN)
-  ------------------------- */
+  /* -------------------------------
+     Reply
+  -------------------------------- */
   const handleSendReply = async () => {
-    if (!replyText.trim() || !selectedTicket) return;
+    if (!selectedTicket || !replyText.trim()) return;
 
     try {
       const updated = await replyTicket(selectedTicket.ticketId, {
@@ -93,44 +95,50 @@ export default function AdminTicket() {
         message: replyText.trim(),
       });
 
-      // ✅ FORCE status back to open (UI truth)
-      updated.status = "open";
-      updated.lastReplyBy = "admin";
-
+      // ✅ sync detail
       setSelectedTicket(updated);
+
+      // ✅ sync list (status + lastReplyBy)
       setTickets((prev) =>
         prev.map((t) =>
-          t.ticketId === updated.ticketId ? updated : t
+          t.ticketId === updated.ticketId
+            ? { ...t, status: updated.status, lastReplyBy: updated.lastReplyBy }
+            : t
         )
       );
 
       setReplyText("");
     } catch {
-      setError("Reply failed");
+      setError("Failed to send reply.");
     }
   };
 
-  /* -------------------------
+  /* -------------------------------
      Close ticket
-  ------------------------- */
+  -------------------------------- */
   const handleCloseTicket = async () => {
     try {
       const updated = await closeTicket(selectedTicket.ticketId);
 
+      // ✅ sync detail
       setSelectedTicket(updated);
+
+      // ✅ sync list
       setTickets((prev) =>
         prev.map((t) =>
-          t.ticketId === updated.ticketId ? updated : t
+          t.ticketId === updated.ticketId
+            ? { ...t, status: "closed" }
+            : t
         )
       );
     } catch {
-      setError("Failed to close ticket");
+      setError("Failed to close ticket.");
     }
   };
 
-  /* -------------------------
-     Stats (status-driven)
-  ------------------------- */
+  /* -------------------------------
+     Stats (fixed)
+  -------------------------------- */
   const stats = {
     total: tickets.length,
     open: tickets.filter((t) => t.status === "open").length,
@@ -139,26 +147,25 @@ export default function AdminTicket() {
   };
 
   return (
-    <div className="min-h-screen mt-16 p-6 bg-neutral-100 dark:bg-neutral-950">
+    <div className="min-h-screen mt-16 bg-neutral-100 dark:bg-neutral-950 p-6">
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6">
-
-        {/* SIDEBAR */}
-        <aside className="col-span-12 lg:col-span-4 bg-white dark:bg-neutral-900 rounded-3xl p-5 shadow-xl">
-          <h2 className="flex items-center gap-2 mb-4 font-semibold">
-            <Inbox size={18} /> Tickets
+        {/* LEFT */}
+        <aside className="col-span-12 lg:col-span-4 bg-white dark:bg-neutral-900 rounded-3xl p-5 shadow">
+          <h2 className="font-semibold flex items-center gap-2 mb-4">
+            <Inbox size={18} /> Support Tickets
           </h2>
 
           <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" size={16} />
+            <Search size={16} className="absolute left-3 top-3 text-neutral-400" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800"
               placeholder="Search..."
+              className="w-full pl-9 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="grid grid-cols-2 gap-3 mb-5">
             <Stat icon={Ticket} label="Total" value={stats.total} />
             <Stat icon={AlertCircle} label="Pending" value={stats.pending} />
             <Stat icon={CheckCircle2} label="Open" value={stats.open} />
@@ -170,66 +177,59 @@ export default function AdminTicket() {
               <button
                 key={t.ticketId}
                 onClick={() => openTicket(t.ticketId)}
-                className={`w-full text-left p-3 rounded-xl border transition
-                  ${selectedTicket?.ticketId === t.ticketId
-                    ? "bg-blue-50 border-blue-300"
-                    : "bg-neutral-50 hover:bg-neutral-100"}
-                `}
+                className={`w-full text-left p-3 rounded-xl border ${
+                  selectedTicket?.ticketId === t.ticketId
+                    ? "bg-blue-50 dark:bg-blue-900/30"
+                    : "bg-neutral-50 dark:bg-neutral-800"
+                }`}
               >
-                <div className="flex justify-between">
-                  <span className="font-mono text-sm">{t.ticketId}</span>
-                  {t.status === "pending" && (
-                    <span className="text-xs bg-yellow-200 px-2 rounded-full">
-                      Needs reply
-                    </span>
-                  )}
-                </div>
+                <p className="font-mono text-sm">{t.ticketId}</p>
                 <p className="text-xs truncate">{t.subject}</p>
               </button>
             ))}
           </div>
         </aside>
 
-        {/* DETAIL */}
-        <section className="col-span-12 lg:col-span-8 bg-white dark:bg-neutral-900 rounded-3xl shadow-xl flex flex-col">
+        {/* RIGHT */}
+        <section className="col-span-12 lg:col-span-8 bg-white dark:bg-neutral-900 rounded-3xl shadow flex flex-col">
           {!selectedTicket ? (
-            <div className="flex-1 flex items-center justify-center opacity-60">
+            <div className="flex-1 flex items-center justify-center text-neutral-500">
               Select a ticket
             </div>
           ) : (
             <>
-              <div className="p-6 border-b flex justify-between">
+              <div className="p-5 border-b flex justify-between">
                 <div>
                   <p className="font-mono">{selectedTicket.ticketId}</p>
-                  <p className="text-xs">{selectedTicket.email}</p>
+                  <p className="text-sm">{selectedTicket.email}</p>
                 </div>
+
                 {selectedTicket.status !== "closed" && (
                   <button
                     onClick={handleCloseTicket}
-                    className="text-red-500"
+                    className="text-red-500 text-sm"
                   >
                     Close Ticket
                   </button>
                 )}
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="flex-1 p-5 space-y-4 overflow-y-auto">
                 {selectedTicket.messages.map((m, i) => (
                   <MessageBubble key={i} {...m} />
                 ))}
               </div>
 
               {selectedTicket.status !== "closed" && (
-                <div className="p-4 border-t flex gap-2">
+                <div className="p-4 border-t flex gap-3">
                   <textarea
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
-                    className="flex-1 rounded-xl p-3 bg-neutral-100"
-                    placeholder="Reply..."
+                    className="flex-1 rounded-xl p-3 bg-neutral-100 dark:bg-neutral-800"
                   />
                   <button
                     onClick={handleSendReply}
-                    className="bg-blue-600 text-white p-4 rounded-xl"
+                    className="bg-blue-600 text-white p-3 rounded-xl"
                   >
                     <Send size={18} />
                   </button>
@@ -245,10 +245,10 @@ export default function AdminTicket() {
 
 function Stat({ icon: Icon, label, value }) {
   return (
-    <div className="bg-neutral-100 dark:bg-neutral-800 p-3 rounded-xl text-center">
+    <div className="p-4 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-center">
       <Icon size={16} className="mx-auto mb-1" />
       <p className="text-xs">{label}</p>
-      <p className="font-bold">{value}</p>
+      <p className="text-xl font-bold">{value}</p>
     </div>
   );
 }
