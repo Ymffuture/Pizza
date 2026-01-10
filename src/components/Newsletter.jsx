@@ -12,7 +12,7 @@ import { CheckCircle, AlertCircle } from "lucide-react";
 import { FiXCircle } from 'react-icons/fi';
 import { FaAddressBook, FaEdit, FaEnvelope, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
 import { MdChatBubble } from "react-icons/md";
-
+import {Link} from "react-router-dom" ;
 /* ----------------------------------
    STATE MANAGEMENT (useReducer)
 ----------------------------------- */
