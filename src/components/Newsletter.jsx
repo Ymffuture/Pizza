@@ -357,6 +357,71 @@ export default function Newsletter() {
             {buttonText}
           </button>
         </form>
+
+        {/* Divider */}
+<div className="relative my-8">
+  <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-white/10 to-transparent" />
+  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-[#f5f5f7] dark:bg-black">
+    OR
+  </span>
+</div>
+
+{/* Create Ticket Section */}
+<motion.div
+  initial={{ opacity: 0, y: 12 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.4, ease: "easeOut" }}
+  className="
+    rounded-2xl
+    border border-black/10 dark:border-white/10
+    bg-white/60 dark:bg-white/5
+    backdrop-blur-md
+    p-5
+    space-y-3
+  "
+>
+  <div className="flex items-start gap-3">
+    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600">
+      🎫
+    </div>
+
+    <div className="flex-1">
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+        Create a Support Ticket
+      </h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+        Best for technical issues, bugs, or requests that need tracking and
+        faster follow-up.
+      </p>
+    </div>
+  </div>
+
+  <div className="flex items-center justify-between flex-wrap gap-3">
+    <p className="text-xs text-gray-500 dark:text-gray-500">
+      📌 You’ll receive a ticket ID and status updates.
+    </p>
+
+    <Link
+      to="/ticket"
+      className="
+        inline-flex items-center gap-2
+        px-4 py-2
+        rounded-xl
+        text-sm font-medium
+        bg-purple-600 text-white
+        hover:bg-purple-700
+        transition
+        hover:scale-[1.03]
+        active:scale-100
+        shadow-sm
+      "
+    >
+      Create Ticket
+      <span aria-hidden>→</span>
+    </Link>
+  </div>
+</motion.div>
+
       </div>
     </section>
   );
