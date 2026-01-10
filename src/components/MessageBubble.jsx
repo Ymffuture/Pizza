@@ -1,70 +1,93 @@
 import { memo } from "react";
 import { ShieldCheck } from "lucide-react";
 
+/* -----------------------------
+   Twitter-style time formatter
+------------------------------ */
+function formatTime(date) {
+  const now = new Date();
+  const d = new Date(date);
+  const diff = (now - d) / 1000;
+
+  if (diff < 60) return "just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+
+  if (d.toDateString() === yesterday.toDateString()) {
+    return "Yesterday";
+  }
+
+  return d.toLocaleDateString(undefined, {
+    day: "numeric",
+    month: "short",
+  });
+}
+
 function MessageBubble({ sender, message, createdAt }) {
   const isAdmin = sender === "admin";
 
   return (
     <div
-      className={`flex ${isAdmin ? "justify-start" : "justify-end"} w-full`}
+      className={`flex w-full ${
+        isAdmin ? "justify-start" : "justify-end"
+      }`}
     >
-      <div
-        className={`
-          relative max-w-[75%] px-4 py-3
-          rounded-2xl text-sm leading-relaxed
-          backdrop-blur-md
-          transition-all
-          ${
-            isAdmin
-              ? `
-                bg-neutral-200/80 dark:bg-neutral-800/80
-                text-neutral-900 dark:text-neutral-100
-                rounded-bl-md
-                shadow-[0_4px_20px_rgba(0,0,0,0.06)]
-              `
-              : `
-                bg-blue-500/90
-                text-white
-                rounded-br-md
-                shadow-[0_4px_20px_rgba(0,0,0,0.12)]
-              `
-          }
-        `}
-      >
-        {/* Admin badge */}
+      <div className="max-w-[78%] space-y-1">
+        {/* Admin Badge */}
         {isAdmin && (
-          <div className="
-            absolute -top-3 left-3
-            flex items-center gap-1
-            px-2 py-[2px]
-            rounded-full
-            text-[10px] font-medium
-            bg-neutral-300 dark:bg-neutral-700
-            text-neutral-700 dark:text-neutral-200
-            shadow-sm
-          ">
+          <div className="flex items-center gap-1 text-[11px] text-neutral-500 dark:text-neutral-400 ml-1">
             <ShieldCheck size={12} />
-            Admin
+            <span>Admin</span>
           </div>
         )}
 
-        {/* Message */}
-        <p className="whitespace-pre-wrap">{message}</p>
+        {/* Bubble */}
+        <div
+          className={`
+            px-4 py-2
+            rounded-2xl
+            text-sm leading-relaxed
+            backdrop-blur-xl
+            border
+            shadow-[0_1px_4px_rgba(0,0,0,0.04)]
+            ${
+              isAdmin
+                ? `
+                  bg-white/70 dark:bg-neutral-900/70
+                  text-neutral-900 dark:text-neutral-100
+                  border-neutral-200 dark:border-neutral-800
+                  rounded-bl-md
+                `
+                : `
+                  bg-blue-500/90
+                  text-white
+                  border-blue-500/40
+                  rounded-br-md
+                `
+            }
+          `}
+        >
+          <p className="whitespace-pre-wrap">{message}</p>
+        </div>
 
-        {/* Timestamp */}
+        {/* Time */}
         {createdAt && (
-          <span
+          <div
             className={`
-              block mt-1 text-[10px]
+              text-[10px]
+              px-1
               ${
                 isAdmin
-                  ? "text-neutral-500 dark:text-neutral-400"
-                  : "text-blue-100"
+                  ? "text-neutral-400 dark:text-neutral-500 text-left"
+                  : "text-blue-200 text-right"
               }
             `}
           >
-            {new Date(createdAt).toLocaleString()}
-          </span>
+            {formatTime(createdAt)}
+          </div>
         )}
       </div>
     </div>
