@@ -124,7 +124,7 @@ export default function AdminTicket() {
 function Spinner() {
   return (
     <svg
-      className="h-5 w-5 animate-spin text-white"
+      className="h-10 w-10 animate-spin text-white"
       viewBox="0 0 24 24"
       aria-hidden
     >
@@ -183,7 +183,7 @@ function Spinner() {
           {/* Ticket list */}
           <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
             {loadingTickets ? (
-              <div className="text-center py-8 text-neutral-500 flex gap-2"> <Spinner/> Loading tickets...</div>
+              <div className="text-center py-8 text-neutral-500 gap-2"> <Spinner/> Loading tickets...</div>
             ) : error ? (
               <div className="text-center py-8 text-red-500">{error}</div>
             ) : filteredTickets.length === 0 ? (
