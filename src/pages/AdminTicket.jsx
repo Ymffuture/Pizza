@@ -133,13 +133,13 @@ function Spinner() {
         cx="12"
         cy="12"
         r="10"
-        stroke="currentColor"
+        stroke="blue"
         strokeWidth="4"
         fill="none"
       />
       <path
         className="opacity-75"
-        fill="currentColor"
+        fill="gray"
         d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
       />
     </svg>
@@ -183,7 +183,17 @@ function Spinner() {
           {/* Ticket list */}
           <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
             {loadingTickets ? (
-              <div className="text-center py-8 text-neutral-500 gap-2"> <Spinner/> Loading tickets...</div>
+              <motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  className="flex flex-col items-center justify-center py-10 text-neutral-500 gap-3"
+>
+  <Spinner className="text-blue-600" />
+  <span className="text-sm font-medium">
+    Loading tickets…
+  </span>
+</motion.div>
+ 
             ) : error ? (
               <div className="text-center py-8 text-red-500">{error}</div>
             ) : filteredTickets.length === 0 ? (
