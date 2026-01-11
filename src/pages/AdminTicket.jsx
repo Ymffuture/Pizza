@@ -121,7 +121,30 @@ export default function AdminTicket() {
     pending: tickets.filter((t) => t?.lastReplyBy === "user").length,
     closed: tickets.filter((t) => t?.status === "closed").length,
   };
-
+function Spinner() {
+  return (
+    <svg
+      className="h-5 w-5 animate-spin text-white"
+      viewBox="0 0 24 24"
+      aria-hidden
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+        fill="none"
+      />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      />
+    </svg>
+  );
+                 }
   return (
     <div className="min-h-screen mt-16 bg-neutral-100 dark:bg-neutral-950 p-6 text-neutral-900 dark:text-neutral-100">
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6">
@@ -160,7 +183,7 @@ export default function AdminTicket() {
           {/* Ticket list */}
           <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
             {loadingTickets ? (
-              <div className="text-center py-8 text-neutral-500">Loading tickets...</div>
+              <div className="text-center py-8 text-neutral-500 flex gap-2"> <Spinner/> Loading tickets...</div>
             ) : error ? (
               <div className="text-center py-8 text-red-500">{error}</div>
             ) : filteredTickets.length === 0 ? (
