@@ -361,7 +361,7 @@ export default function Newsletter() {
         {/* Divider */}
 <div className="relative my-8">
   <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-white/10 to-transparent" />
-  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-white/70 dark:bg-white/5">
+  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
     OR
   </span>
 </div>
