@@ -100,19 +100,43 @@ export default function AdminTicket() {
   };
 
   const handleCloseTicket = async () => {
-    if (!selectedTicket) return;
+  if (!selectedTicket?.ticketId) return;
 
-    try {
-      const updated = await closeTicket(selectedTicket.ticketId);
-      setSelectedTicket(updated);
-      setTickets((prev) =>
-        prev.map((t) => (t.ticketId === updated.ticketId ? updated : t))
-      );
-    } catch (err) {
-      console.error("Failed to close ticket:", err);
-      setError("Failed to close ticket");
-    }
-  };
+  try {
+    // 1. Optional: optimistic update (better UX)
+    const optimisticTicket = { ...selectedTicket, status: "closed" };
+    setSelectedTicket(optimisticTicket);
+    setTickets((prev) =>
+      prev.map((t) =>
+        t.ticketId === selectedTicket.ticketId ? optimisticTicket : t
+      )
+    );
+
+    // 2. Real API call
+    const updated = await closeTicket(selectedTicket.ticketId);
+
+    // 3. Sync with real server data
+    setSelectedTicket(updated);
+    setTickets((prev) =>
+      prev.map((t) => (t.ticketId === updated.ticketId ? updated : t))
+    );
+
+    // Optional: success feedback
+    // toast.success("Ticket closed successfully");
+  } catch (err: any) {
+    console.error("Failed to close ticket:", err);
+
+    // Rollback optimistic update on error
+    setSelectedTicket(selectedTicket);
+    setTickets((prev) =>
+      prev.map((t) =>
+        t.ticketId === selectedTicket.ticketId ? selectedTicket : t
+      )
+    );
+
+    setError(err?.error || err?.message || "Failed to close ticket");
+  }
+};
 
   // Quick stats with safe access
   const stats = {
