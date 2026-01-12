@@ -466,7 +466,7 @@ const StarBackground = () => (
                 <span className="text-[10px]">Copied</span>
               </>
             ) : (
-              <Copy size={14} />
+              <Copy size={14} className="opacity-100" />
             )}
           </button>
 
@@ -480,9 +480,10 @@ const StarBackground = () => (
                 bg-black text-white
                 shadow-lg
                 animate-pop
+                flex gap-2
               "
             >
-             <Check/> Copied!
+             <Check size={16} /> Copied!
             </div>
           )}
 
