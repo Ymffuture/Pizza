@@ -109,7 +109,7 @@ export default function TrackTicket() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-16"
+          className="m-16"
         >
           <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
             Track Your Ticket
