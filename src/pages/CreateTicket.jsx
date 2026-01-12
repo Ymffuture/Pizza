@@ -22,7 +22,7 @@ export default function CreateTicket() {
   const [emailError, setEmailError] = useState("");
 
   /* ----------------------------------
-     Simple email validation
+     Email validation
   ----------------------------------- */
   const isValidEmail = email =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -37,9 +37,13 @@ export default function CreateTicket() {
 
     setEmailError("");
     setLoading(true);
-    const res = await createTicket(data);
-    setTicket(res);
-    setLoading(false);
+
+    try {
+      const res = await createTicket(data);
+      setTicket(res);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const copyId = async () => {
@@ -50,45 +54,59 @@ export default function CreateTicket() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-100 px-4">
+    <div
+      className="
+        min-h-screen
+        flex items-center justify-center
+        px-4
+        bg-neutral-100 dark:bg-neutral-950
+      "
+    >
       <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.98 }}
+        initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
         className="
           w-full max-w-md
-          bg-white/80 backdrop-blur-xl
-          rounded-3xl shadow-2xl
+          rounded-3xl
+          border border-neutral-200/60 dark:border-neutral-800/60
+          bg-white/80 dark:bg-neutral-900/80
+          backdrop-blur-xl
+          shadow-[0_20px_60px_rgba(0,0,0,0.12)]
           p-8
         "
       >
-        <h1 className="text-2xl font-semibold text-neutral-900 mb-2">
+        {/* Header */}
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
           Create Support Ticket
         </h1>
 
-        <p className="text-sm text-neutral-500">
+        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           Describe your issue and we’ll get back to you.
         </p>
 
-        {/* SLA info (NEW) */}
-        <div className="mt-3 flex items-center gap-2 text-sm text-neutral-600">
+        {/* SLA */}
+        <div className="mt-4 flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
           <Clock size={15} />
           <span>We usually respond within 24 hours</span>
         </div>
-<a
-                href={`/track`}
-                className="
-                  inline-flex items-center gap-1
-                  text-sm font-medium
-                  text-blue-600
-                  hover:underline
-                "
-              >
-                Track your ticket
-                <ArrowRight size={14} />
-              </a>
+
+        <a
+          href="/track"
+          className="
+            mt-2 inline-flex items-center gap-1
+            text-sm font-medium
+            text-blue-600 dark:text-blue-500
+            hover:underline
+          "
+        >
+          Track existing ticket
+          <ArrowRight size={14} />
+        </a>
+
         {/* Inputs */}
         <div className="space-y-4 mt-6">
+          {/* Email */}
           <div>
             <input
               placeholder="Email address"
@@ -99,20 +117,22 @@ export default function CreateTicket() {
               }}
               className="
                 w-full px-4 py-3 rounded-xl
-                bg-neutral-100
-                focus:ring-2 focus:ring-blue-500
+                bg-neutral-100 dark:bg-neutral-800
+                text-neutral-900 dark:text-neutral-100
+                border border-transparent
+                focus:border-blue-500
+                focus:ring-2 focus:ring-blue-500/30
                 outline-none
               "
             />
 
-            {/* Email error (NEW) */}
             <AnimatePresence>
               {emailError && (
                 <motion.p
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="text-xs text-red-500 mt-1"
+                  className="mt-1 text-xs text-red-500"
                 >
                   {emailError}
                 </motion.p>
@@ -120,23 +140,37 @@ export default function CreateTicket() {
             </AnimatePresence>
           </div>
 
+          {/* Subject */}
           <input
-            placeholder="Subject"
+            placeholder="Subject (optional)"
             value={data.subject}
             onChange={e => setData({ ...data, subject: e.target.value })}
-            className="w-full px-4 py-3 rounded-xl bg-neutral-100 focus:ring-2 focus:ring-blue-500 outline-none"
+            className="
+              w-full px-4 py-3 rounded-xl
+              bg-neutral-100 dark:bg-neutral-800
+              text-neutral-900 dark:text-neutral-100
+              focus:ring-2 focus:ring-blue-500/30
+              outline-none
+            "
           />
 
+          {/* Message */}
           <textarea
             placeholder="Describe your issue..."
             value={data.message}
             onChange={e => setData({ ...data, message: e.target.value })}
             rows={4}
-            className="w-full px-4 py-3 rounded-xl bg-neutral-100 focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+            className="
+              w-full px-4 py-3 rounded-xl
+              bg-neutral-100 dark:bg-neutral-800
+              text-neutral-900 dark:text-neutral-100
+              focus:ring-2 focus:ring-blue-500/30
+              outline-none resize-none
+            "
           />
         </div>
 
-        {/* Submit Button */}
+        {/* Submit */}
         <motion.button
           whileTap={{ scale: 0.97 }}
           disabled={loading}
@@ -145,7 +179,8 @@ export default function CreateTicket() {
             mt-6 w-full h-11
             flex items-center justify-center
             rounded-xl
-            bg-black text-white
+            bg-black dark:bg-white
+            text-white dark:text-black
             font-medium
             disabled:opacity-60
           "
@@ -177,68 +212,56 @@ export default function CreateTicket() {
         <AnimatePresence>
           {ticket && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}
               className="
-                mt-6
-                p-4 rounded-2xl
-                bg-neutral-100
+                mt-6 p-4 rounded-2xl
+                bg-neutral-100 dark:bg-neutral-800
+                border border-neutral-200 dark:border-neutral-700
                 space-y-3
               "
             >
-              <div className="flex items-start gap-3">
+              <div className="flex gap-3">
                 <CheckCircle className="text-green-500 mt-1" size={20} />
 
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-neutral-900">
+                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                     Ticket created successfully
                   </p>
 
-                  {/* Copyable ID */}
                   <div
                     role="button"
                     tabIndex={0}
                     onClick={copyId}
-                    onKeyDown={e => e.key === "Enter" && copyId()}
                     className="
-                      mt-1
-                      flex items-center gap-2
-                      text-sm font-mono
+                      mt-1 flex items-center gap-2
+                      font-mono text-sm
                       cursor-pointer
                       select-none
                     "
                   >
                     <span>{ticket.ticketId}</span>
 
-                    <motion.span
-                      key={copied ? "check" : "copy"}
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {copied ? (
-                        <Check size={16} className="text-green-600" />
-                      ) : (
-                        <Copy size={16} className="text-neutral-500" />
-                      )}
-                    </motion.span>
+                    {copied ? (
+                      <Check size={16} className="text-green-600" />
+                    ) : (
+                      <Copy size={16} className="text-neutral-500" />
+                    )}
                   </div>
 
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
                     Tap to copy your ticket ID
                   </p>
                 </div>
               </div>
 
-              {/* Track ticket link (NEW) */}
               <a
                 href={`/track-ticket?id=${ticket.ticketId}`}
                 className="
                   inline-flex items-center gap-1
                   text-sm font-medium
-                  text-blue-600
+                  text-blue-600 dark:text-blue-500
                   hover:underline
                 "
               >
