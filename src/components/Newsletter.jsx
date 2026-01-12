@@ -182,7 +182,7 @@ export default function Newsletter() {
     const lastSent = localStorage.getItem("newsletter_last_sent");
     if (!lastSent) return;
     const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
-    const remaining = 500 - diff;
+    const remaining = 550 - diff;
     if (remaining > 0) dispatch({ type: "SET_COOLDOWN", value: remaining });
   }, []);
 
@@ -361,7 +361,7 @@ export default function Newsletter() {
         {/* Divider */}
 <div className="relative my-8">
   <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-white/10 to-transparent" />
-  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
+  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-white dark:bg-white/5 backdrop-blur-xl">
     OR
   </span>
 </div>
