@@ -244,7 +244,7 @@ export default function CreateTicket() {
                       select-none
                     "
                   >
-                    <span className={`dark:text-gray-400"`} >{ticket.ticketId}</span>
+                    <span className={`dark:text-green-800`} >{ticket.ticketId}</span>
 
                     {copied ? (
                       <Check size={16} className="text-green-600" />
