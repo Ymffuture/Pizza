@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import emailjs from "@emailjs/browser";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, AlertCircle, TriangleAlert } from "lucide-react";
+import { CheckCircle, AlertCircle, TriangleAlert, Info} from "lucide-react";
 import { FiXCircle } from 'react-icons/fi';
 import { FaAddressBook, FaEdit, FaEnvelope, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
 import { MdChatBubble } from "react-icons/md";
