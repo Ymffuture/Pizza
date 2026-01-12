@@ -103,13 +103,13 @@ export default function TrackTicket() {
 
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 transition-colors">
-      <div className="max-w-2xl mx-auto px-6 mt-16">
+      <div className="max-w-2xl mx-auto px-6">
 
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
+          className="mb-16"
         >
           <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
             Track Your Ticket
