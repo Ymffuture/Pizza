@@ -8,6 +8,7 @@ import {
   Loader2,
   Clock,
   ArrowRight,
+  Info, 
 } from "lucide-react";
 
 export default function CreateTicket() {
@@ -84,7 +85,9 @@ export default function CreateTicket() {
         <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           Describe your issue and we’ll get back to you.
         </p>
-
+<p className="mt-1 text-sm text-yellow-500 dark:text-yellow-400 bg-yellow-600/10 shadow-lg flex gap-2">
+         <Info className="text-yellow" /> Note: The ticket can't be recovered, please save it somewhere. 
+        </p>
         {/* SLA */}
         <div className="mt-4 flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
           <Clock size={15} />
@@ -227,7 +230,7 @@ export default function CreateTicket() {
 
                 <div className="flex-1">
                   <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                    Ticket created successfully
+                   Your Ticket is  successfully created. 
                   </p>
 
                   <div
@@ -241,7 +244,7 @@ export default function CreateTicket() {
                       select-none
                     "
                   >
-                    <span>{ticket.ticketId}</span>
+                    <span className={`dark:text-gray-400"`} >{ticket.ticketId}</span>
 
                     {copied ? (
                       <Check size={16} className="text-green-600" />
@@ -257,7 +260,7 @@ export default function CreateTicket() {
               </div>
 
               <a
-                href={`/track-ticket?id=${ticket.ticketId}`}
+                href={`/track`}
                 className="
                   inline-flex items-center gap-1
                   text-sm font-medium
@@ -266,7 +269,7 @@ export default function CreateTicket() {
                 "
               >
                 Track your ticket
-                <ArrowRight size={14} />
+                <ArrowRight size={14} className="animate-pulse "/>
               </a>
             </motion.div>
           )}
