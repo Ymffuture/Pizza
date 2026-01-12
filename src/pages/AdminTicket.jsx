@@ -100,41 +100,60 @@ export default function AdminTicket() {
   };
 
   const handleCloseTicket = async () => {
-  if (!selectedTicket?.ticketId) return;
+  if (!selectedTicket || !selectedTicket.ticketId) return;
+
+  const originalTicket = selectedTicket; // for rollback
 
   try {
-    // 1. Optional: optimistic update (better UX)
-    const optimisticTicket = { ...selectedTicket, status: "closed" };
+    // 1. Optimistic update - instant UI feedback
+    const optimisticTicket = {
+      ...selectedTicket,
+      status: "closed"
+    };
+
     setSelectedTicket(optimisticTicket);
-    setTickets((prev) =>
-      prev.map((t) =>
-        t.ticketId === selectedTicket.ticketId ? optimisticTicket : t
+
+    setTickets(prev =>
+      prev.map(ticket =>
+        ticket.ticketId === selectedTicket.ticketId
+          ? optimisticTicket
+          : ticket
       )
     );
 
-    // 2. Real API call
+    // 2. Call the actual API
     const updated = await closeTicket(selectedTicket.ticketId);
 
-    // 3. Sync with real server data
+    // 3. Update with real server data
     setSelectedTicket(updated);
-    setTickets((prev) =>
-      prev.map((t) => (t.ticketId === updated.ticketId ? updated : t))
-    );
-
-    // Optional: success feedback
-    // toast.success("Ticket closed successfully");
-  } catch (err: any) {
-    console.error("Failed to close ticket:", err);
-
-    // Rollback optimistic update on error
-    setSelectedTicket(selectedTicket);
-    setTickets((prev) =>
-      prev.map((t) =>
-        t.ticketId === selectedTicket.ticketId ? selectedTicket : t
+    setTickets(prev =>
+      prev.map(ticket =>
+        ticket.ticketId === updated.ticketId
+          ? updated
+          : ticket
       )
     );
 
-    setError(err?.error || err?.message || "Failed to close ticket");
+    // Optional success message
+    // toast.success("Ticket closed successfully");
+  } catch (error) {
+    console.error("Failed to close ticket:", error);
+
+    // Rollback on error
+    setSelectedTicket(originalTicket);
+    setTickets(prev =>
+      prev.map(ticket =>
+        ticket.ticketId === originalTicket.ticketId
+          ? originalTicket
+          : ticket
+      )
+    );
+
+    setError(
+      error?.response?.data?.error ||
+      error?.message ||
+      "Failed to close ticket. Please try again."
+    );
   }
 };
 
