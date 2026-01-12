@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import emailjs from "@emailjs/browser";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, AlertCircle } from "lucide-react";
+import { CheckCircle, AlertCircle, TriangleAlert } from "lucide-react";
 import { FiXCircle } from 'react-icons/fi';
 import { FaAddressBook, FaEdit, FaEnvelope, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
 import { MdChatBubble } from "react-icons/md";
@@ -279,7 +279,7 @@ export default function Newsletter() {
 
         <header className="text-center mb-10">
           <p className="text-[16px] font-semibold uppercase tracking-widest text-gray-200">
-            Newsletter
+            Newsletter / Subscriptions / Contact Us
           </p>
           <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
             Stay Inspired
@@ -297,7 +297,7 @@ export default function Newsletter() {
               exit={{ opacity: 0, y: -8 }}
               className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 flex gap-2"
             >
-              <AlertCircle size={22} />
+              <TriangleAlert size={22} />
               One submission every 10 mins
             </motion.div>
           )}
@@ -361,7 +361,7 @@ export default function Newsletter() {
         {/* Divider */}
 <div className="relative my-8">
   <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-white/10 to-transparent" />
-  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-[#f5f5f7] dark:bg-black">
+  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-white/70 dark:bg-white/5">
     OR
   </span>
 </div>
@@ -398,9 +398,9 @@ export default function Newsletter() {
 
   <div className="flex items-center justify-between flex-wrap gap-3">
     <p className="text-xs text-gray-500 dark:text-gray-500">
-      📌 You’ll receive a ticket ID and status updates.
+    <Info className="text-gray-600 dark:text-white" size={20} /> You’ll receive a ticket ID and status updates.
     </p>
-
+<br/>
     <Link
       to="/ticket"
       className="
