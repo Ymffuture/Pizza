@@ -182,7 +182,7 @@ export default function Newsletter() {
     const lastSent = localStorage.getItem("newsletter_last_sent");
     if (!lastSent) return;
     const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
-    const remaining = 550 - diff;
+    const remaining = 300 - diff;
     if (remaining > 0) dispatch({ type: "SET_COOLDOWN", value: remaining });
   }, []);
 
@@ -298,7 +298,7 @@ export default function Newsletter() {
               className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 flex gap-2"
             >
               <TriangleAlert size={22} />
-              One submission every 10 mins
+              One submission every 5 mins
             </motion.div>
           )}
         </AnimatePresence>
@@ -361,7 +361,7 @@ export default function Newsletter() {
         {/* Divider */}
 <div className="relative my-8">
   <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-white/10 to-transparent" />
-  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-white dark:bg-white/5 backdrop-blur-xl">
+  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-white/5 dark:bg-black backdrop-blur-xl">
     OR
   </span>
 </div>
@@ -397,8 +397,8 @@ export default function Newsletter() {
   </div>
 
   <div className="flex items-center justify-between flex-wrap gap-3">
-    <p className="text-xs text-gray-500 dark:text-gray-500">
-    <Info className="text-gray-600 dark:text-white" size={20} /> You’ll receive a ticket ID and status updates.
+    <p className="text-xs text-gray-500 dark:text-gray-500 flex gap-2">
+    <Info className="text-gray-600 dark:text-white" size={16} /> You’ll receive a ticket ID and status updates.
     </p>
 <br/>
     <Link
