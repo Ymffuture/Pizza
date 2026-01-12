@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getTicket, replyTicket } from "../api/ticketApi";
-import { Search, Send, Ticket, Info } from "lucide-react";
+import { Search, Send, Ticket, Info, Printer } from "lucide-react";
 import MessageBubble from "../components/MessageBubble";
-import { Printer } from "lucide-react";
 
 /* ---------------------------
    Small debounce hook
@@ -29,7 +28,7 @@ export default function TrackTicket() {
   const [error, setError] = useState("");
 
   /* ---------------------------
-     Auto-load ticket
+     Load ticket by ID
   ---------------------------- */
   useEffect(() => {
     if (!debouncedId.trim()) {
@@ -44,7 +43,7 @@ export default function TrackTicket() {
       try {
         setLoading(true);
         setError("");
-        const data = await getTicket(debouncedId);
+        const data = await getTicket(debouncedId.trim());
         if (active) setTicket(data);
       } catch {
         if (active) {
@@ -59,20 +58,47 @@ export default function TrackTicket() {
     loadTicket();
 
     return () => {
-      active = false; // cancel stale response
+      active = false;
     };
   }, [debouncedId]);
 
+  /* ---------------------------
+     Auto refresh ticket
+     (stops when closed)
+  ---------------------------- */
+  useEffect(() => {
+    if (!ticket || ticket.status === "closed") return;
+
+    const interval = setInterval(async () => {
+      try {
+        const fresh = await getTicket(ticket.ticketId);
+        setTicket(fresh);
+      } catch {
+        // silent fail
+      }
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, [ticket?.ticketId, ticket?.status]);
+
+  /* ---------------------------
+     Reply handler
+  ---------------------------- */
   const reply = async () => {
-    if (!message.trim() || !ticket) return;
+    if (!message.trim() || !ticket || ticket.status === "closed") return;
 
-    const updated = await replyTicket(ticket.ticketId, {
-      sender: "user",
-      message,
-    });
+    try {
+      const updated = await replyTicket(ticket.ticketId, {
+        sender: "user",
+        message: message.trim(),
+      });
 
-    setTicket(updated);
-    setMessage("");
+      setTicket(updated);
+      setMessage("");
+      setError("");
+    } catch {
+      setError("Unable to send reply. Ticket may be closed.");
+    }
   };
 
   return (
@@ -115,7 +141,6 @@ export default function TrackTicket() {
             />
           </div>
 
-          {/* Optional manual trigger */}
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setId(id)}
@@ -154,16 +179,13 @@ export default function TrackTicket() {
               {/* Info */}
               <div className="p-5 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
                 <div className="flex items-center justify-between">
-                   <button
-  onClick={() => window.print()}
-  className="
-    text-neutral-500 hover:text-neutral-700
-    dark:hover:text-neutral-300
-  "
-  title="Print conversation"
->
-  <Printer size={18} />
-</button>
+                  <button
+                    onClick={() => window.print()}
+                    className="text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+                    title="Print conversation"
+                  >
+                    <Printer size={18} />
+                  </button>
 
                   <div className="flex items-center gap-2 font-mono text-sm text-neutral-700 dark:text-neutral-300">
                     <Ticket size={16} />
@@ -194,40 +216,42 @@ export default function TrackTicket() {
 
               {/* Messages */}
               <div className="p-5 space-y-3 max-h-[400px] overflow-y-auto">
-                {ticket.messages.map((msg, i) => (
+                {(ticket.messages || []).map((msg, i) => (
                   <MessageBubble key={i} {...msg} />
                 ))}
               </div>
 
               {/* Reply */}
-              <div className="p-4 border-t border-neutral-200 dark:border-neutral-800 flex gap-2">
-                <textarea
-                  value={message}
-                  onChange={e => setMessage(e.target.value)}
-                  placeholder="Reply to this ticket..."
-                  rows={1}
-                  className="
-                    flex-1 resize-none px-4 py-2 rounded-xl
-                    bg-neutral-100 dark:bg-neutral-800
-                    text-neutral-900 dark:text-neutral-100
-                    focus:ring-2 focus:ring-blue-500
-                    outline-none
-                  "
-                />
+              {ticket.status !== "closed" && (
+                <div className="p-4 border-t border-neutral-200 dark:border-neutral-800 flex gap-2">
+                  <textarea
+                    value={message}
+                    onChange={e => setMessage(e.target.value)}
+                    placeholder="Reply to this ticket..."
+                    rows={1}
+                    className="
+                      flex-1 resize-none px-4 py-2 rounded-xl
+                      bg-neutral-100 dark:bg-neutral-800
+                      text-neutral-900 dark:text-neutral-100
+                      focus:ring-2 focus:ring-blue-500
+                      outline-none
+                    "
+                  />
 
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  onClick={reply}
-                  disabled={!message.trim()}
-                  className="
-                    p-3 rounded-full
-                    bg-blue-500 text-white
-                    disabled:opacity-50
-                  "
-                >
-                  <Send size={18} />
-                </motion.button>
-              </div>
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    onClick={reply}
+                    disabled={!message.trim()}
+                    className="
+                      p-3 rounded-full
+                      bg-blue-500 text-white
+                      disabled:opacity-50
+                    "
+                  >
+                    <Send size={18} />
+                  </motion.button>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
