@@ -92,7 +92,7 @@ const copyAll = (text) => {
         setPlaceholder(list[placeholderIndex % list.length]);
         setPlaceholderIndex(i => i + 1);
         setFade(true);
-      }, 300);
+      }, 3000);
     }, 3000);
 
     return () => clearInterval(interval);
@@ -437,7 +437,7 @@ const StarBackground = () => (
         if (navigator.vibrate) navigator.vibrate(20);
 
         setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
+        setTimeout(() => setCopied(false), 3000);
       };
 
       return (
@@ -463,14 +463,14 @@ const StarBackground = () => (
             {copied ? (
               <>
                 <Check size={14} />
-                <span className="text-[10px]">Copied</span>
+                <span className="text-[10px]">Copied!</span>
               </>
             ) : (
               <Copy size={14} className="opacity-100" />
             )}
           </button>
 
-          {/* TOOLTIP */}
+          {/* TOOLTIP 
           {copied && (
             <div
               className="
@@ -486,6 +486,7 @@ const StarBackground = () => (
              <Check size={16} /> Copied!
             </div>
           )}
+          */}
 
           <SyntaxHighlighter
             style={coldarkCold}
