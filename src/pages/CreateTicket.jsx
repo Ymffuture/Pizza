@@ -259,7 +259,7 @@ export default function CreateTicket() {
                 </div>
               </div>
 
-              <a
+              {/* <a
                 href={`/track`}
                 className="
                   inline-flex items-center gap-1
@@ -270,7 +270,7 @@ export default function CreateTicket() {
               >
                 Track your ticket
                 <ArrowRight size={14} className="animate-pulse "/>
-              </a>
+              </a> */}
             </motion.div>
           )}
         </AnimatePresence>
