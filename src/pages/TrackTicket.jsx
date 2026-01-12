@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getTicket, replyTicket } from "../api/ticketApi";
 import { Search, Send, Ticket, Info } from "lucide-react";
 import MessageBubble from "../components/MessageBubble";
+import { Printer } from "lucide-react";
 
 /* ---------------------------
    Small debounce hook
@@ -153,6 +154,17 @@ export default function TrackTicket() {
               {/* Info */}
               <div className="p-5 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900">
                 <div className="flex items-center justify-between">
+                   <button
+  onClick={() => window.print()}
+  className="
+    text-neutral-500 hover:text-neutral-700
+    dark:hover:text-neutral-300
+  "
+  title="Print conversation"
+>
+  <Printer size={18} />
+</button>
+
                   <div className="flex items-center gap-2 font-mono text-sm text-neutral-700 dark:text-neutral-300">
                     <Ticket size={16} />
                     {ticket.ticketId}
