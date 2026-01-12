@@ -189,13 +189,13 @@ function Spinner() {
   );
                  }
   return (
-    <div className="min-h-screen mt-16 bg-neutral-100 dark:bg-neutral-950 p-6 text-neutral-900 dark:text-neutral-100">
+    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 p-6 text-neutral-900 dark:text-neutral-100">
       <div className="max-w-7xl mx-auto grid grid-cols-12 gap-6">
         {/* LEFT SIDEBAR - Ticket List */}
         <motion.aside
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="col-span-12 lg:col-span-4 bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-5"
+          className="col-span-12 lg:col-span-4 bg-white dark:bg-neutral-900 rounded-3xl shadow-xl p-5 pt-16"
         >
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Inbox size={18} /> Support Tickets
