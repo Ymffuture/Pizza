@@ -271,3 +271,22 @@ body {
 .animate-scaleIn {
   animation: scaleIn 0.25s ease-out;
 }
+
+
+    @media print {
+  body {
+    background: white !important;
+  }
+
+  button,
+  textarea,
+  input {
+    display: none !important;
+  }
+
+  .shadow-xl,
+  .rounded-3xl {
+    box-shadow: none !important;
+  }
+}
+
