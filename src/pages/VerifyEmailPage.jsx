@@ -23,7 +23,7 @@ export default function VerifyEmailPage() {
     const verifyEmail = async () => {
       try {
         // Increased timeout to 15 seconds
-        await api.get(`/verify-email`, {
+        await api.get(`/quiz/verify`, {
           params: { token },
           timeout: 15000,
         });
