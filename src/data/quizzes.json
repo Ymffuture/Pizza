@@ -4,28 +4,280 @@
     "type": "output",
     "language": "javascript",
     "question": "What is the output?",
-    "code": "console.log([] + []);",
-    "correctAnswer": "",
-    "explanation": "Both arrays are converted to strings, resulting in an empty string."
+    "code": "console.log(typeof null);",
+    "correctAnswer": "object",
+    "explanation": "This is a historical JavaScript bug: null is incorrectly reported as an object."
   },
   {
     "id": 2,
     "type": "mcq",
     "language": "python",
     "question": "What will this output?",
-    "code": "x = [1, 2]\nx.append([3,4])\nprint(len(x))",
-    "options": ["2", "3", "4", "Error"],
-    "correctAnswer": 1,
-    "explanation": "append adds the list as one element, making length 3."
+    "code": "x = [1, 2, 3]\nprint(x[::-1])",
+    "options": ["[3, 2, 1]", "[1, 2, 3]", "Error", "None"],
+    "correctAnswer": 0,
+    "explanation": "Slicing with [::-1] reverses the list."
   },
   {
     "id": 3,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(+'10' + 1);",
+    "correctAnswer": "11",
+    "explanation": "Unary + converts string '10' to number, then adds 1."
+  },
+  {
+    "id": 4,
     "type": "mcq",
     "language": "html",
-    "question": "What does this HTML do?",
-    "code": "<a href=\"#\">Click</a>",
-    "options": ["Reloads page", "Does nothing", "Scrolls top", "Throws error"],
+    "question": "What does this tag do?",
+    "code": "<meta charset='UTF-8'>",
+    "options": ["Adds styles", "Sets character encoding", "Adds metadata only", "Does nothing"],
+    "correctAnswer": 1,
+    "explanation": "It defines the character encoding for the HTML document."
+  },
+  {
+    "id": 5,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(type(None))",
+    "correctAnswer": "<class 'NoneType'>",
+    "explanation": "None has its own type called NoneType."
+  },
+  {
+    "id": 6,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(2 + '2' - 1);",
+    "correctAnswer": "21",
+    "explanation": "2 + '2' becomes '22', then '22' - 1 coerces to number 21."
+  },
+  {
+    "id": 7,
+    "type": "mcq",
+    "language": "python",
+    "question": "What does this produce?",
+    "code": "print(bool(''))",
+    "options": ["True", "False", "None", "Error"],
+    "correctAnswer": 1,
+    "explanation": "Empty strings are falsy in Python."
+  },
+  {
+    "id": 8,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(Math.max());",
+    "correctAnswer": "-Infinity",
+    "explanation": "Math.max with no arguments returns -Infinity."
+  },
+  {
+    "id": 9,
+    "type": "mcq",
+    "language": "html",
+    "question": "Which tag is semantic?",
+    "code": "<header></header>",
+    "options": ["div", "span", "header", "b"],
     "correctAnswer": 2,
-    "explanation": "An empty hash navigates to the top of the page."
+    "explanation": "header is a semantic HTML5 element."
+  },
+  {
+    "id": 10,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(3 == 3.0)",
+    "correctAnswer": "True",
+    "explanation": "Python compares values, not types, in equality."
+  },
+  {
+    "id": 11,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log([].length);",
+    "correctAnswer": "0",
+    "explanation": "Empty arrays have length 0."
+  },
+  {
+    "id": 12,
+    "type": "mcq",
+    "language": "python",
+    "question": "What will this output?",
+    "code": "print(len(set([1,1,2,3])))",
+    "options": ["2", "3", "4", "Error"],
+    "correctAnswer": 1,
+    "explanation": "Sets remove duplicates."
+  },
+  {
+    "id": 13,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log('5' == 5);",
+    "correctAnswer": "true",
+    "explanation": "Loose equality performs type coercion."
+  },
+  {
+    "id": 14,
+    "type": "mcq",
+    "language": "html",
+    "question": "What does the alt attribute do?",
+    "code": "<img src='x.jpg' alt='text'>",
+    "options": ["Adds tooltip", "Improves SEO & accessibility", "Adds caption", "Does nothing"],
+    "correctAnswer": 1,
+    "explanation": "alt text helps screen readers and SEO."
+  },
+  {
+    "id": 15,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(type(lambda x: x))",
+    "correctAnswer": "<class 'function'>",
+    "explanation": "Lambdas are functions in Python."
+  },
+  {
+    "id": 16,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(Boolean(0));",
+    "correctAnswer": "false",
+    "explanation": "0 is falsy in JavaScript."
+  },
+  {
+    "id": 17,
+    "type": "mcq",
+    "language": "python",
+    "question": "What does this return?",
+    "code": "print(type([]))",
+    "options": ["list", "<class 'list'>", "array", "Error"],
+    "correctAnswer": 1,
+    "explanation": "type returns the class object."
+  },
+  {
+    "id": 18,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(!!0);",
+    "correctAnswer": "false",
+    "explanation": "Double negation converts to boolean."
+  },
+  {
+    "id": 19,
+    "type": "mcq",
+    "language": "html",
+    "question": "Which input type hides text?",
+    "code": "<input type='password'>",
+    "options": ["text", "hidden", "password", "email"],
+    "correctAnswer": 2,
+    "explanation": "password masks user input."
+  },
+  {
+    "id": 20,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(sum([1,2,3]))",
+    "correctAnswer": "6",
+    "explanation": "sum adds all elements."
+  },
+  {
+    "id": 21,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log('' || 'Hello');",
+    "correctAnswer": "Hello",
+    "explanation": "Logical OR returns the first truthy value."
+  },
+  {
+    "id": 22,
+    "type": "mcq",
+    "language": "python",
+    "question": "What does this print?",
+    "code": "print(10 // 3)",
+    "options": ["3.3", "3", "4", "Error"],
+    "correctAnswer": 1,
+    "explanation": "Floor division returns integer result."
+  },
+  {
+    "id": 23,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(typeof (() => {}));",
+    "correctAnswer": "function",
+    "explanation": "Arrow functions are still functions."
+  },
+  {
+    "id": 24,
+    "type": "mcq",
+    "language": "html",
+    "question": "Which tag creates a line break?",
+    "code": "<br>",
+    "options": ["p", "hr", "br", "div"],
+    "correctAnswer": 2,
+    "explanation": "br inserts a line break."
+  },
+  {
+    "id": 25,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(bool({}))",
+    "correctAnswer": "False",
+    "explanation": "Empty dictionaries are falsy."
+  },
+  {
+    "id": 26,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log([] === []);",
+    "correctAnswer": "false",
+    "explanation": "Arrays are compared by reference."
+  },
+  {
+    "id": 27,
+    "type": "mcq",
+    "language": "python",
+    "question": "What does this return?",
+    "code": "print(type(5))",
+    "options": ["int", "<class 'int'>", "number", "Error"],
+    "correctAnswer": 1,
+    "explanation": "type returns the class."
+  },
+  {
+    "id": 28,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log('10' > 2);",
+    "correctAnswer": "true",
+    "explanation": "String '10' is coerced to number 10."
+  },
+  {
+    "id": 29,
+    "type": "output",
+    "language": "python",
+    "question": "What is the output?",
+    "code": "print(5 in [1,2,3,4,5])",
+    "correctAnswer": "True",
+    "explanation": "in checks membership."
+  },
+  {
+    "id": 30,
+    "type": "output",
+    "language": "javascript",
+    "question": "What is the output?",
+    "code": "console.log(typeof NaN);",
+    "correctAnswer": "number",
+    "explanation": "NaN is still of type number."
   }
 ]
