@@ -100,32 +100,37 @@ export default function AdminTicket() {
   };
 
   const handleCloseTicket = async () => {
-  if (!selectedTicket || !selectedTicket.ticketId) return;
+  if (!selectedTicket?.ticketId) return;
+  if (selectedTicket.status === "closed") return;
 
-  const originalTicket = selectedTicket; // for rollback
+  const ticketId = selectedTicket.ticketId;
+
+  // Snapshot for rollback (clone, not reference)
+  const originalTicket = { ...selectedTicket };
 
   try {
-    // 1. Optimistic update - instant UI feedback
+    // 1. Optimistic update
     const optimisticTicket = {
       ...selectedTicket,
-      status: "closed"
+      status: "closed",
     };
 
     setSelectedTicket(optimisticTicket);
 
     setTickets(prev =>
       prev.map(ticket =>
-        ticket.ticketId === selectedTicket.ticketId
+        ticket.ticketId === ticketId
           ? optimisticTicket
           : ticket
       )
     );
 
-    // 2. Call the actual API
-    const updated = await closeTicket(selectedTicket.ticketId);
+    // 2. API call
+    const updated = await closeTicket(ticketId);
 
-    // 3. Update with real server data
+    // 3. Reconcile with server truth
     setSelectedTicket(updated);
+
     setTickets(prev =>
       prev.map(ticket =>
         ticket.ticketId === updated.ticketId
@@ -134,13 +139,12 @@ export default function AdminTicket() {
       )
     );
 
-    // Optional success message
-    // toast.success("Ticket closed successfully");
   } catch (error) {
     console.error("Failed to close ticket:", error);
 
-    // Rollback on error
+    // Rollback
     setSelectedTicket(originalTicket);
+
     setTickets(prev =>
       prev.map(ticket =>
         ticket.ticketId === originalTicket.ticketId
@@ -150,7 +154,7 @@ export default function AdminTicket() {
     );
 
     setError(
-      error?.response?.data?.error ||
+      error?.error ||
       error?.message ||
       "Failed to close ticket. Please try again."
     );
