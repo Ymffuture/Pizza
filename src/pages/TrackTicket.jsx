@@ -102,12 +102,9 @@ export default function TrackTicket() {
     }
   };
 
-const isClosed = ticket.status === "closed";
+const isClosed = ticket?.status === "closed";
+const isPending = ticket?.status === "pending";
 
-const isPending = ticket.status === "pending";
-
-
-   
 
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 transition-colors">
@@ -205,7 +202,7 @@ const isPending = ticket.status === "pending";
       ? "This ticket is closed and no longer available. Please create a new ticket if you need further assistance."
       : isPending ? "Support will respond soon" :null
   }
-  placement="top"
+  placement={isClosed? "right" :"top"} 
    overlayInnerStyle={{
     backgroundColor: "#202124",
     color: "#fff",
