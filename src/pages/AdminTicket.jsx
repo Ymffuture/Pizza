@@ -99,67 +99,21 @@ export default function AdminTicket() {
     }
   };
 
-  const handleCloseTicket = async () => {
-  if (!selectedTicket?.ticketId) return;
-  if (selectedTicket.status === "closed") return;
+   const handleCloseTicket = async () => {
+    if (!selectedTicket) return;
 
-  const ticketId = selectedTicket.ticketId;
-
-  // Snapshot for rollback (clone, not reference)
-  const originalTicket = { ...selectedTicket };
-
-  try {
-    // 1. Optimistic update
-    const optimisticTicket = {
-      ...selectedTicket,
-      status: "closed",
-    };
-
-    setSelectedTicket(optimisticTicket);
-
-    setTickets(prev =>
-      prev.map(ticket =>
-        ticket.ticketId === ticketId
-          ? optimisticTicket
-          : ticket
-      )
-    );
-
-    // 2. API call
-    const updated = await closeTicket(ticketId);
-
-    // 3. Reconcile with server truth
-    setSelectedTicket(updated);
-
-    setTickets(prev =>
-      prev.map(ticket =>
-        ticket.ticketId === updated.ticketId
-          ? updated
-          : ticket
-      )
-    );
-
-  } catch (error) {
-    console.error("Failed to close ticket:", error);
-
-    // Rollback
-    setSelectedTicket(originalTicket);
-
-    setTickets(prev =>
-      prev.map(ticket =>
-        ticket.ticketId === originalTicket.ticketId
-          ? originalTicket
-          : ticket
-      )
-    );
-
-    setError(
-      error?.error ||
-      error?.message ||
-      "Failed to close ticket. Please try again."
-    );
-  }
-};
+    try {
+      const updated = await closeTicket(selectedTicket.ticketId);
+      setSelectedTicket(updated);
+      setTickets((prev) =>
+        prev.map((t) => (t.ticketId === updated.ticketId ? updated : t))
+      );
+    } catch (err) {
+      console.error("Failed to close ticket:", err);
+      setError("Failed to close ticket");
+    }
+  };
+ 
 
   // Quick stats with safe access
   const stats = {
