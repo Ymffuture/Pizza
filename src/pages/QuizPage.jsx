@@ -130,28 +130,43 @@ export default function QuizPage() {
   /* ======================
      RESULT VIEW
   ====================== */
-  if (result) {
-    return (
-      <div className="pt-24 max-w-xl mx-auto px-6 dark:text-white">
-        <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-lg space-y-4">
-          <h2 className="text-xl font-semibold">Quiz Result</h2>
+  
+if (result) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-md bg-white dark:bg-gray-800 rounded-3xl p-10 shadow-2xl flex flex-col items-center space-y-6"
+      >
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
+          Quiz Result
+        </h2>
 
-          <p>
-            Score: <strong>{result.percentage}%</strong>
-          </p>
+        <p className="text-xl text-gray-700 dark:text-gray-200">
+          Score: <span className="font-semibold">{result.percentage}%</span>
+        </p>
 
-          <p
-            className={`flex items-center gap-2 font-medium ${
-              result.passed ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {result.passed ? <FiCheckCircle /> : <FiXCircle />}
-            {result.passed ? "Passed 🎉" : "Failed ❌"}
-          </p>
+        <div
+          className={`flex items-center gap-3 text-2xl font-semibold ${
+            result.passed ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {result.passed ? <FiCheckCircle /> : <FiXCircle />}
+          {result.passed ? "Passed 🎉" : "Failed ❌"}
         </div>
-      </div>
-    );
-  }
+
+        <p className="text-gray-500 dark:text-gray-300 text-center">
+          {result.passed
+            ? "Congratulations! You passed the quiz."
+            : "Better luck next time. Keep practicing!"}
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
 
   /* ======================
      MAIN VIEW
