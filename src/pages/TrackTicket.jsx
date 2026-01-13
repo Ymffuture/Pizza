@@ -155,16 +155,16 @@ const isPending = ticket?.status === "pending";
               text-white dark:text-neutral-900
             "
           >
-             {loading? <Loader2 className="animate-spin-slow" size={18}/>:<Search size={18} />}
+             {loading? <Loader2 className="animate-spin" size={18}/>:<Search size={18} />}
           </motion.button>
         </div>
 
         {loading && (
-          <p className="text-sm text-neutral-500">Loading ticket…</p>
+          <p className="text-sm text-neutral-500 animate-pulse">Loading ticket…</p>
         )}
 
         {error && (
-          <p className="text-sm text-red-500 ">{error}</p>
+          <p className="text-sm text-red-600 bg-red-600/10 p-2 rounded-lg shadow-lg ">{error}</p>
         )}
 
         {/* Ticket */}
