@@ -155,7 +155,7 @@ const isPending = ticket?.status === "pending";
               text-white dark:text-neutral-900
             "
           >
-            <Search size={18} />
+             {loading? <Loader2 className="animate-spin-slow" size={18}/>:<Search size={18} />}
           </motion.button>
         </div>
 
@@ -164,7 +164,7 @@ const isPending = ticket?.status === "pending";
         )}
 
         {error && (
-          <p className="text-sm text-red-500">{error}</p>
+          <p className="text-sm text-red-500 ">{error}</p>
         )}
 
         {/* Ticket */}
@@ -194,13 +194,13 @@ const isPending = ticket?.status === "pending";
 
                   <div className="flex items-center gap-2 font-mono text-sm text-neutral-700 dark:text-neutral-300">
                     <Ticket size={16} />
-                    {ticket.ticketId}
+                    {!isClosed? :ticket.ticketId:"" }
                   </div>                  
 <Tooltip
   title={
     isClosed
       ? "This ticket is closed and no longer available. Please create a new ticket if you need further assistance."
-      : isPending ? "Support will respond soon" :null
+      : isPending ? "Support will respond soon" :"You're Currently viewing your ticket" 
   }
   placement={isClosed? "right" :"top"} 
    overlayInnerStyle={{
