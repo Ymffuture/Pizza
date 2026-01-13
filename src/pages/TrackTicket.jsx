@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getTicket, replyTicket } from "../api/ticketApi";
 import { Search, Send, Ticket, Info, Printer } from "lucide-react";
 import MessageBubble from "../components/MessageBubble";
+import { Tooltip } from "antd";
 
 /* ---------------------------
    Small debounce hook
@@ -101,6 +102,13 @@ export default function TrackTicket() {
     }
   };
 
+const isClosed = ticket.status === "closed";
+
+const isPending = ticket.status === "pending";
+
+
+   
+
   return (
     <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 transition-colors">
       <div className="max-w-2xl mx-auto px-6 pt-16">
@@ -190,22 +198,40 @@ export default function TrackTicket() {
                   <div className="flex items-center gap-2 font-mono text-sm text-neutral-700 dark:text-neutral-300">
                     <Ticket size={16} />
                     {ticket.ticketId}
-                  </div>
+                  </div>                  
+<Tooltip
+  title={
+    isClosed
+      ? "This ticket is closed and no longer available. Please create a new ticket if you need further assistance."
+      : isPending ? "Support will respond soon" :null
+  }
+  placement="top"
+   overlayInnerStyle={{
+    backgroundColor: "#202124",
+    color: "#fff",
+    fontSize: "12px",
+    borderRadius: "8px",
+    padding: "8px 12px",
+    maxWidth: 240,
+  }}
+>
+  <span
+    className={`
+      inline-flex items-center
+      text-xs px-3 py-1 rounded-full font-medium
+      ${
+        ticket.status === "open"
+          ? "bg-green-100 text-green-700"
+          : ticket.status === "pending"
+          ? "bg-yellow-100 text-yellow-700"
+          : "bg-neutral-200 text-neutral-700 cursor-not-allowed"
+      }
+    `}
+  >
+    {ticket.status}
+  </span>
+</Tooltip>
 
-                  <span
-                    className={`
-                      text-xs px-3 py-1 rounded-full
-                      ${
-                        ticket.status === "open"
-                          ? "bg-green-100 text-green-700"
-                          : ticket.status === "pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-neutral-200 text-neutral-700"
-                      }
-                    `}
-                  >
-                    {ticket.status}
-                  </span>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400 mt-2">
