@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getTicket, replyTicket } from "../api/ticketApi";
-import { Search, Send, Ticket, Info, Printer } from "lucide-react";
+import { Search, Send, Ticket, Info, Printer, Loader2 } from "lucide-react";
 import MessageBubble from "../components/MessageBubble";
-import { Tooltip, Loader2 } from "antd";
+import { Tooltip } from "antd";
 
 /* ---------------------------
    Small debounce hook
