@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getTicket, replyTicket } from "../api/ticketApi";
 import { Search, Send, Ticket, Info, Printer } from "lucide-react";
 import MessageBubble from "../components/MessageBubble";
-import { Tooltip } from "antd";
+import { Tooltip, Loader2 } from "antd";
 
 /* ---------------------------
    Small debounce hook
