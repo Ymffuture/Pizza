@@ -301,7 +301,7 @@ const Navbar = () => {
               {/* HEADER */}
               <div className="flex items-center justify-between mb-4">
                 {/* <GeminiAssistant /> */}
-                <h2 className="text-xl text-blue-500 dark:text-gray-400">Menu</h2>
+                <h2 className="text-xl text-blue-500 dark:text-gray-400">...</h2>
                 <button
                   className="p-2 dark:text-gray-400"
                   onClick={() => setMenuOpen(false)}
@@ -335,24 +335,30 @@ const Navbar = () => {
 
               {/* LINKS */}
               <nav className="flex flex-col gap-3 mb-6">
-                {[
-  { name: "Home", href: "/", icon: <Home size={18} /> },
-  { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} /> },
-  { name: "Tickets", href: "/ticket", icon: <Ticket size={18} /> },
-  { name: "Server/API", href: "/server-api", icon: <ServerCog size={18} /> },
-  { name: "Contact", href: "/contact", icon: <Phone size={18} /> },
-].map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white"
-                  >
-                    {item.icon}
-                    {item.name}
-                  </Link>
-                ))}
-              </nav>
+  {[
+    { name: "Home", href: "/", icon: <Home size={18} /> },
+    { name: "Tickets", href: "/ticket", icon: <Ticket size={18} /> },
+    { name: "Contact", href: "/contact", icon: <Phone size={18} /> },
+    { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} /> },
+    { name: "Server/API", href: "/server-api", icon: <ServerCog size={18} /> },
+  ].map((item) => (
+    <Link
+      key={item.name}
+      to={item.href}
+      onClick={() => setMenuOpen(false)}
+      className="
+        flex items-center gap-3 p-3 rounded-xl
+        bg-gray-100 dark:bg-gray-800
+        text-gray-800 dark:text-white
+        hover:bg-gray-200 dark:hover:bg-gray-700
+        transition-colors
+      "
+    >
+      {item.icon}
+      <span>{item.name}</span>
+    </Link>
+  ))}
+</nav>
 
               {/* THEME */}
               <div className="flex items-center gap-3 mb-5 dark:text-gray-400">
