@@ -18,7 +18,7 @@ export default function VerifyEmail() {
 
   async function verify() {
     try {
-      await api.post("/verify-email", { email, code });
+      await api.post("/auth/verify-email", { email, code });
       toast.success("Verified");
       nav("/dashboard/blog");
     } catch (err) {
