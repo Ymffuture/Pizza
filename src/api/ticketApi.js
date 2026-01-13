@@ -75,12 +75,17 @@ export const getAllTickets = async (params = {}) => {
 ---------------------------------------- */
 export const closeTicket = async (ticketId) => {
   try {
-    const { data } = await ticketApi.patch(`/${ticketId}/close`);
-    return extractTicket(data);
+    const { data } = await ticketApi.put(`/${ticketId}/close`);
+    return extractTicket(data.ticket ?? data);
   } catch (error) {
-    throw error.response?.data || { error: "Failed to close ticket" };
+    throw (
+      error.response?.data || {
+        error: "Failed to close ticket",
+      }
+    );
   }
 };
+
 
 /* ---------------------------------------
    Global API Error Interceptor
