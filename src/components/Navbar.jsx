@@ -16,7 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 // import GeminiAssistant from "../layouts/GeminiAssistant";
 import { motion, AnimatePresence } from "framer-motion";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Ticket, LayoutDashboard, Phone} from "lucide-react";
 import { Dropdown, Menu } from "antd";
 import Dashboard from './dashboard/Dashboard';
 
@@ -337,10 +337,10 @@ const Navbar = () => {
               <nav className="flex flex-col gap-3 mb-6">
                 {[
   { name: "Home", href: "/", icon: <Home size={18} /> },
-  { name: "Small Projects", href: "/small-projects", icon: <FolderKanban size={18} /> },
-  { name: "Large Projects", href: "/large-projects", icon: <Factory size={18} /> },
+  { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} /> },
+  { name: "Tickets", href: "/ticket", icon: <Ticket size={18} /> },
   { name: "Server/API", href: "/server-api", icon: <ServerCog size={18} /> },
-  { name: "Log in", href: "/signup", icon: <LogIn size={18} /> },
+  { name: "Contact", href: "/contact", icon: <Phone size={18} /> },
 ].map((item) => (
                   <Link
                     key={item.name}
