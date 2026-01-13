@@ -33,7 +33,7 @@ export default function VerifyEmailPage() {
         setStatus("success");
         toast.success("Email verified successfully");
 
-        setTimeout(() => navigate("/quiz"), 2000); // Redirect to quiz directly
+        setTimeout(() => navigate("/start-quiz"), 2000); // Redirect to quiz directly
       } catch (err) {
         if (!isMounted) return;
 
