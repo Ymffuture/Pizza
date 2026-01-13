@@ -193,8 +193,22 @@ const isPending = ticket?.status === "pending";
                   </button>
 
                   <div className="flex items-center gap-2 font-mono text-sm text-neutral-700 dark:text-neutral-300">
+                    <Tooltip
+                       title={isClosed? "Ticket not available." :"" } 
+                     placement={isClosed? "right" :"top"} 
+   overlayInnerStyle={{
+    backgroundColor: "#202124",
+    color: "#fff",
+    fontSize: "12px",
+    borderRadius: "8px",
+    padding: "8px 12px",
+    maxWidth: 240,
+  }} 
+                       >
                     <Ticket size={16} />
-                    {!isClosed? :ticket.ticketId:"" }
+                    </Tooltip>
+                     
+                    {!isClosed? ticket.ticketId:"" }
                   </div>                  
 <Tooltip
   title={
