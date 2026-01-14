@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createTicket } from "../api/ticketApi";
+import { analyzeTicketAI } from "../api/aiApi";
 import {
   CheckCircle,
   Copy,
@@ -84,7 +85,7 @@ export default function CreateTicket() {
     setShowAI(true);
 
     try {
-      const res = await fetch("/api/ai/ticket-help", {
+      const res = await fetch("https://swiftmeta.onrender.com/api/ai/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -152,15 +153,41 @@ export default function CreateTicket() {
               setData({ ...data, email: e.target.value });
               setEmailError("");
             }}
-            className="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 outline-none"
+            className="
+                w-full px-4 py-3 rounded-xl
+                bg-neutral-100 dark:bg-neutral-800
+                text-neutral-900 dark:text-neutral-100
+                border border-transparent
+                focus:border-blue-500
+                focus:ring-2 focus:ring-blue-500/30
+                outline-none
+              "
           />
-
+<AnimatePresence>
+              {emailError && (
+                <motion.p
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="mt-1 text-xs text-red-500"
+                >
+                  {emailError}
+                </motion.p>
+              )}
+            </AnimatePresence>
+          
           <input
             placeholder="Subject (optional)"
             value={data.subject}
             disabled={loading}
             onChange={e => setData({ ...data, subject: e.target.value })}
-            className="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 outline-none"
+            className="
+              w-full px-4 py-3 rounded-xl
+              bg-neutral-100 dark:bg-neutral-800
+              text-neutral-900 dark:text-neutral-100
+              focus:ring-2 focus:ring-blue-500/30
+              outline-none
+            "
           />
 
           <textarea
@@ -169,8 +196,14 @@ export default function CreateTicket() {
             disabled={loading}
             onChange={e => setData({ ...data, message: e.target.value })}
             rows={4}
-            className="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 outline-none resize-none"
-          />
+            className="
+              w-full px-4 py-3 rounded-xl
+              bg-neutral-100 dark:bg-neutral-800
+              text-neutral-900 dark:text-neutral-100
+              focus:ring-2 focus:ring-blue-500/30
+              outline-none resize-none
+            "
+            />
         </div>
 
         {/* 🧠 AI Assist */}
@@ -213,13 +246,42 @@ export default function CreateTicket() {
         </AnimatePresence>
 
         {/* Submit */}
-        <button
-          onClick={submit}
+        <motion.button
+          whileTap={{ scale: 0.97 }}
           disabled={loading}
-          className="mt-6 w-full h-11 rounded-xl bg-black dark:bg-white text-white dark:text-black font-medium"
+          onClick={submit}
+          className="
+            mt-6 w-full h-11
+            flex items-center justify-center
+            rounded-xl
+            bg-black dark:bg-white
+            text-white dark:text-black
+            font-medium
+            disabled:opacity-60
+          "
         >
-          {loading ? <Loader2 className="animate-spin mx-auto" /> : "Submit Ticket"}
-        </button>
+          <AnimatePresence mode="wait">
+            {loading ? (
+              <motion.span
+                key="loader"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Loader2 className="animate-spin" size={18} />
+              </motion.span>
+            ) : (
+              <motion.span
+                key="text"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                Submit Ticket
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
 
         {/* Success */}
         <AnimatePresence>
