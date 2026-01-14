@@ -114,6 +114,7 @@ export default function CreateTicket() {
             <input
               placeholder="Email address"
               value={data.email}
+              disabled={loading}
               onChange={e => {
                 setData({ ...data, email: e.target.value });
                 setEmailError("");
@@ -147,6 +148,7 @@ export default function CreateTicket() {
           <input
             placeholder="Subject (optional)"
             value={data.subject}
+            disabled={loading}
             onChange={e => setData({ ...data, subject: e.target.value })}
             className="
               w-full px-4 py-3 rounded-xl
@@ -155,13 +157,14 @@ export default function CreateTicket() {
               focus:ring-2 focus:ring-blue-500/30
               outline-none
             "
-            disabled={loading} 
+          
           />
 
           {/* Message */}
           <textarea
             placeholder="Describe your issue..."
             value={data.message}
+            disabled={loading}
             onChange={e => setData({ ...data, message: e.target.value })}
             rows={4}
             className="
