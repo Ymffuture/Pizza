@@ -155,6 +155,7 @@ export default function CreateTicket() {
               focus:ring-2 focus:ring-blue-500/30
               outline-none
             "
+            disabled={loading} 
           />
 
           {/* Message */}
