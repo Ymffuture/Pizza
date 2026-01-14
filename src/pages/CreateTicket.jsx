@@ -107,7 +107,7 @@ export default function CreateTicket() {
     setData(prev => ({ ...prev, message: aiSuggestion }));
     setShowAI(false);
   };
-
+const copyId = async () => { if (!ticket) return; await navigator.clipboard.writeText(ticket.ticketId); setCopied(true); setTimeout(() => setCopied(false), 1500); };
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-100 dark:bg-neutral-950">
       <motion.div
@@ -135,6 +135,19 @@ export default function CreateTicket() {
           <span>Response within 24 hours</span>
         </div>
 
+              <a
+                href={`/track`}
+                className="
+                  inline-flex items-center gap-1
+                  text-sm font-medium
+                  text-blue-600 dark:text-blue-500
+                  hover:underline
+                "
+              >
+                Track your ticket
+                <ArrowRight size={14} className="animate-pulse "/>
+              </a> 
+        
         {/* Inputs */}
         <div className="space-y-4 mt-6">
           <input
@@ -217,11 +230,63 @@ export default function CreateTicket() {
         {/* Success */}
         <AnimatePresence>
           {ticket && (
-            <motion.div className="mt-6 p-4 rounded-xl bg-green-500/10">
-              <div className="flex gap-2 items-center">
-                <CheckCircle className="text-green-500" />
-                <span className="font-mono">{ticket.ticketId}</span>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="
+                mt-6 p-4 rounded-2xl
+                bg-neutral-100 dark:bg-neutral-800
+                border border-neutral-200 dark:border-neutral-700
+                space-y-3
+              "
+            >
+              <div className="flex gap-3">
+                <CheckCircle className="text-green-500 mt-1" size={20} />
+
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                   Your Ticket is  successfully created. 
+                  </p>
+
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={copyId}
+                    className="
+                      mt-1 flex items-center gap-2
+                      font-mono text-sm
+                      cursor-pointer
+                      select-none
+                    "
+                  >
+                    <span className={`dark:text-green-800`} >{ticket.ticketId}</span>
+
+                    {copied ? (
+                      <Check size={16} className="text-green-600" />
+                    ) : (
+                      <Copy size={16} className="text-neutral-500" />
+                    )}
+                  </div>
+
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Tap to copy your ticket ID
+                  </p>
+                </div>
               </div>
+
+              {/* <a
+                href={`/track`}
+                className="
+                  inline-flex items-center gap-1
+                  text-sm font-medium
+                  text-blue-600 dark:text-blue-500
+                  hover:underline
+                "
+              >
+                Track your ticket
+                <ArrowRight size={14} className="animate-pulse "/>
+              </a> */}
             </motion.div>
           )}
         </AnimatePresence>
