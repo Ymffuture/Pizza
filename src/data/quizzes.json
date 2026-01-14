@@ -270,4 +270,4 @@
     "correctAnswer": 0,
     "explanation": "loading.js automatically wraps the page (or segment) with a loading state UI."
   }
-    ] and 
+    ] 
