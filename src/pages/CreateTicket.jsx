@@ -11,10 +11,9 @@ import {
   Info,
 } from "lucide-react";
 
-/* ✅ React Icons ONLY (new additions) */
+/* ✅ React Icons ONLY */
 import {
   FaRobot,
-  FaMagic,
   FaSpinner,
   FaWandMagicSparkles,
 } from "react-icons/fa6";
@@ -31,7 +30,7 @@ export default function CreateTicket() {
   const [copied, setCopied] = useState(false);
   const [emailError, setEmailError] = useState("");
 
-  /* 🧠 AI states (NEW) */
+  /* 🧠 AI states */
   const [aiLoading, setAiLoading] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState("");
   const [showAI, setShowAI] = useState(false);
@@ -43,7 +42,7 @@ export default function CreateTicket() {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   /* ----------------------------------
-     Submit Ticket (UNCHANGED)
+     Submit Ticket
   ----------------------------------- */
   const submit = async () => {
     if (!data.email || !data.message) return;
@@ -65,7 +64,7 @@ export default function CreateTicket() {
   };
 
   /* ----------------------------------
-     Copy Ticket ID (UNCHANGED)
+     Copy Ticket ID
   ----------------------------------- */
   const copyId = async () => {
     if (!ticket) return;
@@ -75,7 +74,7 @@ export default function CreateTicket() {
   };
 
   /* ----------------------------------
-     🧠 AI Assist (NEW)
+     🧠 AI Assist
   ----------------------------------- */
   const generateWithAI = async () => {
     if (!data.message.trim()) return;
@@ -107,7 +106,7 @@ export default function CreateTicket() {
     setData(prev => ({ ...prev, message: aiSuggestion }));
     setShowAI(false);
   };
-const copyId = async () => { if (!ticket) return; await navigator.clipboard.writeText(ticket.ticketId); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-100 dark:bg-neutral-950">
       <motion.div
@@ -135,19 +134,14 @@ const copyId = async () => { if (!ticket) return; await navigator.clipboard.writ
           <span>Response within 24 hours</span>
         </div>
 
-              <a
-                href={`/track`}
-                className="
-                  inline-flex items-center gap-1
-                  text-sm font-medium
-                  text-blue-600 dark:text-blue-500
-                  hover:underline
-                "
-              >
-                Track your ticket
-                <ArrowRight size={14} className="animate-pulse "/>
-              </a> 
-        
+        <a
+          href="/track"
+          className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline"
+        >
+          Track your ticket
+          <ArrowRight size={14} className="animate-pulse" />
+        </a>
+
         {/* Inputs */}
         <div className="space-y-4 mt-6">
           <input
@@ -179,7 +173,7 @@ const copyId = async () => { if (!ticket) return; await navigator.clipboard.writ
           />
         </div>
 
-        {/* 🧠 AI Assist Button */}
+        {/* 🧠 AI Assist */}
         <button
           onClick={generateWithAI}
           disabled={aiLoading || !data.message}
@@ -234,34 +228,20 @@ const copyId = async () => { if (!ticket) return; await navigator.clipboard.writ
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="
-                mt-6 p-4 rounded-2xl
-                bg-neutral-100 dark:bg-neutral-800
-                border border-neutral-200 dark:border-neutral-700
-                space-y-3
-              "
+              className="mt-6 p-4 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 space-y-3"
             >
               <div className="flex gap-3">
                 <CheckCircle className="text-green-500 mt-1" size={20} />
-
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                   Your Ticket is  successfully created. 
+                  <p className="text-sm font-medium">
+                    Your ticket was successfully created.
                   </p>
 
                   <div
-                    role="button"
-                    tabIndex={0}
                     onClick={copyId}
-                    className="
-                      mt-1 flex items-center gap-2
-                      font-mono text-sm
-                      cursor-pointer
-                      select-none
-                    "
+                    className="mt-1 flex items-center gap-2 font-mono text-sm cursor-pointer"
                   >
-                    <span className={`dark:text-green-800`} >{ticket.ticketId}</span>
-
+                    <span>{ticket.ticketId}</span>
                     {copied ? (
                       <Check size={16} className="text-green-600" />
                     ) : (
@@ -269,24 +249,11 @@ const copyId = async () => { if (!ticket) return; await navigator.clipboard.writ
                     )}
                   </div>
 
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                  <p className="text-xs text-neutral-500">
                     Tap to copy your ticket ID
                   </p>
                 </div>
               </div>
-
-              {/* <a
-                href={`/track`}
-                className="
-                  inline-flex items-center gap-1
-                  text-sm font-medium
-                  text-blue-600 dark:text-blue-500
-                  hover:underline
-                "
-              >
-                Track your ticket
-                <ArrowRight size={14} className="animate-pulse "/>
-              </a> */}
             </motion.div>
           )}
         </AnimatePresence>
