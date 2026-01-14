@@ -1,283 +1,273 @@
-[
+  [
   {
     "id": 1,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log(typeof null);",
-    "correctAnswer": "object",
-    "explanation": "This is a historical JavaScript bug: null is incorrectly reported as an object."
+    "question": "Which keyword declares a variable that cannot be reassigned?",
+    "options": ["var", "let", "const", "function"],
+    "correctAnswer": 2,
+    "explanation": "const declares a block-scoped variable that cannot be reassigned after initial assignment."
   },
   {
     "id": 2,
     "type": "mcq",
-    "language": "python",
-    "question": "What will this output?",
-    "code": "x = [1, 2, 3]\nprint(x[::-1])",
-    "options": ["[3, 2, 1]", "[1, 2, 3]", "Error", "None"],
-    "correctAnswer": 0,
-    "explanation": "Slicing with [::-1] reverses the list."
+    "language": "javascript",
+    "question": "What is JSX?",
+    "options": ["A separate templating language", "JavaScript syntax extension for writing UI elements", "A CSS preprocessor", "A state management tool"],
+    "correctAnswer": 1,
+    "explanation": "JSX (JavaScript XML) allows writing HTML-like code inside JavaScript, which React transforms into React.createElement calls."
   },
   {
     "id": 3,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log(+'10' + 1);",
-    "correctAnswer": "11",
-    "explanation": "Unary + converts string '10' to number, then adds 1."
+    "question": "In React, how do you pass data from a parent to a child component?",
+    "options": ["Using state", "Using props", "Using context", "Using global variables"],
+    "correctAnswer": 1,
+    "explanation": "Props (properties) are the standard way to pass data down the component tree."
   },
   {
     "id": 4,
     "type": "mcq",
-    "language": "html",
-    "question": "What does this tag do?",
-    "code": "<meta charset='UTF-8'>",
-    "options": ["Adds styles", "Sets character encoding", "Adds metadata only", "Does nothing"],
+    "language": "javascript",
+    "question": "What is the main purpose of the useState hook?",
+    "options": ["To perform side effects", "To manage local component state", "To access context", "To optimize rendering"],
     "correctAnswer": 1,
-    "explanation": "It defines the character encoding for the HTML document."
+    "explanation": "useState allows functional components to have and update local state."
   },
   {
     "id": 5,
     "type": "output",
-    "language": "python",
+    "language": "javascript",
+    "code": "console.log(typeof []);",
     "question": "What is the output?",
-    "code": "print(type(None))",
-    "correctAnswer": "<class 'NoneType'>",
-    "explanation": "None has its own type called NoneType."
+    "correctAnswer": "object",
+    "explanation": "In JavaScript, arrays are objects, so typeof returns 'object'."
   },
   {
     "id": 6,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log(2 + '2' - 1);",
-    "correctAnswer": "21",
-    "explanation": "2 + '2' becomes '22', then '22' - 1 coerces to number 21."
+    "question": "What hook is used to run side effects in a functional component?",
+    "options": ["useState", "useEffect", "useContext", "useReducer"],
+    "correctAnswer": 1,
+    "explanation": "useEffect runs code after rendering (e.g., data fetching, subscriptions)."
   },
   {
     "id": 7,
     "type": "mcq",
-    "language": "python",
-    "question": "What does this produce?",
-    "code": "print(bool(''))",
-    "options": ["True", "False", "None", "Error"],
-    "correctAnswer": 1,
-    "explanation": "Empty strings are falsy in Python."
+    "language": "javascript",
+    "question": "In Redux, what holds the entire application state?",
+    "options": ["Actions", "Reducers", "Store", "Middleware"],
+    "correctAnswer": 2,
+    "explanation": "The Redux store is the single source of truth for the entire state tree."
   },
   {
     "id": 8,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log(Math.max());",
-    "correctAnswer": "-Infinity",
-    "explanation": "Math.max with no arguments returns -Infinity."
+    "question": "What is Next.js primarily used for?",
+    "options": ["Backend API only", "React applications with server-side rendering and static generation", "Mobile apps", "Database management"],
+    "correctAnswer": 1,
+    "explanation": "Next.js is a React framework that provides SSR, SSG, routing, and more."
   },
   {
     "id": 9,
     "type": "mcq",
-    "language": "html",
-    "question": "Which tag is semantic?",
-    "code": "<header></header>",
-    "options": ["div", "span", "header", "b"],
+    "language": "javascript",
+    "question": "Which hook lets you access context values?",
+    "options": ["useState", "useEffect", "useContext", "useRef"],
     "correctAnswer": 2,
-    "explanation": "header is a semantic HTML5 element."
+    "explanation": "useContext accepts a context object and returns its current value."
   },
   {
     "id": 10,
     "type": "output",
-    "language": "python",
+    "language": "javascript",
+    "code": "console.log(!!'hello');",
     "question": "What is the output?",
-    "code": "print(3 == 3.0)",
-    "correctAnswer": "True",
-    "explanation": "Python compares values, not types, in equality."
+    "correctAnswer": "true",
+    "explanation": "Double negation converts a truthy value to boolean true."
   },
   {
     "id": 11,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log([].length);",
-    "correctAnswer": "0",
-    "explanation": "Empty arrays have length 0."
+    "question": "In the Next.js app router, how do you create a dynamic route segment?",
+    "options": ["[param] folder", "{param} folder", "<param> folder", "param.js file"],
+    "correctAnswer": 0,
+    "explanation": "Folders in square brackets (e.g., [slug]) define dynamic route parameters."
   },
   {
     "id": 12,
     "type": "mcq",
-    "language": "python",
-    "question": "What will this output?",
-    "code": "print(len(set([1,1,2,3])))",
-    "options": ["2", "3", "4", "Error"],
+    "language": "javascript",
+    "question": "What does useRef return?",
+    "options": ["A mutable value that causes re-renders", "A mutable ref object that persists across renders", "A state value", "A context value"],
     "correctAnswer": 1,
-    "explanation": "Sets remove duplicates."
+    "explanation": "useRef returns an object with a .current property that does not trigger re-renders when changed."
   },
   {
     "id": 13,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log('5' == 5);",
-    "correctAnswer": "true",
-    "explanation": "Loose equality performs type coercion."
+    "question": "In Redux Toolkit, which function simplifies creating reducers and actions?",
+    "options": ["configureStore", "createReducer", "createSlice", "createAsyncThunk"],
+    "correctAnswer": 2,
+    "explanation": "createSlice generates action creators and reducers from a single object."
   },
   {
     "id": 14,
     "type": "mcq",
-    "language": "html",
-    "question": "What does the alt attribute do?",
-    "code": "<img src='x.jpg' alt='text'>",
-    "options": ["Adds tooltip", "Improves SEO & accessibility", "Adds caption", "Does nothing"],
+    "language": "javascript",
+    "code": "function Counter() {\n  const [count, setCount] = useState(0);\n  return <button onClick={() => setCount(count + 1)}>{count}</button>;\n}",
+    "question": "What happens when the button is clicked?",
+    "options": ["Nothing", "Count increases by 1", "Error", "Count resets to 0"],
     "correctAnswer": 1,
-    "explanation": "alt text helps screen readers and SEO."
+    "explanation": "setCount updates the state, causing a re-render with the new count."
   },
   {
     "id": 15,
     "type": "output",
-    "language": "python",
+    "language": "javascript",
+    "code": "console.log({} + []);",
     "question": "What is the output?",
-    "code": "print(type(lambda x: x))",
-    "correctAnswer": "<class 'function'>",
-    "explanation": "Lambdas are functions in Python."
+    "correctAnswer": "[object Object]",
+    "explanation": "Object is coerced to '[object Object]', empty array to '', then concatenated."
   },
   {
     "id": 16,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log(Boolean(0));",
-    "correctAnswer": "false",
-    "explanation": "0 is falsy in JavaScript."
+    "question": "What directive makes a component a client component in Next.js app router?",
+    "options": ["'use server'", "'use client'", "'use static'", "'use dynamic'"],
+    "correctAnswer": 1,
+    "explanation": "'use client' at the top of the file opts the component into client-side rendering."
   },
   {
     "id": 17,
     "type": "mcq",
-    "language": "python",
-    "question": "What does this return?",
-    "code": "print(type([]))",
-    "options": ["list", "<class 'list'>", "array", "Error"],
+    "language": "javascript",
+    "question": "What is the purpose of keys when rendering lists in React?",
+    "options": ["Styling", "Help React identify which items changed for efficient reconciliation", "Pass data", "Create references"],
     "correctAnswer": 1,
-    "explanation": "type returns the class object."
+    "explanation": "Keys allow React to track list items across renders and minimize DOM changes."
   },
   {
     "id": 18,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log(!!0);",
-    "correctAnswer": "false",
-    "explanation": "Double negation converts to boolean."
+    "question": "In Redux, what must every action object have?",
+    "options": ["payload", "type", "meta", "error"],
+    "correctAnswer": 1,
+    "explanation": "An action must have a 'type' property; 'payload' is optional."
   },
   {
     "id": 19,
     "type": "mcq",
-    "language": "html",
-    "question": "Which input type hides text?",
-    "code": "<input type='password'>",
-    "options": ["text", "hidden", "password", "email"],
+    "language": "javascript",
+    "question": "What hook is preferred for complex state logic in React?",
+    "options": ["useState", "useEffect", "useReducer", "useMemo"],
     "correctAnswer": 2,
-    "explanation": "password masks user input."
+    "explanation": "useReducer is useful when state transitions are complex or depend on previous state."
   },
   {
     "id": 20,
     "type": "output",
-    "language": "python",
+    "language": "javascript",
+    "code": "console.log(typeof NaN);",
     "question": "What is the output?",
-    "code": "print(sum([1,2,3]))",
-    "correctAnswer": "6",
-    "explanation": "sum adds all elements."
+    "correctAnswer": "number",
+    "explanation": "NaN is a numeric type in JavaScript, even though it represents 'Not a Number'."
   },
   {
     "id": 21,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log('' || 'Hello');",
-    "correctAnswer": "Hello",
-    "explanation": "Logical OR returns the first truthy value."
+    "question": "In Next.js Server Components, can you use hooks like useState?",
+    "options": ["Yes, freely", "No, only client hooks are allowed on the client", "Only useEffect", "Only useRef"],
+    "correctAnswer": 1,
+    "explanation": "Server Components cannot use state or client-only hooks; add 'use client' for those."
   },
   {
     "id": 22,
     "type": "mcq",
-    "language": "python",
-    "question": "What does this print?",
-    "code": "print(10 // 3)",
-    "options": ["3.3", "3", "4", "Error"],
+    "language": "javascript",
+    "question": "What does useMemo do?",
+    "options": ["Memoizes a component", "Memoizes a computed value to avoid recalculating on every render", "Manages state", "Runs side effects"],
     "correctAnswer": 1,
-    "explanation": "Floor division returns integer result."
+    "explanation": "useMemo caches expensive calculations and recomputes only when dependencies change."
   },
   {
     "id": 23,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log(typeof (() => {}));",
-    "correctAnswer": "function",
-    "explanation": "Arrow functions are still functions."
+    "question": "Which Redux Toolkit function sets up the store with sensible defaults?",
+    "options": ["createStore", "configureStore", "makeStore", "buildStore"],
+    "correctAnswer": 1,
+    "explanation": "configureStore adds thunk middleware, devtools support, and easier setup."
   },
   {
     "id": 24,
-    "type": "mcq",
-    "language": "html",
-    "question": "Which tag creates a line break?",
-    "code": "<br>",
-    "options": ["p", "hr", "br", "div"],
-    "correctAnswer": 2,
-    "explanation": "br inserts a line break."
+    "type": "output",
+    "language": "javascript",
+    "code": "console.log([] == ![]);",
+    "question": "What is the output?",
+    "correctAnswer": "true",
+    "explanation": "![] is false (empty array is truthy, negated to false), [] coerces to '' which == false, so true."
   },
   {
     "id": 25,
-    "type": "output",
-    "language": "python",
-    "question": "What is the output?",
-    "code": "print(bool({}))",
-    "correctAnswer": "False",
-    "explanation": "Empty dictionaries are falsy."
+    "type": "mcq",
+    "language": "javascript",
+    "question": "What are the two main rules of hooks?",
+    "options": ["Call them inside loops", "Only call at the top level of functional components and not in conditions/loops", "Only in class components", "No restrictions"],
+    "correctAnswer": 1,
+    "explanation": "Hooks must be called at the top level to ensure consistent call order across renders."
   },
   {
     "id": 26,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log([] === []);",
-    "correctAnswer": "false",
-    "explanation": "Arrays are compared by reference."
+    "question": "In Next.js, how do you export metadata for SEO in the app router?",
+    "options": ["<head> tags", "export const metadata = {...}", "metadata.js file", "getMetadata function"],
+    "correctAnswer": 1,
+    "explanation": "Exporting a metadata object (or generateMetadata function) sets title, description, etc."
   },
   {
     "id": 27,
     "type": "mcq",
-    "language": "python",
-    "question": "What does this return?",
-    "code": "print(type(5))",
-    "options": ["int", "<class 'int'>", "number", "Error"],
+    "language": "javascript",
+    "question": "What is createAsyncThunk in Redux Toolkit used for?",
+    "options": ["Creating reducers", "Handling asynchronous logic with loading/error states", "Creating slices", "Configuring store"],
     "correctAnswer": 1,
-    "explanation": "type returns the class."
+    "explanation": "createAsyncThunk simplifies async actions and automatically generates pending/fulfilled/rejected actions."
   },
   {
     "id": 28,
     "type": "output",
     "language": "javascript",
+    "code": "console.log(typeof (() => {}));",
     "question": "What is the output?",
-    "code": "console.log('10' > 2);",
-    "correctAnswer": "true",
-    "explanation": "String '10' is coerced to number 10."
+    "correctAnswer": "function",
+    "explanation": "Arrow functions have typeof 'function' just like regular functions."
   },
   {
     "id": 29,
-    "type": "output",
-    "language": "python",
-    "question": "What is the output?",
-    "code": "print(5 in [1,2,3,4,5])",
-    "correctAnswer": "True",
-    "explanation": "in checks membership."
+    "type": "mcq",
+    "language": "javascript",
+    "question": "In React, when should you use useCallback?",
+    "options": ["To cache a value", "To cache a function to prevent unnecessary re-creation", "For side effects", "For refs"],
+    "correctAnswer": 1,
+    "explanation": "useCallback memoizes functions, useful when passing callbacks to optimized child components."
   },
   {
     "id": 30,
-    "type": "output",
+    "type": "mcq",
     "language": "javascript",
-    "question": "What is the output?",
-    "code": "console.log(typeof NaN);",
-    "correctAnswer": "number",
-    "explanation": "NaN is still of type number."
+    "question": "What special file in Next.js app router shows a loading UI while the page is fetching data?",
+    "options": ["loading.js", "skeleton.js", "pending.js", "fetching.js"],
+    "correctAnswer": 0,
+    "explanation": "loading.js automatically wraps the page (or segment) with a loading state UI."
   }
-]
+    ] and 
