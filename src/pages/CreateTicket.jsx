@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { createTicket } from "../api/ticketApi";
 import {
   CheckCircle,
   Copy,
@@ -8,277 +7,118 @@ import {
   Loader2,
   Clock,
   ArrowRight,
-  Info, 
+  Sparkles,
 } from "lucide-react";
+import { createTicket } from "../api/ticketApi";
+import { analyzeTicketAI } from "../api/aiApi";
 
 export default function CreateTicket() {
-  const [data, setData] = useState({
-    email: "",
-    subject: "",
-    message: "",
-  });
+  const [data, setData] = useState({ email: "", subject: "", message: "" });
   const [ticket, setTicket] = useState(null);
+  const [ai, setAi] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [emailError, setEmailError] = useState("");
-
-  /* ----------------------------------
-     Email validation
-  ----------------------------------- */
-  const isValidEmail = email =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const submit = async () => {
     if (!data.email || !data.message) return;
 
-    if (!isValidEmail(data.email)) {
-      setEmailError("Please enter a valid email address");
-      return;
-    }
-
-    setEmailError("");
     setLoading(true);
+    setAiLoading(true);
+
+    let aiResult = null;
 
     try {
-      const res = await createTicket(data);
+      const aiRes = await analyzeTicketAI(data);
+      aiResult = aiRes.ai;
+      setAi(aiResult);
+    } catch {}
+
+    try {
+      const res = await createTicket({
+        ...data,
+        subject: data.subject || aiResult?.suggestedSubject,
+        ai: aiResult,
+      });
       setTicket(res);
     } finally {
       setLoading(false);
+      setAiLoading(false);
     }
   };
 
   const copyId = async () => {
-    if (!ticket) return;
     await navigator.clipboard.writeText(ticket.ticketId);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div
-      className="
-        min-h-screen
-        flex items-center justify-center
-        px-4
-        bg-neutral-100 dark:bg-neutral-950
-      "
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 28, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
-        className="
-          w-full max-w-md
-          rounded-3xl
-          border border-neutral-200/60 dark:border-neutral-800/60
-          bg-white/80 dark:bg-neutral-900/80
-          backdrop-blur-xl
-          shadow-[0_20px_60px_rgba(0,0,0,0.12)]
-          p-8
-        "
-      >
-        {/* Header */}
-        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-          Create Support Ticket
-        </h1>
+    <div className="min-h-screen flex items-center justify-center bg-neutral-100 dark:bg-neutral-950 px-4">
+      <div className="w-full max-w-md rounded-3xl bg-white dark:bg-neutral-900 p-8 shadow-xl space-y-6">
 
-        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-          Describe your issue and we’ll get back to you.
-        </p>
-<p className="mt-1 text-sm text-yellow-500 dark:text-yellow-400 bg-yellow-600/10 shadow-lg flex gap-2">
-         <Info className="text-yellow" /> Note: The ticket can't be recovered, please save it somewhere. 
-        </p>
-        {/* SLA */}
-        <div className="mt-4 flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400">
-          <Clock size={15} />
-          <span>We usually respond within 24 hours</span>
-        </div>
+        <h1 className="text-2xl font-semibold">Create Support Ticket</h1>
 
-        <a
-          href="/track"
-          className="
-            mt-2 inline-flex items-center gap-1
-            text-sm font-medium
-            text-blue-600 dark:text-blue-500
-            hover:underline
-          "
-        >
-          Track existing ticket
-          <ArrowRight size={14} />
-        </a>
+        <div className="space-y-4">
+          <input
+            placeholder="Email"
+            value={data.email}
+            onChange={e => setData({ ...data, email: e.target.value })}
+            className="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-800"
+          />
 
-        {/* Inputs */}
-        <div className="space-y-4 mt-6">
-          {/* Email */}
-          <div>
-            <input
-              placeholder="Email address"
-              value={data.email}
-              disabled={loading}
-              onChange={e => {
-                setData({ ...data, email: e.target.value });
-                setEmailError("");
-              }}
-              className="
-                w-full px-4 py-3 rounded-xl
-                bg-neutral-100 dark:bg-neutral-800
-                text-neutral-900 dark:text-neutral-100
-                border border-transparent
-                focus:border-blue-500
-                focus:ring-2 focus:ring-blue-500/30
-                outline-none
-              "
-            />
-
-            <AnimatePresence>
-              {emailError && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  className="mt-1 text-xs text-red-500"
-                >
-                  {emailError}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Subject */}
           <input
             placeholder="Subject (optional)"
             value={data.subject}
-            disabled={loading}
             onChange={e => setData({ ...data, subject: e.target.value })}
-            className="
-              w-full px-4 py-3 rounded-xl
-              bg-neutral-100 dark:bg-neutral-800
-              text-neutral-900 dark:text-neutral-100
-              focus:ring-2 focus:ring-blue-500/30
-              outline-none
-            "
-          
+            className="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-800"
           />
 
-          {/* Message */}
           <textarea
             placeholder="Describe your issue..."
-            value={data.message}
-            disabled={loading}
-            onChange={e => setData({ ...data, message: e.target.value })}
             rows={4}
-            className="
-              w-full px-4 py-3 rounded-xl
-              bg-neutral-100 dark:bg-neutral-800
-              text-neutral-900 dark:text-neutral-100
-              focus:ring-2 focus:ring-blue-500/30
-              outline-none resize-none
-            "
+            value={data.message}
+            onChange={e => setData({ ...data, message: e.target.value })}
+            className="w-full px-4 py-3 rounded-xl bg-neutral-100 dark:bg-neutral-800"
           />
         </div>
 
-        {/* Submit */}
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          disabled={loading}
+        <button
           onClick={submit}
-          className="
-            mt-6 w-full h-11
-            flex items-center justify-center
-            rounded-xl
-            bg-black dark:bg-white
-            text-white dark:text-black
-            font-medium
-            disabled:opacity-60
-          "
+          disabled={loading}
+          className="w-full h-11 rounded-xl bg-black dark:bg-white text-white dark:text-black"
         >
-          <AnimatePresence mode="wait">
-            {loading ? (
-              <motion.span
-                key="loader"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Loader2 className="animate-spin" size={18} />
-              </motion.span>
-            ) : (
-              <motion.span
-                key="text"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                Submit Ticket
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
+          {loading ? <Loader2 className="animate-spin mx-auto" /> : "Submit Ticket"}
+        </button>
 
-        {/* Success */}
+        {/* AI Insight */}
         <AnimatePresence>
-          {ticket && (
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="
-                mt-6 p-4 rounded-2xl
-                bg-neutral-100 dark:bg-neutral-800
-                border border-neutral-200 dark:border-neutral-700
-                space-y-3
-              "
-            >
-              <div className="flex gap-3">
-                <CheckCircle className="text-green-500 mt-1" size={20} />
+          {aiLoading && (
+            <motion.div className="text-sm flex items-center gap-2 text-blue-500">
+              <Sparkles size={16} /> AI analyzing your ticket...
+            </motion.div>
+          )}
 
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                   Your Ticket is  successfully created. 
-                  </p>
-
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={copyId}
-                    className="
-                      mt-1 flex items-center gap-2
-                      font-mono text-sm
-                      cursor-pointer
-                      select-none
-                    "
-                  >
-                    <span className={`dark:text-green-800`} >{ticket.ticketId}</span>
-
-                    {copied ? (
-                      <Check size={16} className="text-green-600" />
-                    ) : (
-                      <Copy size={16} className="text-neutral-500" />
-                    )}
-                  </div>
-
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                    Tap to copy your ticket ID
-                  </p>
-                </div>
-              </div>
-
-              {/* <a
-                href={`/track`}
-                className="
-                  inline-flex items-center gap-1
-                  text-sm font-medium
-                  text-blue-600 dark:text-blue-500
-                  hover:underline
-                "
-              >
-                Track your ticket
-                <ArrowRight size={14} className="animate-pulse "/>
-              </a> */}
+          {ai && (
+            <motion.div className="rounded-xl p-4 bg-blue-50 dark:bg-blue-900/20 space-y-1 text-sm">
+              <p>📂 Category: {ai.category}</p>
+              <p>⚠️ Urgency: {ai.urgency}</p>
+              <p>💬 Sentiment: {ai.sentiment}</p>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+
+        {/* Success */}
+        {ticket && (
+          <div className="rounded-xl p-4 bg-green-50 dark:bg-green-900/20">
+            <p className="font-medium">Ticket Created</p>
+            <div onClick={copyId} className="cursor-pointer font-mono flex gap-2">
+              {ticket.ticketId}
+              {copied ? <Check /> : <Copy />}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
