@@ -77,36 +77,36 @@ export default function CreateTicket() {
   /* ----------------------------------
      🧠 AI Assist
   ----------------------------------- */
-  const generateWithAI = async () => {
-    if (!data.message.trim()) return;
+  
+const generateWithAI = async () => {
+  if (!data.message.trim()) return;
 
-    setAiLoading(true);
-    setAiSuggestion("");
-    setShowAI(true);
+  setAiLoading(true);
+  setAiSuggestion("");
+  setShowAI(true);
 
-    try {
-      const res = await fetch("https://swiftmeta.onrender.com/api/ai/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: data.message,
-          subject: data.subject,
-        }),
-      });
+  try {
+    const res = await analyzeTicketAI({
+      message: data.message,
+      subject: data.subject,
+      email: data.email, // optional
+    });
 
-      const json = await res.json();
-      setAiSuggestion(json.text || "No suggestion generated.");
-    } catch {
-      setAiSuggestion("AI failed to generate a suggestion.");
-    } finally {
-      setAiLoading(false);
-    }
-  };
+    // Correct field from backend
+    setAiSuggestion(res.improvedMessage || "No suggestion generated.");
+  } catch (err) {
+    console.error(err);
+    setAiSuggestion("AI failed to generate a suggestion.");
+  } finally {
+    setAiLoading(false);
+  }
+};
 
-  const applySuggestion = () => {
-    setData(prev => ({ ...prev, message: aiSuggestion }));
-    setShowAI(false);
-  };
+const applySuggestion = () => {
+  setData(prev => ({ ...prev, message: aiSuggestion }));
+  setShowAI(false);
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-100 dark:bg-neutral-950">
