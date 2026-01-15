@@ -18,7 +18,7 @@ import {
   FaSpinner,
   FaWandMagicSparkles,
 } from "react-icons/fa6";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 
 
 export default function CreateTicket() {
