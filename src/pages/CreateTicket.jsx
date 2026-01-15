@@ -89,11 +89,11 @@ const generateWithAI = async () => {
     const res = await analyzeTicketAI({
       message: data.message,
       subject: data.subject,
-      email: data.email,
+      email: data.email, // optional
     });
 
-    // ✅ FIX: use backend field
-    setAiSuggestion(res.suggestedReply || "No AI reply generated.");
+    // Correct field from backend
+    setAiSuggestion(res.improvedMessage || "No suggestion generated.");
   } catch (err) {
     console.error(err);
     setAiSuggestion("AI failed to generate a suggestion.");
@@ -102,6 +102,10 @@ const generateWithAI = async () => {
   }
 };
 
+const applySuggestion = () => {
+  setData(prev => ({ ...prev, message: aiSuggestion }));
+  setShowAI(false);
+};
 
 
   return (
