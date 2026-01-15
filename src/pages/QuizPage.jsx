@@ -137,8 +137,8 @@ const handleVerify = async () => {
       ticketId: res.emailPayload.ticket_id,
       subject: res.emailPayload.subject,
       message: res.emailPayload.message,
-      template_id:"template_uc07qhs", 
-      service_id:"template_71x89oo" , 
+      template_id:"template_71x89oo", 
+      service_id:"service_kw38oux" , 
       publicKey:"lAEXMMHEtd0LxCc51", 
     });
 
