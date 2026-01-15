@@ -18,6 +18,8 @@ import {
   FaSpinner,
   FaWandMagicSparkles,
 } from "react-icons/fa6";
+import emailjs from "emailjs-com";
+
 
 export default function CreateTicket() {
   const [data, setData] = useState({
@@ -73,6 +75,26 @@ export default function CreateTicket() {
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
+
+
+const sendEmail = async () => {
+  try {
+    await emailjs.send(
+      "service_xxxxx",
+      "template_uiudp97",
+      {
+        email: data.email,
+        message: data.message,
+        ticket_id: ticket.ticketId,
+      },
+      "PUBLIC_KEY_xxxxx"
+    );
+
+    console.log("Email sent");
+  } catch (err) {
+    console.error("EmailJS error:", err);
+  }
+};
 
   /* ----------------------------------
      🧠 AI Assist
