@@ -4,7 +4,7 @@ export const sendEmail = async ({ email, ticketId, subject, message }) => {
   try {
     await emailjs.send(
       "service_6kca9qq",
-      "template_uiudp97",
+      template_id,
       {
         to_email: email,
         ticket_id: ticketId,
