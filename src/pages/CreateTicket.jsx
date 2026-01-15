@@ -108,7 +108,18 @@ const generateWithAI = async () => {
 };
 
 
+const applySuggestion = () => {
+  if (!aiSuggestion) return;
 
+  setData(prev => ({
+    ...prev,
+    message: aiSuggestion,
+  }));
+
+  setShowAI(false);
+};
+
+  
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-100 dark:bg-neutral-950">
       <motion.div
