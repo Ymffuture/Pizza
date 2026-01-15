@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createTicket } from "../api/ticketApi";
 import { analyzeTicketAI } from "../api/aiApi";
@@ -32,6 +32,7 @@ export default function CreateTicket() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const emailSentRef = useRef(false);
 
   /* 🧠 AI states */
   const [aiLoading, setAiLoading] = useState(false);
@@ -54,6 +55,7 @@ export default function CreateTicket() {
       setEmailError("Please enter a valid email address");
       return;
     }
+emailSentRef.current = false;
 
     setEmailError("");
     setLoading(true);
@@ -80,21 +82,31 @@ export default function CreateTicket() {
 const sendEmail = async () => {
   try {
     await emailjs.send(
-      "service_xxxxx",
+      "service_6kca9qq",
       "template_uiudp97",
       {
-        email: data.email,
-        message: data.message,
+        to_email: data.email,
         ticket_id: ticket.ticketId,
+        subject: data.subject || "Support Ticket",
+        message: data.message,
       },
-      "PUBLIC_KEY_xxxxx"
+      "lAEXMMHEtd0LxCc51"
     );
 
-    console.log("Email sent");
+    console.log(" Ticket email sent");
   } catch (err) {
-    console.error("EmailJS error:", err);
+    console.error(" EmailJS error:", err);
   }
 };
+
+
+  useEffect(() => {
+  if (!ticket?.ticketId) return;
+  if (emailSentRef.current) return;
+
+  emailSentRef.current = true;
+  sendEmail();
+}, [ticket]);
 
   /* ----------------------------------
      🧠 AI Assist
