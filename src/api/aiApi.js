@@ -1,4 +1,4 @@
-import { api } from "./api";
+import { api } from "../api";
 
 export const analyzeTicketAI = async ({ email, subject, message }) => {
   const res = await api.post("/ai/analyze", {
