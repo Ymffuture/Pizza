@@ -152,7 +152,17 @@ const applySuggestion = () => {
   setShowAI(false);
 };
 
-  
+function AISkeleton() {
+  return (
+    <div className="space-y-2 animate-pulse">
+      <div className="h-3 rounded bg-blue-500/30 w-full" />
+      <div className="h-3 rounded bg-blue-500/30 w-11/12" />
+      <div className="h-3 rounded bg-blue-500/30 w-10/12" />
+      <div className="h-3 rounded bg-blue-500/30 w-9/12" />
+    </div>
+  );
+}
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-100 dark:bg-neutral-950">
       <motion.div
@@ -275,7 +285,7 @@ const applySuggestion = () => {
               </div>
 
               <p className="text-sm whitespace-pre-wrap">
-                {aiLoading ? "Thinking..." : aiSuggestion}
+                {aiLoading ? <AISkeleton />: aiSuggestion}
               </p>
 
               {!aiLoading && (
