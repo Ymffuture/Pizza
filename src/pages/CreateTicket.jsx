@@ -101,11 +101,11 @@ const sendEmail = async () => {
   ----------------------------------- */
   
 const generateWithAI = async () => {
-  if (!data.message.trim()) return;
+  if (!data.message.trim() || aiLoading) return;
 
   setAiLoading(true);
-  setAiSuggestion("");
   setShowAI(true);
+  setAiSuggestion("");
 
   try {
     const res = await analyzeTicketAI({
@@ -114,20 +114,19 @@ const generateWithAI = async () => {
       message: data.message,
     });
 
-    if (!res.success) {
-      throw new Error("AI failed");
+    if (!res.success || !res.data?.improvedMessage) {
+      throw new Error("Invalid AI response");
     }
 
-    setAiSuggestion(
-      res.data.improvedMessage || "No improvement suggested."
-    );
+    setAiSuggestion(res.data.improvedMessage);
   } catch (err) {
-    console.error("AI error:", err);
-    setAiSuggestion("AI could not analyze this message. Try again.");
+    console.error(err);
+    setAiSuggestion("AI could not improve this message. Try again.");
   } finally {
     setAiLoading(false);
   }
 };
+
 
 
 const applySuggestion = () => {
