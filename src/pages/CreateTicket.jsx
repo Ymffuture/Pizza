@@ -87,25 +87,26 @@ const generateWithAI = async () => {
 
   try {
     const res = await analyzeTicketAI({
-      message: data.message,
+      email: data.email,
       subject: data.subject,
-      email: data.email, // optional
+      message: data.message,
     });
 
-    // Correct field from backend
-    setAiSuggestion(res.improvedMessage || "No suggestion generated.");
+    if (!res.success) {
+      throw new Error("AI failed");
+    }
+
+    setAiSuggestion(
+      res.data.improvedMessage || "No improvement suggested."
+    );
   } catch (err) {
-    console.error(err);
-    setAiSuggestion("AI failed to generate a suggestion.");
+    console.error("AI error:", err);
+    setAiSuggestion("AI could not analyze this message. Try again.");
   } finally {
     setAiLoading(false);
   }
 };
 
-const applySuggestion = () => {
-  setData(prev => ({ ...prev, message: aiSuggestion }));
-  setShowAI(false);
-};
 
 
   return (
