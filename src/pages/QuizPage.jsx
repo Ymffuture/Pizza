@@ -8,7 +8,7 @@ import {
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
-
+import { sendEmail } from "../utils/sendEmail"; 
 import quizzes from "../data/quizzes.json";
 import QuizQuestion from "../components/QuizQuestion";
 import { submitQuiz, requestVerification } from "../services/quizService";
@@ -75,57 +75,78 @@ export default function QuizPage() {
   /* ======================
      EMAIL VERIFICATION
   ====================== */
-  const handleVerify = async () => {
-    if (!email) {
-      setError("Please enter your email address.");
-      return;
-    }
+  
+const handleVerify = async () => {
+  if (!email) {
+    setError("Please enter your email address.");
+    return;
+  }
 
-    try {
-      setVerifying(true);
-      setError("");
-      await requestVerification(email);
-      setVerified(true);
-      toast.success("Verification email sent. Check inbox or spam.");
-    } catch (err) {
-      const msg = extractErrorMessage(err);
-      setError(msg);
-      toast.error(msg);
-      console.error("Email verification error:", err);
-    } finally {
-      setVerifying(false);
-    }
-  };
+  try {
+    setVerifying(true);
+    setError("");
+
+    // 1️⃣ Request backend
+    const res = await requestVerification(email);
+
+    // 2️⃣ AUTO SEND EMAIL (EmailJS)
+    await sendEmail({
+      email: res.emailPayload.to_email,
+      ticketId: "EMAIL-VERIFY",
+      subject: res.emailPayload.subject,
+      message: res.emailPayload.message,
+    });
+
+    toast.success("Verification email sent. Check inbox or spam.");
+  } catch (err) {
+    const msg = extractErrorMessage(err);
+    setError(msg);
+    toast.error(msg);
+  } finally {
+    setVerifying(false);
+  }
+};
 
   /* ======================
      QUIZ SUBMISSION
   ====================== */
   const handleSubmit = async () => {
-    if (!verified) {
-      setError("Please verify your email before submitting.");
-      return;
-    }
+  if (!verified) {
+    setError("Please verify your email before submitting.");
+    return;
+  }
 
-    if (!allAnswered) {
-      setError("Please answer all questions before submitting.");
-      return;
-    }
+  if (!allAnswered) {
+    setError("Please answer all questions before submitting.");
+    return;
+  }
 
-    try {
-      setLoading(true);
-      setError("");
-      const res = await submitQuiz({ email, answers });
-      setResult(res);
-      toast.success(res.passed ? "You passed 🎉" : "You failed ❌");
-    } catch (err) {
-      const msg = extractErrorMessage(err);
-      setError(msg);
-      toast.error(msg);
-      console.error("Quiz submission error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+    setError("");
+
+    // 1️⃣ Submit quiz
+    const res = await submitQuiz({ email, answers });
+
+    // 2️⃣ AUTO SEND RESULT EMAIL
+    await sendEmail({
+      email: res.emailPayload.to_email,
+      ticketId: res.emailPayload.ticket_id,
+      subject: res.emailPayload.subject,
+      message: res.emailPayload.message,
+    });
+
+    // 3️⃣ Show UI result
+    setResult(res);
+    toast.success(res.passed ? "You passed 🎉" : "You failed ❌");
+  } catch (err) {
+    const msg = extractErrorMessage(err);
+    setError(msg);
+    toast.error(msg);
+  } finally {
+    setLoading(false);
+  }
+};
 
   /* ======================
      RESULT VIEW
