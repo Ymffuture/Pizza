@@ -172,7 +172,7 @@ function AISkeleton() {
         className="w-full max-w-md rounded-3xl border border-neutral-200/60 dark:border-neutral-800/60 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] p-8"
       >
         {/* Header */}
-        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 pt-16">
           Create Support Ticket
         </h1>
 
@@ -265,7 +265,7 @@ function AISkeleton() {
         <button
           onClick={generateWithAI}
           disabled={aiLoading || !data.message}
-          className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border border-dashed py-2 text-sm text-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+          className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl border dark:border-blue-200 border-dashed py-2 text-sm text-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:text-white"
         >
           {aiLoading ? <FaSpinner className="animate-spin" /> : <FaWandMagicSparkles />}
           Improve with AI
