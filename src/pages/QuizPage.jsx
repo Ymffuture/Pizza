@@ -95,6 +95,7 @@ const handleVerify = async () => {
       ticketId: "EMAIL-VERIFY",
       subject: res.emailPayload.subject,
       message: res.emailPayload.message,
+      template_id:"template_uiudp97" 
     });
 
     toast.success("Verification email sent. Check inbox or spam.");
@@ -134,6 +135,7 @@ const handleVerify = async () => {
       ticketId: res.emailPayload.ticket_id,
       subject: res.emailPayload.subject,
       message: res.emailPayload.message,
+      template_id:"template_uc07qhs" 
     });
 
     // 3️⃣ Show UI result
