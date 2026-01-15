@@ -138,8 +138,8 @@ const handleVerify = async () => {
       subject: res.emailPayload.subject,
       message: res.emailPayload.message,
       template_id:"template_uc07qhs", 
-      service_id:"service_kw38oux" , 
-      publicKey:"IolitXztFVvhZg6PX", 
+      service_id:"template_71x89oo" , 
+      publicKey:"lAEXMMHEtd0LxCc51", 
     });
 
     // 3️⃣ Show UI result
