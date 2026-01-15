@@ -284,7 +284,7 @@ function AISkeleton() {
                 <FaRobot /> AI Suggestion
               </div>
 
-              <p className="text-sm whitespace-pre-wrap">
+              <p className="text-sm whitespace-pre-wrap dark:text-white dark:bg-white/70">
                 {aiLoading ? <AISkeleton />: aiSuggestion}
               </p>
 
