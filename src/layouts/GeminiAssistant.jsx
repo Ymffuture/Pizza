@@ -173,8 +173,8 @@ const statusMap = {
 const StarBackground = () => (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
       <style>{`@keyframes moveStars {from { transform: translate3d(0,0,0);} to { transform: translate3d(-600px,-300px,0);} }`}</style>
-      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)', backgroundSize: '40px 40px, 80px 80px', opacity: 0.6, animation: 'moveStars 120s linear infinite' }} />
-      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px)', backgroundSize: '120px 120px', opacity: 0.3, animation: 'moveStars 220s linear infinite' }} />
+      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(9, 97, 248, 0.9) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)', backgroundSize: '490px 160px, 80px 90px', opacity: 0.3, animation: 'moveStars 120s linear infinite' }} />
+      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px)', backgroundSize: '120px 120px', opacity: 0.2, animation: 'moveStars 220s linear infinite' }} />
     </div>
   );
   
