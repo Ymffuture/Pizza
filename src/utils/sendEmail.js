@@ -1,6 +1,6 @@
 import emailjs from "@emailjs/browser";
 
-export const sendEmail = async ({ email, ticketId, subject, message, template_id, service_id}) => {
+export const sendEmail = async ({ email, ticketId, subject, message, template_id, service_id, publicKey}) => {
   try {
     await emailjs.send(
       service_id,
@@ -11,7 +11,8 @@ export const sendEmail = async ({ email, ticketId, subject, message, template_id
         subject,
         message,
       },
-      "lAEXMMHEtd0LxCc51"
+      publicKey
+      
     );
 
     console.log("✅ EmailJS email sent");
