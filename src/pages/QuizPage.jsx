@@ -95,6 +95,7 @@ const handleVerify = async () => {
       ticketId: "EMAIL-VERIFY",
       subject: res.emailPayload.subject,
       message: res.emailPayload.message,
+      verifyUrl:res.emailPayload.verify_url,
       template_id:"template_uc07qhs",
       service_id:"service_6kca9qq", 
       publicKey:"lAEXMMHEtd0LxCc51", 
