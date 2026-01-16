@@ -284,7 +284,7 @@ function AISkeleton() {
                 <FaRobot /> AI Suggestion
               </div>
 
-              <p className="text-sm whitespace-pre-wrap dark:text-white dark:bg-white/70">
+              <p className="text-sm whitespace-pre-wrap dark:text-white">
                 {aiLoading ? <AISkeleton />: aiSuggestion}
               </p>
 
@@ -345,7 +345,7 @@ function AISkeleton() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="mt-6 p-4 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 space-y-3"
+              className="mt-6 p-4 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 space-y-6 dark:text-white"
             >
               <div className="flex gap-3">
                 <CheckCircle className="text-green-500 mt-1" size={20} />
@@ -366,7 +366,7 @@ function AISkeleton() {
                     )}
                   </div>
 
-                  <p className="text-xs text-neutral-500">
+                  <p className="text-xs text-neutral-400">
                     Tap to copy your ticket ID
                   </p>
                 </div>
