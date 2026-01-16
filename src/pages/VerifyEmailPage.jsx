@@ -58,6 +58,13 @@ export default function VerifyEmailPage() {
     };
   }, [token, navigate]);
 
+    verifyEmail();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token, navigate]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-6 dark:text-white">
       <div className="w-full max-w-md rounded-2xl p-8 shadow-lg text-center space-y-6">
