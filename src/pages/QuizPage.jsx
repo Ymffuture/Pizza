@@ -95,9 +95,9 @@ const handleVerify = async () => {
       ticketId: "EMAIL-VERIFY",
       subject: res.emailPayload.subject,
       message: res.emailPayload.message,
-      template_id:"emplate_uc07qhs",
+      template_id:"template_uc07qhs",
       service_id:"service_6kca9qq", 
-      publicKey:"IolitXztFVvhZg6PX", 
+      publicKey:"lAEXMMHEtd0LxCc51", 
     });
 
     toast.success("Verification email sent. Check inbox or spam.");
@@ -139,7 +139,7 @@ const handleVerify = async () => {
       message: res.emailPayload.message,
       template_id:"template_71x89oo", 
       service_id:"service_kw38oux" , 
-      publicKey:"lAEXMMHEtd0LxCc51", 
+      publicKey:"IolitXztFVvhZg6PX", 
     });
 
     // 3️⃣ Show UI result
