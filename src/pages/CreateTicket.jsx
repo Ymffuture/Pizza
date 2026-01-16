@@ -87,7 +87,7 @@ const sendEmail = async () => {
       {
         to_email: data.email,
         ticket_id: ticket.ticketId,
-        subject: data.subject || "Support Ticket",
+        subject: data.subject, 
         message: data.message,
       },
       "lAEXMMHEtd0LxCc51"
