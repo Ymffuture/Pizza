@@ -76,7 +76,52 @@ export default function QuizPage() {
      EMAIL VERIFICATION
   ====================== */
   
-const handleSubmit = async () => {
+const handleVerify = async () => {
+  if (!email) {
+    setError("Please enter your email address.");
+    return;
+  }
+
+  try {
+    setVerifying(true);
+    setError("");
+
+    // 1️⃣ Request backend
+    const res = await requestVerification(email);
+
+    // 2️⃣ AUTO SEND EMAIL (EmailJS)
+    await sendEmail({
+      email: res.emailPayload.to_email,
+      ticketId: "EMAIL-VERIFY",
+      subject: res.emailPayload.subject,
+      message: res.emailPayload.message,
+      verifyUrl:res.emailPayload.verify_url,
+      template_id:"template_uc07qhs",
+      service_id:"service_6kca9qq", 
+      publicKey:"lAEXMMHEtd0LxCc51", 
+    });
+setEmail("") 
+    toast.success("Verification email sent. Check inbox or spam.");
+  } catch (err) {
+    const msg = extractErrorMessage(err);
+    setError(msg);
+    toast.error(msg);
+  } finally {
+    setVerifying(false);
+  }
+};
+  
+useEffect(() => {
+  const stored = localStorage.getItem("verifiedEmail");
+  if (stored === email) {
+    setVerified(true);
+  }
+}, [email]);
+
+  /* ======================
+     QUIZ SUBMISSION
+  ====================== */
+  const handleSubmit = async () => {
   if (!verified) {
     setError("Please verify your email before submitting.");
     return;
@@ -125,58 +170,6 @@ const handleSubmit = async () => {
   }
 };
 
-  
-useEffect(() => {
-  const stored = localStorage.getItem("verifiedEmail");
-  if (stored) {
-    setVerified(true);
-  }
-}, []);
-
-
-  /* ======================
-     QUIZ SUBMISSION
-  ====================== */
-  const handleSubmit = async () => {
-  if (!verified) {
-    setError("Please verify your email before submitting.");
-    return;
-  }
-
-  if (!allAnswered) {
-    setError("Please answer all questions before submitting.");
-    return;
-  }
-
-  try {
-    setLoading(true);
-    setError("");
-
-    // 1️⃣ Submit quiz
-    const res = await submitQuiz({ email, answers });
-
-    // 2️⃣ AUTO SEND RESULT EMAIL
-    await sendEmail({
-      email: res.emailPayload.to_email,
-      ticketId: res.emailPayload.ticket_id,
-      subject: res.emailPayload.subject,
-      message: res.emailPayload.message,
-      template_id:"template_71x89oo", 
-      service_id:"service_kw38oux" , 
-      publicKey:"IolitXztFVvhZg6PX", 
-    });
-
-    // 3️⃣ Show UI result
-    setResult(res);
-    toast.success(res.passed ? "You passed 🎉" : "You failed ❌");
-  } catch (err) {
-    const msg = extractErrorMessage(err);
-    setError(msg);
-    toast.error(msg);
-  } finally {
-    setLoading(false);
-  }
-};
 
   /* ======================
      RESULT VIEW
@@ -260,12 +253,11 @@ const completed = progress === 100;
           </button>
 
           {verified && (
-  <p className="text-green-500 mt-2 flex items-center gap-2">
-    <FiCheckCircle />
-    Email verified successfully
-  </p>
-)}
+            <p className="text-yellow-500 mt-2">
+  Verification email sent. Please click the link.
+</p>
 
+          )}
         </div>
 
         {/* Progress */}
