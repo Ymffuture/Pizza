@@ -76,47 +76,63 @@ export default function QuizPage() {
      EMAIL VERIFICATION
   ====================== */
   
-const handleVerify = async () => {
-  if (!email) {
-    setError("Please enter your email address.");
+const handleSubmit = async () => {
+  if (!verified) {
+    setError("Please verify your email before submitting.");
+    return;
+  }
+
+  if (!allAnswered) {
+    setError("Please answer all questions before submitting.");
     return;
   }
 
   try {
-    setVerifying(true);
+    setLoading(true);
     setError("");
 
-    // 1️⃣ Request backend
-    const res = await requestVerification(email);
+    // 1️⃣ Submit quiz (BACKEND VALIDATION happens here)
+    const res = await submitQuiz({ email, answers });
 
-    // 2️⃣ AUTO SEND EMAIL (EmailJS)
+    // 2️⃣ Send result email
     await sendEmail({
       email: res.emailPayload.to_email,
-      ticketId: "EMAIL-VERIFY",
+      ticketId: res.emailPayload.ticket_id,
       subject: res.emailPayload.subject,
       message: res.emailPayload.message,
-      verifyUrl:res.emailPayload.verify_url,
-      template_id:"template_uc07qhs",
-      service_id:"service_6kca9qq", 
-      publicKey:"lAEXMMHEtd0LxCc51", 
+      template_id: "template_71x89oo",
+      service_id: "service_kw38oux",
+      publicKey: "IolitXztFVvhZg6PX",
     });
-setEmail("") 
-    toast.success("Verification email sent. Check inbox or spam.");
+
+    setResult(res);
+    toast.success(res.passed ? "You passed 🎉" : "You failed ❌");
+
   } catch (err) {
+    // ✅ THIS is where your snippet goes
+    if (err?.response?.status === 403) {
+      setError("Email not verified. Please verify first.");
+      toast.error("Email not verified.");
+      return;
+    }
+
     const msg = extractErrorMessage(err);
     setError(msg);
     toast.error(msg);
+
   } finally {
-    setVerifying(false);
+    setLoading(false);
   }
 };
+
   
 useEffect(() => {
   const stored = localStorage.getItem("verifiedEmail");
-  if (stored === email) {
+  if (stored) {
     setVerified(true);
   }
-}, [email]);
+}, []);
+
 
   /* ======================
      QUIZ SUBMISSION
@@ -244,11 +260,12 @@ const completed = progress === 100;
           </button>
 
           {verified && (
-            <p className="text-yellow-500 mt-2">
-  Verification email sent. Please click the link.
-</p>
+  <p className="text-green-500 mt-2 flex items-center gap-2">
+    <FiCheckCircle />
+    Email verified successfully
+  </p>
+)}
 
-          )}
         </div>
 
         {/* Progress */}
