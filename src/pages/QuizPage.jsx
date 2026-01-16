@@ -100,7 +100,7 @@ const handleVerify = async () => {
       service_id:"service_6kca9qq", 
       publicKey:"lAEXMMHEtd0LxCc51", 
     });
-
+setEmail("") 
     toast.success("Verification email sent. Check inbox or spam.");
   } catch (err) {
     const msg = extractErrorMessage(err);
@@ -110,6 +110,13 @@ const handleVerify = async () => {
     setVerifying(false);
   }
 };
+  
+useEffect(() => {
+  const stored = localStorage.getItem("verifiedEmail");
+  if (stored === email) {
+    setVerified(true);
+  }
+}, [email]);
 
   /* ======================
      QUIZ SUBMISSION
@@ -237,9 +244,10 @@ const completed = progress === 100;
           </button>
 
           {verified && (
-            <p className="text-green-500 mt-2 flex items-center gap-1">
-              <FiCheckCircle /> Verification email sent
-            </p>
+            <p className="text-yellow-500 mt-2">
+  Verification email sent. Please click the link.
+</p>
+
           )}
         </div>
 
