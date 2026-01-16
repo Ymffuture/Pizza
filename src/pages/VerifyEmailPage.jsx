@@ -11,7 +11,6 @@ export default function VerifyEmailPage() {
   const token = searchParams.get("token");
 
   const [status, setStatus] = useState("loading"); // loading | success | error
-  const [verified, setVerified] = useState(false);  // ✅ added
 
   useEffect(() => {
     if (!token) {
@@ -31,10 +30,9 @@ export default function VerifyEmailPage() {
 
         if (!isMounted) return;
 
-        // ✅ Persist verified email in state and localStorage
-        if (res?.data?.verified) {
+        // ✅ Persist verified email ONLY on success
+        if (res?.data?.email) {
           localStorage.setItem("verifiedEmail", res.data.email);
-          setVerified(true);
         }
 
         setStatus("success");
@@ -63,6 +61,7 @@ export default function VerifyEmailPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-6 dark:text-white">
       <div className="w-full max-w-md rounded-2xl p-8 shadow-lg text-center space-y-6">
+
         <AnimatePresence mode="wait">
           {/* LOADING */}
           {status === "loading" && (
@@ -142,6 +141,7 @@ export default function VerifyEmailPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
       </div>
     </div>
   );
