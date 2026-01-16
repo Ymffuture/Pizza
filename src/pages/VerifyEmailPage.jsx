@@ -11,56 +11,58 @@ export default function VerifyEmailPage() {
   const token = searchParams.get("token");
 
   const [status, setStatus] = useState("loading"); // loading | success | error
+  const [verified, setVerified] = useState(false);  // ✅ added
 
   useEffect(() => {
-  if (!token) {
-    setStatus("error");
-    toast.error("Invalid verification link");
-    return;
-  }
-
-  let isMounted = true;
-
-  const verifyEmail = async () => {
-    try {
-      const res = await api.get("/quiz/verify", {
-        params: { token },
-        timeout: 15000,
-      });
-
-      if (!isMounted) return;
-
-      if (res?.data?.verified) {
-        localStorage.setItem("verifiedEmail", res.data.email);
-        setVerified(true);
-      }
-
-      setStatus("success");
-      toast.success("Email verified successfully");
-
-      setTimeout(() => navigate("/start-quiz"), 2000);
-    } catch (err) {
-      if (!isMounted) return;
-
+    if (!token) {
       setStatus("error");
-      const msg =
-        err?.response?.data?.message || "Verification failed or expired";
-      toast.error(msg);
-
-      setTimeout(() => navigate("/?resend=true"), 3000);
+      toast.error("Invalid verification link");
+      return;
     }
-  };
 
-  verifyEmail();
+    let isMounted = true;
 
-  return () => { isMounted = false; };
-}, [token, navigate]);
+    const verifyEmail = async () => {
+      try {
+        const res = await api.get("/quiz/verify", {
+          params: { token },
+          timeout: 15000,
+        });
 
+        if (!isMounted) return;
+
+        // ✅ Persist verified email in state and localStorage
+        if (res?.data?.verified) {
+          localStorage.setItem("verifiedEmail", res.data.email);
+          setVerified(true);
+        }
+
+        setStatus("success");
+        toast.success("Email verified successfully");
+
+        setTimeout(() => navigate("/start-quiz"), 2000);
+      } catch (err) {
+        if (!isMounted) return;
+
+        setStatus("error");
+        const msg =
+          err?.response?.data?.message || "Verification failed or expired";
+        toast.error(msg);
+
+        setTimeout(() => navigate("/?resend=true"), 3000);
+      }
+    };
+
+    verifyEmail();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-6 dark:text-white">
       <div className="w-full max-w-md rounded-2xl p-8 shadow-lg text-center space-y-6">
-
         <AnimatePresence mode="wait">
           {/* LOADING */}
           {status === "loading" && (
@@ -140,7 +142,6 @@ export default function VerifyEmailPage() {
             </motion.div>
           )}
         </AnimatePresence>
-
       </div>
     </div>
   );
