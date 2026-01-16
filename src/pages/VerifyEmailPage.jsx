@@ -13,57 +13,49 @@ export default function VerifyEmailPage() {
   const [status, setStatus] = useState("loading"); // loading | success | error
 
   useEffect(() => {
-    if (!token) {
-      setStatus("error");
-      toast.error("Invalid verification link");
-      return;
-    }
+  if (!token) {
+    setStatus("error");
+    toast.error("Invalid verification link");
+    return;
+  }
 
-    let isMounted = true;
+  let isMounted = true;
 
-    const verifyEmail = async () => {
-      try {
-        const res = await api.get("/quiz/verify", {
-          params: { token },
-          timeout: 15000,
-        });
+  const verifyEmail = async () => {
+    try {
+      const res = await api.get("/quiz/verify", {
+        params: { token },
+        timeout: 15000,
+      });
 
-        if (!isMounted) return;
+      if (!isMounted) return;
 
-        // ✅ Persist verified email ONLY on success
-        if (res?.data?.email) {
-          localStorage.setItem("verifiedEmail", res.data.email);
-        }
-
-        setStatus("success");
-        toast.success("Email verified successfully");
-
-        setTimeout(() => navigate("/start-quiz"), 2000);
-      } catch (err) {
-        if (!isMounted) return;
-
-        setStatus("error");
-        const msg =
-          err?.response?.data?.message || "Verification failed or expired";
-        toast.error(msg);
-
-        setTimeout(() => navigate("/?resend=true"), 3000);
+      if (res?.data?.verified) {
+        localStorage.setItem("verifiedEmail", res.data.email);
+        setVerified(true);
       }
-    };
 
-    verifyEmail();
+      setStatus("success");
+      toast.success("Email verified successfully");
 
-    return () => {
-      isMounted = false;
-    };
-  }, [token, navigate]);
+      setTimeout(() => navigate("/start-quiz"), 2000);
+    } catch (err) {
+      if (!isMounted) return;
 
-    verifyEmail();
+      setStatus("error");
+      const msg =
+        err?.response?.data?.message || "Verification failed or expired";
+      toast.error(msg);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [token, navigate]);
+      setTimeout(() => navigate("/?resend=true"), 3000);
+    }
+  };
+
+  verifyEmail();
+
+  return () => { isMounted = false; };
+}, [token, navigate]);
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-6 dark:text-white">
