@@ -19,7 +19,7 @@ import TrackTicket from "./pages/TrackTicket";
 import AdminTicket from "./pages/AdminTicket";
 import ScrollToTop from "./components/ScrollToTop";
 // import RoutesConfig from "./RoutesConfig";
-import {Helmet} from "helmet" 
+import {Helmet} from "react-helmet" 
 //import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
 
