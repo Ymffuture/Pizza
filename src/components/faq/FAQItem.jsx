@@ -6,7 +6,7 @@ export default function FAQItem({ question, answer }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden dark:text-white">
       <button
         onClick={() => setOpen(prev => !prev)}
         className="w-full flex justify-between items-center p-4 text-left focus:outline-none"
