@@ -22,7 +22,7 @@ export default function FAQ() {
 </script>
       </Helmet>
     
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-16">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-16 dark:text-white">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
