@@ -126,22 +126,7 @@ const App = () => {
 
   return (
     <Router>
-      <Helmet >
-      <script type="application/ld+json">
-{JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqData.map(item => ({
-    "@type": "Question",
-    "name": item.question,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": item.answer,
-    },
-  })),
-})}
-</script>
-      </Helmet>
+      
       <ScrollToTop />
       {navbarLoading ? (
         <Skeleton active paragraph={{ rows: 2 }} />
