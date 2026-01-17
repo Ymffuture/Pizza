@@ -17,6 +17,8 @@ import Admin from "./pages/Admin" ;
 import CreateTicket from "./pages/CreateTicket";
 import TrackTicket from "./pages/TrackTicket";
 import AdminTicket from "./pages/AdminTicket";
+import ScrollToTop from "./components/ScrollToTop";
+// import RoutesConfig from "./RoutesConfig";
 
 //import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
@@ -124,6 +126,7 @@ const App = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       {navbarLoading ? (
         <Skeleton active paragraph={{ rows: 2 }} />
       ) : (
