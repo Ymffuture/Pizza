@@ -1,9 +1,27 @@
 import faqData from "../data/faqData";
 import FAQList from "../components/faq/FAQList";
 import { motion } from "framer-motion";
-
+import {Helmet} from "react-helmet" ;
 export default function FAQ() {
   return (
+    <>
+    <Helmet >
+      <script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqData.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer,
+    },
+  })),
+})}
+</script>
+      </Helmet>
+    
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-16">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -18,5 +36,6 @@ export default function FAQ() {
         <FAQList items={faqData} />
       </motion.div>
     </div>
+    </>
   );
 }
