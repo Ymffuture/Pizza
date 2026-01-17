@@ -8,6 +8,7 @@ import GetApp from "./components/GetApp";
 import Newsletter from "./components/Newsletter";
 import Feed from "./pages/Feed" ;
 import Chat from "./layouts/GeminiAssistant" ;
+import ScrollToTop from "./components/ScrollToTop";
 import TrustedPartners from "./components/TrustedPartners" ;
 const LazyLoadOnView = ({ children }) => {
   const ref = React.useRef();
@@ -52,6 +53,7 @@ const Home = () => {
 
   return (
     <>
+      <ScrollToTop/>
       <Hero />
       <Process /> 
       <LazyLoadOnView>
