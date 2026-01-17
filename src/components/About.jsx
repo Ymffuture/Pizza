@@ -4,7 +4,7 @@ import { Code, Layers, Zap, Globe } from "lucide-react";
 
 export default function About() {
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-black px-6 py-12 mt-16">
+    <main className="min-h-screen bg-gray-50 dark:bg-black px-6 py-12 pt-16">
       <Helmet>
         <title>About SwiftMeta</title>
         <meta
@@ -121,7 +121,7 @@ export default function About() {
           </p>
 
           <pre className="bg-black text-green-300 rounded-xl p-4 text-sm overflow-x-auto">
-            {"<About />"}
+            {"<Best App />"}
           </pre>
         </section>
 
