@@ -19,7 +19,7 @@ import TrackTicket from "./pages/TrackTicket";
 import AdminTicket from "./pages/AdminTicket";
 import ScrollToTop from "./components/ScrollToTop";
 // import RoutesConfig from "./RoutesConfig";
-
+import {Helmet} from "helmet" 
 //import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
 
@@ -42,7 +42,7 @@ const QuizPage = lazy(() => import("./pages/QuizPage")) ;
 const QuizQuestion =lazy(() =>import("./components/QuizQuestion")) ;
 const VerifyEmailPage =lazy(() =>import("./pages/VerifyEmailPage"));
 const Contact =lazy(() =>import("./components/Contact")) ;
-
+const FAQ = lazy(() =>import("./pages/FAQ"));
 
 const Loader = () => (
   <div className="flex flex-col items-center justify-center bg-transparent">
@@ -126,6 +126,22 @@ const App = () => {
 
   return (
     <Router>
+      <Helmet >
+      <script type="application/ld+json">
+{JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqData.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer,
+    },
+  })),
+})}
+</script>
+      </Helmet>
       <ScrollToTop />
       {navbarLoading ? (
         <Skeleton active paragraph={{ rows: 2 }} />
@@ -151,8 +167,9 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/resetpassword" element={<ResetPassword/>} />
-<Route path="/ticket" element={<CreateTicket />} />
-        <Route path="/track" element={<TrackTicket />} />
+          <Route path="/ticket" element={<CreateTicket />} />
+         <Route path="/track" element={<TrackTicket />} />
+         <Route path="/faq" element={<FAQ />} />
 
         {/* Admin Route (JWT guard later) */}
         <Route path="/admin-ticket" element={<AdminTicket />} />
