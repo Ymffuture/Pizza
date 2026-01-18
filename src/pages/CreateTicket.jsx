@@ -11,7 +11,7 @@ import {
   ArrowRight,
   Info,
 } from "lucide-react";
-
+import {Helmet} from "react-helmet" ;
 /* ✅ React Icons ONLY */
 import {
   FaRobot,
@@ -165,6 +165,9 @@ function AISkeleton() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-100 dark:bg-neutral-950">
+      <Helmet >
+      <title >Support - Create Ticket</title>
+      </Helmet>
       <motion.div
         initial={{ opacity: 0, y: 28, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
