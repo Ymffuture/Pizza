@@ -6,6 +6,7 @@ export default function FAQ() {
   return (
     <>
     <Helmet >
+      <title>FAQ - 2026/2027</title>
       <script type="application/ld+json">
 {JSON.stringify({
   "@context": "https://schema.org",
