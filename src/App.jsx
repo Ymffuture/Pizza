@@ -143,19 +143,19 @@ const App = () => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2722864790738174"
      crossorigin="anonymous"></script>
-    <!-- Favicon (Vite logo → SwiftMeta logo) -->
+    
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- Primary Meta Tags -->
+    
     <title>SwiftMeta – Your Website Done in Seconds</title>
     <meta name="description" content="SwiftMeta instantly creates stunning, professional websites in seconds – no coding required." />
 <meta name="google-site-verification" content="xXWElQQdEb1YSMqAy524N-B58KqSZqsf5zc0O8fWg3A" />
   <meta name="google-adsense-account" content="ca-pub-2722864790738174" />
-    <!-- Open Graph / Social Media -->
+    
     <meta property="og:title" content="SwiftMeta – Your Website Done in Seconds" />
     <meta property="og:description" content="Instant professional websites. Powered by AI. Launch in seconds." />
     <meta property="og:image" content="https://swiftmeta.vercel.app/og-image.jpg" />
@@ -163,17 +163,17 @@ const App = () => {
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="SwiftMeta" />
 
-    <!-- Twitter Card -->
+    
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="SwiftMeta – Your Website Done in Seconds" />
     <meta name="twitter:description" content="Instant professional websites. Powered by AI." />
     <meta name="twitter:image" content="https://swiftmeta.vercel.app/og-image.jpg" />
 
-    <!-- Theme Color (blue-500 ≈ #3B82F6) -->
+    
     <meta name="theme-color" content="#3B82F6" />
     <meta name="msapplication-TileColor" content="#3B82F6" />
 
-    <!-- Manifest -->
+    
     <link rel="manifest" href="/site.webmanifest" />
   </head>
     
