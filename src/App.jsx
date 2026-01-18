@@ -14,9 +14,6 @@ import Feed from "./pages/Feed";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin" ;
-import CreateTicket from "./pages/CreateTicket";
-import TrackTicket from "./pages/TrackTicket";
-import AdminTicket from "./pages/AdminTicket";
 import ScrollToTop from "./components/ScrollToTop";
 // import RoutesConfig from "./RoutesConfig";
 import {Helmet} from "react-helmet" 
@@ -44,6 +41,15 @@ const VerifyEmailPage =lazy(() =>import("./pages/VerifyEmailPage"));
 const Contact =lazy(() =>import("./components/Contact")) ;
 const FAQ = lazy(() =>import("./pages/FAQ"));
 const HelpCenter =lazy(() =>import("./pages/HelpCenter")) ;
+const CreateTicket =lazy(() =>import("./pages/CreateTicket")) ;
+const TrackTicket =lazy(() =>import("./pages/TrackTicket")) ;
+const AdminTicket =lazy(() =>import("./pages/AdminTicket")) ;
+
+
+
+
+
+
 const Loader = () => (
   <div className="flex flex-col items-center justify-center bg-transparent">
     <svg
@@ -153,9 +159,10 @@ const App = () => {
           <Route path="/admin" element={<Admin />} />
           <Route path="/resetpassword" element={<ResetPassword/>} />
           <Route path="/ticket" element={<CreateTicket />} />
+          <Route path="/support" element={<CreateTicket />} />
          <Route path="/track" element={<TrackTicket />} />
          <Route path="/faq" element={<FAQ />} />
-<Route path="/help" element={<HelpCenter />} />
+         <Route path="/help" element={<HelpCenter />} />
         {/* Admin Route (JWT guard later) */}
         <Route path="/admin-ticket" element={<AdminTicket />} />
 
