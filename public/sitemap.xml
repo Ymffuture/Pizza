@@ -1,33 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Home -->
   <url>
     <loc>https://swiftmeta.vercel.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Services / Projects -->
   <url>
-    <loc>https://swiftmeta.vercel.app/small-projects</loc>
+    <loc>https://swiftmeta.vercel.app/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
   <url>
-    <loc>https://swiftmeta.vercel.app/large-projects</loc>
+    <loc>https://swiftmeta.vercel.app/dashboard/blog</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
   <url>
-    <loc>https://swiftmeta.vercel.app/server-api</loc>
+    <loc>https://swiftmeta.vercel.app/ticket</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Help & Support -->
+  <url>
+    <loc>https://swiftmeta.vercel.app/help</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://swiftmeta.vercel.app/faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Legal -->
   <url>
     <loc>https://swiftmeta.vercel.app/policy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
+
   <url>
     <loc>https://swiftmeta.vercel.app/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
+
 </urlset>
