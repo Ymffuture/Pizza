@@ -12,6 +12,7 @@ import {
   ArrowRight,
   History,
 } from "lucide-react";
+import { Helmet } from "react-helmet";
 
 // --- Small country & flag map (expand as needed) ---
 const COUNTRY_NAMES = {
@@ -32,6 +33,24 @@ export default function WeatherPage() {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [forecast, setForecast] = useState(null); // daily forecast
   const [history, setHistory] = useState([]);
+  
+const weatherEmoji = {
+  Clear: "☀️",
+  Clouds: "☁️",
+  Rain: "🌧️",
+  Snow: "❄️",
+  Thunderstorm: "⛈️",
+};
+
+const icon =
+  currentWeather &&
+  weatherEmoji[currentWeather.weather[0].main] || "🌍";
+
+const pageTitle = loading
+  ? "Loading weather…"
+  : currentWeather
+  ? `${icon} ${currentWeather.name} • ${Math.round(currentWeather.main.temp)}°C`
+  : "Weather Forecast";
 
   // Replace with your key or keep environment variable in production
   const API_KEY = "378c0d8b5246ceb52c1c6c6899b3446e";
@@ -267,6 +286,20 @@ export default function WeatherPage() {
   /********************* Render *********************/
   return (
     <div className="relative min-h-screen flex items-start justify-center py-10 px-4 bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-black mt-8">
+      
+<Helmet>
+  <title>{pageTitle}</title>
+  <meta
+    name="description"
+    content={
+      currentWeather
+        ? `Live weather in ${currentWeather.name}. Temperature ${Math.round(
+            currentWeather.main.temp
+          )}°C with ${currentWeather.weather[0].description}.`
+        : "Real-time weather forecast with 7-day outlook."
+    }
+  />
+</Helmet>
 
       {/* star bg */}
       <StarBackground />
