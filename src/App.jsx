@@ -43,7 +43,7 @@ const QuizQuestion =lazy(() =>import("./components/QuizQuestion")) ;
 const VerifyEmailPage =lazy(() =>import("./pages/VerifyEmailPage"));
 const Contact =lazy(() =>import("./components/Contact")) ;
 const FAQ = lazy(() =>import("./pages/FAQ"));
-const Help =lazy(() =>import("./pages/HelpCenter")) ;
+const HelpCenter =lazy(() =>import("./pages/HelpCenter")) ;
 const Loader = () => (
   <div className="flex flex-col items-center justify-center bg-transparent">
     <svg
