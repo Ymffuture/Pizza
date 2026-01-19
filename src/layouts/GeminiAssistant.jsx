@@ -11,7 +11,7 @@ import { Copy, Check } from "lucide-react";
 import { ArrowUp } from "lucide-react";
 import Lottie from "lottie-react";
 import aiAnimation from "../assets/ai.json";
-
+import aiAnim from "../assets/AI.json";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -344,9 +344,16 @@ const StarBackground = () => (
       {/* HEADER unchanged */}
       <header className="flex items-center justify-between px-5 py-3 backdrop-blur-xl bg-white/80 dark:bg-gray-900/70 border-b border-gray-200/70 dark:border-gray-800 sticky top-0 z-20">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-full bg-sky-500/10 text-sky-500">
-            <BotIcon size={20} />
-          </div>
+          <div className="flex items-center justify-center w-9 h-9 rounded-full bg-sky-500/10 overflow-hidden">
+  <Lottie
+    animationData={aiAnim}
+    loop
+    autoplay
+    className="w-full h-full scale-[1.15]"
+    aria-hidden="true"
+  />
+</div>
+
           <div className="leading-tight">
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">SwiftMeta</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">AI Assistant</p>
