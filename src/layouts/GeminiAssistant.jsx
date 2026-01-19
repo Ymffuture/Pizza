@@ -10,8 +10,8 @@ import { MdMic, MdMicOff } from "react-icons/md";
 import { Copy, Check } from "lucide-react";
 import { ArrowUp } from "lucide-react";
 import Lottie from "lottie-react";
-import aiAnimation from "../assets/ai.json";
-import aiAnim from "../assets/button.json";
+import aiAnim from "../assets/ai.json";
+import AiAnimation from "../assets/button.json";
 import { motion } from "framer-motion";
 
 const GeminiAssistant = () => {
