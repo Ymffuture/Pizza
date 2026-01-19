@@ -336,7 +336,7 @@ const StarBackground = () => (
   className={`
     w-6 h-6
     drop-shadow-lg
-    scale-180
+    scale-220
     ${statusMap[connectionStrength]?.color}
   `}
   aria-hidden="true"
