@@ -157,19 +157,19 @@ const statusMap = {
     color: "text-green-400",
     bg: "bg-green-500/10",
     ring: "ring-black",
-    label: "Connection speed: 80%+",
+    label: "Connection speed: Good",
   },
   Average: {
     color: "text-orange-400",
     bg: "bg-orange-500/10",
     ring: "ring-orange-600",
-    label: "Connection speed: 50%+",
+    label: "Connection speed: Average",
   },
   Poor: {
     color: "text-red-400",
     bg: "bg-red-500/10",
     ring: "ring-red-600",
-    label: "Connection speed: 40%",
+    label: "Connection speed: Poor",
   },
 };
 
@@ -321,7 +321,6 @@ const StarBackground = () => (
   className={`
     relative
     p-3 rounded-full
-    bg-black/10
     ring-1 ${statusMap[connectionStrength]?.ring}
     shadow-xl
     transition
@@ -338,7 +337,7 @@ const StarBackground = () => (
   className={`
     w-6 h-6
     drop-shadow-lg
-    scale-220
+    scale-250
     ${statusMap[connectionStrength]?.color}
   `}
   aria-hidden="true"
