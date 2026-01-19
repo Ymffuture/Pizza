@@ -11,7 +11,8 @@ import { Copy, Check } from "lucide-react";
 import { ArrowUp } from "lucide-react";
 import Lottie from "lottie-react";
 import aiAnimation from "../assets/ai.json";
-import aiAnim from "../assets/AI.json";
+import aiAnim from "../assets/button.json";
+import { motion } from "framer-motion";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -314,22 +315,35 @@ const StarBackground = () => (
   </div>
 
   {/* AI Button */}
-  <button
-    onClick={handleOpen}
-    aria-label="Open AI Assistant"
-    className={`
-      p-3 rounded-full
-      bg-black/10 text-white
-      ring-1 ${statusMap[connectionStrength]?.ring}
-      shadow-xl
-      transition
-      hover:scale-120
-      active:scale-100
-      border-b-black
-    `}
-  >
-    <BotIcon size={20} className={`${statusMap[connectionStrength]?.color}`}/>
-  </button>
+<button
+  onClick={handleOpen}
+  aria-label="Open AI Assistant"
+  className={`
+    relative
+    p-3 rounded-full
+    bg-black/10
+    ring-1 ${statusMap[connectionStrength]?.ring}
+    shadow-xl
+    transition
+    hover:scale-110
+    active:scale-100
+    overflow-hidden
+  `}
+>
+  {/* AI LOTTIE */}
+  <Lottie
+  animationData={aiAnim}
+  loop
+  autoplay
+  className={`
+    w-6 h-6
+    drop-shadow-lg
+    ${statusMap[connectionStrength]?.color}
+  `}
+  aria-hidden="true"
+/>
+</button>
+
 </div>
 
     );
@@ -382,7 +396,9 @@ const StarBackground = () => (
         "Write a NestJS snippet",
         "Tips for learning AI",
       ].map((p, i) => (
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+  whileTap={{ scale: 0.95 }}
           key={i}
           onClick={() => {
             setMsg(p);
@@ -399,7 +415,7 @@ const StarBackground = () => (
         >
           <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400/20 to-purple-500/20 opacity-0 hover:opacity-100 transition" />
           <span className="relative z-10">{p}</span>
-        </button>
+        </motion.button>
       ))}
     </div>
 
