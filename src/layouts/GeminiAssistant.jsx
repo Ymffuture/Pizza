@@ -11,7 +11,7 @@ import { Copy, Check } from "lucide-react";
 import { ArrowUp } from "lucide-react";
 import Lottie from "lottie-react";
 import aiAnim from "../assets/ai.json";
-import AiAnimation from "../assets/button.json";
+import aiAnimation from "../assets/button.json";
 import { motion } from "framer-motion";
 
 const GeminiAssistant = () => {
@@ -321,7 +321,6 @@ const StarBackground = () => (
   className={`
     relative
     p-3 rounded-full
-    ring-1 ${statusMap[connectionStrength]?.ring}
     shadow-xl
     transition
     hover:scale-110
