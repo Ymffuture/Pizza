@@ -155,14 +155,13 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
   className="
     flex-1
     rounded-xl
-    bg-gradient-to-br from-zinc-900 via-black to-zinc-900
-    border border-white/10
     p-4
     shadow-lg
+    Dark:text-white text-gray-600
   "
 >
   {/* Title */}
-  <p className="text-sm font-semibold tracking-wide text-red-500 uppercase">
+  <p className="text-sm font-semibold tracking-wide text-gray-500 dark:text-white uppercase">
     Weather Update
   </p>
 
