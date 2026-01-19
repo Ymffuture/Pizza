@@ -387,6 +387,16 @@ const StarBackground = () => (
         {/* ... messages rendering unchanged ... */}
         {messages.length === 0 && (
   <>
+    {/* AI LOTTIE ANIMATION */}
+    <div className="mt-8 flex justify-center">
+      <Lottie
+        animationData={aiAnimation}
+        loop
+        autoplay
+        className="w-80 h-80 opacity-90"
+        aria-hidden="true"
+      />
+    </div>
     {/* PROMPT BUTTONS */}
     <div className="grid sm:grid-cols-2 gap-3 mt-10">
       {[
@@ -418,16 +428,7 @@ const StarBackground = () => (
       ))}
     </div>
 
-    {/* AI LOTTIE ANIMATION */}
-    <div className="mt-14 flex justify-center">
-      <Lottie
-        animationData={aiAnimation}
-        loop
-        autoplay
-        className="w-80 h-80 opacity-90"
-        aria-hidden="true"
-      />
-    </div>
+    
   </>
 )}
 
