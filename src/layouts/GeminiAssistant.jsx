@@ -409,7 +409,7 @@ const StarBackground = () => (
         animationData={aiAnimation}
         loop
         autoplay
-        className="w-56 h-56 opacity-90"
+        className="w-80 h-80 opacity-90"
         aria-hidden="true"
       />
     </div>
