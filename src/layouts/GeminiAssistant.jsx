@@ -9,6 +9,8 @@ import { toast } from "react-hot-toast";
 import { MdMic, MdMicOff } from "react-icons/md";
 import { Copy, Check } from "lucide-react";
 import { ArrowUp } from "lucide-react";
+import Lottie from "lottie-react";
+import aiAnimation from "../assets/ai.json";
 
 
 const GeminiAssistant = () => {
@@ -364,30 +366,49 @@ const StarBackground = () => (
       <main className="flex-1 overflow-y-auto px-4 py-6 space-my-4 dark:text-white">
         {/* ... messages rendering unchanged ... */}
         {messages.length === 0 && (
-          <div className="grid sm:grid-cols-2 gap-3 mt-10">
-            {["Explain React hooks", "Generate a website idea for business", "Write a nestjs snippet ", "Tips for learning AI"].map((p, i) => (
-              <button
-  key={i}
-  onClick={() => {
-    setMsg(p);
-    setTimeout(sendMessage, 200);
-  }}
-  className="
-    relative rounded-xl p-4 text-sm text-center 
-    bg-white/60 dark:bg-white/5 backdrop-blur-xl
-    transition-all duration-300
-    hover:scale-[1.03]
-    hover:shadow-[0_0_30px_rgba(0,229,255,0.35)]
-    border border-white/10
-  "
->
-  <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400/20 to-purple-500/20 opacity-0 hover:opacity-100 transition" />
-  <span className="relative z-10">{p}</span>
-</button>
+  <>
+    {/* PROMPT BUTTONS */}
+    <div className="grid sm:grid-cols-2 gap-3 mt-10">
+      {[
+        "Explain React hooks",
+        "Generate a website idea for business",
+        "Write a NestJS snippet",
+        "Tips for learning AI",
+      ].map((p, i) => (
+        <button
+          key={i}
+          onClick={() => {
+            setMsg(p);
+            setTimeout(sendMessage, 200);
+          }}
+          className="
+            relative rounded-xl p-4 text-sm text-center 
+            bg-white/60 dark:bg-white/5 backdrop-blur-xl
+            transition-all duration-300
+            hover:scale-[1.03]
+            hover:shadow-[0_0_30px_rgba(0,229,255,0.35)]
+            border border-white/10
+          "
+        >
+          <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400/20 to-purple-500/20 opacity-0 hover:opacity-100 transition" />
+          <span className="relative z-10">{p}</span>
+        </button>
+      ))}
+    </div>
 
-            ))}
-          </div>
-        )}
+    {/* AI LOTTIE ANIMATION */}
+    <div className="mt-14 flex justify-center">
+      <Lottie
+        animationData={aiAnimation}
+        loop
+        autoplay
+        className="w-56 h-56 opacity-90"
+        aria-hidden="true"
+      />
+    </div>
+  </>
+)}
+
       {messages.map((m, i) => (
   <div
     key={i}
