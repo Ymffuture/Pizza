@@ -336,7 +336,7 @@ const StarBackground = () => (
   loop
   autoplay
   className={`
-    w-6 h-6
+    w-12 h-12
     drop-shadow-lg
     ${statusMap[connectionStrength]?.color}
   `}
