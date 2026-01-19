@@ -336,7 +336,7 @@ const StarBackground = () => (
   className={`
     w-6 h-6
     drop-shadow-lg
-    scale-250
+    scale-110
     ${statusMap[connectionStrength]?.color}
   `}
   aria-hidden="true"
@@ -362,7 +362,7 @@ const StarBackground = () => (
     animationData={aiAnim}
     loop
     autoplay
-    className="w-full h-full scale-[1.15]"
+    className="w-full h-full scale-[2.15]"
     aria-hidden="true"
   />
 </div>
@@ -388,7 +388,7 @@ const StarBackground = () => (
         {messages.length === 0 && (
   <>
     {/* AI LOTTIE ANIMATION */}
-    <div className="mt-8 flex justify-center">
+    <div className="mt-1 flex justify-center">
       <Lottie
         animationData={aiAnimation}
         loop
