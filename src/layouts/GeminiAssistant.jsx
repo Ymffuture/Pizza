@@ -336,8 +336,9 @@ const StarBackground = () => (
   loop
   autoplay
   className={`
-    w-12 h-12
+    w-6 h-6
     drop-shadow-lg
+    scale-220
     ${statusMap[connectionStrength]?.color}
   `}
   aria-hidden="true"
