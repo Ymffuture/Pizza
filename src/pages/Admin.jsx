@@ -41,13 +41,19 @@ export default function AdminContacts() {
   }, []);
 
   const updateStatus = async (id, status) => {
+  try {
     setActionLoading(true);
-    await api.patch(`/contact/${id}/status`, { status });
+
+    await api.put(`/contact/${id}/status`, { status });
+
     setContacts(prev =>
       prev.map(c => (c._id === id ? { ...c, status } : c))
     );
+  } finally {
     setActionLoading(false);
-  };
+  }
+};
+
 
   const deleteContact = async id => {
     Modal.confirm({
