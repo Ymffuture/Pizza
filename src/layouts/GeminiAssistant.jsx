@@ -13,12 +13,28 @@ import Lottie from "lottie-react";
 import aiAnim from "../assets/ai.json";
 import aiAnimation from "../assets/button.json";
 import { motion } from "framer-motion";
+import AuthModal from "./AiLogin";
+import Sidebar from "./Sidebar" ;
+
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
   const [messages, setMessages] = useState([]);
+// Auth
+const [authToken, setAuthToken] = useState(null);
+const [showAuthModal, setShowAuthModal] = useState(false);
+
+// Conversations
+const [conversations, setConversations] = useState([]);
+const [currentConversationId, setCurrentConversationId] = useState(null);
+
+  const handleOpen = () => {
+  if (!authToken) return setShowAuthModal(true);
+  setOpen(true);
+};
+
   const chatEndRef = useRef(null);
 
   const basePlaceholders = [
@@ -594,6 +610,24 @@ const StarBackground = () => (
           <ArrowUp size={28} />
         </button>
       </footer>
+
+      {showAuthModal && (
+  <AuthModal
+    onClose={() => setShowAuthModal(false)}
+    onLoginSuccess={(token) => {
+      setAuthToken(token);
+      setOpen(true);
+    }}
+  />
+)}
+
+{authToken && (
+  <Sidebar
+    token={authToken}
+    onSelectConversation={(id) => setCurrentConversationId(id)}
+  />
+)}
+
     </div>
   );
 };
