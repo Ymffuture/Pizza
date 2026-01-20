@@ -71,22 +71,41 @@ export default function Contact() {
   );
 
   // Status dot component
-  const StatusDot = ({ status }) => {
-    const color =
-      status === "pending" ? "bg-yellow-400 animate-pulse dark:text-white" :
-      status === "approved" ? "bg-green-500 dark:text-white" :
-      "bg-gray-400";
-    const label =
-      status === "pending" ? "Pending" :
-      status === "approved" ? "Approved" :
-      "Sending...";
+ const StatusDot = ({ status }) => {
+  const color =
+    status === "pending"
+      ? "bg-yellow-400 animate-pulse"
+      : status === "approved"
+      ? "bg-green-500"
+      : "bg-gray-400";
+
+  const label =
+    status === "pending"
+      ? "Pending"
+      : status === "approved"
+      ? "Approved"
+      : "Sending...";
+
+  const content = (
+    <span className="flex items-center gap-1 text-xs dark:text-white">
+      <span className={`w-2 h-2 rounded-full ${color}`} />
+      {label}
+    </span>
+  );
+
+  // ✅ Tooltip ONLY when approved
+  if (status === "approved") {
     return (
-      <span className="flex items-center gap-1 text-xs dark:text-white">
-        <span className={`w-2 h-2 rounded-full dark:text-white ${color}`} />
-        {label}
-      </span>
+      <Tooltip title="Check your email for reply">
+  <span className="cursor-help">{content}</span>
+</Tooltip>
+
     );
-  };
+  }
+
+  return content;
+};
+
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 py-20 px-6">
