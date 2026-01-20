@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
-import { Spin, Modal } from "antd";
 import {
-  User,
-  Mail,
+  Spin,
+  Modal,
+  Tooltip,
+  message,
+} from "antd";
+import {
   Trash2,
   CheckCircle,
-  Clock
+  Clock,
+  Printer,
+  Copy,
 } from "lucide-react";
 import { api } from "../api";
 
@@ -20,10 +25,17 @@ export default function AdminContacts() {
   const [selected, setSelected] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
+  /* ======================
+     FETCH CONTACTS
+  ====================== */
   const fetchContacts = async (reset = false) => {
     try {
       setLoading(true);
-      const { data } = await api.get(`/contact?skip=${reset ? 0 : skip}&limit=${LIMIT}`);
+
+      const { data } = await api.get(
+        `/contact?skip=${reset ? 0 : skip}&limit=${LIMIT}`
+      );
+
       if (reset) {
         setContacts(data);
         setSkip(LIMIT);
@@ -31,6 +43,8 @@ export default function AdminContacts() {
         setContacts(prev => [...prev, ...data]);
         setSkip(prev => prev + LIMIT);
       }
+    } catch {
+      message.error("Failed to load contacts");
     } finally {
       setLoading(false);
     }
@@ -40,61 +54,90 @@ export default function AdminContacts() {
     fetchContacts(true);
   }, []);
 
+  /* ======================
+     UPDATE STATUS
+  ====================== */
   const updateStatus = async (id, status) => {
-  try {
-    setActionLoading(true);
+    try {
+      setActionLoading(true);
 
-    await api.put(`/contact/${id}/status`, { status });
+      await api.put(`/contact/${id}/status`, { status });
 
-    setContacts(prev =>
-      prev.map(c => (c._id === id ? { ...c, status } : c))
-    );
-  } finally {
-    setActionLoading(false);
-  }
-};
+      setContacts(prev =>
+        prev.map(c =>
+          c._id === id ? { ...c, status } : c
+        )
+      );
 
-
-  const deleteContact = async (id) => {
-  Modal.confirm({
-    title: "Delete message?",
-    content: "This action cannot be undone.",
-    okType: "danger",
-    okText: "Delete",
-    cancelText: "Cancel",
-
-    onOk: async () => {
-      try {
-        setActionLoading(true);
-
-        await api.delete(`/contact/${id}`);
-
-        setContacts(prev =>
-          prev.filter(c => c._id !== id)
-        );
-
-        message.success("Message deleted successfully");
-      } catch (err) {
-        console.error(err);
-
-        const msg =
-          err?.response?.data?.error ||
-          "Failed to delete message";
-
-        message.error(msg);
-
-        // IMPORTANT: throw to keep modal open if needed
-        throw err;
-      } finally {
-        setActionLoading(false);
+      if (status === "approved") {
+        message.success("Message approved");
       }
-    },
-  });
-};
+    } catch {
+      message.error("Failed to update status");
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
+  /* ======================
+     DELETE CONTACT
+  ====================== */
+  const deleteContact = id => {
+    Modal.confirm({
+      title: "Delete message?",
+      content: "This action cannot be undone.",
+      okType: "danger",
+      okText: "Delete",
+      cancelText: "Cancel",
+
+      async onOk() {
+        try {
+          setActionLoading(true);
+
+          await api.delete(`/contact/${id}`);
+
+          setContacts(prev =>
+            prev.filter(c => c._id !== id)
+          );
+
+          message.success("Message deleted");
+        } catch (err) {
+          message.error(
+            err?.response?.data?.error ||
+              "Delete failed"
+          );
+          throw err;
+        } finally {
+          setActionLoading(false);
+        }
+      },
+    });
+  };
+
+  /* ======================
+     COPY CONTACT INFO
+  ====================== */
+  const copyInfo = contact => {
+    const text = `
+Name: ${contact.name}
+Email: ${contact.email}
+Subject: ${contact.subject || "-"}
+Message: ${contact.message}
+    `.trim();
+
+    navigator.clipboard.writeText(text);
+    message.success("Copied to clipboard");
+  };
+
+  /* ======================
+     PRINT
+  ====================== */
+  const printMessage = () => {
+    window.print();
+  };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 p-8 mt-16">
+    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-white p-8 mt-16">
       <Helmet>
         <title>Admin · Contact Messages</title>
       </Helmet>
@@ -102,9 +145,7 @@ export default function AdminContacts() {
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="text-4xl font-extrabold text-center mb-10 
-        bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600
-        drop-shadow-[0_0_25px_rgba(99,102,241,0.35)]"
+        className="text-4xl font-extrabold text-center mb-10"
       >
         Contact Messages
       </motion.h1>
@@ -120,8 +161,7 @@ export default function AdminContacts() {
               key={contact._id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center justify-between p-5 rounded-2xl 
-              bg-white dark:bg-[#111] shadow border border-black/5 dark:border-white/10"
+              className="flex items-center justify-between p-5 rounded-xl bg-white shadow"
             >
               <div
                 className="flex items-center gap-4 cursor-pointer"
@@ -130,25 +170,55 @@ export default function AdminContacts() {
                 <StatusDot status={contact.status} />
 
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-white">
+                  <p className="font-semibold">
                     {contact.name}
                   </p>
-                  <p className="text-xs text-gray-500">{contact.subject || "No subject"}</p>
+                  <p className="text-xs text-gray-500">
+                    {contact.subject || "No subject"}
+                  </p>
                 </div>
               </div>
 
               <div className="flex gap-3">
+                {contact.status === "pending" ? (
+                  <Tooltip title="Pending · Click to copy details">
+                    <button
+                      onClick={() => copyInfo(contact)}
+                      className="p-2 rounded-xl bg-yellow-500/10 text-yellow-600"
+                    >
+                      <Clock size={18} />
+                    </button>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Check your email for reply">
+                    <CheckCircle
+                      size={20}
+                      className="text-green-600"
+                    />
+                  </Tooltip>
+                )}
+
                 {contact.status === "pending" && (
                   <button
-                    onClick={() => updateStatus(contact._id, "approved")}
-                    className="p-2 rounded-xl bg-green-500/10 text-green-600 hover:bg-green-500/20"
+                    disabled={actionLoading}
+                    onClick={() =>
+                      updateStatus(
+                        contact._id,
+                        "approved"
+                      )
+                    }
+                    className="p-2 rounded-xl bg-green-500/10 text-green-600"
                   >
                     <CheckCircle size={18} />
                   </button>
                 )}
+
                 <button
-                  onClick={() => deleteContact(contact._id)}
-                  className="p-2 rounded-xl bg-red-500/10 text-red-600 hover:bg-red-500/20"
+                  disabled={actionLoading}
+                  onClick={() =>
+                    deleteContact(contact._id)
+                  }
+                  className="p-2 rounded-xl bg-red-500/10 text-red-600"
                 >
                   <Trash2 size={18} />
                 </button>
@@ -157,20 +227,22 @@ export default function AdminContacts() {
           ))
         )}
 
-        {contacts.length % LIMIT === 0 && contacts.length > 0 && (
-          <div className="flex justify-center pt-6">
-            <button
-              onClick={() => fetchContacts(false)}
-              className="px-6 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700"
-              disabled={loading}
-            >
-              {loading ? <Spin size="small" /> : "Load More"}
-            </button>
-          </div>
-        )}
+        {contacts.length % LIMIT === 0 &&
+          contacts.length > 0 && (
+            <div className="flex justify-center pt-6">
+              <button
+                onClick={() => fetchContacts(false)}
+                className="px-6 py-2 rounded-xl bg-blue-600 text-white"
+              >
+                Load More
+              </button>
+            </div>
+          )}
       </div>
 
-      {/* READ MESSAGE MODAL */}
+      {/* ======================
+          READ MODAL
+      ====================== */}
       <Modal
         open={!!selected}
         onCancel={() => setSelected(null)}
@@ -179,12 +251,26 @@ export default function AdminContacts() {
       >
         {selected && (
           <div className="space-y-3">
-            <p><strong>Name:</strong> {selected.name}</p>
-            <p><strong>Email:</strong> {selected.email}</p>
-            <p><strong>Subject:</strong> {selected.subject || "-"}</p>
-            <p className="text-gray-700 dark:text-gray-300">
-              {selected.message}
-            </p>
+            <p><b>Name:</b> {selected.name}</p>
+            <p><b>Email:</b> {selected.email}</p>
+            <p><b>Subject:</b> {selected.subject || "-"}</p>
+            <p>{selected.message}</p>
+
+            <div className="flex gap-3 pt-4">
+              <button
+                onClick={() => copyInfo(selected)}
+                className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded"
+              >
+                <Copy size={16} /> Copy
+              </button>
+
+              <button
+                onClick={printMessage}
+                className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded"
+              >
+                <Printer size={16} /> Print
+              </button>
+            </div>
           </div>
         )}
       </Modal>
@@ -192,9 +278,9 @@ export default function AdminContacts() {
   );
 }
 
-/* -------------------------
-   Status Dot
--------------------------- */
+/* ======================
+   STATUS DOT
+====================== */
 function StatusDot({ status }) {
   return (
     <span
