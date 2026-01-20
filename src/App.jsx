@@ -14,6 +14,7 @@ import Feed from "./pages/Feed";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin" ;
+import OnlyAdmin from "./pages/OnlyAdmin" ;
 import ScrollToTop from "./components/ScrollToTop";
 // import RoutesConfig from "./RoutesConfig";
 import {Helmet} from "react-helmet" 
@@ -178,7 +179,7 @@ const App = () => {
          <Route path="/help" element={<HelpCenter />} />
         {/* Admin Route (JWT guard later) */}
         <Route path="/admin-ticket" element={<AdminTicket />} />
-
+        <Route path="/admin-only" element={<OnlyAdmin />} />
           
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
