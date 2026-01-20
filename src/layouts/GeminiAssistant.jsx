@@ -30,10 +30,10 @@ const [showAuthModal, setShowAuthModal] = useState(false);
 const [conversations, setConversations] = useState([]);
 const [currentConversationId, setCurrentConversationId] = useState(null);
 
-  const handleOpen = () => {
-  if (!authToken) return setShowAuthModal(true);
-  setOpen(true);
-};
+ // const handleOpen = () => {
+ // if (!authToken) return setShowAuthModal(true);
+  //setOpen(true);
+//};
 
   const chatEndRef = useRef(null);
 
