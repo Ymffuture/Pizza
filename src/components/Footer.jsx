@@ -308,30 +308,57 @@ const StarBackground = () => (
 
         {/* Company Links */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">Company</h3>
-          <ul className="space-y-2">
-            <li>
-              <Link to="/about" className="hover:text-blue-500 transition">
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link to="/dashboard/blog" className="hover:text-blue-500 transition">
-                Blogs
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="hover:text-blue-500 transition">
-                Contact 
-              </Link>
-            </li>
-            <li>
-              <Link to="/weather" className="hover:text-blue-500 transition">
-                Weather
-              </Link>
-            </li>
-          </ul>
-        </div>
+  <h3 className="text-lg font-semibold mb-4">Company</h3>
+
+  <ul className="space-y-2 text-sm">
+    <li>
+      <Link
+        to="/about"
+        className="hover:text-blue-500 transition"
+      >
+        About Us
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/dashboard/blog"
+        className="hover:text-blue-500 transition"
+      >
+        Blog Articles
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/contact"
+        className="hover:text-blue-500 transition"
+      >
+        Contact Support
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        to="/weather"
+        className="hover:text-blue-500 transition"
+      >
+        Weather Tool
+      </Link>
+    </li>
+
+    {/* Admin – intentionally subtle */}
+    <li>
+      <Link
+        to="/admin-only"
+        className="text-gray-500 hover:text-blue-500 transition"
+      >
+        Admin Access
+      </Link>
+    </li>
+  </ul>
+</div>
+
 
         {/* Support Links */}
         <div>
