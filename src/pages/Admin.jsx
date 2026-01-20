@@ -55,17 +55,43 @@ export default function AdminContacts() {
 };
 
 
-  const deleteContact = async id => {
-    Modal.confirm({
-      title: "Delete message?",
-      content: "This action cannot be undone.",
-      okType: "danger",
-      onOk: async () => {
+  const deleteContact = async (id) => {
+  Modal.confirm({
+    title: "Delete message?",
+    content: "This action cannot be undone.",
+    okType: "danger",
+    okText: "Delete",
+    cancelText: "Cancel",
+
+    onOk: async () => {
+      try {
+        setActionLoading(true);
+
         await api.delete(`/contact/${id}`);
-        setContacts(prev => prev.filter(c => c._id !== id));
-      },
-    });
-  };
+
+        setContacts(prev =>
+          prev.filter(c => c._id !== id)
+        );
+
+        message.success("Message deleted successfully");
+      } catch (err) {
+        console.error(err);
+
+        const msg =
+          err?.response?.data?.error ||
+          "Failed to delete message";
+
+        message.error(msg);
+
+        // IMPORTANT: throw to keep modal open if needed
+        throw err;
+      } finally {
+        setActionLoading(false);
+      }
+    },
+  });
+};
+
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 p-8 mt-16">
