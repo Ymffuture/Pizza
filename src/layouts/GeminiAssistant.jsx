@@ -305,7 +305,7 @@ if (!authToken) {
     animationData={aiAnim}
     loop
     autoplay
-    className="w-full h-full scale-[2.15]"
+    className="w-full h-full scale-[1.15]"
     aria-hidden="true"
   />
 </div>
