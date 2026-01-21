@@ -12,6 +12,7 @@ import { ArrowUp } from "lucide-react";
 import Lottie from "lottie-react";
 import aiAnim from "../assets/ai.json";
 import aiAnimation from "../assets/button.json";
+import { useConnectionStrength } from "../hooks/useConnectionStrength";
 import { motion } from "framer-motion";
 import AuthModal from "./AiLogin";
 import Sidebar from "./Sidebar" ;
