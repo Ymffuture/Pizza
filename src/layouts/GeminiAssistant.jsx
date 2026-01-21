@@ -30,10 +30,6 @@ const [showAuthModal, setShowAuthModal] = useState(false);
 const [conversations, setConversations] = useState([]);
 const [currentConversationId, setCurrentConversationId] = useState(null);
 
- // const handleOpen = () => {
- // if (!authToken) return setShowAuthModal(true);
-  //setOpen(true);
-//};
 
   const chatEndRef = useRef(null);
 
@@ -73,13 +69,17 @@ const cleanCode = (code) =>
 
 
 const handleOpen = () => {
+  if (!authToken) {
+    setShowAuthModal(true);
+    return;
+  }
+
   setOpen(true);
   setShowStatus(true);
 
-  setTimeout(() => {
-    setShowStatus(false);
-  }, 10000);
+  setTimeout(() => setShowStatus(false), 10000);
 };
+
 
   const textareaRef = useRef(null);
   const recognitionRef = useRef(null);
@@ -223,16 +223,6 @@ const StarBackground = () => (
         setStrength(level);
 
         if (level === "Poor") {
-        //  toast((t) => (
-         //   <span className="flex items-center justify-between gap-2 text-[10px]">
-         //     <span>
-           //     NETWORK: <b className="text-red-600">Your connection is weak. AI responses may be slow.</b>
-          //    </span>
-       //       <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
-         //       Close
-         //     </button>
-        //    </span>
-       //   ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
           console.log("bad network") 
           
   setShowStatus(true);
@@ -241,16 +231,6 @@ const StarBackground = () => (
   }, 10000);
         }
         if (level === "Good") {
-        //  toast((t) => (
-        //    <span className="flex items-center justify-between gap-2 text-[10px]">
-          //    <span>
-          //      NETWORK: <b className="text-green-600">Connected</b>
-          //    </span>
-           //   <button onClick={() => toast.dismiss(t.id)} className="px-2 py-1 text-xs rounded bg-white text-black font-medium">
-           //     Close
-         //     </button>
-      //      </span>
-        //  ), { style: { background: "#000", color: "#fff", padding: "10px 14px" } });
           console.log("good networking") 
           
   setShowStatus(true);
@@ -530,7 +510,7 @@ const StarBackground = () => (
             )}
           </button>
 
-          {/* TOOLTIP 
+          {/* TOOLTIP */} 
           {copied && (
             <div
               className="
@@ -546,7 +526,7 @@ const StarBackground = () => (
              <Check size={16} /> Copied!
             </div>
           )}
-          */}
+          
 
           <SyntaxHighlighter
             style={coldarkCold}
