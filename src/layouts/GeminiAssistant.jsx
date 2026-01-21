@@ -12,11 +12,10 @@ import { ArrowUp } from "lucide-react";
 import Lottie from "lottie-react";
 import aiAnim from "../assets/ai.json";
 import aiAnimation from "../assets/button.json";
-import { useConnectionStrength } from "../hooks/useConnectionStrength";
 import { motion } from "framer-motion";
 import AuthModal from "./AiLogin";
 import Sidebar from "./Sidebar" ;
-
+import { useConnectionStrength } from "../hooks/useConnectionStrength";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 
 const GeminiAssistant = () => {
@@ -164,56 +163,15 @@ const StarBackground = () => (
     </div>
   );
   
-  const useConnectionStrength = () => {
-    const [strength, setStrength] = useState("Checking...");
+  useEffect(() => {
+  if (connectionStrength === "Checking" || connectionStrength === "Unknown") return;
 
-    useEffect(() => {
-      const conn =
-        navigator.connection ||
-        navigator.webkitConnection ||
-        navigator.mozConnection;
-
-      if (!conn) {
-        setStrength("Unknown");
-        return;
-      }
-
-      const evaluate = () => {
-        const speed = conn.downlink;
-        const type = conn.effectiveType;
-
-        let level = "Good";
-
-        if (speed < 1 || type === "2g" || type === "slow-2g") level = "Poor";
-        else if (speed < 3 || type === "3g") level = "Average";
-
-        setStrength(level);
-
-        if (level === "Poor") {
-          console.log("bad network") 
-          
   setShowStatus(true);
-          setTimeout(() => {
-    setShowStatus(false);
-  }, 10000);
-        }
-        if (level === "Good") {
-          console.log("good networking") 
-          
-  setShowStatus(true);
-          setTimeout(() => {
-    setShowStatus(false);
-  }, 10000);
-        }
-      };
+  const timer = setTimeout(() => setShowStatus(false), 10000);
 
-      evaluate();
-      conn.addEventListener("change", evaluate);
-      return () => conn.removeEventListener("change", evaluate);
-    }, []);
+  return () => clearTimeout(timer);
+}, [connectionStrength]);
 
-    return strength;
-  };
 
   const connectionStrength = useConnectionStrength();
 
@@ -374,15 +332,6 @@ if (!authToken) {
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">SwiftMeta</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">AI Assistant</p>
           </div>
-          <button
-  onClick={() => {
-    if (!authToken) setShowAuthModal(true);
-    else setSidebarOpen((v) => !v);
-  }}
-  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
->
-  <MessageCircle size={18} />
-</button>
 
         </div>
         <div className="flex items-center gap-3">
