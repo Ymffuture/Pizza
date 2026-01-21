@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import AuthModal from "./AiLogin";
 import Sidebar from "./Sidebar" ;
 
+import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -32,6 +33,20 @@ const [currentConversationId, setCurrentConversationId] = useState(null);
 
 
   const chatEndRef = useRef(null);
+  const textareaRef = useRef(null);
+
+const {
+  transcript,
+  isListening,
+  toggle: toggleVoice,
+} = useSpeechRecognition();
+
+
+  useEffect(() => {
+  if (transcript) {
+    setMsg(transcript);
+  }
+}, [transcript]);
 
   const basePlaceholders = [
     "Ask anything…",
@@ -58,7 +73,6 @@ const [currentConversationId, setCurrentConversationId] = useState(null);
   const [placeholder, setPlaceholder] = useState("");
   const [fade, setFade] = useState(true);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
-  const [isListening, setIsListening] = useState(false);
 const [showStatus, setShowStatus] = useState(false);
 
 const cleanCode = (code) =>
@@ -81,8 +95,7 @@ const handleOpen = () => {
 };
 
 
-  const textareaRef = useRef(null);
-  const recognitionRef = useRef(null);
+
   
 const copyAll = (text) => {
   navigator.clipboard.writeText(text);
@@ -123,49 +136,6 @@ const copyAll = (text) => {
     el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
   };
-
-  const toggleVoice = () => {
-    if (isListening) {
-      recognitionRef.current?.stop();
-    } else {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        toast.error("Speech recognition not supported");
-        return;
-      }
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.lang = "en-US";
-
-      recognition.onresult = (event) => {
-        const transcript = Array.from(event.results)
-          .map(result => result[0])
-          .map(result => result.transcript)
-          .join("");
-        setMsg(transcript);
-      };
-
-      recognition.onerror = () => {
-        setIsListening(false);
-        setPlaceholder("Ask anything…");
-        toast.error("Voice recognition failed");
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-        setPlaceholder("Ask anything…");
-      };
-
-      recognition.start();
-      recognitionRef.current = recognition;
-    }
-    setIsListening(prev => !prev);
-  };
-
-  useEffect(() => {
-    setPlaceholder(isListening ? "Listening… Speak now" : "Ask anything…");
-  }, [isListening]);
 
   // ... (rest of the code unchanged: connectionStrength hook, Loader, scrollToBottom, sendMessage, etc.)
 const statusMap = {
