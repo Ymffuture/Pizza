@@ -15,6 +15,7 @@ import aiAnimation from "../assets/button.json";
 import { motion } from "framer-motion";
 import AuthModal from "./AiLogin";
 import Sidebar from "./Sidebar" ;
+import Loader from "./Loader";
 import { useConnectionStrength } from "../hooks/useConnectionStrength";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 
@@ -81,17 +82,12 @@ const cleanCode = (code) =>
     .replace(/^\s*\d+\s?/gm, "") // remove line numbers
     .trim();
 
-
-
 const handleOpen = () => {
   setOpen(true);
   setShowStatus(true);
 
   setTimeout(() => setShowStatus(false), 10000);
 };
-
-
-
   
 const copyAll = (text) => {
   navigator.clipboard.writeText(text);
@@ -110,9 +106,7 @@ const copyAll = (text) => {
 
   useEffect(() => {
     if (msg || isListening || messages.length === 0) return;
-
-
-    const list = getContextualPlaceholders();
+          const list = getContextualPlaceholders();
 
     const interval = setInterval(() => {
       setFade(false);
@@ -162,6 +156,9 @@ const StarBackground = () => (
       <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px)', backgroundSize: '120px 120px', opacity: 0.2, animation: 'moveStars 220s linear infinite' }} />
     </div>
   );
+
+
+    const connectionStrength = useConnectionStrength();
   
   useEffect(() => {
   if (connectionStrength === "Checking" || connectionStrength === "Unknown") return;
@@ -172,20 +169,6 @@ const StarBackground = () => (
   return () => clearTimeout(timer);
 }, [connectionStrength]);
 
-
-  const connectionStrength = useConnectionStrength();
-
-  const Loader = () => (
-    <div className="flex items-center justify-center">
-      <svg width="30" height="30" viewBox="0 0 100 100" className="animate-spin text-gray-300 dark:text-gray-700">
-        <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="6" strokeLinecap="round" fill="none" strokeDasharray="250" strokeDashoffset="190" />
-        <circle cx="50" cy="50" r="10" fill="#00E5FF">
-          <animate attributeName="r" values="10;14;10" dur="1.6s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="1;0.6;1" dur="1.6s" repeatCount="indefinite" />
-        </circle>
-      </svg>
-    </div>
-  );
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -212,7 +195,6 @@ const StarBackground = () => (
       );
     });
 }, [currentConversationId, authToken]);
-
 
   const sendMessage = async () => {
     if (!msg.trim()) return;
@@ -576,9 +558,7 @@ if (!authToken) {
     }}
   />
 )}
-
-
-    </div>
+ </div>
   );
 };
 
