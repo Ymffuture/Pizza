@@ -32,6 +32,7 @@ const [sidebarOpen, setSidebarOpen] = useState(false);
 // Conversations
 const [conversations, setConversations] = useState([]);
 const [currentConversationId, setCurrentConversationId] = useState(null);
+const API_BASE = "https://swiftmeta.onrender.com/api";
 
 
   const chatEndRef = useRef(null);
@@ -177,54 +178,76 @@ const StarBackground = () => (
   useEffect(scrollToBottom, [messages, loading]);
   
   useEffect(() => {
-  if (!currentConversationId || !authToken) return;
+    if (!authToken || !currentConversationId) return;
 
-  axios
-    .get(
-      `https://swiftmeta.onrender.com/api/messages/${currentConversationId}`,
-      {
+    axios
+      .get(`${API_BASE}/messages/${currentConversationId}`, {
         headers: { Authorization: `Bearer ${authToken}` },
-      }
-    )
-    .then((res) => {
-      setMessages(
-        res.data.map((m) => ({
-          sender: m.role === "user" ? "user" : "ai",
-          text: m.content,
-        }))
-      );
-    });
-}, [currentConversationId, authToken]);
+      })
+      .then((res) => {
+        setMessages(
+          res.data.map((m) => ({
+            id: m._id,
+            sender: m.role === "user" ? "user" : "ai",
+            text: m.content,
+          }))
+        );
+      })
+      .catch(() => toast.error("Failed to load messages"));
+  }, [currentConversationId, authToken]);
 
-  const sendMessage = async () => {
+const sendMessage = async () => {
     if (!msg.trim()) return;
-if (!authToken) {
-  setShowAuthModal(true);
-  return;
-}
 
-    const userMsg = { sender: "user", text: msg };
-    setMessages((p) => [...p, userMsg]);
+    if (!authToken) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    const userMessage = {
+      id: crypto.randomUUID(),
+      sender: "user",
+      text: msg,
+    };
+
+    setMessages((p) => [...p, userMessage]);
     setMsg("");
     setLoading(true);
 
     try {
       const res = await axios.post(
-  "https://swiftmeta.onrender.com/api/gemini",
-  {
-    prompt: userMsg.text,
-    conversationId: currentConversationId,
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  }
-);
+        `${API_BASE}/gemini`,
+        {
+          prompt: userMessage.text,
+          conversationId: currentConversationId,
+        },
+        {
+          headers: { Authorization: `Bearer ${authToken}` },
+        }
+      );
 
-      setMessages((p) => [...p, { sender: "ai", text: res.data.reply }]);
-    } catch {
-      setMessages((p) => [...p, { sender: "ai", text: "Something went wrong." }]);
+      if (!currentConversationId && res.data.conversationId) {
+        setCurrentConversationId(res.data.conversationId);
+      }
+
+      setMessages((p) => [
+        ...p,
+        {
+          id: crypto.randomUUID(),
+          sender: "ai",
+          text: res.data.reply,
+        },
+      ]);
+    } catch (err) {
+      setMessages((p) => [
+        ...p,
+        {
+          id: crypto.randomUUID(),
+          sender: "ai",
+          text: "Something went wrong. Please try again.",
+        },
+      ]);
+      toast.error("AI request failed");
     } finally {
       setLoading(false);
     }
