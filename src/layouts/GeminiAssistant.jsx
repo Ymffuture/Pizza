@@ -26,6 +26,7 @@ const GeminiAssistant = () => {
 // Auth
 const [authToken, setAuthToken] = useState(null);
 const [showAuthModal, setShowAuthModal] = useState(false);
+const [sidebarOpen, setSidebarOpen] = useState(false);
 
 // Conversations
 const [conversations, setConversations] = useState([]);
@@ -83,11 +84,6 @@ const cleanCode = (code) =>
 
 
 const handleOpen = () => {
-  if (!authToken) {
-    setShowAuthModal(true);
-    return;
-  }
-
   setOpen(true);
   setShowStatus(true);
 
@@ -337,6 +333,16 @@ const StarBackground = () => (
             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">SwiftMeta</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">AI Assistant</p>
           </div>
+          <button
+  onClick={() => {
+    if (!authToken) setShowAuthModal(true);
+    else setSidebarOpen((v) => !v);
+  }}
+  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+>
+  <MessageCircle size={18} />
+</button>
+
         </div>
         <div className="flex items-center gap-3">
           <span className={`px-3 py-1 rounded-full text-xs font-medium border ${connectionStrength === "Good" ? "bg-green-500/10 text-green-600 border-green-500/20" : connectionStrength === "Average" ? "bg-yellow-500/10 text-yellow-600 border-yellow-500/20" : "bg-red-500/10 text-red-600 border-red-500/20"}`}>
@@ -571,12 +577,16 @@ const StarBackground = () => (
   />
 )}
 
-{authToken && (
+{authToken && sidebarOpen && (
   <Sidebar
     token={authToken}
-    onSelectConversation={(id) => setCurrentConversationId(id)}
+    onSelectConversation={(id) => {
+      setCurrentConversationId(id);
+      setSidebarOpen(false);
+    }}
   />
 )}
+
 
     </div>
   );
