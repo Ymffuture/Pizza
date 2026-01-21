@@ -319,7 +319,13 @@ const StarBackground = () => (
       {/* HEADER unchanged */}
       <header className="flex items-center justify-between px-5 py-3 backdrop-blur-xl bg-white/80 dark:bg-gray-900/70 border-b border-gray-200/70 dark:border-gray-800 sticky top-0 z-20">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-full bg-sky-500/10 overflow-hidden">
+          <div 
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-sky-500/10 overflow-hidden"
+            onClick={() => {
+    if (!authToken) setShowAuthModal(true);
+    else setSidebarOpen((v) => !v);
+  }}
+            >
   <Lottie
     animationData={aiAnim}
     loop
