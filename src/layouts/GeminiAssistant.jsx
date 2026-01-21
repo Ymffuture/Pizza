@@ -233,9 +233,34 @@ const StarBackground = () => (
   };
 
   useEffect(scrollToBottom, [messages, loading]);
+  
+  useEffect(() => {
+  if (!currentConversationId || !authToken) return;
+
+  axios
+    .get(
+      `https://swiftmeta.onrender.com/api/messages/${currentConversationId}`,
+      {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }
+    )
+    .then((res) => {
+      setMessages(
+        res.data.map((m) => ({
+          sender: m.role === "user" ? "user" : "ai",
+          text: m.content,
+        }))
+      );
+    });
+}, [currentConversationId, authToken]);
+
 
   const sendMessage = async () => {
     if (!msg.trim()) return;
+if (!authToken) {
+  setShowAuthModal(true);
+  return;
+}
 
     const userMsg = { sender: "user", text: msg };
     setMessages((p) => [...p, userMsg]);
@@ -244,9 +269,18 @@ const StarBackground = () => (
 
     try {
       const res = await axios.post(
-        "https://swiftmeta.onrender.com/api/gemini",
-        { prompt: userMsg.text }
-      );
+  "https://swiftmeta.onrender.com/api/gemini",
+  {
+    prompt: userMsg.text,
+    conversationId: currentConversationId,
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  }
+);
+
       setMessages((p) => [...p, { sender: "ai", text: res.data.reply }]);
     } catch {
       setMessages((p) => [...p, { sender: "ai", text: "Something went wrong." }]);
