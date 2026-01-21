@@ -34,15 +34,15 @@ const Sidebar = ({ token, onSelectConversation }) => {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className="
           fixed top-0 right-0 z-40
-          h-full w-72
+          h-full w-66 
           bg-gray-50 dark:bg-gray-900
           border-l border-gray-200 dark:border-gray-700
           p-4
           shadow-xl
         "
       >
-        <h3 className="font-semibold mb-4 text-gray-900 dark:text-white">
-          Your Conversations
+        <h3 className="font-semibold mb-4 text-gray-900 dark:text-white bg-gray-50 p-2 rounded-xl ">
+          History 
         </h3>
 
         <ul className="flex flex-col gap-2 overflow-y-auto">
