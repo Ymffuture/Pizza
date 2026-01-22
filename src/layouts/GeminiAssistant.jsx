@@ -394,10 +394,7 @@ const sendMessage = async (overrideText) => {
           whileHover={{ scale: 1.1 }}
   whileTap={{ scale: 0.95 }}
           key={i}
-          onClick={() => {
-            setMsg(p);
-            setTimeout(sendMessage, 200);
-          }}
+          onClick={() => sendMessage(p)}
           className="
             relative rounded-xl p-4 text-sm text-center 
             bg-white/60 dark:bg-white/5 backdrop-blur-xl
