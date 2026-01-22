@@ -217,26 +217,35 @@ const handleLoginSuccess = (token) => {
   useEffect(scrollToBottom, [messages, loading]);
   
   useEffect(() => {
-    if (!authToken || !currentConversationId) return;
+  if (!authToken || !currentConversationId) return;
 
-    axios
-      .get(`${API_BASE}/messages/${currentConversationId}`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      })
-      .then((res) => {
-        setMessages(
-          res.data.map((m) => ({
-            id: m._id,
-            sender: m.role === "user" ? "user" : "ai",
-            text: m.content,
-          }))
-        );
-      })
-      .catch(() => toast.error("Failed to load messages"));
-  }, [authToken, currentConversationId]);
+  const loadMessages = async () => {
+    try {
+      const res = await axios.get(
+        `${API_BASE}/messages/${currentConversationId}`,
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      );
+
+      setMessages(
+        res.data.map((m) => ({
+          id: m._id,
+          sender: m.role === "user" ? "user" : "ai",
+          text: m.content,
+        }))
+      );
+    } catch {
+      toast.error("Failed to load messages");
+    }
+  };
+
+  loadMessages();
+}, [authToken, currentConversationId]);
+
 
 const uuid = () =>
-  crypto.randomUUID?.() || Date.now() + Math.random();
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 
 const sendMessage = async (overrideText) => {
@@ -388,8 +397,8 @@ const sendMessage = async (overrideText) => {
       </header>
 
       {/* MESSAGES unchanged */}
-      <main className="flex-1 overflow-y-auto px-4 py-6 space-my-4 dark:text-white">
-        {/* ... messages rendering unchanged ... */}
+      <main className="flex-1 overflow-y-auto px-4 py-6 space-y-4 dark:text-white">
+{/* ... messages rendering unchanged ... */}
         {messages.length === 0 && (
   <>
     {/* AI LOTTIE ANIMATION */}
@@ -589,12 +598,12 @@ const sendMessage = async (overrideText) => {
         </button>
 
         <button
-          onClick={sendMessage}
-          disabled={loading}
-          className="p-3 rounded-full bg-gradient-to-tr from-black to-black/10 text-white"
-        >
-          <ArrowUp size={28} />
-        </button>
+  onClick={() => !loading && sendMessage()}
+  className="p-3 rounded-full bg-gradient-to-tr from-black to-black/10 text-white disabled:opacity-50"
+>
+  <ArrowUp size={28} />
+</button>
+
       </footer>
 
       {showAuthModal && (
