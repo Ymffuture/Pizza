@@ -197,7 +197,6 @@ const handleLoginSuccess = (token) => {
   setAuthToken(token);
 };
 
-
   const fetchConversations = async () => {
   if (!authToken) return;
 
@@ -214,7 +213,6 @@ const handleLoginSuccess = (token) => {
 useEffect(() => {
   fetchConversations();
 }, [authToken]);
-
 
 
     const connectionStrength = useConnectionStrength();
@@ -294,9 +292,10 @@ const sendMessage = async (overrideText) => {
       );
 
       if (!currentConversationId && res.data.conversationId) {
-  setCurrentConversationId(res.data.conversationId);
-  fetchConversations(); // 🔥 THIS WAS MISSING
-}
+        setCurrentConversationId(res.data.conversationId);
+        fetchConversations()
+      }
+
       setMessages((p) => [
         ...p,
         {
@@ -635,13 +634,13 @@ const sendMessage = async (overrideText) => {
 {authToken && sidebarOpen && (
   <Sidebar
     conversations={conversations}
+    token={authToken}
     onSelectConversation={(id) => {
       setCurrentConversationId(id);
       setSidebarOpen(false);
     }}
   />
 )}
-
  </div>
   );
 };
