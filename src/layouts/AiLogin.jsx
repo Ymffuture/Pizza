@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import { supabase } from "./lib/supabaseClient";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
-import { FaFacebook } from "react-icons/fa";
 
 const API_BASE = "https://swiftmeta.onrender.com/api";
 
@@ -13,43 +11,27 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
 
   /* ===========================
-     EXCHANGE SUPABASE → BACKEND JWT
-  ============================ */
-  const exchangeToken = async (supabaseToken) => {
-    const res = await fetch(`${API_BASE}/auth/supabase`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${supabaseToken}`,
-      },
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Authentication failed");
-
-    return data.token;
-  };
-
-  /* ===========================
-     EMAIL / PASSWORD
+     EMAIL / PASSWORD AUTH
   ============================ */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { data, error } = isLogin
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
-
-      if (error) throw error;
-
-      const backendToken = await exchangeToken(
-        data.session.access_token
+      const res = await fetch(
+        `${API_BASE}/auth/${isLogin ? "login" : "register"}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
       );
 
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Authentication failed");
+
       toast.success("Welcome 👋");
-      onLoginSuccess(backendToken);
+      onLoginSuccess(data.token);
       onClose();
     } catch (err) {
       toast.error(err.message);
@@ -59,19 +41,37 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
   };
 
   /* ===========================
-     SOCIAL LOGIN (GOOGLE / FB)
+     GOOGLE LOGIN
   ============================ */
-  const signInWithProvider = async (provider) => {
-    try {
-      await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: window.location.origin,
-        },
-      });
-    } catch {
-      toast.error("Authentication failed");
-    }
+  useEffect(() => {
+    /* global google */
+    if (!window.google) return;
+
+    google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: async (response) => {
+        try {
+          const res = await fetch(`${API_BASE}/auth/google`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: response.credential }),
+          });
+
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Google login failed");
+
+          toast.success("Welcome 👋");
+          onLoginSuccess(data.token);
+          onClose();
+        } catch (err) {
+          toast.error(err.message);
+        }
+      },
+    });
+  }, [onClose, onLoginSuccess]);
+
+  const handleGoogleLogin = () => {
+    google.accounts.id.prompt();
   };
 
   return (
@@ -90,22 +90,14 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
           {isLogin ? "Sign in" : "Create account"}
         </h2>
 
-        {/* SOCIAL */}
-        <div className="mt-6 space-y-3">
+        {/* GOOGLE */}
+        <div className="mt-6">
           <button
-            onClick={() => signInWithProvider("google")}
+            onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center gap-3 rounded-xl border px-4 py-3"
           >
             <FcGoogle size={20} />
             Continue with Google
-          </button>
-
-          <button
-            onClick={() => signInWithProvider("facebook")}
-            className="w-full flex items-center justify-center gap-3 rounded-xl border px-4 py-3"
-          >
-            <FaFacebook size={20} className="text-blue-600" />
-            Continue with Facebook
           </button>
         </div>
 
