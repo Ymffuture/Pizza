@@ -137,7 +137,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
   <div
     className={`${
       t.visible ? "animate-custom-enter" : "animate-custom-leave"
-    } max-w-md w-full bg-white dark:bg-[#111] shadow-xl rounded-xl pointer-events-auto flex ring-1 ring-black/10 dark:ring-white/10`}
+    } max-w-md w-full bg-white/10 dark:bg-[#111] rounded-xl pointer-events-auto flex ring-1 ring-black/10 dark:ring-white/10 dark:text-black `}
   >
     {/* LEFT SIDE */}
     <div className="flex-1 w-0 p-4">
@@ -145,7 +145,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
 
         {/* USER AVATAR */}
         <img
-          className="h-12 w-12 rounded-full object-cover"
+          className="h-16 w-16 rounded-full object-cover"
           src={`https://openweathermap.org/img/wn/${weatherInfo.icon}@2x.png`}
           alt="weather icon"
         />
@@ -157,7 +157,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
     rounded-xl
     p-4
     shadow-lg
-    Dark:text-white text-gray-600
+    Dark:text-white text-black 
   "
 >
   {/* Title */}
@@ -179,7 +179,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
       <WiThermometer className="text-2xl text-red-500" />
       <span>
         Temperature:
-        <b className="ml-1 text-white">
+        <b className="ml-1">
           {weatherInfo.temp}°C
         </b>
       </span>
@@ -189,7 +189,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
       <WiThermometer className="text-2xl text-green-500" />
       <span>
         Feels like:
-        <b className="ml-1 text-white">
+        <b className="ml-1 tect-[#202124]">
           {weatherInfo.feelsLike}°C
         </b>
       </span>
