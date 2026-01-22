@@ -196,62 +196,69 @@ const StarBackground = () => (
       .catch(() => toast.error("Failed to load messages"));
   }, [currentConversationId, authToken]);
 
-const sendMessage = async () => {
-    if (!msg.trim()) return;
+const uuid = () =>
+  crypto.randomUUID?.() || Date.now() + Math.random();
 
-    if (!authToken) {
-      setShowAuthModal(true);
-      return;
-    }
+const sendMessage = async (overrideText) => {
+  const text = overrideText ?? msg;
+  if (!text.trim()) return;
 
-    const userMessage = {
-      id: crypto.randomUUID(),
-      sender: "user",
-      text: msg,
-    };
+  if (!authToken) {
+    setShowAuthModal(true);
+    return;
+  }
 
-    setMessages((p) => [...p, userMessage]);
-    setMsg("");
-    setLoading(true);
-
-    try {
-      const res = await axios.post(
-        `${API_BASE}/gemini`,
-        {
-          prompt: userMessage.text,
-          conversationId: currentConversationId,
-        },
-        {
-          headers: { Authorization: `Bearer ${authToken}` },
-        }
-      );
-
-      if (!currentConversationId && res.data.conversationId) {
-        setCurrentConversationId(res.data.conversationId);
-      }
-
-      setMessages((p) => [
-        ...p,
-        {
-          id: crypto.randomUUID(),
-          sender: "ai",
-          text: res.data.reply,
-        },
-      ]);
-    } catch (err) {
-      setMessages((p) => [
-        ...p,
-        {
-          id: crypto.randomUUID(),
-          sender: "ai",
-          text: "Something went wrong. Please try again.",
-        },
-      ]);
-      toast.error("AI request failed");
-    } finally {
-      setLoading(false);
-    }
+  const userMessage = {
+    id: uuid(),
+    sender: "user",
+    text,
   };
+
+  setMessages((p) => [...p, userMessage]);
+  setMsg("");
+  setLoading(true);
+
+  try {
+    const res = await axios.post(
+      `${API_BASE}/gemini`,
+      {
+        prompt: text,
+        conversationId: currentConversationId,
+      },
+      {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }
+    );
+
+    if (!currentConversationId && res.data.conversationId) {
+      setCurrentConversationId(res.data.conversationId);
+    }
+
+    setMessages((p) => [
+      ...p,
+      {
+        id: uuid(),
+        sender: "ai",
+        text: res.data.reply || "⚠️ Empty AI response",
+      },
+    ]);
+  } catch (err) {
+    const message =
+      err.response?.data?.details ||
+      err.response?.data?.error ||
+      "AI request failed";
+
+    setMessages((p) => [
+      ...p,
+      { id: uuid(), sender: "ai", text: message },
+    ]);
+
+    toast.error(message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   if (!open) {
     return (
