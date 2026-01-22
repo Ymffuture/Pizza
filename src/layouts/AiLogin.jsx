@@ -127,7 +127,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
             disabled={loading}
             className="w-full rounded-xl bg-black text-white py-3"
           >
-            {loading ? <Loader/> : isLogin ? "Sign in" : "Create account"}
+            {loading ? <Loader className="justify-center text-blue-400" /> : isLogin ? "Sign in" : "Create account"}
           </button>
         </form>
 
