@@ -78,6 +78,34 @@ const {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
 const [showStatus, setShowStatus] = useState(false);
 
+useEffect(() => {
+  const handleOAuthLogin = async () => {
+    const { data } = await supabase.auth.getSession();
+
+    if (data?.session?.access_token && !authToken) {
+      const res = await fetch(
+        "https://swiftmeta.onrender.com/api/auth/supabase",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${data.session.access_token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      if (res.ok) {
+        localStorage.setItem("authToken", result.token);
+        setAuthToken(result.token);
+      }
+    }
+  };
+
+  handleOAuthLogin();
+}, []);
+
+
+  
 const cleanCode = (code) =>
   code
     .replace(/^\s*\d+\s?/gm, "") // remove line numbers
