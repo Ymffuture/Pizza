@@ -94,7 +94,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
         <div className="mt-6">
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 rounded-xl border px-4 py-3"
+            className="w-full flex items-center justify-center gap-3 rounded-xl border-gray-200 bg-gray-50 px-4 py-3"
           >
             <FcGoogle size={20} />
             Continue with Google
@@ -109,7 +109,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-xl px-4 py-3"
           />
 
           <input
@@ -118,7 +118,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-xl px-4 py-3"
           />
 
           <button
