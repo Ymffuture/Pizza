@@ -94,9 +94,9 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
         <div className="mt-6">
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 rounded-xl border-gray-200 bg-gray-50 px-4 py-3"
+            className="w-full flex items-center justify-center gap-3 rounded-xl border-gray-400 text-[#202124] bg-gray-50 px-4 py-3"
           >
-            <FcGoogle size={20} />
+            <FcGoogle size={24} />
             Continue with Google
           </button>
         </div>
