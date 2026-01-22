@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
-
+import Loader from "./Loader";
 const API_BASE = "https://swiftmeta.onrender.com/api";
 
 const AuthModal = ({ onClose, onLoginSuccess }) => {
@@ -51,7 +51,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
       callback: async (response) => {
         try {
-          const res = await fetch(`${API_BASE}/auth/google`, {
+          const res = await fetch(`${API_BASE}/auth/v2/google`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ token: response.credential }),
@@ -60,7 +60,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
           const data = await res.json();
           if (!res.ok) throw new Error(data.error || "Google login failed");
 
-          toast.success("Welcome 👋");
+          toast("Welcome!");
           onLoginSuccess(data.token);
           onClose();
         } catch (err) {
@@ -94,6 +94,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
         <div className="mt-6">
           <button
             onClick={handleGoogleLogin}
+            disabled={loading}
             className="w-full flex items-center justify-center gap-3 rounded-xl border-gray-400 text-[#202124] bg-gray-50 px-4 py-3"
           >
             <FcGoogle size={24} />
@@ -126,7 +127,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
             disabled={loading}
             className="w-full rounded-xl bg-black text-white py-3"
           >
-            {loading ? "Please wait…" : isLogin ? "Sign in" : "Create account"}
+            {loading ? <Loader/> : isLogin ? "Sign in" : "Create account"}
           </button>
         </form>
 
