@@ -198,6 +198,25 @@ const handleLoginSuccess = (token) => {
 };
 
 
+  const fetchConversations = async () => {
+  if (!authToken) return;
+
+  try {
+    const res = await axios.get(`${API_BASE}/conversations`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+    setConversations(res.data);
+  } catch {
+    toast.error("Failed to load conversations");
+  }
+};
+
+useEffect(() => {
+  fetchConversations();
+}, [authToken]);
+
+
+
     const connectionStrength = useConnectionStrength();
   
   useEffect(() => {
@@ -275,9 +294,9 @@ const sendMessage = async (overrideText) => {
       );
 
       if (!currentConversationId && res.data.conversationId) {
-        setCurrentConversationId(res.data.conversationId);
-      }
-
+  setCurrentConversationId(res.data.conversationId);
+  fetchConversations(); // 🔥 THIS WAS MISSING
+}
       setMessages((p) => [
         ...p,
         {
@@ -615,13 +634,14 @@ const sendMessage = async (overrideText) => {
 
 {authToken && sidebarOpen && (
   <Sidebar
-    token={authToken}
+    conversations={conversations}
     onSelectConversation={(id) => {
       setCurrentConversationId(id);
       setSidebarOpen(false);
     }}
   />
 )}
+
  </div>
   );
 };
