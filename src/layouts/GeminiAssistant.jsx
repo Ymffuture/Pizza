@@ -159,6 +159,17 @@ const StarBackground = () => (
   );
 
 
+  useEffect(() => {
+  const saved = localStorage.getItem("authToken");
+  if (saved) setAuthToken(saved);
+}, []);
+
+const handleLoginSuccess = (token) => {
+  localStorage.setItem("authToken", token);
+  setAuthToken(token);
+};
+
+
     const connectionStrength = useConnectionStrength();
   
   useEffect(() => {
@@ -572,10 +583,7 @@ const sendMessage = async (overrideText) => {
       {showAuthModal && (
   <AuthModal
     onClose={() => setShowAuthModal(false)}
-    onLoginSuccess={(token) => {
-      setAuthToken(token);
-      setOpen(true);
-    }}
+    onLoginSuccess={handleLoginSuccess} 
   />
 )}
 
