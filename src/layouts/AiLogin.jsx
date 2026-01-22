@@ -19,7 +19,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
 
     try {
       const res = await fetch(
-        `${API_BASE}/auth/${isLogin ? "login" : "register"}`,
+        `${API_BASE}/auth/v2/${isLogin ? "login" : "register"}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
