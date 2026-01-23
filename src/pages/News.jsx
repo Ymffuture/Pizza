@@ -2,6 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+/* ======================
+   HELPERS
+====================== */
+const isPaidOnly = (value) =>
+  typeof value === "string" && value.includes("ONLY AVAILABLE");
+
+const renderValue = (value) => {
+  if (!value) return "—";
+  if (isPaidOnly(value)) {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400">
+        🔒 Paid plan
+      </span>
+    );
+  }
+  return value;
+};
+
 const NewsComponent = () => {
   const [data, setData] = useState(null);
   const [latest, setLatest] = useState(null);
@@ -11,6 +29,9 @@ const NewsComponent = () => {
 
   const navigate = useNavigate();
 
+  /* ======================
+     FETCH NEWS
+  ====================== */
   useEffect(() => {
     const url =
       "https://newsdata.io/api/1/latest" +
@@ -29,26 +50,27 @@ const NewsComponent = () => {
         setData(res);
         setLatest(res?.results?.[0] || null);
         setShowPopup(Boolean(res?.results?.length));
-        toast.success("News updated", { duration: 2000 });
+        toast.success("News loaded", { duration: 2000 });
       })
       .catch((err) => {
         setError(err.message);
-        toast.error(err.message || "News fetch failed", {
-          duration: 2000,
-        });
+        toast.error(err.message || "Fetch failed", { duration: 2000 });
       })
       .finally(() => setLoading(false));
   }, []);
 
+  /* ======================
+     MINI EXTERNAL READER
+  ====================== */
   const openExternalReader = (article) => {
     const reader = window.open(
-      "",
+      article.link,
       "_blank",
       "width=420,height=640,noopener,noreferrer"
     );
 
     if (!reader) {
-      toast.error("Popup blocked by browser", { duration: 2000 });
+      toast.error("Popup blocked", { duration: 2000 });
       return;
     }
 
@@ -83,13 +105,16 @@ const NewsComponent = () => {
         <body>
           ${article.image_url ? `<img src="${article.image_url}" />` : ""}
           <h1>${article.title}</h1>
-          <p>${article.description || "No description available."}</p>
+          <p>${article.description || article.content || "No content available."}</p>
           <a href="${article.link}" target="_blank">Read full article →</a>
         </body>
       </html>
     `);
   };
 
+  /* ======================
+     STATES
+  ====================== */
   if (loading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -111,9 +136,12 @@ const NewsComponent = () => {
     );
   }
 
+  /* ======================
+     UI
+  ====================== */
   return (
     <section className="max-w-7xl mx-auto px-4 py-10 pt-16 relative dark:text-white">
-      {/* SMART POPUP */}
+      {/* POPUP */}
       {showPopup && latest && (
         <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-4">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
@@ -149,7 +177,7 @@ const NewsComponent = () => {
       )}
 
       {/* HEADER */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <header className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-semibold">Today’s News</h1>
           <p className="text-sm text-gray-500">
@@ -183,7 +211,7 @@ const NewsComponent = () => {
               {latest.title}
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-              {latest.description}
+              {renderValue(latest.content || latest.description)}
             </p>
           </div>
         </article>
@@ -204,21 +232,63 @@ const NewsComponent = () => {
               />
             )}
 
-            <div className="p-4 flex flex-col gap-2">
-              <p className="text-xs text-gray-500">
-                {article.source_id} ·{" "}
-                {new Date(article.pubDate).toLocaleDateString()}
-              </p>
+            <div className="p-4 flex flex-col gap-3">
+              {/* META */}
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                {article.source_icon && (
+                  <img
+                    src={article.source_icon}
+                    alt={article.source_name}
+                    className="w-4 h-4 rounded"
+                  />
+                )}
+                <span>{article.source_name || article.source_id}</span>
+                <span>•</span>
+                <span>
+                  {new Date(article.pubDate).toLocaleString()}
+                </span>
+              </div>
 
+              {/* TITLE */}
               <h3 className="font-medium line-clamp-2">
                 {article.title}
               </h3>
 
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                {article.description}
+              {/* CONTENT */}
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+                {renderValue(article.content || article.description)}
               </p>
 
-              <div className="flex justify-between mt-2">
+              {/* KEYWORDS */}
+              {Array.isArray(article.keywords) && article.keywords.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {article.keywords.slice(0, 5).map((kw) => (
+                    <span
+                      key={kw}
+                      className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800"
+                    >
+                      #{kw}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* INFO GRID */}
+              <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                <div><b>Category:</b> {article.category?.join(", ") || "—"}</div>
+                <div><b>Country:</b> {article.country?.join(", ") || "—"}</div>
+                <div><b>Language:</b> {article.language || "—"}</div>
+                <div><b>Type:</b> {article.datatype || "—"}</div>
+              </div>
+
+              {/* AI / SENTIMENT */}
+              <div className="border-t pt-2 text-xs text-gray-500 space-y-1">
+                <div><b>Sentiment:</b> {renderValue(article.sentiment)}</div>
+                <div><b>AI Summary:</b> {renderValue(article.ai_summary)}</div>
+              </div>
+
+              {/* ACTIONS */}
+              <div className="flex justify-between pt-2">
                 <a
                   href={article.link}
                   target="_blank"
@@ -227,7 +297,6 @@ const NewsComponent = () => {
                 >
                   Read →
                 </a>
-
                 <button
                   onClick={() => openExternalReader(article)}
                   className="text-xs text-gray-500 hover:underline"
