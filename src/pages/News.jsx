@@ -9,9 +9,6 @@ const NewsComponent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 🔍 enable only when debugging
-  const DEBUG_MODE = false;
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,9 +18,7 @@ const NewsComponent = () => {
       "&country=za,us" +
       "&language=en" +
       "&excludecategory=crime,sports" +
-      "&prioritydomain=top" +
-      "&image=1" +
-      "&removeduplicate=0";
+      "&removeduplicate=1";
 
     fetch(url)
       .then((res) => {
@@ -34,24 +29,26 @@ const NewsComponent = () => {
         setData(res);
         setLatest(res?.results?.[0] || null);
         setShowPopup(Boolean(res?.results?.length));
-        toast("News updated");
+        toast.success("News updated", { duration: 2000 });
       })
       .catch((err) => {
         setError(err.message);
-        toast.error(err.message || "Failed to load news");
+        toast.error(err.message || "News fetch failed", {
+          duration: 2000,
+        });
       })
       .finally(() => setLoading(false));
   }, []);
 
   const openExternalReader = (article) => {
     const reader = window.open(
-      article.link,
+      "",
       "_blank",
       "width=420,height=640,noopener,noreferrer"
     );
 
     if (!reader) {
-      toast.error("Popup blocked");
+      toast.error("Popup blocked by browser", { duration: 2000 });
       return;
     }
 
@@ -73,8 +70,14 @@ const NewsComponent = () => {
               border-radius: 12px;
               margin-bottom: 12px;
             }
-            h1 { font-size: 18px; margin-bottom: 12px; }
-            a { color: #60a5fa; text-decoration: none; }
+            h1 {
+              font-size: 18px;
+              margin-bottom: 12px;
+            }
+            a {
+              color: #60a5fa;
+              text-decoration: none;
+            }
           </style>
         </head>
         <body>
@@ -102,26 +105,19 @@ const NewsComponent = () => {
 
   if (error) {
     return (
-      <p className="text-center text-red-500 py-10">
+      <p className="text-center text-red-500 py-8">
         {error}
       </p>
     );
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 dark:text-white relative">
-      {/* 🔍 DEBUG JSON VIEW */}
-      {DEBUG_MODE && data && (
-        <pre className="mb-8 p-4 rounded-xl text-xs overflow-auto bg-gray-100 dark:bg-gray-900">
-          {JSON.stringify(data, null, 2)}
-        </pre>
-      )}
-
+    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 relative dark:text-white">
       {/* SMART POPUP */}
       {showPopup && latest && (
         <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-4">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-            Latest
+            Latest News
           </p>
           <h4 className="font-semibold text-sm line-clamp-2">
             {latest.title}
@@ -130,7 +126,7 @@ const NewsComponent = () => {
           <div className="mt-3 flex justify-between items-center gap-3">
             <button
               onClick={() => navigate("/news")}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm font-medium text-blue-600 hover:underline"
             >
               Open
             </button>
@@ -153,25 +149,25 @@ const NewsComponent = () => {
       )}
 
       {/* HEADER */}
-      <header className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-semibold">Today’s News</h1>
           <p className="text-sm text-gray-500">
-            High-priority stories with images
+            Curated stories from ZA & US
           </p>
         </div>
 
         <button
           onClick={() => navigate("/news")}
-          className="rounded-full bg-black text-white px-6 py-2 text-sm hover:bg-gray-800 transition"
+          className="rounded-full bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition"
         >
-          View all
+          View all news
         </button>
       </header>
 
       {/* FEATURED */}
       {latest && (
-        <article className="mb-10 rounded-3xl overflow-hidden bg-gray-100 dark:bg-gray-900 shadow-xl">
+        <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
           {latest.image_url && (
             <img
               src={latest.image_url}
@@ -192,6 +188,57 @@ const NewsComponent = () => {
           </div>
         </article>
       )}
+
+      {/* GRID */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {data?.results?.slice(1, 7).map((article) => (
+          <article
+            key={article.link}
+            className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
+          >
+            {article.image_url && (
+              <img
+                src={article.image_url}
+                alt={article.title}
+                className="h-40 w-full object-cover"
+              />
+            )}
+
+            <div className="p-4 flex flex-col gap-2">
+              <p className="text-xs text-gray-500">
+                {article.source_id} ·{" "}
+                {new Date(article.pubDate).toLocaleDateString()}
+              </p>
+
+              <h3 className="font-medium line-clamp-2">
+                {article.title}
+              </h3>
+
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                {article.description}
+              </p>
+
+              <div className="flex justify-between mt-2">
+                <a
+                  href={article.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  Read →
+                </a>
+
+                <button
+                  onClick={() => openExternalReader(article)}
+                  className="text-xs text-gray-500 hover:underline"
+                >
+                  Mini view
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
     </section>
   );
 };
