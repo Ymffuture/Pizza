@@ -34,7 +34,7 @@ const NewsComponent = () => {
         setData(res);
         setLatest(res?.results?.[0] || null);
         setShowPopup(Boolean(res?.results?.length));
-        toast.success("News updated");
+        toast("News updated");
       })
       .catch((err) => {
         setError(err.message);
@@ -45,7 +45,7 @@ const NewsComponent = () => {
 
   const openExternalReader = (article) => {
     const reader = window.open(
-      "",
+      article.link,
       "_blank",
       "width=420,height=640,noopener,noreferrer"
     );
