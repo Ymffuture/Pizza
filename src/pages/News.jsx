@@ -55,11 +55,11 @@ const NewsComponent = () => {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 relative pt-16">
+    <section className="max-w-7xl mx-auto px-4 py-10 relative dark:text-white pt-16">
       {/* SMART POPUP */}
       {showPopup && latest && (
         <div className="fixed bottom-6 right-6 z-50 w-80 rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-4">
-          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+          <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-white mb-1">
             Latest News
           </p>
           <h4 className="font-semibold text-sm leading-snug line-clamp-2">
@@ -84,7 +84,7 @@ const NewsComponent = () => {
       )}
 
       {/* HEADER */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <header className="flex flex-col sm:flex-row sm:items-center dark:text-white sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">
             Today’s News
