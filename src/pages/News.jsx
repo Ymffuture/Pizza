@@ -9,22 +9,21 @@ const NewsComponent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 🔍 enable only when debugging
+  const DEBUG_MODE = false;
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const url =
       "https://newsdata.io/api/1/latest" +
       "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
-      "&country=za,us,gb" +
+      "&country=za,us" +
       "&language=en" +
-      "&excludecategory=sports" +
+      "&excludecategory=crime,sports" +
       "&prioritydomain=top" +
       "&image=1" +
-      "&video=1" +
-      "&removeduplicate=0" +
-      "&sort=relevancy" +
-      "&excludefield=duplicate" +
-      "&size=10";
+      "&removeduplicate=0";
 
     fetch(url)
       .then((res) => {
@@ -34,14 +33,12 @@ const NewsComponent = () => {
       .then((res) => {
         setData(res);
         setLatest(res?.results?.[0] || null);
-        if (res?.results?.length) {
-          setShowPopup(true);
-          toast.success("Top stories updated");
-        }
+        setShowPopup(Boolean(res?.results?.length));
+        toast.success("News updated");
       })
       .catch((err) => {
         setError(err.message);
-        toast.error(err.message || "Unable to load news");
+        toast.error(err.message || "Failed to load news");
       })
       .finally(() => setLoading(false));
   }, []);
@@ -54,25 +51,25 @@ const NewsComponent = () => {
     );
 
     if (!reader) {
-      toast.error("Popup blocked by browser");
+      toast.error("Popup blocked");
       return;
     }
 
     reader.document.write(`
       <html>
         <head>
-          <title>${article.title}</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>${article.title}</title>
           <style>
             body {
               font-family: system-ui, sans-serif;
               padding: 16px;
-              line-height: 1.6;
               background: #0f172a;
               color: #e5e7eb;
+              line-height: 1.6;
             }
             img {
-              max-width: 100%;
+              width: 100%;
               border-radius: 12px;
               margin-bottom: 12px;
             }
@@ -105,19 +102,26 @@ const NewsComponent = () => {
 
   if (error) {
     return (
-      <p className="text-center text-red-500 py-8">
+      <p className="text-center text-red-500 py-10">
         {error}
       </p>
     );
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 dark:text-white">
-      {/* POPUP */}
+    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 dark:text-white relative">
+      {/* 🔍 DEBUG JSON VIEW */}
+      {DEBUG_MODE && data && (
+        <pre className="mb-8 p-4 rounded-xl text-xs overflow-auto bg-gray-100 dark:bg-gray-900">
+          {JSON.stringify(data, null, 2)}
+        </pre>
+      )}
+
+      {/* SMART POPUP */}
       {showPopup && latest && (
         <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-4">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-            Breaking
+            Latest
           </p>
           <h4 className="font-semibold text-sm line-clamp-2">
             {latest.title}
@@ -133,7 +137,7 @@ const NewsComponent = () => {
 
             <button
               onClick={() => openExternalReader(latest)}
-              className="text-sm text-gray-500 hover:underline"
+              className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
             >
               Mini reader
             </button>
@@ -149,63 +153,45 @@ const NewsComponent = () => {
       )}
 
       {/* HEADER */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-semibold">Top Stories</h1>
-        <p className="text-sm text-gray-500">
-          Relevant global news, filtered for quality
-        </p>
+      <header className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-semibold">Today’s News</h1>
+          <p className="text-sm text-gray-500">
+            High-priority stories with images
+          </p>
+        </div>
+
+        <button
+          onClick={() => navigate("/news")}
+          className="rounded-full bg-black text-white px-6 py-2 text-sm hover:bg-gray-800 transition"
+        >
+          View all
+        </button>
       </header>
 
-      {/* GRID */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.map((article) => (
-          <article
-            key={article.link}
-            className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
-          >
-            {article.image_url && (
-              <img
-                src={article.image_url}
-                alt={article.title}
-                className="h-40 w-full object-cover"
-              />
-            )}
-
-            <div className="p-4 flex flex-col gap-2">
-              <p className="text-xs text-gray-500">
-                {article.source_id} ·{" "}
-                {new Date(article.pubDate).toLocaleDateString()}
-              </p>
-
-              <h3 className="font-medium line-clamp-2">
-                {article.title}
-              </h3>
-
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                {article.description}
-              </p>
-
-              <div className="flex justify-between items-center mt-2">
-                <a
-                  href={article.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:underline"
-                >
-                  Read →
-                </a>
-
-                <button
-                  onClick={() => openExternalReader(article)}
-                  className="text-xs text-gray-500 hover:underline"
-                >
-                  Mini view
-                </button>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+      {/* FEATURED */}
+      {latest && (
+        <article className="mb-10 rounded-3xl overflow-hidden bg-gray-100 dark:bg-gray-900 shadow-xl">
+          {latest.image_url && (
+            <img
+              src={latest.image_url}
+              alt={latest.title}
+              className="h-64 w-full object-cover"
+            />
+          )}
+          <div className="p-6">
+            <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
+              Featured
+            </p>
+            <h2 className="text-xl font-semibold mb-2">
+              {latest.title}
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+              {latest.description}
+            </p>
+          </div>
+        </article>
+      )}
     </section>
   );
 };
