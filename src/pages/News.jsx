@@ -16,7 +16,7 @@ const renderValue = (value) => {
   if (isPaidOnly(value)) {
     return (
       <Tooltip title="This information is only available on paid plans">
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 text-xs cursor-help">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-yellow-700 dark:text-yellow-300 text-xs cursor-help">
           <FiLock className="w-3.5 h-3.5" />
           
         </span>
@@ -188,7 +188,7 @@ const NewsComponent = () => {
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-semibold">Today’s News</h1>
+          <h1 className="text-3xl font-semibold bg-red-600 dark:bg-red-300 p-2 rounded-xl pt-4 animate-bounce">Today’s News</h1>
           <p className="text-sm text-gray-500">
             Curated stories from ZA & US
           </p>
