@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Tooltip } from "antd";
 import { FiLock } from "react-icons/fi";
-
+import {Helmet} from "react-helmet" ;
 /* ======================
    HELPERS
 ====================== */
@@ -151,6 +151,21 @@ const NewsComponent = () => {
   return (
     <section className="max-w-7xl mx-auto px-4 py-10 pt-16 relative dark:text-white">
       {/* POPUP */}
+       <Helmet>
+  <title>
+    News Update {latest?.title ? ` – ${latest.title}` : ""}
+  </title>
+
+  <meta
+    name="description"
+    content={
+      latest?.description ||
+      latest?.content ||
+      "Latest breaking news from South Africa and the United States."
+    }
+  />
+</Helmet>
+
       {showPopup && latest && (
         <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-4">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
