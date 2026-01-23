@@ -8,6 +8,8 @@ import {Helmet} from "react-helmet" ;
 /* ======================
    HELPERS
 ====================== */
+const isPaidOnly = (value) =>   typeof value === "string" && value.includes("ONLY AVAILABLE");
+
 const renderValue = (value) => {
   if (!value) return "—";
 
