@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Tooltip } from "antd";
+import { FiLock } from "react-icons/fi";
 
 /* ======================
    HELPERS
@@ -10,15 +12,22 @@ const isPaidOnly = (value) =>
 
 const renderValue = (value) => {
   if (!value) return "—";
+
   if (isPaidOnly(value)) {
     return (
-      <span className="inline-flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400">
-        🔒 Paid plan
-      </span>
+      <Tooltip title="This information is only available on paid plans">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 text-xs cursor-help">
+          <FiLock className="w-3.5 h-3.5" />
+          
+        </span>
+      </Tooltip>
     );
   }
+
   return value;
 };
+
+
 
 const NewsComponent = () => {
   const [data, setData] = useState(null);
@@ -50,7 +59,7 @@ const NewsComponent = () => {
         setData(res);
         setLatest(res?.results?.[0] || null);
         setShowPopup(Boolean(res?.results?.length));
-        toast.success("News loaded", { duration: 2000 });
+        toast("News loaded", { duration: 200 });
       })
       .catch((err) => {
         setError(err.message);
@@ -236,11 +245,13 @@ const NewsComponent = () => {
               {/* META */}
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 {article.source_icon && (
+             <Tooltip title={`Source: ${article.source_name}`}>
                   <img
                     src={article.source_icon}
                     alt={article.source_name}
                     className="w-4 h-4 rounded"
                   />
+                </Tooltip>
                 )}
                 <span>{article.source_name || article.source_id}</span>
                 <span>•</span>
