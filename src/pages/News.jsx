@@ -1,22 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 const NewsComponent = () => {
   const [data, setData] = useState(null);
-  const [latest, setLatest] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const navigate = useNavigate();
+  const notifiedRef = useRef(false);
 
   useEffect(() => {
     const url =
       "https://newsdata.io/api/1/latest" +
       "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
-      "&country=za,us,jp,ua" +
+      "&country=za,us,jp,ua,gb,de,in,br" +
       "&language=en" +
-      "&category=breaking,education,sports,world,other" +
+      "&category=breaking,education,sports,world,entertainment,crime,business,food,technology,science,health,politics,environment,other" +
       "&removeduplicate=1";
 
     fetch(url)
@@ -26,8 +23,15 @@ const NewsComponent = () => {
       })
       .then((res) => {
         setData(res);
-        setLatest(res?.results?.[0]);
-        setShowPopup(true);
+
+        // 🔔 Notify only once if there is fresh content
+        if (!notifiedRef.current && res?.results?.length > 0) {
+          toast("New headlines just dropped", {
+            icon: "📰",
+            duration: 4000,
+          });
+          notifiedRef.current = true;
+        }
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -36,10 +40,10 @@ const NewsComponent = () => {
   if (loading) {
     return (
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <div
             key={i}
-            className="h-56 rounded-2xl bg-gray-200 dark:bg-gray-800 animate-pulse"
+            className="h-56 rounded-2xl bg-gray-200/70 dark:bg-gray-800/70 animate-pulse"
           />
         ))}
       </div>
@@ -48,120 +52,110 @@ const NewsComponent = () => {
 
   if (error) {
     return (
-      <p className="text-center text-red-500 py-8">
+      <div className="text-center py-10 text-red-500">
         {error}
-      </p>
+      </div>
     );
   }
 
+  const featured = data?.results?.[0];
+  const rest = data?.results?.slice(1, 7);
+
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 relative dark:text-white pt-16">
-      {/* SMART POPUP */}
-      {showPopup && latest && (
-        <div className="fixed bottom-6 right-6 z-50 w-80 rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-4">
-          <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-white mb-1">
-            Latest News
-          </p>
-          <h4 className="font-semibold text-sm leading-snug line-clamp-2">
-            {latest.title}
-          </h4>
-
-          <div className="mt-3 flex justify-between items-center">
-            <button
-              onClick={() => navigate("/news")}
-              className="text-sm font-medium text-blue-600 hover:underline"
-            >
-              Open →
-            </button>
-            <button
-              onClick={() => setShowPopup(false)}
-              className="text-xs opacity-60 hover:opacity-100"
-            >
-              Dismiss
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* HEADER */}
-      <header className="flex flex-col sm:flex-row sm:items-center dark:text-white sm:justify-between gap-4 mb-8">
+    <section className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+      {/* Header */}
+      <header className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">
-            Today’s News
+            News
           </h1>
-          <p className="text-sm text-gray-500">
-            Curated global stories that matter
+          <p className="text-sm opacity-60">
+            Curated global headlines
           </p>
         </div>
 
-        <button
-          onClick={() => navigate("/news")}
-          className="rounded-full bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition"
+        <a
+          href="/news"
+          className="rounded-full px-5 py-2 text-sm font-medium
+          bg-black text-white dark:bg-white dark:text-black
+          hover:opacity-90 transition"
         >
-          View all news
-        </button>
+          View all
+        </a>
       </header>
 
-      {/* FEATURED STORY */}
-      {latest && (
-        <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
-          {latest.image_url && (
+      {/* Featured */}
+      {featured && (
+        <article className="relative rounded-3xl overflow-hidden bg-gray-100 dark:bg-gray-900">
+          {featured.image_url && (
             <img
-              src={latest.image_url}
-              alt={latest.title}
-              className="h-64 w-full object-cover"
+              src={featured.image_url}
+              alt={featured.title}
+              className="absolute inset-0 h-full w-full object-cover opacity-80"
             />
           )}
-          <div className="p-6">
-            <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
-              Featured
-            </p>
-            <h2 className="text-xl font-semibold leading-snug mb-2">
-              {latest.title}
+          <div className="relative z-10 p-8 max-w-xl backdrop-blur-md bg-white/70 dark:bg-black/50">
+            <span className="text-xs uppercase tracking-wide opacity-70">
+              Latest
+            </span>
+            <h2 className="mt-2 text-2xl font-semibold leading-tight">
+              {featured.title}
             </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-              {latest.description}
-            </p>
+            {featured.description && (
+              <p className="mt-3 text-sm opacity-80 line-clamp-3">
+                {featured.description}
+              </p>
+            )}
+            <a
+              href={featured.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-4 text-sm font-medium underline"
+            >
+              Read story →
+            </a>
           </div>
         </article>
       )}
 
-      {/* NEWS GRID */}
+      {/* Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 7).map((article) => (
+        {rest?.map((article) => (
           <article
             key={article.link}
-            className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition overflow-hidden"
+            className="rounded-2xl bg-white dark:bg-gray-900 p-5
+            shadow-sm hover:shadow-md transition"
           >
-            {article.image_url && (
-              <img
-                src={article.image_url}
-                alt={article.title}
-                className="h-40 w-full object-cover"
-              />
-            )}
+            <div className="flex gap-2 text-xs mb-2">
+              {article.category?.[0] && (
+                <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800">
+                  {article.category[0]}
+                </span>
+              )}
+              <span className="opacity-50">
+                {article.source_id}
+              </span>
+            </div>
 
-            <div className="p-4 flex flex-col gap-2">
-              <p className="text-xs text-gray-500">
-                {article.source_id} ·{" "}
+            <h3 className="font-medium leading-snug line-clamp-3">
+              {article.title}
+            </h3>
+
+            <p className="mt-2 text-sm opacity-70 line-clamp-2">
+              {article.description}
+            </p>
+
+            <div className="mt-4 text-xs opacity-60 flex justify-between">
+              <span>
                 {new Date(article.pubDate).toLocaleDateString()}
-              </p>
-
-              <h3 className="font-medium leading-snug line-clamp-2">
-                {article.title}
-              </h3>
-
-              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                {article.description}
-              </p>
-
+              </span>
               <a
                 href={article.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-blue-600 mt-2 hover:underline"
+                className="hover:underline"
               >
-                Read more →
+                Open →
               </a>
             </div>
           </article>
