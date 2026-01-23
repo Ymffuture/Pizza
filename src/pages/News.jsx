@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiLock, FiUnlock } from "react-icons/fi";
 import { Tooltip } from "antd";
-import { FiLock } from "react-icons/fi";
 import {Helmet} from "react-helmet" ;
 /* ======================
    HELPERS
 ====================== */
-const isPaidOnly = (value) =>
-  typeof value === "string" && value.includes("ONLY AVAILABLE");
-
 const renderValue = (value) => {
   if (!value) return "—";
 
@@ -17,8 +15,20 @@ const renderValue = (value) => {
     return (
       <Tooltip title="This information is only available on paid plans">
         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-yellow-700 dark:text-yellow-300 text-xs cursor-help">
-          <FiLock className="w-3.5 h-3.5" />
-          
+          <AnimatePresence mode="wait">
+            {/* UNLOCK → LOCK animation */}
+            <motion.span
+              key="lock"
+              initial={{ opacity: 0, scale: 0.6, rotate: -90 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.6, rotate: 90 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="flex items-center gap-1"
+            >
+              <FiUnlock className="w-3.5 h-3.5 text-green-500" />
+              <FiLock className="w-3.5 h-3.5 text-yellow-500" />
+            </motion.span>
+          </AnimatePresence>
         </span>
       </Tooltip>
     );
@@ -149,7 +159,7 @@ const NewsComponent = () => {
      UI
   ====================== */
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 relative dark:text-white">
+    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 relative dark:text-white bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl">
       {/* POPUP */}
        <Helmet>
   <title>
@@ -201,7 +211,7 @@ const NewsComponent = () => {
       )}
 
       {/* HEADER */}
-      <header className="flex flex-col sm:flex-row sm:justify-between gap-4 dark:bg-[#202124] pt-8 mb-8">
+      <header className="flex flex-col sm:flex-row sm:justify-between gap-4  pt-8 mb-8">
         <div>
           <h1 className="text-3xl font-semibold bg-red-50 dark:bg-red-300 p-2 rounded-xl">Today’s News</h1>
           <p className="text-sm text-gray-500">
