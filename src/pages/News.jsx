@@ -203,7 +203,7 @@ const NewsComponent = () => {
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-semibold bg-red-600 dark:bg-red-300 p-2 rounded-xl pt-4 animate-bounce">Today’s News</h1>
+          <h1 className="text-3xl font-semibold bg-red-50 dark:bg-red-300 p-2 rounded-xl pt-4">Today’s News</h1>
           <p className="text-sm text-gray-500">
             Curated stories from ZA & US
           </p>
