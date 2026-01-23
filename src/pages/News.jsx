@@ -203,7 +203,8 @@ const NewsComponent = () => {
 </Helmet>
 
       {showPopup && latest && (
-        <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-4">
+        <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-6
+           ">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
             Latest News
           </p>
@@ -237,7 +238,7 @@ const NewsComponent = () => {
       )}
 
       {/* HEADER */}
-      <header className="flex flex-col sm:flex-row sm:justify-between gap-4  pt-8 mb-8">
+      <header className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-8 mb-8">
         <div>
           <h1 className="text-3xl font-semibold bg-red-50 dark:bg-red-300 p-2 rounded-xl">Today’s News</h1>
           <p className="text-sm text-gray-500">
