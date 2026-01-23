@@ -356,6 +356,15 @@ const StarBackground = () => (
         Admin Access
       </Link>
     </li>
+
+    <li>
+      <Link
+        to="/news"
+        className="text-gray-500 hover:text-blue-500 transition"
+      >
+        News
+      </Link>
+    </li>
   </ul>
 </div>
 
