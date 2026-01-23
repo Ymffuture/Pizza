@@ -63,15 +63,6 @@ const renderValue = (value) => {
 };
 
 
-useEffect(() => {
-  if (!showPopup) return;
-
-  const timer = setTimeout(() => {
-    setShowPopup(false);
-  }, 4000); // ⏱️ 4s like a toast
-
-  return () => clearTimeout(timer);
-}, [showPopup]);
 
 
 const NewsComponent = () => {
@@ -211,51 +202,40 @@ const NewsComponent = () => {
   />
 </Helmet>
 
-      <AnimatePresence>
-  {showPopup && latest && (
-    <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 20, scale: 0.95 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm
-        rounded-2xl bg-white/90 dark:bg-gray-900/90
-        backdrop-blur-xl shadow-2xl p-6"
-    >
-      <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-        Latest News
-      </p>
+      {showPopup && latest && (
+        <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-6
+           ">
+          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+            Latest News
+          </p>
+          <h4 className="font-semibold text-sm line-clamp-2">
+            {latest.title}
+          </h4>
 
-      <h4 className="font-semibold text-sm line-clamp-2">
-        {latest.title}
-      </h4>
+          <div className="mt-3 flex justify-between items-center gap-3">
+            <button
+              onClick={() => navigate("/news")}
+              className="text-sm font-medium text-blue-600 hover:underline"
+            >
+              Open
+            </button>
 
-      <div className="mt-3 flex justify-between items-center gap-3">
-        <button
-          onClick={() => navigate("/news")}
-          className="text-sm font-medium text-blue-600 hover:underline"
-        >
-          Open
-        </button>
+            <button
+              onClick={() => openExternalReader(latest)}
+              className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+            >
+              Mini reader
+            </button>
 
-        <button
-          onClick={() => openExternalReader(latest)}
-          className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
-        >
-          Mini reader
-        </button>
-
-        <button
-          onClick={() => setShowPopup(false)}
-          className="text-xs opacity-60 hover:opacity-100"
-        >
-          Dismiss
-        </button>
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
+            <button
+              onClick={() => setShowPopup(false)}
+              className="text-xs opacity-60 hover:opacity-100"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-8 mb-8">
