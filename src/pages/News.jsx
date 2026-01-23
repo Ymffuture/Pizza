@@ -201,9 +201,9 @@ const NewsComponent = () => {
       )}
 
       {/* HEADER */}
-      <header className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-8">
+      <header className="flex flex-col sm:flex-row sm:justify-between gap-4 dark:bg-[#202124] pt-8 mb-8">
         <div>
-          <h1 className="text-3xl font-semibold bg-red-50 dark:bg-red-300 p-2 rounded-xl pt-4">Today’s News</h1>
+          <h1 className="text-3xl font-semibold bg-red-50 dark:bg-red-300 p-2 rounded-xl">Today’s News</h1>
           <p className="text-sm text-gray-500">
             Curated stories from ZA & US
           </p>
@@ -288,7 +288,7 @@ const NewsComponent = () => {
               {/* KEYWORDS */}
               {Array.isArray(article.keywords) && article.keywords.length > 0 && (
                 <div className="flex flex-wrap gap-1">
-                  {article.keywords.slice(0, 5).map((kw) => (
+                  {article.keywords.slice(0, 6).map((kw) => (
                     <span
                       key={kw}
                       className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800"
