@@ -2,106 +2,63 @@ import React from "react";
 
 const Loader = () => {
   return (
-    <div className="relative flex items-center justify-center w-16 h-16">
-      <span className="sr-only">AI is thinking</span>
+    <div className="relative flex items-center gap-1 h-5">
+      <span className="sr-only">AI reasoning</span>
 
-      {/* Core */}
-      <div className="ai-core" />
-
-      {/* Orbiting nodes */}
-      {[...Array(6)].map((_, i) => (
+      {[...Array(5)].map((_, i) => (
         <span
           key={i}
-          className="ai-node"
-          style={{
-            "--i": i,
-          }}
+          className="ai-signal"
+          style={{ "--i": i }}
         />
       ))}
 
-      {/* Pulse ring */}
-      <span className="ai-wave" />
-
       <style jsx>{`
-        :root {
-          --ai-color: rgb(34, 211, 238);
-        }
-
-        .ai-core {
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background: var(--ai-color);
-          box-shadow: 0 0 18px var(--ai-color);
-          animation: core-pulse 1.8s ease-in-out infinite;
-          z-index: 2;
-        }
-
-        .ai-node {
-          position: absolute;
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: var(--ai-color);
-          opacity: 0.8;
-          transform-origin: center 28px;
-          animation: orbit 2.4s linear infinite,
-            flicker 1.6s ease-in-out infinite;
-          animation-delay: calc(var(--i) * 0.15s);
-        }
-
-        .ai-wave {
-          position: absolute;
-          width: 100%;
+        .ai-signal {
+          width: 3px;
           height: 100%;
-          border-radius: 50%;
-          border: 2px solid var(--ai-color);
-          opacity: 0;
-          animation: wave 2s ease-out infinite;
+          background: linear-gradient(
+            to top,
+            transparent,
+            #22d3ee,
+            transparent
+          );
+          opacity: 0.6;
+          transform-origin: center;
+          animation:
+            drift 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite,
+            jitter 0.9s steps(2) infinite;
+          animation-delay: calc(var(--i) * 0.12s);
         }
 
-        @keyframes orbit {
-          from {
-            transform: rotate(calc(var(--i) * 60deg)) translateY(-28px);
-          }
-          to {
-            transform: rotate(calc(var(--i) * 60deg + 360deg))
-              translateY(-28px);
-          }
-        }
-
-        @keyframes flicker {
-          0%,
-          100% {
-            opacity: 0.4;
-            transform: scale(0.9);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1.2);
-          }
-        }
-
-        @keyframes core-pulse {
-          0%,
-          100% {
-            transform: scale(1);
-            box-shadow: 0 0 18px var(--ai-color);
-          }
-          50% {
-            transform: scale(1.35);
-            box-shadow: 0 0 30px var(--ai-color);
-          }
-        }
-
-        @keyframes wave {
+        @keyframes drift {
           0% {
-            transform: scale(0.4);
-            opacity: 0.8;
+            transform: scaleY(0.3);
+            opacity: 0.3;
+          }
+          40% {
+            transform: scaleY(1);
+            opacity: 1;
+          }
+          70% {
+            transform: scaleY(0.6);
+            opacity: 0.5;
           }
           100% {
-            transform: scale(1.2);
-            opacity: 0;
+            transform: scaleY(0.3);
+            opacity: 0.3;
+          }
+        }
+
+        @keyframes jitter {
+          0% {
+            filter: blur(0);
+          }
+          50% {
+            filter: blur(0.6px);
+          }
+          100% {
+            filter: blur(0);
           }
         }
       `}</style>
