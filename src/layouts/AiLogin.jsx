@@ -123,12 +123,21 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
           />
 
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-xl bg-black text-white py-3"
-          >
-            {loading ? <Loader className="justify-center text-blue-400" /> : isLogin ? "Sign in" : "Create account"}
-          </button>
+  type="submit"
+  disabled={loading}
+  className="w-full h-12 flex items-center justify-center rounded-xl bg-black text-white"
+>
+  <span className={`transition-opacity ${loading ? "opacity-0" : "opacity-100"}`}>
+    {isLogin ? "Sign in" : "Create account"}
+  </span>
+
+  {loading && (
+    <span className="absolute">
+      <Loader />
+    </span>
+  )}
+</button>
+
         </form>
 
         <button
