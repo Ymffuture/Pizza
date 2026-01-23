@@ -20,7 +20,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import {Helmet} from "react-helmet" 
 //import NavBlog from "./components/NavBlog";
 import { setToken } from "./api";
-
+import News from "./pages/News" ;
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Dashboard from "./components/dashboard/Dashboard";
 const Weather =lazy(() =>import("./components/WeatherPage")) ;
@@ -180,7 +180,7 @@ const App = () => {
         {/* Admin Route (JWT guard later) */}
         <Route path="/admin-ticket" element={<AdminTicket />} />
         <Route path="/admin-only" element={<OnlyAdmin />} />
-          
+          <Route path="/news" element={<News />} />
           {/* DASHBOARD */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
