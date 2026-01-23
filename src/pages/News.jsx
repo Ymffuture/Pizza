@@ -17,7 +17,7 @@ const NewsComponent = () => {
       "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
       "&country=za,us,jp,ua" +
       "&language=en" +
-      "&category=breaking,education,sports,world,other,crime,entertainment" +
+      "&category=breaking,education,sports,world,other" +
       "&removeduplicate=1";
 
     fetch(url)
