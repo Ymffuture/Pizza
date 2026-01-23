@@ -8,6 +8,42 @@ import {Helmet} from "react-helmet" ;
 /* ======================
    HELPERS
 ====================== */
+const LockTransition = () => {
+  const [locked, setLocked] = React.useState(false);
+
+  React.useEffect(() => {
+    const t = setTimeout(() => setLocked(true), 2000); // ⏱️ 2s
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <AnimatePresence mode="wait">
+      {!locked ? (
+        <motion.span
+          key="unlock"
+          initial={{ opacity: 0, scale: 0.6, rotate: -90 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          exit={{ opacity: 0, scale: 0.6, rotate: 90 }}
+          transition={{ duration: 0.35 }}
+          className="flex items-center"
+        >
+          <FiUnlock className="w-3.5 h-3.5 text-green-500" />
+        </motion.span>
+      ) : (
+        <motion.span
+          key="lock"
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.35 }}
+          className="flex items-center"
+        >
+          <FiLock className="w-3.5 h-3.5 text-yellow-500" />
+        </motion.span>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const isPaidOnly = (value) =>   typeof value === "string" && value.includes("ONLY AVAILABLE");
 
 const renderValue = (value) => {
@@ -17,20 +53,7 @@ const renderValue = (value) => {
     return (
       <Tooltip title="This information is only available on paid plans">
         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-yellow-700 dark:text-yellow-300 text-xs cursor-help">
-          <AnimatePresence mode="wait">
-            {/* UNLOCK → LOCK animation */}
-            <motion.span
-              key="lock"
-              initial={{ opacity: 0, scale: 0.6, rotate: -90 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              exit={{ opacity: 0, scale: 0.6, rotate: 90 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="flex items-center gap-1"
-            >
-              <FiUnlock className="w-3.5 h-3.5 text-green-500" />
-              <FiLock className="w-3.5 h-3.5 text-yellow-500" />
-            </motion.span>
-          </AnimatePresence>
+          <LockTransition />
         </span>
       </Tooltip>
     );
@@ -38,6 +61,7 @@ const renderValue = (value) => {
 
   return value;
 };
+
 
 
 
