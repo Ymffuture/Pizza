@@ -15,10 +15,16 @@ const NewsComponent = () => {
     const url =
       "https://newsdata.io/api/1/latest" +
       "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
-      "&country=za,us,jp,ua" +
+      "&country=za,us,gb" +
       "&language=en" +
-      "&category=breaking,education,sports,world,other" +
-      "&removeduplicate=1";
+      "&excludecategory=sports" +
+      "&prioritydomain=top" +
+      "&image=1" +
+      "&video=1" +
+      "&removeduplicate=0" +
+      "&sort=relevancy" +
+      "&excludefield=duplicate" +
+      "&size=10";
 
     fetch(url)
       .then((res) => {
@@ -27,13 +33,15 @@ const NewsComponent = () => {
       })
       .then((res) => {
         setData(res);
-        setLatest(res?.results?.[0]);
-        setShowPopup(true);
-        toast("Latest news loaded");
+        setLatest(res?.results?.[0] || null);
+        if (res?.results?.length) {
+          setShowPopup(true);
+          toast.success("Top stories updated");
+        }
       })
       .catch((err) => {
         setError(err.message);
-        toast.error(err.message || "Something went wrong");
+        toast.error(err.message || "Unable to load news");
       })
       .finally(() => setLoading(false));
   }, []);
@@ -104,28 +112,28 @@ const NewsComponent = () => {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 relative pt-16 dark:text-white">
-      {/* SMART POPUP */}
+    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 dark:text-white">
+      {/* POPUP */}
       {showPopup && latest && (
         <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-4">
           <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-            Latest News
+            Breaking
           </p>
-          <h4 className="font-semibold text-sm leading-snug line-clamp-2">
+          <h4 className="font-semibold text-sm line-clamp-2">
             {latest.title}
           </h4>
 
           <div className="mt-3 flex justify-between items-center gap-3">
             <button
               onClick={() => navigate("/news")}
-              className="text-sm font-medium text-blue-600 hover:underline"
+              className="text-sm text-blue-600 hover:underline"
             >
               Open
             </button>
 
             <button
               onClick={() => openExternalReader(latest)}
-              className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+              className="text-sm text-gray-500 hover:underline"
             >
               Mini reader
             </button>
@@ -141,51 +149,16 @@ const NewsComponent = () => {
       )}
 
       {/* HEADER */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Today’s News
-          </h1>
-          <p className="text-sm text-gray-500">
-            Curated global stories that matter
-          </p>
-        </div>
-
-        <button
-          onClick={() => navigate("/news")}
-          className="rounded-full bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition"
-        >
-          View all news
-        </button>
+      <header className="mb-8">
+        <h1 className="text-3xl font-semibold">Top Stories</h1>
+        <p className="text-sm text-gray-500">
+          Relevant global news, filtered for quality
+        </p>
       </header>
-
-      {/* FEATURED */}
-      {latest && (
-        <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
-          {latest.image_url && (
-            <img
-              src={latest.image_url}
-              alt={latest.title}
-              className="h-64 w-full object-cover"
-            />
-          )}
-          <div className="p-6">
-            <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
-              Featured
-            </p>
-            <h2 className="text-xl font-semibold mb-2">
-              {latest.title}
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-              {latest.description}
-            </p>
-          </div>
-        </article>
-      )}
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 7).map((article) => (
+        {data?.results?.map((article) => (
           <article
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
