@@ -13,8 +13,7 @@ import { renderMiniViewHTML } from "../utils/MiniView";
 ====================== */
 const LockTransition = () => {
   const [locked, setLocked] = React.useState(false);
-   const [zoomImage, setZoomImage] = useState(null);
-
+   
 
   React.useEffect(() => {
     const t = setTimeout(() => setLocked(true), 2000); // ⏱️ 2s
@@ -153,6 +152,8 @@ const NewsComponent = () => {
       </p>
     );
   }
+   
+const [zoomImage, setZoomImage] = useState(null);
 
   /* ======================
      UI
