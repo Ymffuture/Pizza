@@ -75,7 +75,7 @@ const NewsComponent = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+const [zoomImage, setZoomImage] = useState(null);
   const navigate = useNavigate();
 
   /* ======================
@@ -153,7 +153,7 @@ const NewsComponent = () => {
     );
   }
    
-const [zoomImage, setZoomImage] = useState(null);
+
 
   /* ======================
      UI
@@ -269,7 +269,7 @@ const [zoomImage, setZoomImage] = useState(null);
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 15).map((article) => (
+        {data?.results?.slice(1, 9).map((article) => (
           <article
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
