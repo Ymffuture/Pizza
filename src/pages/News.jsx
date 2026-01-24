@@ -6,6 +6,7 @@ import { FiLock, FiUnlock } from "react-icons/fi";
 import { Tooltip } from "antd";
 import {Helmet} from "react-helmet" ;
 import { createPortal } from "react-dom";
+import { renderMiniViewHTML } from "../utils/MiniView";
 
 /* ======================
    HELPERS
@@ -122,46 +123,7 @@ const NewsComponent = () => {
   }
 
   reader.document.open();
-  reader.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>SwiftMeta - ${article.title}</title>
-        <style>
-          body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            padding: 16px;
-            background: #0f172a;
-            color: #e5e7eb;
-            line-height: 1.6;
-          }
-          img {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 12px;
-          }
-          h1 {
-            font-size: 18px;
-            margin-bottom: 12px;
-          }
-          a {
-            color: #60a5fa;
-            text-decoration: none;
-          }
-        </style>
-      </head>
-      <body>
-        ${article.image_url ? `<img src="${article.image_url}" />` : "No image available for this article" }
-        <h1>${article.title}</h1>
-        <p>${article.description || article.content || "No content available."}</p>
-        <hr />
-        <a href="${article.link}" target="_blank" rel="noopener noreferrer">
-          Read full article →
-        </a>
-      </body>
-    </html>
-  `);
+  reader.document.write(renderMiniViewHTML(article));
   reader.document.close();
 };
 
@@ -276,10 +238,17 @@ const NewsComponent = () => {
         <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
           {latest.image_url && (
             <img
-              src={latest.image_url}
-              alt={latest.title}
-              className="h-64 w-full object-cover"
-            />
+  src={article.image_url}
+  alt={article.title}
+  onClick={() =>
+    setZoomImage({
+      src: article.image_url,
+      alt: article.title,
+    })
+  }
+  className="h-40 w-full object-cover cursor-zoom-in"
+/>
+
           )}
           <div className="p-6">
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
@@ -297,7 +266,7 @@ const NewsComponent = () => {
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 9).map((article) => (
+        {data?.results?.slice(1, 15).map((article) => (
           <article
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
@@ -388,6 +357,33 @@ const NewsComponent = () => {
           </article>
         ))}
       </div>
+       
+       {zoomImage &&
+  createPortal(
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm
+                   flex items-center justify-center p-4"
+        onClick={() => setZoomImage(null)}
+      >
+        <motion.img
+          src={zoomImage.src}
+          alt={zoomImage.alt}
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 25 }}
+          className="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        />
+      </motion.div>
+    </AnimatePresence>,
+    document.body
+  )}
+
     </section>
   );
 };
