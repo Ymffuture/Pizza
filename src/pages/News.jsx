@@ -41,7 +41,7 @@ const LockTransition = () => {
           transition={{ duration: 0.35 }}
           className="flex items-center"
         >
-          <FiLock className="w-3.5 h-3.5 text-yellow-500" />
+          <FiLock className="w-3.5 h-3.5 text-gray-500" />
         </motion.span>
       )}
     </AnimatePresence>
