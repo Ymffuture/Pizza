@@ -67,10 +67,6 @@ const renderValue = (value) => {
 };
 
 
-const PAGE_SIZE = 9;
-
-const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-const [refreshing, setRefreshing] = useState(false);
 
 
 const NewsComponent = () => {
@@ -80,7 +76,14 @@ const NewsComponent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 const [zoomImage, setZoomImage] = useState(null);
+   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+const [refreshing, setRefreshing] = useState(false);
+
   const navigate = useNavigate();
+
+   const PAGE_SIZE = 9;
+
+
 
   /* ======================
      FETCH NEWS
