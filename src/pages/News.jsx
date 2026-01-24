@@ -16,7 +16,7 @@ const LockTransition = () => {
    
 
   React.useEffect(() => {
-    const t = setTimeout(() => setLocked(true), 5000); 
+    const t = setTimeout(() => setLocked(true), 2000); // ⏱️ 2s
     return () => clearTimeout(t);
   }, []);
 
@@ -41,7 +41,7 @@ const LockTransition = () => {
           transition={{ duration: 0.35 }}
           className="flex items-center"
         >
-          <FiLock className="w-3.5 h-3.5 text-gray-500 animate-pulse" />
+          <FiLock className="w-3.5 h-3.5 text-yellow-500" />
         </motion.span>
       )}
     </AnimatePresence>
@@ -56,7 +56,7 @@ const renderValue = (value) => {
   if (isPaidOnly(value)) {
     return (
       <Tooltip title="This information is only available on paid plans">
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-gray-700 dark:text-gray-300 text-xs cursor-help">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-yellow-700 dark:text-yellow-300 text-xs cursor-help">
           <LockTransition />
         </span>
       </Tooltip>
@@ -76,23 +76,12 @@ const NewsComponent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 const [zoomImage, setZoomImage] = useState(null);
-
-const [refreshing, setRefreshing] = useState(false);
-
   const navigate = useNavigate();
-
-   const PAGE_SIZE = 9;
-   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-
 
   /* ======================
      FETCH NEWS
   ====================== */
-  const fetchNews = async (showToast = true) => {
-  try {
-    setLoading(true);
-    setError(null);
-
+  useEffect(() => {
     const url =
       "https://newsdata.io/api/1/latest" +
       "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
@@ -101,34 +90,23 @@ const [refreshing, setRefreshing] = useState(false);
       "&excludecategory=crime,sports" +
       "&removeduplicate=1";
 
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Failed to fetch news");
-
-    const json = await res.json();
-
-    setData(json);
-    setLatest(json?.results?.[0] || null);
-    setShowPopup(Boolean(json?.results?.length));
-    setVisibleCount(PAGE_SIZE); // reset pagination
-
-    showToast && toast.success("News refreshed", { duration: 1200 });
-  } catch (err) {
-    setError(err.message);
-    toast.error(err.message || "Fetch failed");
-  } finally {
-    setLoading(false);
-    setRefreshing(false);
-  }
-};
-
-   const handleLoadMore = () => {
-  setVisibleCount((prev) => prev + PAGE_SIZE);
-};
-
-const handleRefresh = () => {
-  setRefreshing(true);
-  fetchNews();
-};
+    fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch news");
+        return res.json();
+      })
+      .then((res) => {
+        setData(res);
+        setLatest(res?.results?.[0] || null);
+        setShowPopup(Boolean(res?.results?.length));
+        toast("News loaded", { duration: 200 });
+      })
+      .catch((err) => {
+        setError(err.message);
+        toast.error(err.message || "Fetch failed", { duration: 2000 });
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   /* ======================
      MINI EXTERNAL READER
@@ -250,25 +228,12 @@ const handleRefresh = () => {
           </p>
         </div>
 
-         <div className="flex items-center gap-3">
-  <button
-    onClick={handleRefresh}
-    disabled={refreshing}
-    className="rounded-full border px-5 py-2 text-sm
-               hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-  >
-    {refreshing ? "Refreshing…" : "Refresh"}
-  </button>
-
-  <button
-    onClick={() => navigate("/news")}
-    className="rounded-full bg-black text-white px-6 py-2 text-sm
-               hover:bg-gray-800 transition"
-  >
-    View all news
-  </button>
-</div>
-
+        <button
+          onClick={() => navigate("/news")}
+          className="rounded-full bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition"
+        >
+          View all news
+        </button>
       </header>
 
       {/* FEATURED */}
@@ -304,7 +269,7 @@ const handleRefresh = () => {
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, visibleCount + 1).map((article) => (
+        {data?.results?.slice(1, 11).map((article) => (
           <article
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
@@ -330,7 +295,7 @@ const handleRefresh = () => {
               {/* META */}
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 {article.source_icon && (
-             <Tooltip title={`Source: ${article.source_name || "loading..."}`}>
+             <Tooltip title={`Source: ${article.source_name}`}>
                   <img
                     src={article.source_icon}
                     alt={article.source_name}
@@ -357,24 +322,17 @@ const handleRefresh = () => {
 
               {/* KEYWORDS */}
               {Array.isArray(article.keywords) && article.keywords.length > 0 && (
-  <div className="flex flex-wrap gap-1">
-    {article.keywords.slice(0, 6).map((kw) => (
-      <span
-        key={kw}
-        className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800"
-      >
-        #{kw}
-      </span>
-    ))}
-
-    {article.keywords.length > 6 && (
-      <span className="px-2 py-0.5 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-        +{article.keywords.length - 6} more
-      </span>
-    )}
-  </div>
-)}
-
+                <div className="flex flex-wrap gap-1">
+                  {article.keywords.slice(0, 6).map((kw) => (
+                    <span
+                      key={kw}
+                      className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800"
+                    >
+                      #{kw}
+                    </span>
+                  ))}
+                </div>
+              )}
 
               {/* INFO GRID */}
               <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
@@ -410,19 +368,6 @@ const handleRefresh = () => {
             </div>
           </article>
         ))}
-
-         {data?.results?.length > visibleCount + 1 && (
-  <div className="flex justify-center mt-10">
-    <button
-      onClick={handleLoadMore}
-      className="px-6 py-2 rounded-full bg-gray-900 text-white text-sm
-                 hover:bg-gray-800 transition"
-    >
-      Load more news
-    </button>
-  </div>
-)}
-
       </div>
        
        {zoomImage &&
