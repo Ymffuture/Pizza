@@ -48,7 +48,7 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
     if (!window.google) return;
 
     google.accounts.id.initialize({
-      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      client_id: "744445938022-nju0135l9hs6fcs4eb4nnk5gadgq48tv.apps.googleusercontent.com",
       callback: async (response) => {
         try {
           const res = await fetch(`${API_BASE}/auth/v2/google`, {
