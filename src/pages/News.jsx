@@ -361,11 +361,7 @@ const NewsComponent = () => {
 
     <div className="p-4 flex flex-col gap-3">
       {/* existing content: meta, title, keywords, info, AI summary, actions */}
-    </div>
-  </article>
-))}
-
-                <span>{article.source_name || article.source_id}</span>
+       <span>{article.source_name || article.source_id}</span>
                 <span>•</span>
                 <span>{new Date(article.pubDate).toLocaleString()}</span>
               </div>
@@ -430,9 +426,10 @@ const NewsComponent = () => {
                   Mini view
                 </button>
               </div>
-            </div>
-          </article>
-        ))}
+            </div> 
+    
+  </article>
+))}
       </div>
        
       {/* ZOOM IMAGE MODAL */}
