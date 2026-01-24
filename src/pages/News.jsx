@@ -110,54 +110,61 @@ const NewsComponent = () => {
      MINI EXTERNAL READER
   ====================== */
   const openExternalReader = (article) => {
-    const reader = window.open(
-      article.link,
-      "_blank",
-      "width=420,height=640,noopener,noreferrer"
-    );
+  const reader = window.open(
+    "",
+    "_blank",
+    "width=420,height=640"
+  );
 
-    if (!reader) {
-      toast.error("Popup blocked", { duration: 2000 });
-      return;
-    }
+  if (!reader) {
+    toast.error("Popup blocked", { duration: 2000 });
+    return;
+  }
 
-    reader.document.write(`
-      <html>
-        <head>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>${article.title}</title>
-          <style>
-            body {
-              font-family: system-ui, sans-serif;
-              padding: 16px;
-              background: #0f172a;
-              color: #e5e7eb;
-              line-height: 1.6;
-            }
-            img {
-              width: 100%;
-              border-radius: 12px;
-              margin-bottom: 12px;
-            }
-            h1 {
-              font-size: 18px;
-              margin-bottom: 12px;
-            }
-            a {
-              color: #60a5fa;
-              text-decoration: none;
-            }
-          </style>
-        </head>
-        <body>
-          ${article.image_url ? `<img src="${article.image_url}" />` : ""}
-          <h1>${article.title}</h1>
-          <p>${article.description || article.content || "No content available."}</p>
-          <a href="${article.link}" target="_blank">Read full article →</a>
-        </body>
-      </html>
-    `);
-  };
+  reader.document.open();
+  reader.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>${article.title}</title>
+        <style>
+          body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 16px;
+            background: #0f172a;
+            color: #e5e7eb;
+            line-height: 1.6;
+          }
+          img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 12px;
+          }
+          h1 {
+            font-size: 18px;
+            margin-bottom: 12px;
+          }
+          a {
+            color: #60a5fa;
+            text-decoration: none;
+          }
+        </style>
+      </head>
+      <body>
+        ${article.image_url ? `<img src="${article.image_url}" />` : ""}
+        <h1>${article.title}</h1>
+        <p>${article.description || article.content || "No content available."}</p>
+        <hr />
+        <a href="${article.link}" target="_blank" rel="noopener noreferrer">
+          Read full article →
+        </a>
+      </body>
+    </html>
+  `);
+  reader.document.close();
+};
+
 
   /* ======================
      STATES
@@ -210,7 +217,7 @@ const NewsComponent = () => {
       className="fixed bottom-4 right-4 z-[9999]
         w-[90vw] max-w-sm
         rounded-2xl bg-white/90 dark:bg-gray-900/90
-        backdrop-blur-xl shadow-2xl p-4"
+        backdrop-blur-xl shadow-2xl dark:text-white p-4"
     >
       <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
         Latest News
@@ -250,7 +257,7 @@ const NewsComponent = () => {
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-8 mb-8">
         <div>
-          <h1 className="text-3xl font-semibold bg-red-50 dark:bg-red-300 p-2 rounded-xl">Today’s News</h1>
+          <h1 className="text-3xl font-semibold p-2 rounded-xl">Today’s News</h1>
           <p className="text-sm text-gray-500">
             Curated stories from ZA & US
           </p>
