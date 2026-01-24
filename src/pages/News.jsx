@@ -86,7 +86,7 @@ const NewsComponent = () => {
 
       const url =
         "https://newsdata.io/api/1/latest" +
-        "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
+        "?apikey=pub_ac9c8f45cea54c21bf1b8d9bb1ecca16" +
         "&country=za,us" +
         "&language=en" +
         "&excludecategory=crime,sports" +
