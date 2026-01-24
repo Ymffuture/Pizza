@@ -46,21 +46,21 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
 useEffect(() => {
   if (!window.google) return;
 
+  const container = document.getElementById("google-hidden-btn");
+  if (!container) return;
+
   google.accounts.id.initialize({
     client_id:
       "744445938022-nju0135l9hs6fcs4eb4nnk5gadgq48tv.apps.googleusercontent.com",
     callback: handleGoogleResponse,
   });
 
-  // Render hidden Google button
-  google.accounts.id.renderButton(
-    document.getElementById("google-hidden-btn"),
-    {
-      theme: "outline",
-      size: "large",
-    }
-  );
+  google.accounts.id.renderButton(container, {
+    theme: "outline",
+    size: "large",
+  });
 }, []);
+
 
 const handleGoogleResponse = async (response) => {
   try {
@@ -86,8 +86,10 @@ const handleGoogleResponse = async (response) => {
 };
 
 const handleGoogleLogin = () => {
-  document.querySelector("#google-hidden-btn div")?.click();
+  const btn = document.querySelector("#google-hidden-btn [role=button]");
+  btn?.click();
 };
+
 
 
   return (
