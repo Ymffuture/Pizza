@@ -105,13 +105,13 @@ const NewsComponent = () => {
       setLatest(articles[0] || null);
       setShowPopup(Boolean(articles.length));
 
-      toast.success("News loaded", { duration: 1200 });
+      toast("News loaded", { duration: 1200 });
     } catch (err) {
       if (axios.isCancel(err)) {
         console.log("Request canceled:", err.message);
       } else {
         setError(err.message || "Fetch failed");
-        toast.error(err.message || "Fetch failed", { duration: 2000 });
+        toast(err.message || "Fetch failed", { duration: 2000 });
       }
     } finally {
       setLoading(false);
@@ -132,7 +132,7 @@ const NewsComponent = () => {
       const source = axios.CancelToken.source();
       await fetchNews(source.token);
     } catch (err) {
-      toast.error(err.message || "Fetch failed", { duration: 2000 });
+      toast(err.message || "Fetch failed", { duration: 2000 });
     } finally {
       setRefreshing(false);
     }
@@ -145,7 +145,7 @@ const NewsComponent = () => {
     const reader = window.open("", "_blank", "width=420,height=640");
 
     if (!reader) {
-      toast.error("Popup blocked", { duration: 2000 });
+      toast("Popup blocked", { duration: 2000 });
       return;
     }
 
@@ -266,7 +266,7 @@ const NewsComponent = () => {
       <header className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-8 mb-8">
         <div>
           <h1 className="text-3xl font-semibold p-2 rounded-xl">Today's News</h1>
-          <p className="text-sm text-gray-500">Curated stories from ZA & US</p>
+          <p className="text-sm text-gray-500">Curated stories from selected countries</p>
         </div>
         <button
           onClick={() => navigate("/news")}
@@ -332,12 +332,22 @@ const NewsComponent = () => {
               />
             ) : null}
 
-            <div className="p-4 flex flex-col gap-3">
-              <div className="flex items-center gap-1 text-xs text-gray-500">
+            <div className="flex items-center gap-2 text-xs text-gray-500">
+                {article.source_icon && (
+                  <Tooltip title={`Source: ${article.source_name}`}>
+                    <img
+                      src={article.source_icon}
+                      alt={article.source_name}
+                      className="w-4 h-4 rounded"
+                    />
+                  </Tooltip>
+                )}
                 <span>{article.source_name || article.source_id}</span>
                 <span>•</span>
                 <span>{new Date(article.pubDate).toLocaleString()}</span>
               </div>
+
+               
               <h3 className="font-medium line-clamp-2">{article.title}</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
                 {renderValue(article.content || article.description)}
