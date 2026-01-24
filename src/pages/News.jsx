@@ -87,9 +87,6 @@ const NewsComponent = () => {
       const url =
         "https://newsdata.io/api/1/latest" +
         "?apikey=pub_ac9c8f45cea54c21bf1b8d9bb1ecca16" +
-        "&country=za,us" +
-        "&language=en" +
-        "&excludecategory=crime,sports" +
         "&removeduplicate=1";
 
       const res = await axios.get(url, { 
