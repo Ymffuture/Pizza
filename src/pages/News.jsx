@@ -3,20 +3,18 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiLock, FiUnlock } from "react-icons/fi";
+import { FiLock, FiUnlock, FiAlertCircle } from "react-icons/fi";
 import { Tooltip } from "antd";
-import {Helmet} from "react-helmet" ;
+import { Helmet } from "react-helmet";
 import { createPortal } from "react-dom";
 import { renderMiniViewHTML } from "../utils/MiniView";
-import { FiAlertCircle } from "react-icons/fi";
- 
+
 /* ======================
    HELPERS
 ====================== */
 const LockTransition = () => {
   const [locked, setLocked] = React.useState(false);
    
-
   React.useEffect(() => {
     const t = setTimeout(() => setLocked(true), 2000); // ⏱️ 2s
     return () => clearTimeout(t);
@@ -50,7 +48,7 @@ const LockTransition = () => {
   );
 };
 
-const isPaidOnly = (value) =>   typeof value === "string" && value.includes("ONLY AVAILABLE");
+const isPaidOnly = (value) => typeof value === "string" && value.includes("ONLY AVAILABLE");
 
 const renderValue = (value) => {
   if (!value) return "—";
@@ -68,27 +66,20 @@ const renderValue = (value) => {
   return value;
 };
 
-
-
-
 const NewsComponent = () => {
   const [data, setData] = useState(null);
   const [latest, setLatest] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-const [zoomImage, setZoomImage] = useState(null);
+  const [zoomImage, setZoomImage] = useState(null);
   const navigate = useNavigate();
-const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
   /* ======================
      FETCH NEWS
   ====================== */
-  
-
-useEffect(() => {
-  const source = axios.CancelToken.source(); // allows canceling the request if component unmounts
-
-  const fetchNews = async () => {
+  const fetchNews = async (cancelToken = null) => {
     try {
       setLoading(true);
       setError(null);
@@ -101,11 +92,13 @@ useEffect(() => {
         "&excludecategory=crime,sports" +
         "&removeduplicate=1";
 
-      const res = await axios.get(url, { cancelToken: source.token });
+      const res = await axios.get(url, { 
+        cancelToken: cancelToken || null 
+      });
 
       // API might return results in `results` array
       const articles = res.data.results || [];
-      setData(articles);
+      setData({ results: articles }); // Ensure data has results property
       setLatest(articles[0] || null);
       setShowPopup(Boolean(articles.length));
 
@@ -122,54 +115,54 @@ useEffect(() => {
     }
   };
 
-  fetchNews();
+  useEffect(() => {
+    const source = axios.CancelToken.source(); // allows canceling the request if component unmounts
 
-  return () => {
-    source.cancel("Component unmounted, request canceled");
-  };
-}, []);
+    fetchNews(source.token);
 
-const handleRefresh = () => {
-   try {
-  setRefreshing(true);
-  fetchNews();
-   } catch (error) {
+    return () => {
+      source.cancel("Component unmounted, request canceled");
+    };
+  }, []);
 
+  const handleRefresh = async () => {
+    try {
+      setRefreshing(true);
+      const source = axios.CancelToken.source();
+      await fetchNews(source.token);
+    } catch (error) {
       toast(error.message || "Fetch failed", { duration: 2000 });
-   
-   } finally {
-setRefreshing(false);
-   } 
-
-} ;
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   /* ======================
      MINI EXTERNAL READER
   ====================== */
   const openExternalReader = (article) => {
-  const reader = window.open(
-    "",
-    "_blank",
-    "width=420,height=640"
-  );
+    const reader = window.open(
+      "",
+      "_blank",
+      "width=420,height=640"
+    );
 
-  if (!reader) {
-    toast("Popup blocked", { duration: 2000 });
-    return;
-  }
+    if (!reader) {
+      toast("Popup blocked", { duration: 2000 });
+      return;
+    }
 
-  reader.document.open();
-  reader.document.write(renderMiniViewHTML(article));
-  reader.document.close();
-};
-
+    reader.document.open();
+    reader.document.write(renderMiniViewHTML(article));
+    reader.document.close();
+  };
 
   /* ======================
-     STATES
+     LOADING STATE
   ====================== */
   if (loading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-20 ">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-20">
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
@@ -180,116 +173,104 @@ setRefreshing(false);
     );
   }
 
-if (error) {
-  return (
-    <div className="relative w-full h-[80vh] flex items-center justify-center px-4">
-      {/* Background icon */}
-      <FiAlertCircle
-        className="absolute text-red-200 dark:text-red-800 opacity-20 w-64 h-64 sm:w-96 sm:h-96"
-      />
+  /* ======================
+     ERROR STATE
+  ====================== */
+  if (error) {
+    return (
+      <div className="relative w-full h-[80vh] flex items-center justify-center px-4">
+        {/* Background icon */}
+        <FiAlertCircle className="absolute text-red-200 dark:text-red-800 opacity-20 w-64 h-64 sm:w-96 sm:h-96" />
 
-      {/* Animated error text */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="text-center z-10"
-      >
-        <p className="text-2xl sm:text-3xl font-semibold text-red-600 dark:text-red-400 mb-2">
-          Oops! Something went wrong
-        </p>
-        <p className="text-sm sm:text-base text-gray-500 dark:text-gray-300">
-          {error}
-        </p>
-        <button
-          onClick={handleRefresh}
-          className={`mt-4 px-6 py-2 ${!refreshing? " bg-red-400 dark:bg-red-500":"bg-yellow-400 dark:bg-yellow-600" }  text-white rounded-lg hover:bg-red-700 transition`}
+        {/* Animated error text */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-center z-10"
         >
-           {refreshing? "refreshing...": "Retry"}
-        </button>
-      </motion.div>
-    </div>
-  );
-}
-
+          <p className="text-2xl sm:text-3xl font-semibold text-red-600 dark:text-red-400 mb-2">
+            Oops! Something went wrong
+          </p>
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-300">
+            {error}
+          </p>
+          <button
+            onClick={handleRefresh}
+            className={`mt-4 px-6 py-2 ${
+              !refreshing ? "bg-red-400 dark:bg-red-500" : "bg-yellow-400 dark:bg-yellow-600"
+            } text-white rounded-lg hover:bg-red-700 transition`}
+          >
+            {refreshing ? "Refreshing..." : "Retry"}
+          </button>
+        </motion.div>
+      </div>
     );
   }
-   
-
 
   /* ======================
      UI
   ====================== */
   return (
     <section className="max-w-7xl mx-auto px-4 py-10 pt-16 relative dark:text-white bg-white/90 dark:bg-[#0f172a] backdrop-blur-xl">
+      {/* SEO HELMET */}
+      <Helmet>
+        <title>
+          News Update {latest?.title ? ` – ${latest.title}` : ""}
+        </title>
+        <meta
+          name="description"
+          content={
+            latest?.description ||
+            latest?.content ||
+            "Latest breaking news from South Africa and the United States."
+          }
+        />
+      </Helmet>
+
       {/* POPUP */}
-       <Helmet>
-  <title>
-    News Update {latest?.title ? ` – ${latest.title}` : ""}
-  </title>
-
-  <meta
-    name="description"
-    content={
-      latest?.description ||
-      latest?.content ||
-      "Latest breaking news from South Africa and the United States."
-    }
-  />
-</Helmet>
-{showPopup &&
-  latest &&
-  createPortal(
-    <div
-      className="fixed bottom-4 right-4 z-[9999]
-        w-[90vw] max-w-sm
-        rounded-2xl bg-white/90 dark:bg-gray-900/90
-        backdrop-blur-xl shadow-2xl dark:text-white p-4"
-    >
-      <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-        Latest News
-      </p>
-
-      <h4 className="font-semibold text-sm line-clamp-2">
-        {latest.title}
-      </h4>
-
-      <div className="mt-3 flex justify-between items-center gap-3">
-        <button
-          onClick={() => navigate("/news")}
-          className="text-sm font-medium text-blue-600 hover:underline"
-        >
-          Open
-        </button>
-
-        <button
-          onClick={() => openExternalReader(latest)}
-          className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
-        >
-          Mini reader
-        </button>
-
-        <button
-          onClick={() => setShowPopup(false)}
-          className="text-xs opacity-60 hover:opacity-100"
-        >
-          Dismiss
-        </button>
-      </div>
-    </div>,
-    document.body
-  )}
-
+      <AnimatePresence>
+        {showPopup && latest && createPortal(
+          <div className="fixed bottom-4 right-4 z-[9999] w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl dark:text-white p-4">
+            <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+              Latest News
+            </p>
+            <h4 className="font-semibold text-sm line-clamp-2">
+              {latest.title}
+            </h4>
+            <div className="mt-3 flex justify-between items-center gap-3">
+              <button
+                onClick={() => navigate("/news")}
+                className="text-sm font-medium text-blue-600 hover:underline"
+              >
+                Open
+              </button>
+              <button
+                onClick={() => openExternalReader(latest)}
+                className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+              >
+                Mini reader
+              </button>
+              <button
+                onClick={() => setShowPopup(false)}
+                className="text-xs opacity-60 hover:opacity-100"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>,
+          document.body
+        )}
+      </AnimatePresence>
 
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-8 mb-8">
         <div>
-          <h1 className="text-3xl font-semibold p-2 rounded-xl">Today’s News</h1>
+          <h1 className="text-3xl font-semibold p-2 rounded-xl">Today's News</h1>
           <p className="text-sm text-gray-500">
             Curated stories from ZA & US
           </p>
         </div>
-
         <button
           onClick={() => navigate("/news")}
           className="rounded-full bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition"
@@ -302,26 +283,23 @@ if (error) {
       {latest && (
         <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
           {latest.image_url && (
-  <img
-    src={latest.image_url}
-    alt={latest.title}
-    onClick={() =>
-      setZoomImage({
-        src: latest.image_url,
-        alt: latest.title,
-      })
-    }
-    className="h-64 w-full object-cover cursor-zoom-in"
-  />
-)}
-
+            <img
+              src={latest.image_url}
+              alt={latest.title}
+              onClick={() =>
+                setZoomImage({
+                  src: latest.image_url,
+                  alt: latest.title,
+                })
+              }
+              className="h-64 w-full object-cover cursor-zoom-in"
+            />
+          )}
           <div className="p-6">
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
               Featured
             </p>
-            <h2 className="text-xl font-semibold mb-2">
-              {latest.title}
-            </h2>
+            <h2 className="text-xl font-semibold mb-2">{latest.title}</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
               {renderValue(latest.content || latest.description)}
             </p>
@@ -337,45 +315,37 @@ if (error) {
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
           >
             {article.image_url && (
-              
-  <img
-    src={article.image_url}
-    alt={article.title}
-    onClick={() =>
-      setZoomImage({
-        src: article.image_url,
-        alt: article.title,
-      })
-    }
-    className="h-40 w-full object-cover cursor-zoom-in"
-  />
-)}
-
-         
-
+              <img
+                src={article.image_url}
+                alt={article.title}
+                onClick={() =>
+                  setZoomImage({
+                    src: article.image_url,
+                    alt: article.title,
+                  })
+                }
+                className="h-40 w-full object-cover cursor-zoom-in"
+              />
+            )}
             <div className="p-4 flex flex-col gap-3">
               {/* META */}
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 {article.source_icon && (
-             <Tooltip title={`Source: ${article.source_name}`}>
-                  <img
-                    src={article.source_icon}
-                    alt={article.source_name}
-                    className="w-4 h-4 rounded"
-                  />
-                </Tooltip>
+                  <Tooltip title={`Source: ${article.source_name}`}>
+                    <img
+                      src={article.source_icon}
+                      alt={article.source_name}
+                      className="w-4 h-4 rounded"
+                    />
+                  </Tooltip>
                 )}
                 <span>{article.source_name || article.source_id}</span>
                 <span>•</span>
-                <span>
-                  {new Date(article.pubDate).toLocaleString()}
-                </span>
+                <span>{new Date(article.pubDate).toLocaleString()}</span>
               </div>
 
               {/* TITLE */}
-              <h3 className="font-medium line-clamp-2">
-                {article.title}
-              </h3>
+              <h3 className="font-medium line-clamp-2">{article.title}</h3>
 
               {/* CONTENT */}
               <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
@@ -432,32 +402,30 @@ if (error) {
         ))}
       </div>
        
-       {zoomImage &&
-  createPortal(
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm
-                   flex items-center justify-center p-4"
-        onClick={() => setZoomImage(null)}
-      >
-        <motion.img
-          src={zoomImage.src}
-          alt={zoomImage.alt}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 25 }}
-          className="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        />
-      </motion.div>
-    </AnimatePresence>,
-    document.body
-  )}
-
+      {/* ZOOM IMAGE MODAL */}
+      <AnimatePresence>
+        {zoomImage && createPortal(
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setZoomImage(null)}
+          >
+            <motion.img
+              src={zoomImage.src}
+              alt={zoomImage.alt}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 25 }}
+              className="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>,
+          document.body
+        )}
+      </AnimatePresence>
     </section>
   );
 };
