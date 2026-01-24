@@ -159,14 +159,26 @@ const NewsComponent = () => {
   ====================== */
   if (loading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-20">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="h-48 rounded-2xl bg-gray-200 dark:bg-gray-800 animate-pulse"
-          />
-        ))}
-      </div>
+      {/* Top skeleton section */}
+<div className="pt-28 flex flex-col items-center gap-4 animate-pulse">
+  {/* Paragraph skeletons */}
+  <div className="h-4 w-72 rounded-full bg-gray-200 dark:bg-gray-800" />
+  <div className="h-4 w-56 rounded-full bg-gray-200 dark:bg-gray-800" />
+
+  {/* Button skeleton */}
+  <div className="mt-4 h-10 w-40 rounded-xl bg-gray-300 dark:bg-gray-700" />
+</div>
+
+{/* Existing grid skeletons */}
+<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-20">
+  {[...Array(6)].map((_, i) => (
+    <div
+      key={i}
+      className="h-48 rounded-2xl bg-gray-200 dark:bg-gray-800 animate-pulse"
+    />
+  ))}
+</div>
+
     );
   }
 
