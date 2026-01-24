@@ -67,6 +67,10 @@ const renderValue = (value) => {
 };
 
 
+const PAGE_SIZE = 9;
+
+const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+const [refreshing, setRefreshing] = useState(false);
 
 
 const NewsComponent = () => {
@@ -81,7 +85,11 @@ const [zoomImage, setZoomImage] = useState(null);
   /* ======================
      FETCH NEWS
   ====================== */
-  useEffect(() => {
+  const fetchNews = async (showToast = true) => {
+  try {
+    setLoading(true);
+    setError(null);
+
     const url =
       "https://newsdata.io/api/1/latest" +
       "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
@@ -90,23 +98,34 @@ const [zoomImage, setZoomImage] = useState(null);
       "&excludecategory=crime,sports" +
       "&removeduplicate=1";
 
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch news");
-        return res.json();
-      })
-      .then((res) => {
-        setData(res);
-        setLatest(res?.results?.[0] || null);
-        setShowPopup(Boolean(res?.results?.length));
-        toast("News loaded", { duration: 200 });
-      })
-      .catch((err) => {
-        setError(err.message);
-        toast.error(err.message || "Fetch failed", { duration: 2000 });
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Failed to fetch news");
+
+    const json = await res.json();
+
+    setData(json);
+    setLatest(json?.results?.[0] || null);
+    setShowPopup(Boolean(json?.results?.length));
+    setVisibleCount(PAGE_SIZE); // reset pagination
+
+    showToast && toast.success("News refreshed", { duration: 1200 });
+  } catch (err) {
+    setError(err.message);
+    toast.error(err.message || "Fetch failed");
+  } finally {
+    setLoading(false);
+    setRefreshing(false);
+  }
+};
+
+   const handleLoadMore = () => {
+  setVisibleCount((prev) => prev + PAGE_SIZE);
+};
+
+const handleRefresh = () => {
+  setRefreshing(true);
+  fetchNews();
+};
 
   /* ======================
      MINI EXTERNAL READER
@@ -234,6 +253,26 @@ const [zoomImage, setZoomImage] = useState(null);
         >
           View all news
         </button>
+
+         <div className="flex items-center gap-3">
+  <button
+    onClick={handleRefresh}
+    disabled={refreshing}
+    className="rounded-full border px-5 py-2 text-sm
+               hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+  >
+    {refreshing ? "Refreshing…" : "Refresh"}
+  </button>
+
+  <button
+    onClick={() => navigate("/news")}
+    className="rounded-full bg-black text-white px-6 py-2 text-sm
+               hover:bg-gray-800 transition"
+  >
+    View all news
+  </button>
+</div>
+
       </header>
 
       {/* FEATURED */}
@@ -269,7 +308,7 @@ const [zoomImage, setZoomImage] = useState(null);
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 11).map((article) => (
+        {data?.results?.slice(1, visibleCount + 1).map((article) => (
           <article
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
@@ -375,6 +414,19 @@ const [zoomImage, setZoomImage] = useState(null);
             </div>
           </article>
         ))}
+
+         {data?.results?.length > visibleCount + 1 && (
+  <div className="flex justify-center mt-10">
+    <button
+      onClick={handleLoadMore}
+      className="px-6 py-2 rounded-full bg-gray-900 text-white text-sm
+                 hover:bg-gray-800 transition"
+    >
+      Load more news
+    </button>
+  </div>
+)}
+
       </div>
        
        {zoomImage &&
