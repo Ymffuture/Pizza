@@ -16,7 +16,7 @@ const LockTransition = () => {
    
 
   React.useEffect(() => {
-    const t = setTimeout(() => setLocked(true), 2000); // ⏱️ 2s
+    const t = setTimeout(() => setLocked(true), 5000); 
     return () => clearTimeout(t);
   }, []);
 
@@ -41,7 +41,7 @@ const LockTransition = () => {
           transition={{ duration: 0.35 }}
           className="flex items-center"
         >
-          <FiLock className="w-3.5 h-3.5 text-yellow-500" />
+          <FiLock className="w-3.5 h-3.5 text-gray-500 animate-pulse" />
         </motion.span>
       )}
     </AnimatePresence>
@@ -56,7 +56,7 @@ const renderValue = (value) => {
   if (isPaidOnly(value)) {
     return (
       <Tooltip title="This information is only available on paid plans">
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-yellow-700 dark:text-yellow-300 text-xs cursor-help">
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-gray-700 dark:text-gray-300 text-xs cursor-help">
           <LockTransition />
         </span>
       </Tooltip>
@@ -295,7 +295,7 @@ const [zoomImage, setZoomImage] = useState(null);
               {/* META */}
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 {article.source_icon && (
-             <Tooltip title={`Source: ${article.source_name}`}>
+             <Tooltip title={`Source: ${article.source_name || "loading..."}`}>
                   <img
                     src={article.source_icon}
                     alt={article.source_name}
@@ -322,17 +322,24 @@ const [zoomImage, setZoomImage] = useState(null);
 
               {/* KEYWORDS */}
               {Array.isArray(article.keywords) && article.keywords.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {article.keywords.slice(0, 6).map((kw) => (
-                    <span
-                      key={kw}
-                      className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800"
-                    >
-                      #{kw}
-                    </span>
-                  ))}
-                </div>
-              )}
+  <div className="flex flex-wrap gap-1">
+    {article.keywords.slice(0, 6).map((kw) => (
+      <span
+        key={kw}
+        className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800"
+      >
+        #{kw}
+      </span>
+    ))}
+
+    {article.keywords.length > 6 && (
+      <span className="px-2 py-0.5 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+        +{article.keywords.length - 6} more
+      </span>
+    )}
+  </div>
+)}
+
 
               {/* INFO GRID */}
               <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
