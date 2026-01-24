@@ -229,39 +229,56 @@ const NewsComponent = () => {
       </Helmet>
 
       {/* POPUP */}
-      <AnimatePresence>
-        {showPopup && latest && createPortal(
-          <div className="fixed bottom-4 right-4 z-[9999] w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl dark:text-white p-4">
-            <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-              Latest News
-            </p>
-            <h4 className="font-semibold text-sm line-clamp-2">
-              {latest.title}
-            </h4>
-            <div className="mt-3 flex justify-between items-center gap-3">
-              <button
-                onClick={() => navigate("/news")}
-                className="text-sm font-medium text-blue-600 hover:underline"
-              >
-                Open
-              </button>
-              <button
-                onClick={() => openExternalReader(latest)}
-                className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
-              >
-                Mini reader
-              </button>
-              <button
-                onClick={() => setShowPopup(false)}
-                className="text-xs opacity-60 hover:opacity-100"
-              >
-                Dismiss
-              </button>
-            </div>
-          </div>,
-          document.body
-        )}
-      </AnimatePresence>
+      {showPopup &&
+  latest &&
+  createPortal(
+    <AnimatePresence>
+      <motion.div
+        key="news-popup"
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.95 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        className="fixed bottom-4 right-4 z-[9999]
+          w-[90vw] max-w-sm
+          rounded-2xl bg-white/90 dark:bg-gray-900/90
+          backdrop-blur-xl shadow-2xl dark:text-white p-4"
+      >
+        <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+          Latest News
+        </p>
+
+        <h4 className="font-semibold text-sm line-clamp-2">
+          {latest.title}
+        </h4>
+
+        <div className="mt-3 flex justify-between items-center gap-3">
+          <button
+            onClick={() => navigate("/news")}
+            className="text-sm font-medium text-blue-600 hover:underline"
+          >
+            Open
+          </button>
+
+          <button
+            onClick={() => openExternalReader(latest)}
+            className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+          >
+            Mini reader
+          </button>
+
+          <button
+            onClick={() => setShowPopup(false)}
+            className="text-xs opacity-60 hover:opacity-100"
+          >
+            Dismiss
+          </button>
+        </div>
+      </motion.div>
+    </AnimatePresence>,
+    document.body
+  )}
+
 
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-8 mb-8">
@@ -309,7 +326,7 @@ const NewsComponent = () => {
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 11).map((article) => (
+        {data?.results?.slice(1, 12).map((article) => (
           <article
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
@@ -410,29 +427,33 @@ const NewsComponent = () => {
       </div>
        
       {/* ZOOM IMAGE MODAL */}
-      <AnimatePresence>
-        {zoomImage && createPortal(
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-            onClick={() => setZoomImage(null)}
-          >
-            <motion.img
-              src={zoomImage.src}
-              alt={zoomImage.alt}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 25 }}
-              className="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </motion.div>,
-          document.body
-        )}
-      </AnimatePresence>
+      {zoomImage &&
+  createPortal(
+    <AnimatePresence>
+      <motion.div
+        key="zoom-overlay"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-sm
+          flex items-center justify-center p-4"
+        onClick={() => setZoomImage(null)}
+      >
+        <motion.img
+          src={zoomImage.src}
+          alt={zoomImage.alt}
+          initial={{ scale: 0.85, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.85, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 25 }}
+          className="max-h-[90vh] max-w-[90vw] rounded-xl shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        />
+      </motion.div>
+    </AnimatePresence>,
+    document.body
+  )}
+
     </section>
   );
 };
