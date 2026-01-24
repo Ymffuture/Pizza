@@ -293,67 +293,78 @@ const NewsComponent = () => {
           View all news
         </button>
       </header>
+{/* FEATURED ARTICLE */}
+{latest && (
+  <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
+    {/* IMAGE OR VIDEO */}
+    {latest.video_url ? (
+      <video
+        src={latest.video_url}
+        controls
+        className="h-64 w-full object-cover rounded-t-xl"
+      />
+    ) : latest.image_url ? (
+      <img
+        src={latest.image_url}
+        alt={latest.title}
+        onClick={() =>
+          setZoomImage({
+            src: latest.image_url,
+            alt: latest.title,
+          })
+        }
+        className="h-64 w-full object-cover cursor-zoom-in"
+      />
+    ) : null}
 
-      {/* FEATURED */}
-      {latest && (
-        <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
-          {latest.image_url && (
-            <img
-              src={latest.image_url}
-              alt={latest.title}
-              onClick={() =>
-                setZoomImage({
-                  src: latest.image_url,
-                  alt: latest.title,
-                })
-              }
-              className="h-64 w-full object-cover cursor-zoom-in"
-            />
-          )}
-          <div className="p-6">
-            <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
-              Featured
-            </p>
-            <h2 className="text-xl font-semibold mb-2">{latest.title}</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-              {renderValue(latest.content || latest.description)}
-            </p>
-          </div>
-        </article>
-      )}
+    <div className="p-6">
+      <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
+        Featured
+      </p>
+      <h2 className="text-xl font-semibold mb-2">{latest.title}</h2>
+      <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+        {renderValue(latest.content || latest.description)}
+      </p>
+    </div>
+  </article>
+)}
+
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 12).map((article) => (
-          <article
-            key={article.link}
-            className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
-          >
-            {article.image_url && (
-              <img
-                src={article.image_url}
-                alt={article.title}
-                onClick={() =>
-                  setZoomImage({
-                    src: article.image_url,
-                    alt: article.title,
-                  })
-                }
-                className="h-40 w-full object-cover cursor-zoom-in"
-              />
-            )}
-            <div className="p-4 flex flex-col gap-3">
-              {/* META */}
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                {article.source_icon && (
-                  <Tooltip title={`Source: ${article.source_name}`}>
-                    <img
-                      src={article.source_icon}
-                      alt={article.source_name}
-                      className="w-4 h-4 rounded"
-                    />
-                  </Tooltip>
-                )}
+        {/* GRID ARTICLES */}
+{data?.results?.slice(1, 12).map((article) => (
+  <article
+    key={article.link}
+    className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
+  >
+    {/* VIDEO OR IMAGE */}
+    {article.video_url ? (
+      <video
+        src={article.video_url}
+        controls
+        className="h-40 w-full object-cover rounded-t-xl"
+      />
+    ) : article.image_url ? (
+      <img
+        src={article.image_url}
+        alt={article.title}
+        onClick={() =>
+          setZoomImage({
+            src: article.image_url,
+            alt: article.title,
+          })
+        }
+        className="h-40 w-full object-cover cursor-zoom-in"
+      />
+    ) : null}
+
+    <div className="p-4 flex flex-col gap-3">
+      {/* existing content: meta, title, keywords, info, AI summary, actions */}
+    </div>
+  </article>
+))}
+
                 <span>{article.source_name || article.source_id}</span>
                 <span>•</span>
                 <span>{new Date(article.pubDate).toLocaleString()}</span>
