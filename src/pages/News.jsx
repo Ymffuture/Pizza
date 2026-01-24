@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiLock, FiUnlock } from "react-icons/fi";
 import { Tooltip } from "antd";
 import {Helmet} from "react-helmet" ;
 import { createPortal } from "react-dom";
 import { renderMiniViewHTML } from "../utils/MiniView";
-
+import { FiAlertCircle } from "react-icons/fi";
+ 
 /* ======================
    HELPERS
 ====================== */
@@ -77,36 +79,69 @@ const NewsComponent = () => {
   const [error, setError] = useState(null);
 const [zoomImage, setZoomImage] = useState(null);
   const navigate = useNavigate();
-
+const [refreshing, setRefreshing] = useState(false);
   /* ======================
      FETCH NEWS
   ====================== */
-  useEffect(() => {
-    const url =
-      "https://newsdata.io/api/1/latest" +
-      "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
-      "&country=za,us" +
-      "&language=en" +
-      "&excludecategory=crime,sports" +
-      "&removeduplicate=1";
+  
 
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch news");
-        return res.json();
-      })
-      .then((res) => {
-        setData(res);
-        setLatest(res?.results?.[0] || null);
-        setShowPopup(Boolean(res?.results?.length));
-        toast("News loaded", { duration: 200 });
-      })
-      .catch((err) => {
-        setError(err.message);
+useEffect(() => {
+  const source = axios.CancelToken.source(); // allows canceling the request if component unmounts
+
+  const fetchNews = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const url =
+        "https://newsdata.io/api/1/latest" +
+        "?apikey=pub_cf448f1504b94e33aa0bd96f40f0bf91" +
+        "&country=za,us" +
+        "&language=en" +
+        "&excludecategory=crime,sports" +
+        "&removeduplicate=1";
+
+      const res = await axios.get(url, { cancelToken: source.token });
+
+      // API might return results in `results` array
+      const articles = res.data.results || [];
+      setData(articles);
+      setLatest(articles[0] || null);
+      setShowPopup(Boolean(articles.length));
+
+      toast("News loaded", { duration: 1200 });
+    } catch (err) {
+      if (axios.isCancel(err)) {
+        console.log("Request canceled:", err.message);
+      } else {
+        setError(err.message || "Fetch failed");
         toast(err.message || "Fetch failed", { duration: 2000 });
-      })
-      .finally(() => setLoading(false));
-  }, []);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchNews();
+
+  return () => {
+    source.cancel("Component unmounted, request canceled");
+  };
+}, []);
+
+const handleRefresh = () => {
+   try {
+  setRefreshing(true);
+  fetchNews();
+   } catch (error) {
+
+      toast(error.message || "Fetch failed", { duration: 2000 });
+   
+   } finally {
+setRefreshing(false);
+   } 
+
+} ;
 
   /* ======================
      MINI EXTERNAL READER
@@ -134,7 +169,7 @@ const [zoomImage, setZoomImage] = useState(null);
   ====================== */
   if (loading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-16">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-20 ">
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
@@ -145,11 +180,38 @@ const [zoomImage, setZoomImage] = useState(null);
     );
   }
 
-  if (error) {
-    return (
-      <p className="text-center text-red-500 pt-16 p-8">
-        {error}
-      </p>
+if (error) {
+  return (
+    <div className="relative w-full h-[80vh] flex items-center justify-center px-4">
+      {/* Background icon */}
+      <FiAlertCircle
+        className="absolute text-red-200 dark:text-red-800 opacity-20 w-64 h-64 sm:w-96 sm:h-96"
+      />
+
+      {/* Animated error text */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="text-center z-10"
+      >
+        <p className="text-2xl sm:text-3xl font-semibold text-red-600 dark:text-red-400 mb-2">
+          Oops! Something went wrong
+        </p>
+        <p className="text-sm sm:text-base text-gray-500 dark:text-gray-300">
+          {error}
+        </p>
+        <button
+          onClick={handleRefresh}
+          className={`mt-4 px-6 py-2 ${!refreshing? " bg-red-400 dark:bg-red-500":"bg-yellow-400 dark:bg-yellow-600" }  text-white rounded-lg hover:bg-red-700 transition`}
+        >
+           {refreshing? "refreshing...": "Retry"}
+        </button>
+      </motion.div>
+    </div>
+  );
+}
+
     );
   }
    
