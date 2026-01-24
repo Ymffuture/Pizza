@@ -331,7 +331,7 @@ const NewsComponent = () => {
                 className="h-40 w-full object-cover cursor-zoom-in"
               />
             ) : null}
-
+             <div className="p-4 flex flex-col gap-3">
             <div className="flex items-center gap-2 text-xs text-gray-500">
                 {article.source_icon && (
                   <Tooltip title={`Source: ${article.source_name}`}>
