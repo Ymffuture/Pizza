@@ -43,36 +43,52 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
   /* ===========================
      GOOGLE LOGIN
   ============================ */
-  useEffect(() => {
-    /* global google */
-    if (!window.google) return;
+useEffect(() => {
+  if (!window.google) return;
 
-    google.accounts.id.initialize({
-      client_id: "744445938022-nju0135l9hs6fcs4eb4nnk5gadgq48tv.apps.googleusercontent.com",
-      callback: async (response) => {
-        try {
-          const res = await fetch(`${API_BASE}/auth/v2/google`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: response.credential }),
-          });
+  google.accounts.id.initialize({
+    client_id:
+      "744445938022-nju0135l9hs6fcs4eb4nnk5gadgq48tv.apps.googleusercontent.com",
+    callback: handleGoogleResponse,
+  });
 
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || "Google login failed");
+  // Render hidden Google button
+  google.accounts.id.renderButton(
+    document.getElementById("google-hidden-btn"),
+    {
+      theme: "outline",
+      size: "large",
+    }
+  );
+}, []);
 
-          toast("Welcome!");
-          onLoginSuccess(data.token);
-          onClose();
-        } catch (err) {
-          toast.error(err.message);
-        }
-      },
+const handleGoogleResponse = async (response) => {
+  try {
+    setLoading(true);
+
+    const res = await fetch(`${API_BASE}/auth/v2/google`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: response.credential }),
     });
-  }, [onClose, onLoginSuccess]);
 
-  const handleGoogleLogin = () => {
-    google.accounts.id.prompt();
-  };
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Google login failed");
+
+    toast.success("Welcome 👋");
+    onLoginSuccess(data.token);
+    onClose();
+  } catch (err) {
+    toast.error(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleGoogleLogin = () => {
+  document.querySelector("#google-hidden-btn div")?.click();
+};
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
