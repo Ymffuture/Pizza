@@ -269,18 +269,27 @@ const [zoomImage, setZoomImage] = useState(null);
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 9).map((article) => (
+        {data?.results?.slice(1, 11).map((article) => (
           <article
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
           >
             {article.image_url && (
-              <img
-                src={article.image_url}
-                alt={article.title}
-                className="h-40 w-full object-cover"
-              />
-            )}
+              
+  <img
+    src={article.image_url}
+    alt={article.title}
+    onClick={() =>
+      setZoomImage({
+        src: article.image_url,
+        alt: article.title,
+      })
+    }
+    className="h-40 w-full object-cover cursor-zoom-in"
+  />
+)}
+
+         
 
             <div className="p-4 flex flex-col gap-3">
               {/* META */}
