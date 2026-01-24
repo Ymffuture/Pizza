@@ -13,6 +13,8 @@ import { renderMiniViewHTML } from "../utils/MiniView";
 ====================== */
 const LockTransition = () => {
   const [locked, setLocked] = React.useState(false);
+   const [zoomImage, setZoomImage] = useState(null);
+
 
   React.useEffect(() => {
     const t = setTimeout(() => setLocked(true), 2000); // ⏱️ 2s
@@ -237,19 +239,19 @@ const NewsComponent = () => {
       {latest && (
         <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
           {latest.image_url && (
-            <img
-  src={article.image_url}
-  alt={article.title}
-  onClick={() =>
-    setZoomImage({
-      src: article.image_url,
-      alt: article.title,
-    })
-  }
-  className="h-40 w-full object-cover cursor-zoom-in"
-/>
+  <img
+    src={latest.image_url}
+    alt={latest.title}
+    onClick={() =>
+      setZoomImage({
+        src: latest.image_url,
+        alt: latest.title,
+      })
+    }
+    className="h-64 w-full object-cover cursor-zoom-in"
+  />
+)}
 
-          )}
           <div className="p-6">
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
               Featured
