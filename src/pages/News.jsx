@@ -76,13 +76,13 @@ const NewsComponent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 const [zoomImage, setZoomImage] = useState(null);
-   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
 const [refreshing, setRefreshing] = useState(false);
 
   const navigate = useNavigate();
 
    const PAGE_SIZE = 9;
-
+   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
 
   /* ======================
@@ -249,13 +249,6 @@ const handleRefresh = () => {
             Curated stories from ZA & US
           </p>
         </div>
-
-        <button
-          onClick={() => navigate("/news")}
-          className="rounded-full bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition"
-        >
-          View all news
-        </button>
 
          <div className="flex items-center gap-3">
   <button
