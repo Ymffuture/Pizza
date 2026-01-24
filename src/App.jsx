@@ -149,7 +149,7 @@ const App = () => {
       
       <ScrollToTop />
       {navbarLoading ? (
-        <Skeleton active paragraph={{ rows: 2 }} />
+        <Skeleton active paragraph={{ rows: 1}} />
       ) : (
         <Navbar />
       )}
