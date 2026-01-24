@@ -127,7 +127,7 @@ const NewsComponent = () => {
     <html>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>${article.title}</title>
+        <title>SwiftMeta - ${article.title}</title>
         <style>
           body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -152,7 +152,7 @@ const NewsComponent = () => {
         </style>
       </head>
       <body>
-        ${article.image_url ? `<img src="${article.image_url}" />` : ""}
+        ${article.image_url ? `<img src="${article.image_url}" />` : "No image available for this article" }
         <h1>${article.title}</h1>
         <p>${article.description || article.content || "No content available."}</p>
         <hr />
@@ -194,7 +194,7 @@ const NewsComponent = () => {
      UI
   ====================== */
   return (
-    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 relative dark:text-white bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl">
+    <section className="max-w-7xl mx-auto px-4 py-10 pt-16 relative dark:text-white bg-white/90 dark:bg-[#0f172a] backdrop-blur-xl">
       {/* POPUP */}
        <Helmet>
   <title>
@@ -297,7 +297,7 @@ const NewsComponent = () => {
 
       {/* GRID */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.results?.slice(1, 7).map((article) => (
+        {data?.results?.slice(1, 9).map((article) => (
           <article
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
