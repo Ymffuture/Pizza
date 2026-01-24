@@ -16,7 +16,7 @@ const LockTransition = () => {
   const [locked, setLocked] = React.useState(false);
    
   React.useEffect(() => {
-    const t = setTimeout(() => setLocked(true), 2000); // ⏱️ 2s
+    const t = setTimeout(() => setLocked(true), 5000); // ⏱️ 2s
     return () => clearTimeout(t);
   }, []);
 
@@ -354,17 +354,24 @@ const NewsComponent = () => {
 
               {/* KEYWORDS */}
               {Array.isArray(article.keywords) && article.keywords.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {article.keywords.slice(0, 6).map((kw) => (
-                    <span
-                      key={kw}
-                      className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800"
-                    >
-                      #{kw}
-                    </span>
-                  ))}
-                </div>
-              )}
+  <div className="flex flex-wrap gap-1">
+    {article.keywords.slice(0, 6).map((kw) => (
+      <span
+        key={kw}
+        className="px-2 py-0.5 text-xs rounded-full bg-gray-100 dark:bg-gray-800"
+      >
+        #{kw}
+      </span>
+    ))}
+
+    {article.keywords.length > 6 && (
+      <span className="px-2 py-0.5 text-xs rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+        +{article.keywords.length - 6} more
+      </span>
+    )}
+  </div>
+)}
+
 
               {/* INFO GRID */}
               <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
