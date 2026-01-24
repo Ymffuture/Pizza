@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiLock, FiUnlock } from "react-icons/fi";
 import { Tooltip } from "antd";
 import {Helmet} from "react-helmet" ;
+import { createPortal } from "react-dom";
+
 /* ======================
    HELPERS
 ====================== */
@@ -201,41 +203,49 @@ const NewsComponent = () => {
     }
   />
 </Helmet>
+{showPopup &&
+  latest &&
+  createPortal(
+    <div
+      className="fixed bottom-4 right-4 z-[9999]
+        w-[90vw] max-w-sm
+        rounded-2xl bg-white/90 dark:bg-gray-900/90
+        backdrop-blur-xl shadow-2xl p-4"
+    >
+      <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+        Latest News
+      </p>
 
-      {showPopup && latest && (
-        <div className="fixed bottom-4 right-4 z-50 w-[90vw] max-w-sm rounded-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-2xl p-6
-           ">
-          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-            Latest News
-          </p>
-          <h4 className="font-semibold text-sm line-clamp-2">
-            {latest.title}
-          </h4>
+      <h4 className="font-semibold text-sm line-clamp-2">
+        {latest.title}
+      </h4>
 
-          <div className="mt-3 flex justify-between items-center gap-3">
-            <button
-              onClick={() => navigate("/news")}
-              className="text-sm font-medium text-blue-600 hover:underline"
-            >
-              Open
-            </button>
+      <div className="mt-3 flex justify-between items-center gap-3">
+        <button
+          onClick={() => navigate("/news")}
+          className="text-sm font-medium text-blue-600 hover:underline"
+        >
+          Open
+        </button>
 
-            <button
-              onClick={() => openExternalReader(latest)}
-              className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
-            >
-              Mini reader
-            </button>
+        <button
+          onClick={() => openExternalReader(latest)}
+          className="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+        >
+          Mini reader
+        </button>
 
-            <button
-              onClick={() => setShowPopup(false)}
-              className="text-xs opacity-60 hover:opacity-100"
-            >
-              Dismiss
-            </button>
-          </div>
-        </div>
-      )}
+        <button
+          onClick={() => setShowPopup(false)}
+          className="text-xs opacity-60 hover:opacity-100"
+        >
+          Dismiss
+        </button>
+      </div>
+    </div>,
+    document.body
+  )}
+
 
       {/* HEADER */}
       <header className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-8 mb-8">
