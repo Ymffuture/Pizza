@@ -103,7 +103,7 @@ const [zoomImage, setZoomImage] = useState(null);
       })
       .catch((err) => {
         setError(err.message);
-        toast.error(err.message || "Fetch failed", { duration: 2000 });
+        toast(err.message || "Fetch failed", { duration: 2000 });
       })
       .finally(() => setLoading(false));
   }, []);
@@ -119,7 +119,7 @@ const [zoomImage, setZoomImage] = useState(null);
   );
 
   if (!reader) {
-    toast.error("Popup blocked", { duration: 2000 });
+    toast("Popup blocked", { duration: 2000 });
     return;
   }
 
@@ -134,11 +134,11 @@ const [zoomImage, setZoomImage] = useState(null);
   ====================== */
   if (loading) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[...Array(3)].map((_, i) => (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-16">
+        {[...Array(6)].map((_, i) => (
           <div
             key={i}
-            className="h-56 rounded-2xl bg-gray-200 dark:bg-gray-800 animate-pulse"
+            className="h-48 rounded-2xl bg-gray-200 dark:bg-gray-800 animate-pulse"
           />
         ))}
       </div>
@@ -147,7 +147,7 @@ const [zoomImage, setZoomImage] = useState(null);
 
   if (error) {
     return (
-      <p className="text-center text-red-500 py-8">
+      <p className="text-center text-red-500 pt-16 p-8">
         {error}
       </p>
     );
