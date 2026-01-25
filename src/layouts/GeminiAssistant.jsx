@@ -104,6 +104,14 @@ useEffect(() => {
   handleOAuthLogin();
 }, []);
 
+const handleLogout = () => {
+  localStorage.removeItem("authToken");
+  setAuthToken(null);
+  setMessages([]);
+  setConversations([]);
+  setCurrentConversationId(null);
+  setSidebarOpen(false);
+};
 
   
 const cleanCode = (code) =>
@@ -635,6 +643,7 @@ const sendMessage = async (overrideText) => {
   <Sidebar
     conversations={conversations}
     token={authToken}
+    onLogout={handleLogout}
     onSelectConversation={(id) => {
       setCurrentConversationId(id);
       setSidebarOpen(false);
