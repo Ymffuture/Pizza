@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { toast } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import Loader from "./Loader";
+
 const API_BASE = "https://swiftmeta.onrender.com/api";
+const GOOGLE_CLIENT_ID =
+  "744445938022-nju0135l9hs6fcs4eb4nnk5gadgq48tv.apps.googleusercontent.com";
 
 const AuthModal = ({ onClose, onLoginSuccess }) => {
   const [email, setEmail] = useState("");
@@ -18,80 +22,78 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
     setLoading(true);
 
     try {
-      const res = await fetch(
+      const { data } = await axios.post(
         `${API_BASE}/auth/v2/${isLogin ? "login" : "register"}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
+        { email, password },
+        { headers: { "Content-Type": "application/json" } }
       );
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Authentication failed");
 
       toast.success("Welcome 👋");
       onLoginSuccess(data.token);
       onClose();
     } catch (err) {
-      toast.error(err.message);
+      toast.error(
+        err.response?.data?.error || "Authentication failed"
+      );
     } finally {
       setLoading(false);
     }
   };
 
   /* ===========================
-     GOOGLE LOGIN
+     GOOGLE LOGIN (GIS)
   ============================ */
-useEffect(() => {
-  if (!window.google) return;
+  useEffect(() => {
+    if (!window.google) return;
 
-  const container = document.getElementById("google-hidden-btn");
-  if (!container) return;
+    const container = document.getElementById("google-hidden-btn");
+    if (!container) return;
 
-  google.accounts.id.initialize({
-    client_id:
-      "744445938022-nju0135l9hs6fcs4eb4nnk5gadgq48tv.apps.googleusercontent.com",
-    callback: handleGoogleResponse,
-  });
-
-  google.accounts.id.renderButton(container, {
-    theme: "outline",
-    size: "large",
-  });
-}, []);
-
-
-const handleGoogleResponse = async (response) => {
-  try {
-    setLoading(true);
-
-    const res = await fetch(`${API_BASE}/auth/v2/google`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: response.credential }),
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleResponse,
     });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Google login failed");
+    // Google renders its OWN button here (must be EMPTY)
+    google.accounts.id.renderButton(container, {
+      theme: "outline",
+      size: "large",
+      width: "300",
+    });
+  }, []);
 
-    toast.success("Welcome 👋");
-    onLoginSuccess(data.token);
-    onClose();
-  } catch (err) {
-    toast.error(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  const handleGoogleResponse = async (response) => {
+    try {
+      setLoading(true);
 
-const handleGoogleLogin = () => {
-  const btn = document.querySelector("#google-hidden-btn [role=button]");
-  btn?.click();
-};
+      const { data } = await axios.post(
+        `${API_BASE}/auth/v2/google`,
+        { token: response.credential },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
+      toast.success("Welcome 👋");
+      onLoginSuccess(data.token);
+      onClose();
+    } catch (err) {
+      toast.error(
+        err.response?.data?.error || "Google login failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const handleGoogleLogin = () => {
+    const googleBtn = document.querySelector(
+      "#google-hidden-btn [role=button]"
+    );
+    googleBtn?.click();
+  };
 
+  /* ===========================
+     UI
+  ============================ */
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="relative w-full max-w-md rounded-2xl bg-white dark:bg-neutral-900 dark:text-white p-8 border border-black/10 dark:border-white/10">
@@ -108,19 +110,20 @@ const handleGoogleLogin = () => {
           {isLogin ? "Sign in" : "Create account"}
         </h2>
 
-        {/* GOOGLE */}
-        {/* Hidden Google button (required) */}
-<div id="google-hidden-btn" className="hidden mt-6" >
-
+        {/* GOOGLE (VISIBLE BUTTON) */}
+        <div className="mt-6">
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 rounded-xl border-gray-400 text-[#202124] bg-gray-50 px-4 py-3"
+            className="w-full flex items-center justify-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 text-[#202124]"
           >
             <FcGoogle size={24} />
             Continue with Google
           </button>
         </div>
+
+        {/* GOOGLE (HIDDEN CONTAINER — MUST BE EMPTY) */}
+        <div id="google-hidden-btn" className="hidden" />
 
         {/* FORM */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-3">
@@ -143,21 +146,24 @@ const handleGoogleLogin = () => {
           />
 
           <button
-  type="submit"
-  disabled={loading}
-  className="w-full h-12 flex items-center justify-center rounded-xl bg-black text-white"
->
-  <span className={`transition-opacity ${loading ? "opacity-0" : "opacity-100"}`}>
-    {isLogin ? "Sign in" : "Create account"}
-  </span>
+            type="submit"
+            disabled={loading}
+            className="relative w-full h-12 flex items-center justify-center rounded-xl bg-black text-white"
+          >
+            <span
+              className={`transition-opacity ${
+                loading ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              {isLogin ? "Sign in" : "Create account"}
+            </span>
 
-  {loading && (
-    <span className="absolute">
-      <Loader />
-    </span>
-  )}
-</button>
-
+            {loading && (
+              <span className="absolute">
+                <Loader />
+              </span>
+            )}
+          </button>
         </form>
 
         <button
