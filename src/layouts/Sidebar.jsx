@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { FiUser } from "react-icons/fi";
+import { MdAccountCircle } from "react-icons/md";
 
 const API_BASE = "https://swiftmeta.onrender.com/api";
 
@@ -61,14 +63,14 @@ const Sidebar = ({ token, onSelectConversation, onLogout }) => {
           bg-white/70 dark:bg-neutral-900/70
           backdrop-blur-xl
           border-l border-black/5 dark:border-white/10
-          shadow-xl
+          shadow-2xl dark:text-white
         "
       >
         {/* USER INFO */}
         {user && (
           <div className="flex items-center gap-3 mb-5 px-2">
             <img
-              src={user.avatar || "/avatar.png"}
+              src={user.avatar || <MdAccountCircle size={24} className="dark:text-white" />} 
               alt="avatar"
               className="w-10 h-10 rounded-full object-cover"
             />
