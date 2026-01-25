@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
-export function useSpeechRecognition({ lang = "en-US" } = {}) {
+export function useSpeechRecognition({ lang = "en-US", continuous = true } = {}) {
   const recognitionRef = useRef(null);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -21,18 +21,29 @@ export function useSpeechRecognition({ lang = "en-US" } = {}) {
 
     const recognition = new SpeechRecognition();
     recognition.lang = lang;
-    recognition.continuous = false;
+    recognition.continuous = continuous;
     recognition.interimResults = true;
 
     recognition.onresult = (event) => {
-      const text = Array.from(event.results)
-        .map((r) => r[0].transcript)
-        .join("");
-      setTranscript(text);
+      let finalTranscript = "";
+      let interimTranscript = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcriptPart = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcriptPart;
+        } else {
+          interimTranscript += transcriptPart;
+        }
+      }
+
+      // Update state with final + interim for live feedback
+      setTranscript((prev) => prev + finalTranscript + interimTranscript);
     };
 
-    recognition.onerror = () => {
-      toast.error("Voice recognition failed");
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+      toast.error("Voice recognition failed: " + event.error);
       setIsListening(false);
     };
 
