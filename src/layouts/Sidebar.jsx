@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Sidebar = ({ token, onSelectConversation }) => {
+const Sidebar = ({ token, onSelectConversation, onLogout }) => {
   const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
@@ -25,6 +25,15 @@ const Sidebar = ({ token, onSelectConversation }) => {
     fetchConversations();
   }, [token]);
 
+  const handleLogout = () => {
+    // If parent passes logout logic
+    if (onLogout) return onLogout();
+
+    // Fallback logout
+    localStorage.removeItem("token");
+    window.location.reload();
+  };
+
   return (
     <AnimatePresence>
       <motion.aside
@@ -33,13 +42,14 @@ const Sidebar = ({ token, onSelectConversation }) => {
         exit={{ x: 40, opacity: 0 }}
         transition={{
           duration: 0.35,
-          ease: [0.22, 1, 0.36, 1], // Apple-like easing
+          ease: [0.22, 1, 0.36, 1],
         }}
         className="
           fixed top-0 right-0 z-40
           h-full w-72
           px-4 py-5
-          
+          flex flex-col
+
           bg-white/70 dark:bg-neutral-900/70
           backdrop-blur-xl backdrop-saturate-150
 
@@ -50,16 +60,18 @@ const Sidebar = ({ token, onSelectConversation }) => {
         "
       >
         {/* Header */}
-        <h3 className="
-          mb-4 px-2
-          text-xs font-semibold uppercase tracking-wide
-          text-neutral-500 dark:text-neutral-400
-        ">
+        <h3
+          className="
+            mb-4 px-2
+            text-xs font-semibold uppercase tracking-wide
+            text-neutral-500 dark:text-neutral-400
+          "
+        >
           History
         </h3>
 
         {/* Conversation List */}
-        <ul className="space-y-1 overflow-y-auto scrollbar-none">
+        <ul className="flex-1 space-y-1 overflow-y-auto scrollbar-none">
           {conversations.map((c) => (
             <li
               key={c._id}
@@ -69,23 +81,44 @@ const Sidebar = ({ token, onSelectConversation }) => {
                 rounded-xl px-3 py-2
                 text-sm font-medium
 
-                bg-transparent
                 hover:bg-black/5 dark:hover:bg-white/10
-
                 active:scale-[0.98]
                 transition-all duration-200
               "
             >
-              <span className="
-                block truncate
-                text-neutral-800 dark:text-neutral-100
-                group-hover:text-neutral-900 dark:group-hover:text-white
-              ">
+              <span
+                className="
+                  block truncate
+                  text-neutral-800 dark:text-neutral-100
+                  group-hover:text-neutral-900 dark:group-hover:text-white
+                "
+              >
                 {c.title || "Untitled"}
               </span>
             </li>
           ))}
         </ul>
+
+        {/* Divider */}
+        <div className="my-4 h-px bg-black/5 dark:bg-white/10" />
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="
+            w-full
+            rounded-xl px-4 py-2.5
+            text-sm font-medium
+
+            text-red-600 dark:text-red-400
+            hover:bg-red-500/10
+            active:scale-[0.97]
+
+            transition-all duration-200
+          "
+        >
+          Log out
+        </button>
       </motion.aside>
     </AnimatePresence>
   );
