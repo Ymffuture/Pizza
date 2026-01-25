@@ -27,7 +27,7 @@ const Sidebar = ({ token, onSelectConversation, onLogout }) => {
     if (!token) return;
 
     axios
-      .get(`${API_BASE}/auth/me`, {
+      .get(`${API_BASE}/auth/v2/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUser(res.data))
