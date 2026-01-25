@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /admin-only
+Sitemap: https://swiftmeta.vercel.app/sitemap.xml
