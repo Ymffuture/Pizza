@@ -1,0 +1,9 @@
+SwiftMeta
+https://swiftmeta.vercel.app
+
+Product: AI Website Builder
+Creator: SwiftMeta Team
+Tech: React, Vite, AI, Vercel
+Location: Global
+
+Contact: support@swiftmeta.vercel.app
