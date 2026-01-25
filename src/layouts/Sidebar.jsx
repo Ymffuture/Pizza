@@ -25,14 +25,25 @@ const Sidebar = ({ token, onSelectConversation, onLogout }) => {
     fetchConversations();
   }, [token]);
 
-  const handleLogout = () => {
-    // If parent passes logout logic
-    if (onLogout) return onLogout();
-
-    // Fallback logout
+  const handleLogout = async () => {
+  try {
+    await axios.post(
+      "https://swiftmeta.onrender.com/api/auth/v2/logout",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (e) {
+    // ignore — token may already be invalid
+  } finally {
     localStorage.removeItem("token");
-    window.location.reload();
-  };
+    window.location.href = "/";
+  }
+};
+
 
   return (
     <AnimatePresence>
