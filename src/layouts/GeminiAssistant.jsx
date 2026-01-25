@@ -17,7 +17,7 @@ import AuthModal from "./AiLogin";
 import Sidebar from "./Sidebar" ;
 import Loader from "./Loader";
 import { useConnectionStrength } from "../hooks/useConnectionStrength";
-import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
+import { usePuterSpeechRecognition } from "../hooks/useSpeechRecognition";
 
 const GeminiAssistant = () => {
   const [open, setOpen] = useState(false);
@@ -42,7 +42,14 @@ const {
   transcript,
   isListening,
   toggle: toggleVoice,
-} = useSpeechRecognition();
+} = usePuterSpeechRecognition();
+
+
+  useEffect(() => {
+  if (transcript) {
+    setMsg((prev) => prev + transcript);
+  }
+}, [transcript]);
 
 
   useEffect(() => {
@@ -605,32 +612,81 @@ const sendMessage = async (overrideText) => {
       </main>
 
       {/* INPUT */}
-      <footer className="bg-gray-200 dark:bg-gray-800 p-4 flex gap-2 items-end">
-        <textarea
-          ref={textareaRef}
-          value={msg}
-          rows={1}
-          onChange={(e) => { setMsg(e.target.value); autoGrow(); }}
-          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-          placeholder={isListening ? "Listening… Speak now" : placeholder}
-          className={`flex-1 resize-none rounded-xl px-4 py-2 bg-transparent focus:outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-opacity duration-300 ${fade ? "opacity-100" : "opacity-0"}`}
-        />
+      <footer className="
+  sticky bottom-0
+  bg-white/80 dark:bg-neutral-900/80
+  backdrop-blur-xl
+  border-t border-black/5 dark:border-white/10
+  px-4 py-3
+">
+  <div className="
+    mx-auto max-w-4xl
+    flex items-end gap-2
+    rounded-2xl
+    bg-gray-100 dark:bg-neutral-800
+    px-3 py-2
+  ">
+    <textarea
+      ref={textareaRef}
+      value={msg}
+      rows={1}
+      onChange={(e) => {
+        setMsg(e.target.value);
+        autoGrow();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      }}
+      placeholder={isListening ? "Listening…" : placeholder}
+      className="
+        flex-1 resize-none bg-transparent
+        px-2 py-2
+        text-sm text-gray-900 dark:text-white
+        placeholder-gray-500 dark:placeholder-gray-400
+        focus:outline-none
+        leading-relaxed
+      "
+    />
 
-        <button
-          onClick={toggleVoice}
-          className={`p-3 rounded-full transition ${isListening ? "bg-red-500 text-white animate-pulse" : "bg-gray-300 dark:bg-gray-700"}`}
-        >
-          {isListening ? <MdMicOff size={28} /> : <MdMic size={28} />}
-        </button>
+    {/* Voice button */}
+    <button
+      onClick={toggleVoice}
+      className={`
+        flex items-center justify-center
+        h-9 w-9 rounded-full
+        transition
+        ${
+          isListening
+            ? "bg-red-500/10 text-red-500"
+            : "text-gray-500 hover:bg-black/5 dark:hover:bg-white/10"
+        }
+      `}
+      title="Voice input"
+    >
+      {isListening ? <MdMicOff size={20} /> : <MdMic size={20} />}
+    </button>
 
-        <button
-  onClick={() => !loading && sendMessage()}
-  className="p-3 rounded-full bg-gradient-to-tr from-black to-black/10 text-white disabled:opacity-50"
->
-  <ArrowUp size={28} />
-</button>
-
-      </footer>
+    {/* Send button */}
+    <button
+      onClick={() => !loading && msg.trim() && sendMessage()}
+      disabled={loading || !msg.trim()}
+      className="
+        flex items-center justify-center
+        h-9 w-9 rounded-full
+        bg-black text-white
+        dark:bg-white dark:text-black
+        disabled:opacity-40
+        transition
+      "
+      title="Send"
+    >
+      <ArrowUp size={18} />
+    </button>
+  </div>
+</footer>
 
       {showAuthModal && (
   <AuthModal
