@@ -115,10 +115,12 @@ const AuthModal = ({ onClose, onLoginSuccess }) => {
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 rounded-xl border bg-gray-50 px-4 py-3 text-[#202124]"
+            className="w-full flex items-center justify-center gap-3 rounded-xl bg-gray-50 px-4 py-3 text-[#202124]"
           >
-            <FcGoogle size={24} />
-            Continue with Google
+            {loading? <span className="absolute">
+                <Loader />
+              </span> :(<FcGoogle size={24} />
+            )} Continue with Google
           </button>
         </div>
 
