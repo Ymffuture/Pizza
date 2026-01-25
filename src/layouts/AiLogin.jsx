@@ -109,7 +109,9 @@ const handleGoogleLogin = () => {
         </h2>
 
         {/* GOOGLE */}
-        <div className="mt-6">
+        {/* Hidden Google button (required) */}
+<div id="google-hidden-btn" className="hidden mt-6" />
+
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
