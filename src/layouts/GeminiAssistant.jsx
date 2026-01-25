@@ -614,15 +614,15 @@ const sendMessage = async (overrideText) => {
       {/* INPUT */}
       <footer className="
   sticky bottom-0
-  bg-white/80 dark:bg-neutral-900/80
+  bg-transparent
   backdrop-blur-xl
-  border-t border-black/5 dark:border-white/10
+  
   px-4 py-3
 ">
   <div className="
     mx-auto max-w-4xl
     flex items-end gap-2
-    rounded-2xl
+    rounded-full 
     bg-gray-100 dark:bg-neutral-800
     px-3 py-2
   ">
