@@ -1,144 +1,101 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
-export function useSpeechRecognition({
-  lang = "en-US",
-  continuous = true,
+export function usePuterSpeechRecognition({
+  language = "en",
+  autoStopMs = 15000,
 } = {}) {
-  const recognitionRef = useRef(null);
-  const isManuallyStoppedRef = useRef(false);
+  const mediaRecorderRef = useRef(null);
+  const chunksRef = useRef([]);
+  const timeoutRef = useRef(null);
 
-  const [isListening, setIsListening] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const [interim, setInterim] = useState("");
-
-  const isSupported =
+  const [isSupported, setIsSupported] = useState(
     typeof window !== "undefined" &&
-    (window.SpeechRecognition || window.webkitSpeechRecognition);
+      navigator.mediaDevices &&
+      window.puter
+  );
 
-  const createRecognition = useCallback(() => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = lang;
-    recognition.continuous = continuous;
-    recognition.interimResults = true;
-
-    recognition.onresult = (event) => {
-      let finalText = "";
-      let interimText = "";
-
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const text = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-          finalText += text;
-        } else {
-          interimText += text;
-        }
-      }
-
-      if (finalText) {
-        setTranscript((prev) => prev + finalText + " ");
-      }
-
-      setInterim(interimText);
-    };
-
-    recognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
-
-      switch (event.error) {
-        case "not-allowed":
-          toast.error("Microphone permission denied");
-          break;
-        case "no-speech":
-          toast("No speech detected");
-          break;
-        case "audio-capture":
-          toast.error("No microphone found");
-          break;
-        default:
-          toast.error("Speech recognition error");
-      }
-
-      setIsListening(false);
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-      setInterim("");
-
-      // Auto-restart if continuous and not manually stopped
-      if (continuous && !isManuallyStoppedRef.current) {
-        try {
-          recognition.start();
-          setIsListening(true);
-        } catch {
-          // Chrome can throw if restarting too fast
-        }
-      }
-    };
-
-    return recognition;
-  }, [lang, continuous]);
-
-  const start = useCallback(() => {
+  const start = useCallback(async () => {
     if (!isSupported) {
       toast.error("Speech recognition not supported");
       return;
     }
 
-    if (!window.isSecureContext && location.hostname !== "localhost") {
-      toast.error("Speech recognition requires HTTPS");
-      return;
-    }
-
-    if (isListening) return;
-
-    isManuallyStoppedRef.current = false;
-
-    const recognition = createRecognition();
-    recognitionRef.current = recognition;
-
     try {
-      recognition.start();
-      setIsListening(true);
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      const recorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+      chunksRef.current = [];
+
+      recorder.ondataavailable = (e) => {
+        if (e.data.size) chunksRef.current.push(e.data);
+      };
+
+      recorder.onstop = async () => {
+        try {
+          const audioBlob = new Blob(chunksRef.current, {
+            type: "audio/webm",
+          });
+
+          const result = await window.puter.ai.transcribe(audioBlob, {
+            language,
+          });
+
+          if (!result?.text) {
+            toast.error("No speech detected");
+            return;
+          }
+
+          setTranscript((prev) => prev + result.text + " ");
+        } catch (err) {
+          console.error(err);
+          toast.error("Transcription failed");
+        }
+      };
+
+      recorder.start();
+      setIsRecording(true);
+
+      timeoutRef.current = setTimeout(stop, autoStopMs);
     } catch (err) {
-      console.error("Failed to start recognition:", err);
-      toast.error("Failed to start voice recognition");
+      console.error(err);
+      toast.error("Microphone access denied");
     }
-  }, [isSupported, isListening, createRecognition]);
+  }, [isSupported, language, autoStopMs]);
 
   const stop = useCallback(() => {
-    isManuallyStoppedRef.current = true;
-    recognitionRef.current?.stop();
-    setIsListening(false);
-    setInterim("");
+    if (!mediaRecorderRef.current) return;
+
+    mediaRecorderRef.current.stop();
+    mediaRecorderRef.current.stream
+      .getTracks()
+      .forEach((track) => track.stop());
+
+    clearTimeout(timeoutRef.current);
+    setIsRecording(false);
   }, []);
 
   const toggle = () => {
-    isListening ? stop() : start();
+    isRecording ? stop() : start();
   };
 
   useEffect(() => {
     return () => {
-      isManuallyStoppedRef.current = true;
-      recognitionRef.current?.stop();
+      clearTimeout(timeoutRef.current);
+      mediaRecorderRef.current?.stop();
     };
   }, []);
 
   return {
     transcript,
-    interim, // 🔥 live text while speaking
-    isListening,
+    isRecording,
     isSupported,
     start,
     stop,
     toggle,
-    reset: () => {
-      setTranscript("");
-      setInterim("");
-    },
+    reset: () => setTranscript(""),
   };
 }
