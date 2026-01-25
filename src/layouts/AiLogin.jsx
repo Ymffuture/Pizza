@@ -110,7 +110,7 @@ const handleGoogleLogin = () => {
 
         {/* GOOGLE */}
         {/* Hidden Google button (required) */}
-<div id="google-hidden-btn" className="hidden mt-6" />
+<div id="google-hidden-btn" className="hidden mt-6" >
 
           <button
             onClick={handleGoogleLogin}
