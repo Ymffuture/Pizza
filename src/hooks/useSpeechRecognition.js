@@ -1,21 +1,22 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "react-hot-toast";
 
-export function useSpeechRecognition({ lang = "en-US", continuous = true } = {}) {
+export function useSpeechRecognition({
+  lang = "en-US",
+  continuous = true,
+} = {}) {
   const recognitionRef = useRef(null);
+  const isManuallyStoppedRef = useRef(false);
+
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [interim, setInterim] = useState("");
 
   const isSupported =
     typeof window !== "undefined" &&
     (window.SpeechRecognition || window.webkitSpeechRecognition);
 
-  const start = () => {
-    if (!isSupported) {
-      toast.error("Speech recognition not supported in this browser");
-      return;
-    }
-
+  const createRecognition = useCallback(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -25,58 +26,119 @@ export function useSpeechRecognition({ lang = "en-US", continuous = true } = {})
     recognition.interimResults = true;
 
     recognition.onresult = (event) => {
-      let finalTranscript = "";
-      let interimTranscript = "";
+      let finalText = "";
+      let interimText = "";
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcriptPart = event.results[i][0].transcript;
+        const text = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-          finalTranscript += transcriptPart;
+          finalText += text;
         } else {
-          interimTranscript += transcriptPart;
+          interimText += text;
         }
       }
 
-      // Update state with final + interim for live feedback
-      setTranscript((prev) => prev + finalTranscript + interimTranscript);
+      if (finalText) {
+        setTranscript((prev) => prev + finalText + " ");
+      }
+
+      setInterim(interimText);
     };
 
     recognition.onerror = (event) => {
       console.error("Speech recognition error:", event.error);
-      toast.error("Voice recognition failed: " + event.error);
+
+      switch (event.error) {
+        case "not-allowed":
+          toast.error("Microphone permission denied");
+          break;
+        case "no-speech":
+          toast("No speech detected");
+          break;
+        case "audio-capture":
+          toast.error("No microphone found");
+          break;
+        default:
+          toast.error("Speech recognition error");
+      }
+
       setIsListening(false);
     };
 
     recognition.onend = () => {
       setIsListening(false);
+      setInterim("");
+
+      // Auto-restart if continuous and not manually stopped
+      if (continuous && !isManuallyStoppedRef.current) {
+        try {
+          recognition.start();
+          setIsListening(true);
+        } catch {
+          // Chrome can throw if restarting too fast
+        }
+      }
     };
 
-    recognition.start();
-    recognitionRef.current = recognition;
-    setIsListening(true);
-  };
+    return recognition;
+  }, [lang, continuous]);
 
-  const stop = () => {
+  const start = useCallback(() => {
+    if (!isSupported) {
+      toast.error("Speech recognition not supported");
+      return;
+    }
+
+    if (!window.isSecureContext && location.hostname !== "localhost") {
+      toast.error("Speech recognition requires HTTPS");
+      return;
+    }
+
+    if (isListening) return;
+
+    isManuallyStoppedRef.current = false;
+
+    const recognition = createRecognition();
+    recognitionRef.current = recognition;
+
+    try {
+      recognition.start();
+      setIsListening(true);
+    } catch (err) {
+      console.error("Failed to start recognition:", err);
+      toast.error("Failed to start voice recognition");
+    }
+  }, [isSupported, isListening, createRecognition]);
+
+  const stop = useCallback(() => {
+    isManuallyStoppedRef.current = true;
     recognitionRef.current?.stop();
     setIsListening(false);
-  };
+    setInterim("");
+  }, []);
 
   const toggle = () => {
     isListening ? stop() : start();
   };
 
-  // Cleanup on unmount
   useEffect(() => {
-    return () => recognitionRef.current?.stop();
+    return () => {
+      isManuallyStoppedRef.current = true;
+      recognitionRef.current?.stop();
+    };
   }, []);
 
   return {
     transcript,
+    interim, // 🔥 live text while speaking
     isListening,
     isSupported,
     start,
     stop,
     toggle,
-    reset: () => setTranscript(""),
+    reset: () => {
+      setTranscript("");
+      setInterim("");
+    },
   };
 }
