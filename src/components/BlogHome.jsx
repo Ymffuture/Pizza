@@ -91,8 +91,9 @@ const [showViewModal, setShowViewModal] = useState(false);
     
     <main 
       role="main"
-        aria-label="Blog get updated" 
-      className="min-h-screen pb-28 md:pb-2 mx-auto px-4 pt-6 pb-4 max-w-2xl overflow-x-hidden">
+      aria-label="Blog get updated" 
+      className="min-h-screen pb-28 md:pb-2 mx-auto px-4 pt-6 pb-4 max-w-2xl overflow-x-hidden"
+      >
 
       <InfiniteScroll
         dataLength={posts.length}
@@ -502,7 +503,7 @@ function CommentBox({ postId, onCommentUpdate }) {
                       }))
                     }
                     placeholder="Reply..."
-                    className="p-2 text-xs w-10 rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
+                    className="p-2 text-xs w-full rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
                   />
                   <button
                     onClick={() => sendReply(c._id)}
