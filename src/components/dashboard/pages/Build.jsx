@@ -356,7 +356,7 @@ ${bridge}
         </p>
       </div>
     
-        <main/>
+        </main>
     </>
   );
 }
