@@ -265,7 +265,7 @@ const [showViewModal, setShowViewModal] = useState(false);
     </main>
 </>
   );
-}
+};
 
 function CommentBox({ postId, onCommentUpdate }) {
   const [text, setText] = useState("");
