@@ -12,6 +12,10 @@ import remarkGfm from "remark-gfm";
 import { FiThumbsUp } from "react-icons/fi";
 import { BsPatchCheckFill } from "react-icons/bs";
 import {Helmet} from "react-helmet" ;
+import Loader from "./Loader" ;
+
+
+
 export default function BlogHome() {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -71,9 +75,24 @@ const [showViewModal, setShowViewModal] = useState(false);
       
   
   return (
+<>
 
+  <Helmet>
+        <title>Blog | SwiftMeta</title>
+        <meta
+          name="description"
+          content="post and Explore free HTML, CSS, JavaScript, React, and Next.js projects to practice web development skills from beginner to advanced level."
+        />
+        <link
+          rel="canonical"
+          href="https://swiftmeta.vercel.app/dashboard/blog"
+        />
+      </Helmet> 
     
-    <div className="min-h-screen pb-28 md:pb-2 mx-auto px-4 pt-6 pb-4 max-w-2xl overflow-x-hidden">
+    <main 
+      role="main"
+        aria-label="Blog get updated" 
+      className="min-h-screen pb-28 md:pb-2 mx-auto px-4 pt-6 pb-4 max-w-2xl overflow-x-hidden">
 
       <InfiniteScroll
         dataLength={posts.length}
@@ -242,7 +261,8 @@ const [showViewModal, setShowViewModal] = useState(false);
   onClose={() => setShowViewModal(false)}
 />
 
-    </div>
+    </main>
+</>
   );
 }
 
