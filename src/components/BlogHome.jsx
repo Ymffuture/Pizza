@@ -502,7 +502,7 @@ function CommentBox({ postId, onCommentUpdate }) {
                       }))
                     }
                     placeholder="Reply..."
-                    className="p-2 text-xs w-10}0 rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
+                    className="p-2 text-xs w-10 rounded-full bg-gray-100 dark:bg-black/40 border dark:border-gray-700"
                   />
                   <button
                     onClick={() => sendReply(c._id)}
