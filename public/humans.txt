@@ -1,9 +1,11 @@
-SwiftMeta
-https://swiftmeta.vercel.app
+/* TEAM */
+Developer: Kgomotso Nkosi
+Site: SwiftMeta
+Location: Johannesburg, South Africa
+Email: futurekgomotso@gmail.com
+Twitter: @futureFBG96 
 
-Product: AI Website Builder
-Creator: SwiftMeta Team
-Tech: React, Vite, AI, Vercel
-Location: Global
-
-Contact: support@swiftmeta.vercel.app
+/* SITE */
+Last update: 2026-01-26
+Technology: React, Node.js, TailwindCSS, MongoDB and +4 more 
+Standards: HTML5, CSS3, ES6, SEO friendly
