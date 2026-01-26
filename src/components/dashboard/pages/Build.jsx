@@ -4,6 +4,7 @@ import Editor from "@monaco-editor/react";
 import { defaultHTML, defaultCSS, defaultJS } from "./Playground";
 import { FiInfo, FiAlertTriangle, FiXCircle } from "react-icons/fi";
 import dayjs from "dayjs";
+import { Helmet } from "react-helmet";
 
 export default function Build() {
   const [html, setHtml] = useState(defaultHTML);
@@ -188,7 +189,27 @@ ${bridge}
 
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100">
+    <>
+
+      <Helmet>
+      <title>Build Your Website | SwiftMeta</title>
+      <meta
+        name="description"
+        content="Build, preview, and download a complete HTML, CSS, Tailwind, and JavaScript website instantly using SwiftMeta’s live playground."
+      />
+      <link
+        rel="canonical"
+        href="https://swiftmeta.vercel.app/dashboard/build"
+      />
+      {/* Dashboard pages should not be indexed */}
+      <meta name="robots" content="noindex, nofollow" />
+    </Helmet>
+      <main
+      role="main"
+      aria-label="Website builder playground"
+      className="min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100"
+    >
+    
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
@@ -334,6 +355,8 @@ ${bridge}
           Tip: Press <b className="rounded border border-gray-200 shadow-lg p-1" >Ctrl/Cmd + Enter</b> to run your code.
         </p>
       </div>
-    </div>
+    
+        <main/>
+    </>
   );
 }
