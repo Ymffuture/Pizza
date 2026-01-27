@@ -1,42 +1,47 @@
-<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+<svg
+  viewBox="0 0 1024 1024"
+  width="3072"
+  height="3072"
+  xmlns="http://www.w3.org/2000/svg"
+>
   <!-- Outer circle -->
   <circle
     cx="512"
     cy="512"
     r="440"
-    fill="#000"
-    stroke="#000"
+    fill="none"
+    stroke="none"
     stroke-width="18"
   />
 
-  <!-- Inner circle (100% proportional fit) -->
+  <!-- Inner circle -->
   <circle
     cx="512"
     cy="512"
     r="220"
-    fill="#fff"
+    fill="#F8FAFC"
     stroke="#1E90FF"
     stroke-width="22"
   />
 
-  <!-- Left arc (full height fit) -->
+  <!-- Left arc -->
   <path
     d="M512 512
        Q220 220 220 512
        Q220 804 512 804"
     fill="#1677ff"
-    stroke="#fff"
+    stroke="#F8FAFC"
     stroke-width="56"
     stroke-linecap="round"
   />
 
-  <!-- Right arc (full height fit) -->
+  <!-- Right arc -->
   <path
     d="M512 512
        Q804 220 804 512
        Q804 804 512 804"
-    fill="#1E90FF"
-    stroke="#fff"
+    fill="#9CA3AF"
+    stroke="#F8FAFC" 
     stroke-width="56"
     stroke-linecap="round"
   />
