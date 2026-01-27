@@ -45,6 +45,10 @@ const HelpCenter =lazy(() =>import("./pages/HelpCenter")) ;
 const CreateTicket =lazy(() =>import("./pages/CreateTicket")) ;
 const TrackTicket =lazy(() =>import("./pages/TrackTicket")) ;
 const AdminTicket =lazy(() =>import("./pages/AdminTicket")) ;
+const ApplicantLayout =lazy(() =>import("./pages/applicant/ApplicantLayout")) ;
+import JobApply from "./pages/applicant/JobApply";
+import ApplicationStatus from "./pages/applicant/ApplicationStatus";
+import AdminApplications from "./pages/admin/AdminApplications";
 
 
 
@@ -124,6 +128,15 @@ const Loader = () => (
   </div>
 );
 
+
+const isAdmin = () => true;
+
+const AdminRoute = ({ children }) => {
+  return isAdmin() ? children : <Navigate to="/apply" replace />;
+};
+
+
+
 const App = () => {
   const [navbarLoading, setNavbarLoading] = useState(true);
 
@@ -177,6 +190,21 @@ const App = () => {
          <Route path="/track" element={<TrackTicket />} />
          <Route path="/faq" element={<FAQ />} />
          <Route path="/help" element={<HelpCenter />} />
+
+          <Route path="/apply" element={<ApplicantLayout />}>
+          <Route index element={<JobApply />} />
+          <Route path="status" element={<ApplicationStatus />} />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin/applications"
+          element={
+            <AdminRoute>
+              <AdminApplications />
+            </AdminRoute>
+          }
+        />
         {/* Admin Route (JWT guard later) */}
         <Route path="/admin-ticket" element={<AdminTicket />} />
         <Route path="/admin-only" element={<OnlyAdmin />} />
