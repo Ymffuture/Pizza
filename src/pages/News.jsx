@@ -68,6 +68,65 @@ const renderValue = (value) => {
   return value;
 };
 
+const normalizeVideoUrl = (url) => {
+  if (url.includes("youtube.com") || url.includes("youtu.be")) {
+    const id =
+      url.split("v=")[1]?.split("&")[0] ||
+      url.split("youtu.be/")[1];
+    return {
+      type: "youtube",
+      embed: `https://www.youtube.com/embed/${id}`,
+    };
+  }
+
+  if (url.includes("vimeo.com")) {
+    const id = url.split("/").pop();
+    return {
+      type: "vimeo",
+      embed: `https://player.vimeo.com/video/${id}`,
+    };
+  }
+
+  if (url.includes("twitter.com") || url.includes("x.com")) {
+    return {
+      type: "twitter",
+      embed: url,
+    };
+  }
+
+  if (url.endsWith(".mp4")) {
+    return {
+      type: "mp4",
+      embed: url,
+    };
+  }
+
+  return null;
+};
+
+
+const VIDEO_REGEX =
+  /(https?:\/\/(?:www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|vimeo\.com\/|twitter\.com\/.*\/status\/|x\.com\/.*\/status\/)[^\s]+)/i;
+
+const extractVideo = (article) => {
+  const sources = [
+    article.video_url,
+    article.content,
+    article.description,
+    article.link,
+  ].filter(Boolean);
+
+  for (const source of sources) {
+    const match = source.match(VIDEO_REGEX);
+    if (match) {
+      return normalizeVideoUrl(match[1]);
+    }
+  }
+
+  return null;
+};
+
+
 /* ======================
    MAIN COMPONENT
 ====================== */
@@ -102,8 +161,18 @@ const NewsComponent = () => {
 
       const articles = res.data.results || [];
       setData({ results: articles });
-      setLatest(articles[0] || null);
       setShowPopup(Boolean(articles.length));
+       
+const enriched = articles.map((article) => {
+  const video = extractVideo(article);
+  return { ...article, video };
+});
+
+// Move video articles to the top
+enriched.sort((a, b) => Boolean(b.video) - Boolean(a.video));
+
+setData({ results: enriched });
+setLatest(enriched[0] || null);
 
       toast("News loaded", { duration: 1200 });
     } catch (err) {
@@ -293,22 +362,33 @@ if (loading) {
       {/* FEATURED */}
       {latest && (
         <article className="mb-10 rounded-3xl overflow-hidden shadow-xl bg-gray-100 dark:bg-gray-900">
-          {latest.video_url ? (
-            <video
-              src={latest.video_url}
-              controls
-              className="h-64 w-full object-cover rounded-t-xl"
-            />
-          ) : latest.image_url ? (
-            <img
-              src={latest.image_url}
-              alt={latest.title}
-              onClick={() =>
-                setZoomImage({ src: latest.image_url, alt: latest.title })
-              }
-              className="h-64 w-full object-cover cursor-zoom-in"
-            />
-          ) : null}
+          {latest.video ? (
+      latest.video.type === "mp4" ? (
+        <video
+          src={latest.video.embed}
+          controls
+          className="h-64 w-full object-cover"
+        />
+      ) : (
+        <iframe
+          src={latest.video.embed}
+          className="h-64 w-full"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+          title={latest.title}
+        />
+      )
+    ) : latest.image_url ? (
+      <img
+  src={latest.image_url}
+  alt={latest.title}
+  onClick={() =>
+    setZoomImage({ src: latest.image_url, alt: latest.title })
+  }
+  className="cursor-zoom-in h-40 w-full object-cover"
+/>
+
+    ) : null}
 
           <div className="p-6">
             <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">
@@ -329,22 +409,34 @@ if (loading) {
             key={article.link}
             className="rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-xl transition"
           >
-            {article.video_url ? (
-              <video
-                src={article.video_url}
-                controls
-                className="h-40 w-full object-cover rounded-t-xl"
-              />
-            ) : article.image_url ? (
-              <img
-                src={article.image_url}
-                alt={article.title}
-                onClick={() =>
-                  setZoomImage({ src: article.image_url, alt: article.title })
-                }
-                className="h-40 w-full object-cover cursor-zoom-in"
-              />
-            ) : null}
+            {article.video ? (
+  article.video.type === "mp4" ? (
+    <video
+      src={article.video.embed}
+      controls
+      className="h-40 w-full object-cover"
+    />
+  ) : (
+    <iframe
+      src={article.video.embed}
+      className="h-40 w-full"
+      allow="autoplay; encrypted-media"
+      allowFullScreen
+      title={article.title}
+    />
+  )
+) : article.image_url ? (
+ <img
+  src={article.image_url}
+  alt={article.title}
+  onClick={() =>
+    setZoomImage({ src: article.image_url, alt: article.title })
+  }
+  className="cursor-zoom-in h-40 w-full object-cover"
+/>
+
+) : null}
+
              <div className="p-4 flex flex-col gap-3">
             <div className="flex items-center gap-2 text-xs text-gray-500">
                 {article.source_icon && (
