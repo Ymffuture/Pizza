@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import StatusBadge from "../../components/StatusBadge";
-import {api} from "../../../api";
+import {api} from "../../api";
 export default function ApplicationStatus() {
   const [application, setApplication] = useState(null);
 
