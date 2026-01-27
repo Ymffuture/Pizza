@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import StatusBadge from "../../components/StatusBadge";
-
+import {api} from "../../../api";
 export default function ApplicationStatus() {
   const [application, setApplication] = useState(null);
 
   useEffect(() => {
     // Example: fetch latest application
-    axios.get("/api/application/latest").then((res) => {
+    api.get("/application/latest").then((res) => {
       setApplication(res.data);
     });
   }, []);
