@@ -13,31 +13,31 @@
   "dir": "ltr",
   "icons": [
     {
-  "src": "/vite.svg",
+  "src": "/favicon.ico",
   "sizes": "512x512",
-  "type": "image/svg+xml",
+  "type": "image/png",
   "purpose": "any maskable"
 },
     {
-      "src": "/Logo.svg",
+      "src": "/swiftmeta-logo.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/logo-maskable-192.png",
+      "src": "/icons/favicon-32x32.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/icons/logo-maskable-512.png",
+      "src": "/icons/favicon.ico",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/icons/logo-monochrome-192.png",
+      "src": "/icons/swiftmeta-logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "monochrome"
@@ -51,9 +51,9 @@
       "url": "/about?source=pwa",
       "icons": [
         {
-          "src": "Logo.svg",
+          "src": "swiftMeta-logo.png",
           "sizes": "96x96",
-          "type": "image/svg+xml"
+          "type": "image/png"
         }
       ]
     },
