@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import {api} from "../../../api";
 
 export default function JobApply() {
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ export default function JobApply() {
 
     try {
       const formData = new FormData(e.target);
-      await axios.post("/api/apply", formData);
+      await api.post("/apply", formData);
       setMessage("Application submitted successfully");
       e.target.reset();
     } catch (err) {
