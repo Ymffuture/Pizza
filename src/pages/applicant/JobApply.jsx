@@ -23,18 +23,31 @@ export default function JobApply() {
 
   const handleChange = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
+    
+if (key === "idNumber") {
+  if (/^\d{0,13}$/.test(value)) {
+    if (value.length >= 6) {
+      const year = value.slice(0, 2);
+      const month = value.slice(2, 4);
+      const day = value.slice(4, 6);
 
-    if (key === "idNumber") {
-      if (/^\d{0,13}$/.test(value)) {
-        if (value.length >= 6) {
-          const year = value.slice(0, 2);
-          const month = value.slice(2, 4);
-          const day = value.slice(4, 6);
-          setDob(`19${year}-${month}-${day}`); // simple assumption
-        } else setDob("");
+      const yearPrefix = year[0] === "0" ? "20" : "19";
+      const fullYear = yearPrefix + year;
+
+      const monthNum = parseInt(month, 10);
+      const dayNum = parseInt(day, 10);
+if (monthNum >= 1 && monthNum <= 12 && dayNum >= 1 && dayNum <= 31) {
+        setDob(`${fullYear}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
+      }  if (!monthNum >= 1 || !monthNum <= 12 || !dayNum >= 1 || !dayNum <= 31) {
+        setError("Invalid ID number, please check your ID number.");
+      } else {
+        setDob("");
       }
+    } else {
+      setDob("");
     }
-  };
+  }
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
