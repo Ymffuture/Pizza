@@ -220,7 +220,7 @@ export default function JobApply() {
         {errors.global && (
           <p className="text-red-700 bg-red-600/10 p-2 rounded-xl text-sm">{errors.global}</p>
         )}
-        {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl flex gap-2"> <FiCheckCircle size={24}/> {message}</p>}
+        {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <InputField icon={<FiUser />} placeholder="First Name"
@@ -314,7 +314,7 @@ function InputField({
           className="flex-1 bg-transparent outline-none text-sm"
         />
       </div>
-      {error && <p className="text-red-500 flex gap-2 text-xs"> <FiAlertCircle size={24} /> {error}</p>}
+      {error && <p className="text-red-500 flex gap-2 text-xs"> <FiAlertCircle size={18} /> {error}</p>}
     </div>
   );
 }
@@ -330,7 +330,7 @@ function FileField({ label, error, onChange }) {
         onChange={(e) => onChange(e.target.files?.[0])}
         className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700"
       />
-      {error && <p className="text-red-700 bg-red-600/10 text-xs"> <FiAlertCircle size={24} /> {error}</p>}
+      {error && <p className="text-red-700 bg-red-600/10 flex gap-2 p-2 rounded text-xs"> <FiAlertCircle size={18} /> {error}</p>}
     </div>
   );
 }
