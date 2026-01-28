@@ -45,6 +45,7 @@ export default function JobApply() {
         <form onSubmit={handleSubmit} className="space-y-8">
 
           {/* Personal Information */}
+          
           <section>
             <h2 className="text-lg font-medium mb-4">
               Personal Information
