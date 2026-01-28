@@ -7,24 +7,18 @@ import {
   FiCalendar,
   FiMapPin,
   FiBriefcase,
+  FiUpload,
 } from "react-icons/fi";
 
 /* ---------------------------------------------------
-   ZOD SCHEMA
+   FILE CONSTRAINTS
 --------------------------------------------------- */
-const jobApplySchema = z.object({
-  firstName: z.string().min(2, "First name is required"),
-  lastName: z.string().min(2, "Last name is required"),
-  idNumber: z.string().refine(isValidSouthAfricanID, {
-    message: "Invalid South African ID number",
-  }),
-  email: z.string().email("Invalid email address"),
-  location: z.string().min(2, "Location is required"),
-  qualification: z.string().min(2, "Qualification is required"),
-  experience: z.string().min(1, "Experience is required"),
-  currentRole: z.string().optional(),
-  portfolio: z.string().optional(),
-});
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_FILE_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
 
 /* ---------------------------------------------------
    SOUTH AFRICAN ID VALIDATION
@@ -36,7 +30,8 @@ function isValidSouthAfricanID(id) {
   const month = parseInt(id.slice(2, 4), 10);
   const day = parseInt(id.slice(4, 6), 10);
 
-  const fullYear = year <= new Date().getFullYear() % 100 ? 2000 + year : 1900 + year;
+  const fullYear =
+    year <= new Date().getFullYear() % 100 ? 2000 + year : 1900 + year;
   const date = new Date(fullYear, month - 1, day);
 
   if (
@@ -47,14 +42,11 @@ function isValidSouthAfricanID(id) {
     return false;
   }
 
-  // Citizenship digit (0 or 1)
   const citizenship = parseInt(id[10], 10);
   if (![0, 1].includes(citizenship)) return false;
 
-  // Luhn checksum
   let sum = 0;
   let alternate = false;
-
   for (let i = id.length - 1; i >= 0; i--) {
     let n = parseInt(id[i], 10);
     if (alternate) {
@@ -67,6 +59,39 @@ function isValidSouthAfricanID(id) {
 
   return sum % 10 === 0;
 }
+
+/* ---------------------------------------------------
+   ZOD SCHEMA
+--------------------------------------------------- */
+const fileSchema = z
+  .instanceof(File, { message: "File is required" })
+  .refine((file) => file.size <= MAX_FILE_SIZE, "File must be under 5MB")
+  .refine(
+    (file) => ACCEPTED_FILE_TYPES.includes(file.type),
+    "Only PDF or Word documents are allowed"
+  );
+
+const jobApplySchema = z.object({
+  firstName: z.string().min(2, "First name is required"),
+  lastName: z.string().min(2, "Last name is required"),
+  idNumber: z.string().refine(isValidSouthAfricanID, {
+    message: "Invalid South African ID number",
+  }),
+  email: z.string().email("Invalid email address"),
+  location: z.string().min(2, "Location is required"),
+  qualification: z.string().min(2, "Qualification is required"),
+  experience: z.string().min(1, "Experience is required"),
+  currentRole: z.string().optional(),
+  portfolio: z.string().optional(),
+
+  // Documents
+  cv: fileSchema,
+  doc1: z.instanceof(File).optional(),
+  doc2: z.instanceof(File).optional(),
+  doc3: z.instanceof(File).optional(),
+  doc4: z.instanceof(File).optional(),
+  doc5: z.instanceof(File).optional(),
+});
 
 /* ---------------------------------------------------
    MAIN COMPONENT
@@ -87,20 +112,23 @@ export default function JobApply() {
     experience: "",
     currentRole: "",
     portfolio: "",
+    cv: null,
+    doc1: null,
+    doc2: null,
+    doc3: null,
+    doc4: null,
+    doc5: null,
   });
 
   const formRef = useRef(null);
 
   /* ---------------------------------------------------
-     HANDLE CHANGE (LIVE VALIDATION)
+     HANDLE CHANGE
   --------------------------------------------------- */
   const handleChange = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
-
-    // Clear success message on edit
     setMessage("");
 
-    // Zod field validation
     try {
       jobApplySchema.pick({ [key]: true }).parse({ [key]: value });
       setErrors((prev) => ({ ...prev, [key]: undefined }));
@@ -111,13 +139,13 @@ export default function JobApply() {
       }));
     }
 
-    // Extract DOB from ID
     if (key === "idNumber" && /^\d{6}/.test(value)) {
       const year = value.slice(0, 2);
       const month = value.slice(2, 4);
       const day = value.slice(4, 6);
-      const yearPrefix = parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
-      setDob(`${yearPrefix}${year}-${month}-${day}`);
+      const prefix =
+        parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
+      setDob(`${prefix}${year}-${month}-${day}`);
     } else if (key === "idNumber") {
       setDob("");
     }
@@ -136,9 +164,9 @@ export default function JobApply() {
       jobApplySchema.parse(formData);
 
       const data = new FormData();
-      Object.entries(formData).forEach(([key, value]) =>
-        data.append(key, value)
-      );
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value) data.append(key, value);
+      });
 
       await api.post("/application/apply", data);
 
@@ -153,6 +181,12 @@ export default function JobApply() {
         experience: "",
         currentRole: "",
         portfolio: "",
+        cv: null,
+        doc1: null,
+        doc2: null,
+        doc3: null,
+        doc4: null,
+        doc5: null,
       });
       setDob("");
     } catch (err) {
@@ -184,75 +218,57 @@ export default function JobApply() {
         {errors.global && (
           <p className="text-red-500 text-sm">{errors.global}</p>
         )}
-
-        {message && (
-          <p className="text-green-500 text-sm">{message}</p>
-        )}
+        {message && <p className="text-green-500 text-sm">{message}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <InputField
-            icon={<FiUser />}
-            placeholder="First Name"
-            value={formData.firstName}
-            error={errors.firstName}
-            onChange={(v) => handleChange("firstName", v)}
-          />
+          <InputField icon={<FiUser />} placeholder="First Name"
+            value={formData.firstName} error={errors.firstName}
+            onChange={(v) => handleChange("firstName", v)} />
 
-          <InputField
-            icon={<FiUser />}
-            placeholder="Last Name"
-            value={formData.lastName}
-            error={errors.lastName}
-            onChange={(v) => handleChange("lastName", v)}
-          />
+          <InputField icon={<FiUser />} placeholder="Last Name"
+            value={formData.lastName} error={errors.lastName}
+            onChange={(v) => handleChange("lastName", v)} />
 
-          <InputField
-            icon={<FiCalendar />}
-            placeholder="ID Number"
-            value={formData.idNumber}
-            error={errors.idNumber}
-            onChange={(v) => handleChange("idNumber", v)}
-          />
+          <InputField icon={<FiCalendar />} placeholder="ID Number"
+            value={formData.idNumber} error={errors.idNumber}
+            onChange={(v) => handleChange("idNumber", v)} />
 
-          <InputField
-            icon={<FiCalendar />}
-            placeholder="Date of Birth"
-            value={dob}
-            readOnly
-          />
+          <InputField icon={<FiCalendar />} placeholder="Date of Birth"
+            value={dob} readOnly />
 
-          <InputField
-            icon={<FiMail />}
-            placeholder="Email Address"
-            type="email"
-            value={formData.email}
-            error={errors.email}
-            onChange={(v) => handleChange("email", v)}
-          />
+          <InputField icon={<FiMail />} placeholder="Email Address"
+            value={formData.email} error={errors.email}
+            onChange={(v) => handleChange("email", v)} />
 
-          <InputField
-            icon={<FiMapPin />}
-            placeholder="Location"
-            value={formData.location}
-            error={errors.location}
-            onChange={(v) => handleChange("location", v)}
-          />
+          <InputField icon={<FiMapPin />} placeholder="Location"
+            value={formData.location} error={errors.location}
+            onChange={(v) => handleChange("location", v)} />
 
-          <InputField
-            icon={<FiBriefcase />}
-            placeholder="Highest Qualification"
-            value={formData.qualification}
-            error={errors.qualification}
-            onChange={(v) => handleChange("qualification", v)}
-          />
+          <InputField icon={<FiBriefcase />} placeholder="Highest Qualification"
+            value={formData.qualification} error={errors.qualification}
+            onChange={(v) => handleChange("qualification", v)} />
 
-          <InputField
-            icon={<FiBriefcase />}
-            placeholder="Years of Experience"
-            value={formData.experience}
-            error={errors.experience}
-            onChange={(v) => handleChange("experience", v)}
-          />
+          <InputField icon={<FiBriefcase />} placeholder="Years of Experience"
+            value={formData.experience} error={errors.experience}
+            onChange={(v) => handleChange("experience", v)} />
+
+          {/* Documents */}
+          <div className="space-y-3">
+            <FileField
+              label="Curriculum Vitae (Required)"
+              error={errors.cv}
+              onChange={(f) => handleChange("cv", f)}
+            />
+
+            {[1, 2, 3, 4, 5].map((n) => (
+              <FileField
+                key={n}
+                label={`Supporting Document ${n}`}
+                error={errors[`doc${n}`]}
+                onChange={(f) => handleChange(`doc${n}`, f)}
+              />
+            ))}
+          </div>
 
           <button
             type="submit"
@@ -268,7 +284,7 @@ export default function JobApply() {
 }
 
 /* ---------------------------------------------------
-   INPUT FIELD COMPONENT
+   INPUT COMPONENTS
 --------------------------------------------------- */
 function InputField({
   icon,
@@ -296,6 +312,22 @@ function InputField({
           className="flex-1 bg-transparent outline-none text-sm"
         />
       </div>
+      {error && <p className="text-red-500 text-xs">{error}</p>}
+    </div>
+  );
+}
+
+function FileField({ label, error, onChange }) {
+  return (
+    <div className="space-y-1">
+      <label className="text-sm text-gray-500 flex items-center gap-2">
+        <FiUpload /> {label}
+      </label>
+      <input
+        type="file"
+        onChange={(e) => onChange(e.target.files?.[0])}
+        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700"
+      />
       {error && <p className="text-red-500 text-xs">{error}</p>}
     </div>
   );
