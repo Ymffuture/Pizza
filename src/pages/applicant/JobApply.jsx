@@ -333,12 +333,19 @@ export default function JobApply() {
 </div>
 
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full h-11 rounded-2xl bg-black dark:bg-gray-100 text-white dark:text-gray-900 font-medium"
-          >
-            {loading ? "Submitting…" : "Submit Application"}
-          </button>
+  type="submit"
+  disabled={loading || !formData.consent}
+  className={`w-full h-11 rounded-2xl font-medium transition
+    ${
+      loading || !formData.consent
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-black dark:bg-gray-100 text-white dark:text-gray-900"
+    }
+  `}
+>
+  {loading ? "Submitting…" : "Submit Application"}
+</button>
+
         </form>
       </div>
     </div>
