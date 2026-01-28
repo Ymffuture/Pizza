@@ -12,7 +12,7 @@ export default function JobApply() {
 
     try {
       const formData = new FormData(e.target);
-      await api.post("/apply", formData);
+      await api.post("/application/apply", formData);
       setMessage("Application submitted successfully");
       e.target.reset();
     } catch (err) {
