@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { z } from "zod";
 import { api } from "../../api";
 import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
-
+import {Helmet} from "react-helmet" ;
 import {
   FiUser,
   FiMail,
@@ -217,6 +217,10 @@ export default function JobApply() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4 dark:text-white">
+
+      <Helmet >
+      <title >Apply - Math/science or MERN </title>
+      </Helmet>
       <div
         ref={formRef}
         className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6"
