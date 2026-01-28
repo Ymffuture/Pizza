@@ -260,7 +260,7 @@ export default function JobApply() {
               onChange={(f) => handleChange("cv", f)}
             />
 
-            {[1, 2, 3, 4, 5].map((n) => (
+            {[1, 2].map((n) => (
               <FileField
                 key={n}
                 label={`Supporting Document ${n}`}
