@@ -86,14 +86,17 @@ const jobApplySchema = z.object({
   currentRole: z.string().optional(),
   portfolio: z.string().optional(),
 
-  // Documents
   cv: fileSchema,
   doc1: z.instanceof(File).optional(),
   doc2: z.instanceof(File).optional(),
-  // doc3: z.instanceof(File).optional(),
-  // doc4: z.instanceof(File).optional(),
-  // doc5: z.instanceof(File).optional(),
+
+  consent: z.literal(true, {
+    errorMap: () => ({
+      message: "You must accept the Terms & Privacy Policy",
+    }),
+  }),
 });
+
 
 /* ---------------------------------------------------
    MAIN COMPONENT
@@ -118,6 +121,7 @@ export default function JobApply() {
     doc1: null,
     gender: "",
     doc2: null,
+    consent: false, 
     // doc3: null,
     // doc4: null,
     // doc5: null,
@@ -194,6 +198,7 @@ export default function JobApply() {
         doc1: null,
         doc2: null,
         gender: "",
+        consent: false, 
         // doc3: null,
         // doc4: null,
         // doc5: null,
@@ -289,6 +294,43 @@ export default function JobApply() {
               />
             ))}
           </div>
+<div className="space-y-1">
+  <label className="flex items-start gap-3 text-sm cursor-pointer">
+    <input
+      type="checkbox"
+      checked={formData.consent}
+      onChange={(e) => handleChange("consent", e.target.checked)}
+      className="mt-1 accent-black"
+    />
+
+    <span className="text-gray-600 dark:text-gray-300">
+      I agree to the{" "}
+      <a
+        href="/terms"
+        target="_blank"
+        className="underline font-medium"
+      >
+        Terms & Conditions
+      </a>{" "}
+      and{" "}
+      <a
+        href="/privacy"
+        target="_blank"
+        className="underline font-medium"
+      >
+        Privacy Policy
+      </a>
+      . I consent to the processing of my personal information in accordance
+      with POPIA.
+    </span>
+  </label>
+
+  {errors.consent && (
+    <p className="text-red-500 text-xs flex gap-2">
+      <FiAlertCircle size={14} /> {errors.consent}
+    </p>
+  )}
+</div>
 
           <button
             type="submit"
