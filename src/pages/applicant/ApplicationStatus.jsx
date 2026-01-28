@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { FiSearch, FiMail, FiHash } from "react-icons/fi";
 import StatusBadge from "../../components/StatusBadge";
 import { api } from "../../api";
-
+import {Helmet} from "react-helmet" ;
 export default function ApplicationStatus() {
   const [query, setQuery] = useState("");
   const [application, setApplication] = useState(null);
@@ -42,6 +42,9 @@ export default function ApplicationStatus() {
 
   return (
     <div className="min-h-screen flex justify-center items-start py-12 bg-gray-50 dark:bg-gray-900 px-4 transition-colors">
+      <Helmet >
+      <title >Status - application</title>
+      </Helmet>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
