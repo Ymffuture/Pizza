@@ -116,6 +116,7 @@ export default function JobApply() {
     portfolio: "",
     cv: null,
     doc1: null,
+    gender: "",
     doc2: null,
     // doc3: null,
     // doc4: null,
@@ -148,6 +149,12 @@ export default function JobApply() {
       const prefix =
         parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
       setDob(`${prefix}${year}-${month}-${day}`);
+      
+      if (value.length >= 10) {
+    const genderDigits = parseInt(value.slice(6, 10), 10);
+    const gender = genderDigits >= 0 && genderDigits <= 4999 ? "Female" : "Male";
+    setFormData((prev) => ({ ...prev, gender }));
+      }
     } else if (key === "idNumber") {
       setDob("");
     }
@@ -186,6 +193,7 @@ export default function JobApply() {
         cv: null,
         doc1: null,
         doc2: null,
+        gender: "",
         // doc3: null,
         // doc4: null,
         // doc5: null,
@@ -237,6 +245,12 @@ export default function JobApply() {
 
           <InputField icon={<FiCalendar />} placeholder="Date of Birth"
             value={dob} readOnly />
+<InputField
+  icon={<FiUser />}
+  placeholder="Gender"
+  value={formData.gender}
+  readOnly
+/>
 
           <InputField icon={<FiMail />} placeholder="Email Address"
             value={formData.email} error={errors.email}
