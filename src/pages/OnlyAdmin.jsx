@@ -100,6 +100,13 @@ export default function AdminGate() {
               >
                 Go to Admin Tickets
               </button>
+
+              <button
+                onClick={() => navigate("/admin/applications")}
+                className="w-full h-12 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-semibold"
+              >
+                Go to Admin applications
+              </button>
             </div>
           </>
         )}
