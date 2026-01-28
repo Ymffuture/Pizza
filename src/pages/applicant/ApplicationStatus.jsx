@@ -18,7 +18,7 @@ export default function ApplicationStatus() {
          * Example backend route:
          * GET /api/application/latest
          */
-        const res = await api.get("/application/latest");
+        const res = await api.get("/admin/applications");
 
         if (!res.data) {
           setError("No application found");
