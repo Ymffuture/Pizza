@@ -72,13 +72,13 @@ const fileSchema = z
   );
 
 const jobApplySchema = z.object({
-  firstName: z.string().min(2, "First name is required"),
+  firstName: z.string().min(4, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
   idNumber: z.string().refine(isValidSouthAfricanID, {
     message: "Invalid South African ID number",
   }),
   email: z.string().email("Invalid email address"),
-  location: z.string().min(2, "Location is required"),
+  location: z.string().min(6, "Location is required"),
   qualification: z.string().min(2, "Qualification is required"),
   experience: z.string().min(1, "Experience is required"),
   currentRole: z.string().optional(),
@@ -170,7 +170,7 @@ export default function JobApply() {
 
       await api.post("/application/apply", data);
 
-      setMessage("Application submitted successfully 🎉");
+      setMessage("Application submitted successfully!");
       setFormData({
         firstName: "",
         lastName: "",
@@ -212,13 +212,13 @@ export default function JobApply() {
         className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6"
       >
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-          Job Application
+          Job / School Application
         </h1>
 
         {errors.global && (
-          <p className="text-red-500 text-sm">{errors.global}</p>
+          <p className="text-red-700 bg-red-600/10 p-2 rounded-xl text-sm">{errors.global}</p>
         )}
-        {message && <p className="text-green-500 text-sm">{message}</p>}
+        {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl ">{message}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <InputField icon={<FiUser />} placeholder="First Name"
@@ -328,7 +328,7 @@ function FileField({ label, error, onChange }) {
         onChange={(e) => onChange(e.target.files?.[0])}
         className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700"
       />
-      {error && <p className="text-red-500 text-xs">{error}</p>}
+      {error && <p className="text-red-700 bg-red-600/10 text-xs">{error}</p>}
     </div>
   );
 }
