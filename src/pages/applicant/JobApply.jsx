@@ -166,25 +166,27 @@ export default function JobApply() {
 }
 
 /* ---------- Reusable Components ---------- */
-function Input({ label, ...props }) {
+function Input(props) {
+  const { label, ...rest } = props; // destructure inside the function
   return (
     <div className="flex flex-col">
       <label className="text-sm text-gray-500 mb-1">{label}</label>
       <input
-        {...props}
-        className="h-11 rounded-2xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 bg-gray-50"
+        {...rest}
+        className="h-11 rounded-2xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors duration-300"
       />
     </div>
   );
 }
 
-function Select({ label, options, ...props }) {
+function Select(props) {
+  const { label, options, ...rest } = props;
   return (
     <div className="flex flex-col">
       <label className="text-sm text-gray-500 mb-1">{label}</label>
       <select
-        {...props}
-        className="h-11 rounded-2xl px-4 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-400"
+        {...rest}
+        className="h-11 rounded-2xl px-4 text-sm bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-colors duration-300"
       >
         <option value="">Select</option>
         {options.map((opt) => (
@@ -197,16 +199,17 @@ function Select({ label, options, ...props }) {
   );
 }
 
-function FileInput({ label, ...props }) {
+function FileInput(props) {
+  const { label, ...rest } = props;
   return (
     <div className="flex flex-col">
       <label className="text-sm text-gray-500 mb-1">{label}</label>
       <input
         type="file"
-        {...props}
-        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+        {...rest}
+        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 dark:file:bg-gray-700 dark:file:text-gray-100 dark:hover:file:bg-gray-600 transition-colors duration-300"
       />
     </div>
-   </div>
   );
 }
+
