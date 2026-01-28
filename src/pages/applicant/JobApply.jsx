@@ -1,91 +1,154 @@
 import { useState, useRef } from "react";
+import { z } from "zod";
 import { api } from "../../api";
-import { FiUser, FiMail, FiCalendar, FiMapPin, FiBriefcase } from "react-icons/fi";
+import {
+  FiUser,
+  FiMail,
+  FiCalendar,
+  FiMapPin,
+  FiBriefcase,
+} from "react-icons/fi";
 
+/* ---------------------------------------------------
+   ZOD SCHEMA
+--------------------------------------------------- */
+const jobApplySchema = z.object({
+  firstName: z.string().min(2, "First name is required"),
+  lastName: z.string().min(2, "Last name is required"),
+  idNumber: z.string().refine(isValidSouthAfricanID, {
+    message: "Invalid South African ID number",
+  }),
+  email: z.string().email("Invalid email address"),
+  location: z.string().min(2, "Location is required"),
+  qualification: z.string().min(2, "Qualification is required"),
+  experience: z.string().min(1, "Experience is required"),
+  currentRole: z.string().optional(),
+  portfolio: z.string().optional(),
+});
+
+/* ---------------------------------------------------
+   SOUTH AFRICAN ID VALIDATION
+--------------------------------------------------- */
+function isValidSouthAfricanID(id) {
+  if (!/^\d{13}$/.test(id)) return false;
+
+  const year = parseInt(id.slice(0, 2), 10);
+  const month = parseInt(id.slice(2, 4), 10);
+  const day = parseInt(id.slice(4, 6), 10);
+
+  const fullYear = year <= new Date().getFullYear() % 100 ? 2000 + year : 1900 + year;
+  const date = new Date(fullYear, month - 1, day);
+
+  if (
+    date.getFullYear() !== fullYear ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return false;
+  }
+
+  // Citizenship digit (0 or 1)
+  const citizenship = parseInt(id[10], 10);
+  if (![0, 1].includes(citizenship)) return false;
+
+  // Luhn checksum
+  let sum = 0;
+  let alternate = false;
+
+  for (let i = id.length - 1; i >= 0; i--) {
+    let n = parseInt(id[i], 10);
+    if (alternate) {
+      n *= 2;
+      if (n > 9) n -= 9;
+    }
+    sum += n;
+    alternate = !alternate;
+  }
+
+  return sum % 10 === 0;
+}
+
+/* ---------------------------------------------------
+   MAIN COMPONENT
+--------------------------------------------------- */
 export default function JobApply() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
   const [dob, setDob] = useState("");
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     idNumber: "",
     email: "",
     location: "",
-    gender: "",
     qualification: "",
     experience: "",
     currentRole: "",
     portfolio: "",
   });
-  const formRef = useRef();
 
+  const formRef = useRef(null);
+
+  /* ---------------------------------------------------
+     HANDLE CHANGE (LIVE VALIDATION)
+  --------------------------------------------------- */
   const handleChange = (key, value) => {
-  setFormData((prev) => ({ ...prev, [key]: value }));
+    setFormData((prev) => ({ ...prev, [key]: value }));
 
-  if (key !== "idNumber") return;
+    // Clear success message on edit
+    setMessage("");
 
-  if (!/^\d{0,13}$/.test(value)) return;
+    // Zod field validation
+    try {
+      jobApplySchema.pick({ [key]: true }).parse({ [key]: value });
+      setErrors((prev) => ({ ...prev, [key]: undefined }));
+    } catch (err) {
+      setErrors((prev) => ({
+        ...prev,
+        [key]: err.errors?.[0]?.message,
+      }));
+    }
 
-  if (value.length < 6) {
-    setDob("");
-    setError("");
-    return;
-  }
+    // Extract DOB from ID
+    if (key === "idNumber" && /^\d{6}/.test(value)) {
+      const year = value.slice(0, 2);
+      const month = value.slice(2, 4);
+      const day = value.slice(4, 6);
+      const yearPrefix = parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
+      setDob(`${yearPrefix}${year}-${month}-${day}`);
+    } else if (key === "idNumber") {
+      setDob("");
+    }
+  };
 
-  const year = value.slice(0, 2);
-  const month = value.slice(2, 4);
-  const day = value.slice(4, 6);
-
-  const yearPrefix = year[0] === "0" ? "20" : "19";
-  const fullYear = yearPrefix + year;
-
-  const monthNum = Number(month);
-  const dayNum = Number(day);
-
-  const isValidDate =
-    monthNum >= 1 &&
-    monthNum <= 12 &&
-    dayNum >= 1 &&
-    dayNum <= 31;
-
-  if (!isValidDate) {
-    setDob("");
-    setError("Invalid ID number, please check your ID number.");
-    return;
-  }
-
-  setError("");
-  setDob(`${fullYear}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
-};
-
-
+  /* ---------------------------------------------------
+     HANDLE SUBMIT
+  --------------------------------------------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setErrors({});
     setMessage("");
 
-    if (formData.idNumber.length !== 13) {
-      setError("ID Number must be exactly 13 digits");
-      formRef.current.scrollIntoView({ behavior: "smooth" });
-      setLoading(false);
-      return;
-    }
-
     try {
+      jobApplySchema.parse(formData);
+
       const data = new FormData();
-      Object.entries(formData).forEach(([key, value]) => data.append(key, value));
+      Object.entries(formData).forEach(([key, value]) =>
+        data.append(key, value)
+      );
+
       await api.post("/application/apply", data);
-      setMessage("Application submitted successfully!");
+
+      setMessage("Application submitted successfully 🎉");
       setFormData({
         firstName: "",
         lastName: "",
         idNumber: "",
         email: "",
         location: "",
-        gender: "",
         qualification: "",
         experience: "",
         currentRole: "",
@@ -93,111 +156,108 @@ export default function JobApply() {
       });
       setDob("");
     } catch (err) {
-      console.error(err);
-      setError("Something went wrong. Please try again.");
-      formRef.current.scrollIntoView({ behavior: "smooth" });
+      if (err instanceof z.ZodError) {
+        const fieldErrors = {};
+        err.errors.forEach((e) => {
+          fieldErrors[e.path[0]] = e.message;
+        });
+        setErrors(fieldErrors);
+      } else {
+        setErrors({ global: "Something went wrong. Please try again." });
+      }
+      formRef.current?.scrollIntoView({ behavior: "smooth" });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4">
       <div
         ref={formRef}
-        className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6 transition-colors duration-300"
+        className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6"
       >
-        <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">Job Application</h1>
-        <p className="text-gray-500 dark:text-gray-300">Please fill in your details carefully</p>
+        <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
+          Job Application
+        </h1>
 
-        {error && (
-          <div className="flex items-center gap-2 text-red-600 bg-red-50 dark:bg-red-900 dark:text-red-400 rounded-2xl p-3">
-            <FiUser />
-            <span>{error}</span>
-          </div>
+        {errors.global && (
+          <p className="text-red-500 text-sm">{errors.global}</p>
         )}
+
         {message && (
-          <div className="flex items-center gap-2 text-green-600 bg-green-50 dark:bg-green-900 dark:text-green-400 rounded-2xl p-3">
-            <FiCheckCircle />
-            <span>{message}</span>
-          </div>
+          <p className="text-green-500 text-sm">{message}</p>
         )}
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Personal Information */}
-          <div className="space-y-4">
-            <InputField
-              icon={<FiUser />}
-              placeholder="First Name"
-              value={formData.firstName}
-              onChange={(v) => handleChange("firstName", v)}
-            />
-            <InputField
-              icon={<FiUser />}
-              placeholder="Last Name"
-              value={formData.lastName}
-              onChange={(v) => handleChange("lastName", v)}
-            />
-            <InputField
-              icon={<FiCalendar />}
-              placeholder="ID Number"
-              value={formData.idNumber}
-              onChange={(v) => handleChange("idNumber", v)}
-            />
-            <InputField
-              icon={<FiCalendar />}
-              placeholder="Date of Birth"
-              value={dob}
-              onChange={() => {}}
-              type="text"
-            />
-            <InputField
-              icon={<FiMail />}
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={(v) => handleChange("email", v)}
-              type="email"
-            />
-            <InputField
-              icon={<FiMapPin />}
-              placeholder="Location (City, Country)"
-              value={formData.location}
-              onChange={(v) => handleChange("location", v)}
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <InputField
+            icon={<FiUser />}
+            placeholder="First Name"
+            value={formData.firstName}
+            error={errors.firstName}
+            onChange={(v) => handleChange("firstName", v)}
+          />
 
-          {/* Professional Info */}
-          <div className="space-y-4">
-            <InputField
-              icon={<FiBriefcase />}
-              placeholder="Highest Qualification"
-              value={formData.qualification}
-              onChange={(v) => handleChange("qualification", v)}
-            />
-            <InputField
-              icon={<FiBriefcase />}
-              placeholder="Years of Experience"
-              value={formData.experience}
-              onChange={(v) => handleChange("experience", v)}
-            />
-            <InputField
-              icon={<FiBriefcase />}
-              placeholder="Current Role / Position"
-              value={formData.currentRole}
-              onChange={(v) => handleChange("currentRole", v)}
-            />
-            <InputField
-              icon={<FiBriefcase />}
-              placeholder="Portfolio / LinkedIn URL"
-              value={formData.portfolio}
-              onChange={(v) => handleChange("portfolio", v)}
-            />
-          </div>
+          <InputField
+            icon={<FiUser />}
+            placeholder="Last Name"
+            value={formData.lastName}
+            error={errors.lastName}
+            onChange={(v) => handleChange("lastName", v)}
+          />
+
+          <InputField
+            icon={<FiCalendar />}
+            placeholder="ID Number"
+            value={formData.idNumber}
+            error={errors.idNumber}
+            onChange={(v) => handleChange("idNumber", v)}
+          />
+
+          <InputField
+            icon={<FiCalendar />}
+            placeholder="Date of Birth"
+            value={dob}
+            readOnly
+          />
+
+          <InputField
+            icon={<FiMail />}
+            placeholder="Email Address"
+            type="email"
+            value={formData.email}
+            error={errors.email}
+            onChange={(v) => handleChange("email", v)}
+          />
+
+          <InputField
+            icon={<FiMapPin />}
+            placeholder="Location"
+            value={formData.location}
+            error={errors.location}
+            onChange={(v) => handleChange("location", v)}
+          />
+
+          <InputField
+            icon={<FiBriefcase />}
+            placeholder="Highest Qualification"
+            value={formData.qualification}
+            error={errors.qualification}
+            onChange={(v) => handleChange("qualification", v)}
+          />
+
+          <InputField
+            icon={<FiBriefcase />}
+            placeholder="Years of Experience"
+            value={formData.experience}
+            error={errors.experience}
+            onChange={(v) => handleChange("experience", v)}
+          />
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-11 rounded-2xl bg-black dark:bg-gray-100 text-white dark:text-gray-900 font-medium hover:opacity-90 transition"
+            className="w-full h-11 rounded-2xl bg-black dark:bg-gray-100 text-white dark:text-gray-900 font-medium"
           >
             {loading ? "Submitting…" : "Submit Application"}
           </button>
@@ -207,18 +267,36 @@ export default function JobApply() {
   );
 }
 
-/* ---------- Reusable Components ---------- */
-function InputField({ icon, value, onChange, placeholder, type = "text" }) {
+/* ---------------------------------------------------
+   INPUT FIELD COMPONENT
+--------------------------------------------------- */
+function InputField({
+  icon,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+  error,
+  readOnly = false,
+}) {
   return (
-    <div className="flex items-center gap-2 rounded-2xl px-3 h-11 bg-gray-50 dark:bg-gray-700 transition-colors duration-300">
-      {icon && <span className="text-gray-400 dark:text-gray-300">{icon}</span>}
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1 bg-transparent outline-none text-sm text-gray-900 dark:text-gray-100"
-      />
+    <div className="space-y-1">
+      <div
+        className={`flex items-center gap-2 rounded-2xl px-3 h-11 bg-gray-50 dark:bg-gray-700 ${
+          error ? "ring-1 ring-red-500" : ""
+        }`}
+      >
+        {icon && <span className="text-gray-400">{icon}</span>}
+        <input
+          type={type}
+          value={value}
+          readOnly={readOnly}
+          onChange={(e) => onChange?.(e.target.value)}
+          placeholder={placeholder}
+          className="flex-1 bg-transparent outline-none text-sm"
+        />
+      </div>
+      {error && <p className="text-red-500 text-xs">{error}</p>}
     </div>
   );
 }
