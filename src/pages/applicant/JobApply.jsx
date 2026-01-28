@@ -88,9 +88,9 @@ const jobApplySchema = z.object({
   cv: fileSchema,
   doc1: z.instanceof(File).optional(),
   doc2: z.instanceof(File).optional(),
-  doc3: z.instanceof(File).optional(),
-  doc4: z.instanceof(File).optional(),
-  doc5: z.instanceof(File).optional(),
+  // doc3: z.instanceof(File).optional(),
+  // doc4: z.instanceof(File).optional(),
+  // doc5: z.instanceof(File).optional(),
 });
 
 /* ---------------------------------------------------
@@ -115,9 +115,9 @@ export default function JobApply() {
     cv: null,
     doc1: null,
     doc2: null,
-    doc3: null,
-    doc4: null,
-    doc5: null,
+    // doc3: null,
+    // doc4: null,
+    // doc5: null,
   });
 
   const formRef = useRef(null);
@@ -184,9 +184,9 @@ export default function JobApply() {
         cv: null,
         doc1: null,
         doc2: null,
-        doc3: null,
-        doc4: null,
-        doc5: null,
+        // doc3: null,
+        // doc4: null,
+        // doc5: null,
       });
       setDob("");
     } catch (err) {
@@ -206,7 +206,7 @@ export default function JobApply() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4 dark:text-white">
       <div
         ref={formRef}
         className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6"
