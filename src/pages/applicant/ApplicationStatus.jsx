@@ -13,12 +13,8 @@ export default function ApplicationStatus() {
         setLoading(true);
         setError("");
 
-        /**
-         * ⚠️ This endpoint MUST exist on backend
-         * Example backend route:
-         * GET /api/application/latest
-         */
-        const res = await api.get("/admin/applications");
+        // ✅ CORRECT ENDPOINT
+        const res = await api.get("/application/latest");
 
         if (!res.data) {
           setError("No application found");
@@ -27,7 +23,7 @@ export default function ApplicationStatus() {
         }
       } catch (err) {
         console.error(err);
-        setError("Unable to fetch application status. Please try again.");
+        setError("Unable to fetch application status.");
       } finally {
         setLoading(false);
       }
@@ -41,7 +37,9 @@ export default function ApplicationStatus() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
-        <p className="text-gray-500 text-sm">Loading application status…</p>
+        <p className="text-gray-500 text-sm">
+          Loading application status…
+        </p>
       </div>
     );
   }
@@ -49,8 +47,8 @@ export default function ApplicationStatus() {
   if (error) {
     return (
       <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
-        <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-md text-center">
-          <h2 className="text-lg font-medium text-gray-900 mb-2">
+        <div className="bg-white rounded-2xl border p-6 max-w-md text-center">
+          <h2 className="text-lg font-medium mb-2">
             Something went wrong
           </h2>
           <p className="text-sm text-gray-600 mb-4">
@@ -81,11 +79,11 @@ export default function ApplicationStatus() {
 
   return (
     <div className="min-h-screen bg-[#f5f5f7] flex justify-center py-10">
-      <div className="w-full max-w-xl bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
-
-        <h1 className="text-2xl font-semibold text-gray-900 mb-1">
+      <div className="w-full max-w-xl bg-white border rounded-2xl shadow-sm p-8">
+        <h1 className="text-2xl font-semibold mb-1">
           Application Status
         </h1>
+
         <p className="text-sm text-gray-500 mb-6">
           Track your job application progress
         </p>
@@ -93,16 +91,14 @@ export default function ApplicationStatus() {
         <div className="space-y-4">
           <div>
             <p className="text-sm text-gray-500">Applicant</p>
-            <p className="text-base text-gray-900 font-medium">
+            <p className="font-medium">
               {application.firstName} {application.lastName}
             </p>
           </div>
 
           <div>
             <p className="text-sm text-gray-500">Current Status</p>
-            <div className="mt-1">
-              <StatusBadge status={application.status} />
-            </div>
+            <StatusBadge status={application.status} />
           </div>
 
           <div>
