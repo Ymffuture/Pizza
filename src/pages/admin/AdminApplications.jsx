@@ -92,24 +92,30 @@ export default function AdminApplications() {
             </div>
 
             {/* DOCUMENTS */}
-            <div>
-              <p className="text-sm font-medium mb-2">Uploaded Documents</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Array.isArray(app.documents) && app.documents.length > 0 ? (
-                  app.documents.map((doc, i) => (
-                    <DocumentPreview
-                      key={i}
-                      url={doc.url}
-                      name={doc.name}
-                    />
-                  ))
-                ) : (
-                  <p className="text-sm text-gray-400">
-                    No documents uploaded
-                  </p>
-                )}
-              </div>
-            </div>
+            {/* DOCUMENTS */}
+<div>
+  <p className="text-sm font-medium mb-2">Uploaded Documents</p>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {app.documents &&
+    Object.values(app.documents).filter(Boolean).length > 0 ? (
+      Object.values(app.documents)
+        .filter((doc) => doc?.url)
+        .map((doc, i) => (
+          <DocumentPreview
+            key={i}
+            url={doc.url}
+            name={doc.name}
+          />
+        ))
+    ) : (
+      <p className="text-sm text-gray-400">
+        No documents uploaded
+      </p>
+    )}
+  </div>
+</div>
+
 
             {/* STATUS UPDATE */}
             <div className="flex items-center gap-4 pt-3 border-t">
