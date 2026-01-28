@@ -8,6 +8,7 @@ import {
   Factory,
   ServerCog,
   LogIn,
+  Send, 
 } from "lucide-react";
 
 import { FaWhatsapp, FaInstagram, FaLinkedin } from "react-icons/fa";
@@ -335,6 +336,25 @@ const Navbar = () => {
 
               {/* LINKS */}
               <nav className="flex flex-col gap-3 mb-6">
+  {/* APPLY – PRIMARY CTA */}
+  <Link
+    to="/apply"
+    onClick={() => setMenuOpen(false)}
+    className="
+      relative flex items-center gap-3 p-3 rounded-xl
+      bg-gradient-to-r from-blue-600 to-indigo-600
+      text-white font-semibold
+      shadow-lg shadow-blue-600/30
+      hover:scale-[1.02] hover:shadow-indigo-600/40
+      transition-all
+    "
+  >
+    <span className="absolute inset-0 rounded-xl ring-2 ring-blue-400/50 animate-pulse" />
+    <Send size={18} />
+    <span>Apply Now</span>
+  </Link>
+
+  {/* OTHER LINKS */}
   {[
     { name: "Home", href: "/", icon: <Home size={18} /> },
     { name: "Tickets", href: "/ticket", icon: <Ticket size={18} /> },
@@ -359,6 +379,7 @@ const Navbar = () => {
     </Link>
   ))}
 </nav>
+
 
               {/* THEME */}
               <div className="flex items-center gap-3 mb-5 dark:text-gray-400">
