@@ -55,7 +55,9 @@ export default function JobApply() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-pink-500 via-purple-500 to-yellow-400 flex justify-center py-10 px-4">
+   <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4 transition-colors duration-300">
+  <div className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6 transition-colors duration-300">
+    
       <div
         ref={formRef}
         className="w-full max-w-3xl bg-white rounded-3xl shadow-xl p-8 space-y-6"
@@ -205,5 +207,6 @@ function FileInput({ label, ...props }) {
         className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
       />
     </div>
+   </div>
   );
 }
