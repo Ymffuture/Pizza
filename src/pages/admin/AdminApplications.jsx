@@ -9,18 +9,41 @@ export default function AdminApplications() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    api
-      .get("/admin/applications")
-      .then((res) => {
-        if (Array.isArray(res.data)) {
-          setApps(res.data);
-        } else {
-          setApps([]);
-        }
-      })
-      .catch(() => setError("Failed to load applications"))
-      .finally(() => setLoading(false));
+    fetchApplications();
   }, []);
+
+  const fetchApplications = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/admin/applications");
+      setApps(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load applications");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const res = await api.put(`/admin/applications/${id}/status`, {
+        status: newStatus,
+      });
+
+      // ✅ Update UI immediately
+      setApps((prev) =>
+        prev.map((app) =>
+          app._id === id ? { ...app, status: res.data.status } : app
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status");
+    }
+  };
+
+  /* ---------------- STATES ---------------- */
 
   if (loading)
     return <p className="text-center mt-20 text-gray-500">Loading…</p>;
@@ -29,50 +52,82 @@ export default function AdminApplications() {
     return <p className="text-center mt-20 text-red-500">{error}</p>;
 
   if (!apps.length)
-    return <p className="text-center mt-20">No applications</p>;
+    return <p className="text-center mt-20">No applications found</p>;
+
+  /* ---------------- UI ---------------- */
 
   return (
-    <div className="max-w-6xl mx-auto p-8 space-y-6 bg-[#f5f5f7]">
-      <h1 className="text-3xl font-semibold">Applications</h1>
+    <div className="min-h-screen bg-[#f5f5f7]">
+      <div className="max-w-6xl mx-auto p-8 space-y-6">
+        <h1 className="text-3xl font-semibold">Job Applications</h1>
 
-      {apps.map((app) => (
-        <div
-          key={app._id}
-          className="bg-white rounded-2xl shadow-sm border p-6"
-        >
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">
-              {app.firstName} {app.lastName}
-            </h3>
-            <StatusBadge status={app.status} />
-          </div>
-
-          <p className="text-sm text-gray-500 mt-1">{app.email}</p>
-
-          {/* DOCUMENTS */}
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            {Array.isArray(app.documents) &&
-              app.documents.map((doc, i) => (
-                <DocumentPreview key={i} url={doc.url} name={doc.name} />
-              ))}
-          </div>
-
-          {/* STATUS UPDATE */}
-          <select
-            value={app.status}
-            onChange={(e) =>
-              api.patch(`/admin/applications/${app._id}/status`, {
-                status: e.target.value,
-              })
-            }
-            className="mt-4 px-3 py-2 border rounded-xl text-sm"
+        {apps.map((app) => (
+          <div
+            key={app._id}
+            className="bg-white rounded-2xl shadow-sm border p-6 space-y-4"
           >
-            <option value="successfully">Successfully</option>
-            <option value="unsuccessfully">Unsuccessfully</option>
-            <option value="second intake">Second Intake</option>
-          </select>
-        </div>
-      ))}
+            {/* HEADER */}
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-medium">
+                {app.firstName} {app.lastName}
+              </h3>
+              <StatusBadge status={app.status} />
+            </div>
+
+            {/* BASIC INFO */}
+            <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+              <p><strong>Email:</strong> {app.email}</p>
+              <p><strong>ID Number:</strong> {app.idNumber}</p>
+              <p><strong>Gender:</strong> {app.gender}</p>
+              <p><strong>Qualification:</strong> {app.qualification}</p>
+              <p><strong>Experience:</strong> {app.experienceLevel}</p>
+              <p>
+                <strong>Applied:</strong>{" "}
+                {new Date(app.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+
+            {/* DOCUMENTS */}
+            <div>
+              <p className="text-sm font-medium mb-2">Uploaded Documents</p>
+              <div className="grid grid-cols-2 gap-4">
+                {Array.isArray(app.documents) && app.documents.length > 0 ? (
+                  app.documents.map((doc, i) => (
+                    <DocumentPreview
+                      key={i}
+                      url={doc.url}
+                      name={doc.name}
+                    />
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No documents uploaded
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* STATUS UPDATE */}
+            <div className="flex items-center gap-4 pt-2">
+              <label className="text-sm text-gray-500">
+                Update Status:
+              </label>
+
+              <select
+                value={app.status}
+                onChange={(e) =>
+                  handleStatusChange(app._id, e.target.value)
+                }
+                className="px-3 py-2 border rounded-xl text-sm focus:outline-none"
+              >
+                <option value="successfully">Successfully</option>
+                <option value="unsuccessfully">Unsuccessfully</option>
+                <option value="second intake">Second Intake</option>
+              </select>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
