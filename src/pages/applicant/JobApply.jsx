@@ -22,32 +22,44 @@ export default function JobApply() {
   const formRef = useRef();
 
   const handleChange = (key, value) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-    
-if (key === "idNumber") {
-  if (/^\d{0,13}$/.test(value)) {
-    if (value.length >= 6) {
-      const year = value.slice(0, 2);
-      const month = value.slice(2, 4);
-      const day = value.slice(4, 6);
+  setFormData((prev) => ({ ...prev, [key]: value }));
 
-      const yearPrefix = year[0] === "0" ? "20" : "19";
-      const fullYear = yearPrefix + year;
+  if (key !== "idNumber") return;
 
-      const monthNum = parseInt(month, 10);
-      const dayNum = parseInt(day, 10);
-if (monthNum >= 1 && monthNum <= 12 && dayNum >= 1 && dayNum <= 31) {
-        setDob(`${fullYear}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
-      }  if (!monthNum >= 1 || !monthNum <= 12 || !dayNum >= 1 || !dayNum <= 31) {
-        setError("Invalid ID number, please check your ID number.");
-      } else {
-        setDob("");
-      }
-    } else {
-      setDob("");
-    }
+  if (!/^\d{0,13}$/.test(value)) return;
+
+  if (value.length < 6) {
+    setDob("");
+    setError("");
+    return;
   }
+
+  const year = value.slice(0, 2);
+  const month = value.slice(2, 4);
+  const day = value.slice(4, 6);
+
+  const yearPrefix = year[0] === "0" ? "20" : "19";
+  const fullYear = yearPrefix + year;
+
+  const monthNum = Number(month);
+  const dayNum = Number(day);
+
+  const isValidDate =
+    monthNum >= 1 &&
+    monthNum <= 12 &&
+    dayNum >= 1 &&
+    dayNum <= 31;
+
+  if (!isValidDate) {
+    setDob("");
+    setError("Invalid ID number, please check your ID number.");
+    return;
+  }
+
+  setError("");
+  setDob(`${fullYear}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`);
 };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
