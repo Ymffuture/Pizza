@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { z } from "zod";
 import { api } from "../../api";
 import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
-
+import {Helmet} from "react-helmet" ;
 import {
   FiUser,
   FiMail,
@@ -10,7 +10,9 @@ import {
   FiMapPin,
   FiBriefcase,
   FiUpload,
+  FiPhone, 
 } from "react-icons/fi";
+import Loader from "./Loader" 
 
 /* ---------------------------------------------------
    FILE CONSTRAINTS
@@ -85,15 +87,19 @@ const jobApplySchema = z.object({
   experience: z.string().min(1, "Experience is required"),
   currentRole: z.string().optional(),
   portfolio: z.string().optional(),
+phone: z.string().min(10).optional(),
 
-  // Documents
   cv: fileSchema,
   doc1: z.instanceof(File).optional(),
   doc2: z.instanceof(File).optional(),
-  // doc3: z.instanceof(File).optional(),
-  // doc4: z.instanceof(File).optional(),
-  // doc5: z.instanceof(File).optional(),
+
+  consent: z.literal(true, {
+    errorMap: () => ({
+      message: "You must accept the Terms & Privacy Policy",
+    }),
+  }),
 });
+
 
 /* ---------------------------------------------------
    MAIN COMPONENT
@@ -116,7 +122,11 @@ export default function JobApply() {
     portfolio: "",
     cv: null,
     doc1: null,
+    gender: "",
     doc2: null,
+    consent: false, 
+    phone: "",
+
     // doc3: null,
     // doc4: null,
     // doc5: null,
@@ -148,6 +158,12 @@ export default function JobApply() {
       const prefix =
         parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
       setDob(`${prefix}${year}-${month}-${day}`);
+      
+      if (value.length >= 10) {
+    const genderDigits = parseInt(value.slice(6, 10), 10);
+    const gender = genderDigits >= 0 && genderDigits <= 4999 ? "Female" : "Male";
+    setFormData((prev) => ({ ...prev, gender }));
+      }
     } else if (key === "idNumber") {
       setDob("");
     }
@@ -186,29 +202,88 @@ export default function JobApply() {
         cv: null,
         doc1: null,
         doc2: null,
+        gender: "",
+        consent: false, 
+        phone: "",
+ 
         // doc3: null,
         // doc4: null,
         // doc5: null,
       });
       setDob("");
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        const fieldErrors = {};
-        err.errors.forEach((e) => {
-          fieldErrors[e.path[0]] = e.message;
-        });
-        setErrors(fieldErrors);
-      } else {
-        setErrors({ global: "Something went wrong. Please try again." });
-      }
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-    } finally {
+  // 1. Frontend validation (Zod)
+  if (err instanceof z.ZodError) {
+    const fieldErrors = {};
+    err.errors.forEach((e) => {
+      fieldErrors[e.path[0]] = e.message;
+    });
+    setErrors(fieldErrors);
+  }
+
+  // 2. Backend responded (business logic errors)
+  else if (err.response) {
+    const { status, data } = err.response;
+
+    // Duplicate application (email / ID already exists)
+    if (status === 409) {
+      setErrors({
+        global: data?.message || "You have already applied for this position.",
+      });
+    }
+
+    // Validation error from backend
+    else if (status === 400 || status === 422) {
+      setErrors({
+        global: data?.message || "Invalid application data.",
+      });
+    }
+
+    // Unauthorized
+    else if (status === 401) {
+      setErrors({
+        global: "You are not authorized. Please log in again.",
+      });
+    }
+
+    // Server error
+    else if (status >= 500) {
+      setErrors({
+        global: "Server error. Please try again later.",
+      });
+    } else {
+      setErrors({
+        global: data?.message || "Application failed.",
+      });
+    }
+  }
+
+  // 3. Network error (no response at all)
+  else if (err.request) {
+    setErrors({
+      global: "Network error. Check your internet connection.",
+    });
+  }
+
+  // 4. Unknown JS error
+  else {
+    setErrors({
+      global: "Unexpected error occurred.",
+    });
+  }
+
+  formRef.current?.scrollIntoView({ behavior: "smooth" });
+} finally {
       setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4 dark:text-white">
+
+      <Helmet >
+      <title >Apply - Math/science or MERN </title>
+      </Helmet>
       <div
         ref={formRef}
         className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6"
@@ -218,7 +293,7 @@ export default function JobApply() {
         </h1>
 
         {errors.global && (
-          <p className="text-red-700 bg-red-600/10 p-2 rounded-xl text-sm">{errors.global}</p>
+          <p className="text-red-600 bg-red-400/10 p-2 rounded-xl text-sm">{errors.global}</p>
         )}
         {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
@@ -237,10 +312,22 @@ export default function JobApply() {
 
           <InputField icon={<FiCalendar />} placeholder="Date of Birth"
             value={dob} readOnly />
+<InputField
+  icon={<FiUser />}
+  placeholder="Gender"
+  value={formData.gender}
+  readOnly
+/>
 
           <InputField icon={<FiMail />} placeholder="Email Address"
             value={formData.email} error={errors.email}
             onChange={(v) => handleChange("email", v)} />
+<InputField
+  icon={<FiPhone />}
+  placeholder="Phone Number"
+  value={formData.phone}
+  onChange={(v) => handleChange("phone", v)}
+/>
 
           <InputField icon={<FiMapPin />} placeholder="Location"
             value={formData.location} error={errors.location}
@@ -271,14 +358,58 @@ export default function JobApply() {
               />
             ))}
           </div>
+<div className="space-y-1">
+  <label className="flex items-start gap-3 text-sm cursor-pointer">
+    <input
+      type="checkbox"
+      checked={formData.consent}
+      onChange={(e) => handleChange("consent", e.target.checked)}
+      className="mt-1 accent-black"
+    />
+
+    <span className="text-gray-600 dark:text-gray-300">
+      I agree to the{" "}
+      <a
+        href="/terms"
+        target="_blank"
+        className="underline font-medium"
+      >
+        Terms & Conditions
+      </a>{" "}
+      and{" "}
+      <a
+        href="/privacy"
+        target="_blank"
+        className="underline font-medium"
+      >
+        Privacy Policy
+      </a>
+      . I consent to the processing of my personal information in accordance
+      with POPIA.
+    </span>
+  </label>
+
+  {errors.consent && (
+    <p className="text-red-500 text-xs flex gap-2">
+      <FiAlertCircle size={14} /> {errors.consent}
+    </p>
+  )}
+</div>
 
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full h-11 rounded-2xl bg-black dark:bg-gray-100 text-white dark:text-gray-900 font-medium"
-          >
-            {loading ? "Submitting…" : "Submit Application"}
-          </button>
+  type="submit"
+  disabled={loading || !formData.consent}
+  className={`w-full h-11 rounded-2xl font-medium transition flex items-center justify-center
+    ${
+      loading || !formData.consent
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-black dark:bg-gray-100 text-white dark:text-gray-900"
+    }
+  `}
+>
+  {loading ? <Loader /> : "Submit Application"}
+</button>
+
         </form>
       </div>
     </div>
