@@ -267,10 +267,7 @@ export default function JobApply() {
   }
 
   formRef.current?.scrollIntoView({ behavior: "smooth" });
-}
-
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-    } finally {
+} finally {
       setLoading(false);
     }
   };
