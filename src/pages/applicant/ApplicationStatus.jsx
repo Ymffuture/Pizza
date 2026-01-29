@@ -73,7 +73,7 @@ export default function ApplicationStatus() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-start py-12 bg-gray-50 dark:bg-gray-900 px-4 transition-colors">
+    <div className="min-h-screen flex justify-center items-start dark:bg-gray-900 transition-colors">
       <Helmet>
         <title>Application Status</title>
       </Helmet>
@@ -81,7 +81,7 @@ export default function ApplicationStatus() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-xl bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 space-y-8"
+        className="w-full max-w-xl dark:bg-gray-800 space-y-8"
       >
         {/* Header */}
         <div>
@@ -180,8 +180,8 @@ export default function ApplicationStatus() {
 
               {renderDocument(
                 "Curriculum Vitae (CV)",
-                application.documents?.cv, 
-                application.publicId, 
+                application.documents?.cv
+               
               )}
 
               {renderDocument(
