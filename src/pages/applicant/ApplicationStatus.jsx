@@ -124,6 +124,35 @@ export default function ApplicationStatus() {
                 {new Date(application.updatedAt).toLocaleString()}
               </p>
             </div>
+<div className="space-y-4">
+  <p className="text-gray-400 text-sm">Uploaded Documents</p>
+
+  <div className="space-y-3 bg-gray-50 dark:bg-gray-700/40 p-4 rounded-2xl">
+    {application.documents?.cv && (
+      <div>
+        <p className="text-xs text-gray-400">Curriculum Vitae</p>
+        {renderDoc(application.documents.cv)}
+      </div>
+    )}
+
+    {application.documents?.doc1 && (
+      <div>
+        <p className="text-xs text-gray-400">
+          Matric / Latest School Report
+        </p>
+        {renderDoc(application.documents.doc1)}
+      </div>
+    )}
+
+    {application.documents?.doc2 && (
+      <div>
+        <p className="text-xs text-gray-400">Certified ID Copy</p>
+        {renderDoc(application.documents.doc2)}
+      </div>
+    )}
+  </div>
+</div>
+        
           </motion.div>
         )}
       </motion.div>
