@@ -62,7 +62,7 @@ const MenuCard = ({
       <div
         className="
           group relative
-          bg-white/90 dark:bg-zinc-900/80
+           dark:bg-zinc-900/80
           backdrop-blur-xl
           border border-gray-200/60 dark:border-zinc-700
           rounded-3xl overflow-hidden
