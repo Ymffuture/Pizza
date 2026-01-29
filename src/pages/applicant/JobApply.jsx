@@ -10,6 +10,7 @@ import {
   FiMapPin,
   FiBriefcase,
   FiUpload,
+  FiPhone, 
 } from "react-icons/fi";
 import Loader from "./Loader" 
 
