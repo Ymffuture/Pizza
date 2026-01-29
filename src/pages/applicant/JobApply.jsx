@@ -279,14 +279,14 @@ export default function JobApply() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center w-full dark:text-white">
+    <div className="min-h-screen dark:bg-gray-900 flex justify-center w-full dark:text-white">
 
       <Helmet >
       <title >Apply - Math/science or MERN </title>
       </Helmet>
       <div
         ref={formRef}
-        className="w-full max-w-3xl bg-white dark:bg-gray-800 p-8 space-y-6"
+        className="w-full max-w-3xl dark:bg-gray-800 p-8"
       >
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
           Job / School Application (Developer / DoE) 
