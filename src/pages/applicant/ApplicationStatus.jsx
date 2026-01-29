@@ -81,7 +81,7 @@ export default function ApplicationStatus() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-xl dark:bg-gray-800 space-y-8"
+        className="w-full max-w-xl space-y-8"
       >
         {/* Header */}
         <div>
