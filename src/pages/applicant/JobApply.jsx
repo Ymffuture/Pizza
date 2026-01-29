@@ -279,7 +279,7 @@ export default function JobApply() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-8 dark:text-white">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center w-full dark:text-white">
 
       <Helmet >
       <title >Apply - Math/science or MERN </title>
