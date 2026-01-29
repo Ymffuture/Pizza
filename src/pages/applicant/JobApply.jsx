@@ -279,7 +279,7 @@ export default function JobApply() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4 dark:text-white">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-8 dark:text-white">
 
       <Helmet >
       <title >Apply - Math/science or MERN </title>
@@ -289,9 +289,13 @@ export default function JobApply() {
         className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6"
       >
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-          Job / School Application
+          Job / School Application (Developer / Doe) 
         </h1>
+   <p className="text-black dark:text-white p-2 rounded-xl text-sm">This form will be in our system for 3 months for next application cycle </p>
 
+<p className="text-gray-600 dark:text-gray-300 p-2 rounded-xl text-sm">This form will act as Agreement between SwiftMeta and the applicatint</p>
+        
+        
         {errors.global && (
           <p className="text-red-600 bg-red-400/10 p-2 rounded-xl text-sm">{errors.global}</p>
         )}
@@ -343,21 +347,28 @@ export default function JobApply() {
 
           {/* Documents */}
           <div className="space-y-3">
-            <FileField
-              label="Curriculum Vitae (Required)"
-              error={errors.cv}
-              onChange={(f) => handleChange("cv", f)}
-            />
+  {/* CV */}
+  <FileField
+    label="Curriculum Vitae (Required)"
+    error={errors.cv}
+    onChange={(f) => handleChange("cv", f)}
+  />
 
-            {[1, 2].map((n) => (
-              <FileField
-                key={n}
-                label={`Supporting Document ${n}`}
-                error={errors[`doc${n}`]}
-                onChange={(f) => handleChange(`doc${n}`, f)}
-              />
-            ))}
-          </div>
+  {/* Matric / Past Report */}
+  <FileField
+    label="Matric Certificate / Latest School Report"
+    error={errors.doc1}
+    onChange={(f) => handleChange("doc1", f)}
+  />
+
+  {/* ID Copy */}
+  <FileField
+    label="Certified ID Copy"
+    error={errors.doc2}
+    onChange={(f) => handleChange("doc2", f)}
+  />
+</div>
+
 <div className="space-y-1">
   <label className="flex items-start gap-3 text-sm cursor-pointer">
     <input
@@ -378,7 +389,7 @@ export default function JobApply() {
       </a>{" "}
       and{" "}
       <a
-        href="/privacy"
+        href="/policy"
         target="_blank"
         className="underline font-medium"
       >
