@@ -169,7 +169,7 @@ const Policy = () => {
           <div className="mt-4 p-4 rounded-2xl bg-gray-100 dark:bg-white/10 border border-black/5 dark:border-white/10">
             <p className="font-medium text-gray-900 dark:text-white">Email</p>
             <p className="text-gray-700 dark:text-gray-300">
-              support@swiftmeta.dev
+              famacloud.ai@gmail.com
             </p>
           </div>
         </Section>
