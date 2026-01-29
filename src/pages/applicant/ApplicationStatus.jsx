@@ -121,8 +121,10 @@ export default function ApplicationStatus() {
               <Loader />
             ) : (
               <>
+                 {query.includes('@')? "Start Searching with email" :(
                 <FiSearch />
                 Search Application
+               )} 
               </>
             )}
           </button>
