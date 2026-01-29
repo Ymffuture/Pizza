@@ -1,4 +1,4 @@
-const Loader = ({ size = 20, color = "#007aff" }) => (
+const Loader = ({ size = 26, color = "currentColor" }) => (
   <svg
     viewBox="0 0 100 100"
     xmlns="http://www.w3.org/2000/svg"
@@ -22,13 +22,13 @@ const Loader = ({ size = 20, color = "#007aff" }) => (
       <animate
         attributeName="stroke-dasharray"
         values="1,200;90,200;1,200"
-        dur="1.5s"
+        dur="2.5s"
         repeatCount="indefinite"
       />
       <animate
         attributeName="stroke-dashoffset"
         values="0;-40;-120"
-        dur="1.5s"
+        dur="2.5s"
         repeatCount="indefinite"
       />
       <animateTransform
@@ -36,7 +36,7 @@ const Loader = ({ size = 20, color = "#007aff" }) => (
         type="rotate"
         from="0 50 50"
         to="360 50 50"
-        dur="2s"
+        dur="2.5s"
         repeatCount="indefinite"
       />
     </circle>
