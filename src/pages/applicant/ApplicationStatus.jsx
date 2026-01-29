@@ -180,7 +180,8 @@ export default function ApplicationStatus() {
 
               {renderDocument(
                 "Curriculum Vitae (CV)",
-                application.documents?.cv
+                application.documents?.cv, 
+                application.publicId, 
               )}
 
               {renderDocument(
