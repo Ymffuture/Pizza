@@ -1,13 +1,41 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FiSearch, FiMail, FiHash } from "react-icons/fi";
+import { FiSearch, FiMail, FiHash, FiFileText } from "react-icons/fi";
 import StatusBadge from "../../components/StatusBadge";
 import { api } from "../../api";
-import {Helmet} from "react-helmet" ;
-import Loader from "./Loader" ;
+import { Helmet } from "react-helmet";
+import Loader from "./Loader";
 
+/* ------------------------------------
+   Helpers
+------------------------------------ */
+const maskIdNumber = (id = "") => {
+  if (id.length < 4) return id;
+  return `${id[0]}****${id.slice(-3)}`;
+};
 
+const renderDocument = (label, doc) => {
+  if (!doc) return null;
 
+  return (
+    <div className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm">
+      <FiFileText className="text-gray-400 mt-1" />
+      <div className="space-y-1">
+        <p className="text-xs text-gray-400">{label}</p>
+        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+          {doc.name}
+        </p>
+        <p className="text-xs text-gray-500 break-all">
+          Public ID: {doc.publicId}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+/* ------------------------------------
+   Component
+------------------------------------ */
 export default function ApplicationStatus() {
   const [query, setQuery] = useState("");
   const [application, setApplication] = useState(null);
@@ -46,9 +74,10 @@ export default function ApplicationStatus() {
 
   return (
     <div className="min-h-screen flex justify-center items-start py-12 bg-gray-50 dark:bg-gray-900 px-4 transition-colors">
-      <Helmet >
-      <title >Status - application</title>
+      <Helmet>
+        <title>Application Status</title>
       </Helmet>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -81,16 +110,16 @@ export default function ApplicationStatus() {
             />
           </div>
 
-          {error && (
-            <p className="text-red-500 text-sm">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
             className="w-full h-11 rounded-2xl bg-black dark:bg-gray-100 text-white dark:text-gray-900 font-medium flex items-center justify-center gap-2"
           >
-            {loading ? <Loader />: (
+            {loading ? (
+              <Loader />
+            ) : (
               <>
                 <FiSearch />
                 Search Application
@@ -106,6 +135,7 @@ export default function ApplicationStatus() {
             animate={{ opacity: 1 }}
             className="space-y-6 border-t pt-6 dark:border-gray-700"
           >
+            {/* Applicant */}
             <div>
               <p className="text-gray-400 text-sm">Applicant</p>
               <p className="font-medium text-gray-900 dark:text-gray-100 text-lg">
@@ -113,46 +143,56 @@ export default function ApplicationStatus() {
               </p>
             </div>
 
+            {/* ID + Email */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-gray-400 text-sm">ID Number</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm">
+                  {maskIdNumber(application.idNumber)}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-gray-400 text-sm">Email</p>
+                <p className="text-gray-700 dark:text-gray-300 text-sm truncate">
+                  {application.email}
+                </p>
+              </div>
+            </div>
+
+            {/* Status */}
             <div>
               <p className="text-gray-400 text-sm">Current Status</p>
               <StatusBadge status={application.status} />
             </div>
 
+            {/* Updated */}
             <div>
               <p className="text-gray-400 text-sm">Last Updated</p>
               <p className="text-gray-700 dark:text-gray-300 text-sm">
                 {new Date(application.updatedAt).toLocaleString()}
               </p>
             </div>
-<div className="space-y-4">
-  <p className="text-gray-400 text-sm">Uploaded Documents</p>
 
-  <div className="space-y-3 bg-gray-50 dark:bg-gray-700/40 p-4 rounded-2xl">
-    {application.documents?.cv && (
-      <div>
-        <p className="text-xs text-gray-400">Curriculum Vitae</p>
-        {renderDoc(application.documents.cv)}
-      </div>
-    )}
+            {/* Documents */}
+            <div className="space-y-3">
+              <p className="text-gray-400 text-sm">Uploaded Documents</p>
 
-    {application.documents?.doc1 && (
-      <div>
-        <p className="text-xs text-gray-400">
-          Matric / Latest School Report
-        </p>
-        {renderDoc(application.documents.doc1)}
-      </div>
-    )}
+              {renderDocument(
+                "Curriculum Vitae (CV)",
+                application.documents?.cv
+              )}
 
-    {application.documents?.doc2 && (
-      <div>
-        <p className="text-xs text-gray-400">Certified ID Copy</p>
-        {renderDoc(application.documents.doc2)}
-      </div>
-    )}
-  </div>
-</div>
-        
+              {renderDocument(
+                "Matric / Latest School Report",
+                application.documents?.doc1
+              )}
+
+              {renderDocument(
+                "Certified ID Copy",
+                application.documents?.doc2
+              )}
+            </div>
           </motion.div>
         )}
       </motion.div>
