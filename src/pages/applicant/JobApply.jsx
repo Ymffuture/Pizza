@@ -86,6 +86,7 @@ const jobApplySchema = z.object({
   experience: z.string().min(1, "Experience is required"),
   currentRole: z.string().optional(),
   portfolio: z.string().optional(),
+phone: z.string().min(10).optional(),
 
   cv: fileSchema,
   doc1: z.instanceof(File).optional(),
@@ -123,6 +124,8 @@ export default function JobApply() {
     gender: "",
     doc2: null,
     consent: false, 
+    phone: "",
+
     // doc3: null,
     // doc4: null,
     // doc5: null,
@@ -200,6 +203,8 @@ export default function JobApply() {
         doc2: null,
         gender: "",
         consent: false, 
+        phone: "",
+ 
         // doc3: null,
         // doc4: null,
         // doc5: null,
@@ -316,6 +321,12 @@ export default function JobApply() {
           <InputField icon={<FiMail />} placeholder="Email Address"
             value={formData.email} error={errors.email}
             onChange={(v) => handleChange("email", v)} />
+<InputField
+  icon={<FiPhone />}
+  placeholder="Phone Number"
+  value={formData.phone}
+  onChange={(v) => handleChange("phone", v)}
+/>
 
           <InputField icon={<FiMapPin />} placeholder="Location"
             value={formData.location} error={errors.location}
