@@ -8,7 +8,7 @@ const googlePlayIcon =
 
 const GetApp = () => {
   return (
-    <section className="py-20 bg-[#FAFAFA] dark:bg-black transition-all duration-300">
+    <section className="py-20 dark:bg-black transition-all duration-300">
       {/* Apple-style container */}
       <div className="max-w-6xl mx-auto px-6">
         <div
