@@ -286,14 +286,14 @@ export default function JobApply() {
       </Helmet>
       <div
         ref={formRef}
-        className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6"
+        className="w-full max-w-3xl bg-white dark:bg-gray-800 p-8 space-y-6"
       >
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-          Job / School Application (Developer / Doe) 
+          Job / School Application (Developer / DoE) 
         </h1>
    <p className="text-black dark:text-white p-2 rounded-xl text-sm">This form will be in our system for 3 months for next application cycle </p>
 
-<p className="text-gray-600 dark:text-gray-300 p-2 rounded-xl text-sm">This form will act as Agreement between SwiftMeta and the applicatint</p>
+<p className="text-gray-600 dark:text-gray-300 p-2 rounded-xl text-sm">This form will act as Agreement between SwiftMeta and the applicant</p>
         
         
         {errors.global && (
