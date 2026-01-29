@@ -1,12 +1,11 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
 export default function DocumentPreview({ url, name }) {
   const [showModal, setShowModal] = useState(false);
 
   if (!url) return null;
 
   const isImage = url.match(/\.(jpeg|jpg|png|gif)$/i);
+  const isPDF = url.match(/\.pdf$/i);
+  const isDoc = url.match(/\.(doc|docx)$/i);
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-2xl shadow-md mb-4">
@@ -19,11 +18,10 @@ export default function DocumentPreview({ url, name }) {
           onClick={() => setShowModal(true)}
           className="text-blue-600 dark:text-blue-400 text-xs font-semibold hover:underline"
         >
-          View Online
+          View
         </button>
       </div>
 
-      {/* Optional image preview */}
       {isImage && (
         <img
           src={url}
@@ -32,7 +30,6 @@ export default function DocumentPreview({ url, name }) {
         />
       )}
 
-      {/* Modal */}
       <AnimatePresence>
         {showModal && (
           <motion.div
@@ -59,11 +56,26 @@ export default function DocumentPreview({ url, name }) {
                 </button>
               </div>
 
-              <iframe
-                src={url}
-                title={name || "Document"}
-                className="flex-1 w-full rounded-xl"
-              />
+              {isImage || isPDF ? (
+                <iframe
+                  src={url}
+                  title={name || "Document"}
+                  className="flex-1 w-full rounded-xl"
+                />
+              ) : isDoc ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 underline"
+                  >
+                    Download {name}
+                  </a>
+                </div>
+              ) : (
+                <p>Cannot preview this file type</p>
+              )}
             </motion.div>
           </motion.div>
         )}
