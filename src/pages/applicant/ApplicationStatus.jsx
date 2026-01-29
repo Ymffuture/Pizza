@@ -4,6 +4,10 @@ import { FiSearch, FiMail, FiHash } from "react-icons/fi";
 import StatusBadge from "../../components/StatusBadge";
 import { api } from "../../api";
 import {Helmet} from "react-helmet" ;
+import Loader from "./Loader" ;
+
+
+
 export default function ApplicationStatus() {
   const [query, setQuery] = useState("");
   const [application, setApplication] = useState(null);
@@ -86,7 +90,7 @@ export default function ApplicationStatus() {
             disabled={loading}
             className="w-full h-11 rounded-2xl bg-black dark:bg-gray-100 text-white dark:text-gray-900 font-medium flex items-center justify-center gap-2"
           >
-            {loading ? "Searching…" : (
+            {loading ? <Loader />: (
               <>
                 <FiSearch />
                 Search Application
