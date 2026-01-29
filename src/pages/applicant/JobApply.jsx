@@ -206,15 +206,69 @@ export default function JobApply() {
       });
       setDob("");
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        const fieldErrors = {};
-        err.errors.forEach((e) => {
-          fieldErrors[e.path[0]] = e.message;
-        });
-        setErrors(fieldErrors);
-      } else {
-        setErrors({ global: "Something went wrong. Please try again." });
-      }
+  // 1. Frontend validation (Zod)
+  if (err instanceof z.ZodError) {
+    const fieldErrors = {};
+    err.errors.forEach((e) => {
+      fieldErrors[e.path[0]] = e.message;
+    });
+    setErrors(fieldErrors);
+  }
+
+  // 2. Backend responded (business logic errors)
+  else if (err.response) {
+    const { status, data } = err.response;
+
+    // Duplicate application (email / ID already exists)
+    if (status === 409) {
+      setErrors({
+        global: data?.message || "You have already applied for this position.",
+      });
+    }
+
+    // Validation error from backend
+    else if (status === 400 || status === 422) {
+      setErrors({
+        global: data?.message || "Invalid application data.",
+      });
+    }
+
+    // Unauthorized
+    else if (status === 401) {
+      setErrors({
+        global: "You are not authorized. Please log in again.",
+      });
+    }
+
+    // Server error
+    else if (status >= 500) {
+      setErrors({
+        global: "Server error. Please try again later.",
+      });
+    } else {
+      setErrors({
+        global: data?.message || "Application failed.",
+      });
+    }
+  }
+
+  // 3. Network error (no response at all)
+  else if (err.request) {
+    setErrors({
+      global: "Network error. Check your internet connection.",
+    });
+  }
+
+  // 4. Unknown JS error
+  else {
+    setErrors({
+      global: "Unexpected error occurred.",
+    });
+  }
+
+  formRef.current?.scrollIntoView({ behavior: "smooth" });
+}
+
       formRef.current?.scrollIntoView({ behavior: "smooth" });
     } finally {
       setLoading(false);
@@ -236,7 +290,7 @@ export default function JobApply() {
         </h1>
 
         {errors.global && (
-          <p className="text-red-700 bg-red-600/10 p-2 rounded-xl text-sm">{errors.global}</p>
+          <p className="text-red-600 bg-red-400/10 p-2 rounded-xl text-sm">{errors.global}</p>
         )}
         {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
