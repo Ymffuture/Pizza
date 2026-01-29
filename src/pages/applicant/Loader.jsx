@@ -1,4 +1,4 @@
-const Loader = ({ size = 20, color = "currentColor" }) => (
+const Loader = ({ size = 20, color = "#007aff" }) => (
   <svg
     viewBox="0 0 100 100"
     xmlns="http://www.w3.org/2000/svg"
