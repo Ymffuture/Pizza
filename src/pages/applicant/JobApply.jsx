@@ -286,7 +286,7 @@ export default function JobApply() {
       </Helmet>
       <div
         ref={formRef}
-        className="w-full max-w-3xl dark:bg-gray-800 p-8"
+        className="w-full max-w-3xl p-8"
       >
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
           Job / School Application (Developer / DoE) 
@@ -443,7 +443,7 @@ function InputField({
     <div className="space-y-1">
       <div
         className={`flex items-center gap-2 rounded-2xl px-3 h-11 bg-gray-50 dark:bg-gray-700 ${
-          error ? "ring-1 ring-red-500" : ""
+          error ? "ring-1 ring-red-600/10" : ""
         }`}
       >
         {icon && <span className="text-gray-400">{icon}</span>}
@@ -456,7 +456,7 @@ function InputField({
           className="flex-1 bg-transparent outline-none text-sm"
         />
       </div>
-      {error && <p className="text-red-500 flex gap-2 text-xs"> <FiAlertCircle size={18} /> {error}</p>}
+      {error && <p className="text-red-600 flex gap-2 text-xs"> <FiAlertCircle size={18} /> {error}</p>}
     </div>
   );
 }
