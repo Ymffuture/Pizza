@@ -270,11 +270,11 @@ export default function Newsletter() {
   ----------------------------------- */
 
   return (
-    <section className="bg-[#f5f5f7] dark:bg-black py-24">
+    <section className="dark:bg-black py-20" >
     
    
 
-      <div className="max-w-3xl mx-auto px-8 py-16 rounded-[32px] bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-lg relative overflow-hidden" >
+      <div className="max-w-3xl mx-auto w-full rounded-[32px] dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 relative overflow-hidden" >
 {(status === "loading" || isPending) && <Liner />}
 
         <header className="text-center mb-10">
