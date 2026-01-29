@@ -130,9 +130,9 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* INFO */}
           <aside className="space-y-8">
-            <InfoCard icon={Mail} title="Email" value="support@swiftmeta.dev" />
-            <InfoCard icon={Phone} title="Phone" value="+27 63 441 4863" />
-            <InfoCard icon={MapPin} title="Location" value="Johannesburg, SA" />
+            <InfoCard icon={Mail} title="Email" value="Famacloud.ai@gmail.com" />
+            <InfoCard icon={Phone} title="Phone" value="+27 63 441 4863 (WhatsApp) / +27 65 393 5339" />
+            <InfoCard icon={MapPin} title="Location" value="Johannesburg South, SA" />
           </aside>
 
           {/* FORM + HISTORY */}
