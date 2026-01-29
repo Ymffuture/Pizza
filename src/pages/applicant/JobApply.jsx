@@ -11,6 +11,7 @@ import {
   FiBriefcase,
   FiUpload,
 } from "react-icons/fi";
+import Loader from "./Loader" 
 
 /* ---------------------------------------------------
    FILE CONSTRAINTS
@@ -343,7 +344,7 @@ export default function JobApply() {
     }
   `}
 >
-  {loading ? "Submitting…" : "Submit Application"}
+  {loading ? <Loader /> : "Submit Application"}
 </button>
 
         </form>
