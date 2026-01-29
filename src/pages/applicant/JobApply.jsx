@@ -336,7 +336,7 @@ export default function JobApply() {
           <button
   type="submit"
   disabled={loading || !formData.consent}
-  className={`w-full h-11 rounded-2xl font-medium transition
+  className={`w-full h-11 rounded-2xl font-medium transition flex items-center justify-center
     ${
       loading || !formData.consent
         ? "bg-gray-400 cursor-not-allowed"
