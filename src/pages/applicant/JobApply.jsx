@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { z } from "zod";
 import { api } from "../../api";
+import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
+
 import {
   FiUser,
   FiMail,
@@ -72,13 +74,13 @@ const fileSchema = z
   );
 
 const jobApplySchema = z.object({
-  firstName: z.string().min(2, "First name is required"),
+  firstName: z.string().min(4, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
   idNumber: z.string().refine(isValidSouthAfricanID, {
     message: "Invalid South African ID number",
   }),
   email: z.string().email("Invalid email address"),
-  location: z.string().min(2, "Location is required"),
+  location: z.string().min(6, "Location is required"),
   qualification: z.string().min(2, "Qualification is required"),
   experience: z.string().min(1, "Experience is required"),
   currentRole: z.string().optional(),
@@ -88,9 +90,9 @@ const jobApplySchema = z.object({
   cv: fileSchema,
   doc1: z.instanceof(File).optional(),
   doc2: z.instanceof(File).optional(),
-  doc3: z.instanceof(File).optional(),
-  doc4: z.instanceof(File).optional(),
-  doc5: z.instanceof(File).optional(),
+  // doc3: z.instanceof(File).optional(),
+  // doc4: z.instanceof(File).optional(),
+  // doc5: z.instanceof(File).optional(),
 });
 
 /* ---------------------------------------------------
@@ -115,9 +117,9 @@ export default function JobApply() {
     cv: null,
     doc1: null,
     doc2: null,
-    doc3: null,
-    doc4: null,
-    doc5: null,
+    // doc3: null,
+    // doc4: null,
+    // doc5: null,
   });
 
   const formRef = useRef(null);
@@ -170,7 +172,7 @@ export default function JobApply() {
 
       await api.post("/application/apply", data);
 
-      setMessage("Application submitted successfully 🎉");
+      setMessage("Application submitted successfully!");
       setFormData({
         firstName: "",
         lastName: "",
@@ -184,9 +186,9 @@ export default function JobApply() {
         cv: null,
         doc1: null,
         doc2: null,
-        doc3: null,
-        doc4: null,
-        doc5: null,
+        // doc3: null,
+        // doc4: null,
+        // doc5: null,
       });
       setDob("");
     } catch (err) {
@@ -206,19 +208,19 @@ export default function JobApply() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex justify-center py-10 px-4 dark:text-white">
       <div
         ref={formRef}
         className="w-full max-w-3xl bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 space-y-6"
       >
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-          Job Application
+          Job / School Application
         </h1>
 
         {errors.global && (
-          <p className="text-red-500 text-sm">{errors.global}</p>
+          <p className="text-red-700 bg-red-600/10 p-2 rounded-xl text-sm">{errors.global}</p>
         )}
-        {message && <p className="text-green-500 text-sm">{message}</p>}
+        {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <InputField icon={<FiUser />} placeholder="First Name"
@@ -260,7 +262,7 @@ export default function JobApply() {
               onChange={(f) => handleChange("cv", f)}
             />
 
-            {[1, 2, 3, 4, 5].map((n) => (
+            {[1, 2].map((n) => (
               <FileField
                 key={n}
                 label={`Supporting Document ${n}`}
@@ -312,7 +314,7 @@ function InputField({
           className="flex-1 bg-transparent outline-none text-sm"
         />
       </div>
-      {error && <p className="text-red-500 text-xs">{error}</p>}
+      {error && <p className="text-red-500 flex gap-2 text-xs"> <FiAlertCircle size={18} /> {error}</p>}
     </div>
   );
 }
@@ -328,7 +330,7 @@ function FileField({ label, error, onChange }) {
         onChange={(e) => onChange(e.target.files?.[0])}
         className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700"
       />
-      {error && <p className="text-red-500 text-xs">{error}</p>}
+      {error && <p className="text-red-700 bg-red-600/10 flex gap-2 p-2 rounded text-xs"> <FiAlertCircle size={18} /> {error}</p>}
     </div>
   );
 }
