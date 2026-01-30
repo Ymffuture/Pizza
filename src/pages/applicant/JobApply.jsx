@@ -64,6 +64,16 @@ function isValidSouthAfricanID(id) {
   return sum % 10 === 0;
 }
 
+function useDebounce(value, delay = 500) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+
+  return debounced;
+      }
 /* ---------------------------------------------------
    ZOD SCHEMA
 --------------------------------------------------- */
@@ -114,18 +124,6 @@ const [checkingEmail, setCheckingEmail] = useState(false);
 const [idExists, setIdExists] = useState(false);
 const [emailExists, setEmailExists] = useState(false);
 
-
-
-function useDebounce(value, delay = 500) {
-  const [debounced, setDebounced] = useState(value);
-
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-
-  return debounced;
-}
   const debouncedId = useDebounce(formData.idNumber);
 const debouncedEmail = useDebounce(formData.email);
 
