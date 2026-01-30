@@ -123,7 +123,31 @@ const [checkingId, setCheckingId] = useState(false);
 const [checkingEmail, setCheckingEmail] = useState(false);
 const [idExists, setIdExists] = useState(false);
 const [emailExists, setEmailExists] = useState(false);
+const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    idNumber: "",
+    email: "",
+    location: "",
+    qualification: "",
+    experience: "",
+    currentRole: "",
+    portfolio: "",
+    cv: null,
+    doc1: null,
+    gender: "",
+    doc2: null,
+    consent: false, 
+    phone: "",
 
+    // doc3: null,
+    // doc4: null,
+    // doc5: null,
+  });
+
+  
+  const debouncedId = useDebounce(formData.idNumber);
+const debouncedEmail = useDebounce(formData.email); 
 
 
 useEffect(() => {
@@ -191,36 +215,6 @@ useEffect(() => {
   });
   return;
 }
-
-
-  
-  
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    idNumber: "",
-    email: "",
-    location: "",
-    qualification: "",
-    experience: "",
-    currentRole: "",
-    portfolio: "",
-    cv: null,
-    doc1: null,
-    gender: "",
-    doc2: null,
-    consent: false, 
-    phone: "",
-
-    // doc3: null,
-    // doc4: null,
-    // doc5: null,
-  });
-
-  
-  const debouncedId = useDebounce(formData.idNumber);
-const debouncedEmail = useDebounce(formData.email);
-
   
   const formRef = useRef(null);
 
