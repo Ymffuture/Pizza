@@ -122,7 +122,7 @@ export default function ApplicationStatus() {
             ) : (
               <>
                  {query.includes('@')? "Start Searching with email" :(
-               <span >
+               <span className="flex gap-2" >
                <FiSearch />
                 Search Application
                </span>
