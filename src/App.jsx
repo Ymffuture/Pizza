@@ -49,6 +49,7 @@ const ApplicantLayout =lazy(() =>import("./pages/applicant/ApplicantLayout")) ;
 import JobApply from "./pages/applicant/JobApply";
 import ApplicationStatus from "./pages/applicant/ApplicationStatus";
 import AdminApplications from "./pages/admin/AdminApplications";
+import CookieBanner from "./components/CookieBanner";
 
 
 
@@ -157,7 +158,7 @@ const App = () => {
     
     </Helmet>
     
-    
+    <CookieBanner />
     <Router>
       
       <ScrollToTop />
