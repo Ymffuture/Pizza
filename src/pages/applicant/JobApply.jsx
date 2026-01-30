@@ -453,7 +453,7 @@ if (idExists || emailExists) {
   }}
 />
 
-{checkingId && <InlineLoader label="Checking Email" />}
+{checkingEmail && <InlineLoader label="Checking email" />}
 
 
 {!checkingEmail &&
