@@ -11,7 +11,7 @@ import {
   Send, 
 } from "lucide-react";
 
-import { FaWhatsapp, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaWhatsapp, FaInstagram, FaLinkedin, FaDiscord } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
@@ -444,16 +444,56 @@ const Navbar = () => {
               </div>
 
               {/* SOCIAL ICONS */}
-              <div className="flex items-center justify-center gap-4">
-                <FaXTwitter size={20} className="cursor-pointer dark:text-white" />
-                <FaInstagram size={20} className="cursor-pointer dark:text-red-300" />
-                <FaLinkedin size={20} className="cursor-pointer dark:text-blue-600" />
-                <FaWhatsapp
-                  size={20}
-                  className="cursor-pointer dark:text-green-600"
-                  onClick={handleWhatsAppRedirect}
-                />
-              </div>
+  
+
+<div className="flex items-center justify-center gap-5">
+  {/* X / Twitter */}
+  <a
+    href="https://x.com/@futureFBG96"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="transition transform hover:scale-110"
+    aria-label="X / Twitter"
+  >
+    <FaXTwitter size={20} className="dark:text-white" />
+  </a>
+
+  {/* Instagram */}
+
+  {/* LinkedIn */}
+
+  {/* GitHub */}
+  <a
+    href="https://github.com/Ymffuture"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="transition transform hover:scale-110"
+    aria-label="GitHub"
+  >
+    <FaGithub size={20} className="dark:text-gray-200" />
+  </a>
+
+  {/* Discord */}
+  <a
+    href="https://discord.gg/54ZcWjguQ"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="transition transform hover:scale-110"
+    aria-label="Discord"
+  >
+    <FaDiscord size={20} className="dark:text-indigo-400" />
+  </a>
+
+  {/* WhatsApp */}
+  <button
+    onClick={handleWhatsAppRedirect}
+    className="transition transform hover:scale-110"
+    aria-label="WhatsApp"
+  >
+    <FaWhatsapp size={20} className="dark:text-green-600" />
+  </button>
+</div>
+
             </motion.div>
           </>
         )}
