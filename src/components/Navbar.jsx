@@ -11,7 +11,7 @@ import {
   Send, 
 } from "lucide-react";
 
-import { FaWhatsapp, FaInstagram, FaLinkedin, FaDiscord } from "react-icons/fa";
+import { FaWhatsapp, FaGithub, FaLinkedin, FaDiscord } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
