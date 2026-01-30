@@ -387,7 +387,7 @@ if (idExists || emailExists) {
         )}
         {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl p-6 flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4 pt-6">
           <InputField icon={<FiUser />} placeholder="First Name"
             value={formData.firstName} error={errors.firstName}
             onChange={(v) => handleChange("firstName", v)} />
