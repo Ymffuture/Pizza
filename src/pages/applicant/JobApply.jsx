@@ -297,9 +297,9 @@ export default function JobApply() {
         
         
         {errors.global && (
-          <p className="text-red-600 bg-red-400/10 p-2 rounded-xl text-sm">{errors.global}</p>
+          <p className="text-red-600 bg-red-400/10 p-6 p-2 rounded-xl text-sm">{errors.global}</p>
         )}
-        {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
+        {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl p-6 flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <InputField icon={<FiUser />} placeholder="First Name"
