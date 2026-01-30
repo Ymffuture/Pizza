@@ -400,7 +400,7 @@ if (idExists || emailExists) {
   icon={<FiCalendar />}
   placeholder="ID Number"
   value={formData.idNumber}
-  error={errors.idNumber}
+  error={errors.idNumber || (idExists && "ID already used") }
   onChange={(v) => {
     setIdExists(false);
     handleChange("idNumber", v);
