@@ -209,12 +209,7 @@ useEffect(() => {
   checkEmail();
 }, [debouncedEmail]);
 
-  if (idExists || emailExists) {
-  setErrors({
-    global: "You already have an application in our system.",
-  });
-  return;
-}
+  
   
   const formRef = useRef(null);
 
@@ -305,8 +300,10 @@ useEffect(() => {
     setErrors(fieldErrors);
   }
       
-if (emailExists || idExists) {
-  toast.error("ID number or email already exists");
+if (idExists || emailExists) {
+  setErrors({
+    global: "You already have an application in our system.",
+  });
   return;
 }
 
