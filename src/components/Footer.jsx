@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import gsap from "gsap";
@@ -280,12 +280,12 @@ const StarBackground = () => (
               <FaFacebookF />
             </a>
             <a
-              href="https://www.instagram.com/"
+              href="https://github.com/Ymffuture"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-pink-500 transition"
             >
-              <FaInstagram />
+              <FaGithub />
             </a>
             <a
               href="https://x.com/"
@@ -295,6 +295,7 @@ const StarBackground = () => (
             >
               <FaXTwitter />
             </a>
+            {/*
             <a
               href="https://www.linkedin.com/in/kgomotsonkosi-l"
               target="_blank"
@@ -303,6 +304,7 @@ const StarBackground = () => (
             >
               <FaLinkedinIn />
             </a>
+            */} 
           </div>
         </div>
 
