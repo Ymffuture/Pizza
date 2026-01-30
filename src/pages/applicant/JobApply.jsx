@@ -109,7 +109,95 @@ export default function JobApply() {
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [dob, setDob] = useState("");
+const [checkingId, setCheckingId] = useState(false);
+const [checkingEmail, setCheckingEmail] = useState(false);
+const [idExists, setIdExists] = useState(false);
+const [emailExists, setEmailExists] = useState(false);
 
+
+
+function useDebounce(value, delay = 500) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(t);
+  }, [value, delay]);
+
+  return debounced;
+}
+  const debouncedId = useDebounce(formData.idNumber);
+const debouncedEmail = useDebounce(formData.email);
+
+useEffect(() => {
+  const checkId = async () => {
+    if (debouncedId.length !== 13) return;
+
+    if (!isValidSouthAfricanID(debouncedId)) return;
+
+    try {
+      setCheckingId(true);
+      const res = await api.get("/application/exists", {
+        params: { idNumber: debouncedId },
+      });
+
+      setIdExists(res.data.exists);
+
+      if (res.data.exists) {
+        setErrors((p) => ({
+          ...p,
+          idNumber: "An application already exists for this ID",
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCheckingId(false);
+    }
+  };
+
+  checkId();
+}, [debouncedId]);
+
+
+  useEffect(() => {
+  const checkEmail = async () => {
+    if (!z.string().email().safeParse(debouncedEmail).success) return;
+
+    try {
+      setCheckingEmail(true);
+      const res = await api.get("/application/exists", {
+        params: { email: debouncedEmail },
+      });
+
+      setEmailExists(res.data.exists);
+
+      if (res.data.exists) {
+        setErrors((p) => ({
+          ...p,
+          email: "An application already exists for this email",
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setCheckingEmail(false);
+    }
+  };
+
+  checkEmail();
+}, [debouncedEmail]);
+
+  if (idExists || emailExists) {
+  setErrors({
+    global: "You already have an application in our system.",
+  });
+  return;
+}
+
+
+  
+  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -310,9 +398,27 @@ export default function JobApply() {
             value={formData.lastName} error={errors.lastName}
             onChange={(v) => handleChange("lastName", v)} />
 
-          <InputField icon={<FiCalendar />} placeholder="ID Number"
-            value={formData.idNumber} error={errors.idNumber}
-            onChange={(v) => handleChange("idNumber", v)} />
+          <InputField
+  icon={<FiCalendar />}
+  placeholder="ID Number"
+  value={formData.idNumber}
+  error={errors.idNumber}
+  onChange={(v) => {
+    setIdExists(false);
+    handleChange("idNumber", v);
+  }}
+/>
+
+{checkingId && (
+  <p className="text-xs text-gray-400">Checking ID…</p>
+)}
+
+{!checkingId && formData.idNumber.length === 13 && !errors.idNumber && (
+  <p className="text-green-600 text-xs flex gap-1">
+    <FiCheckCircle /> ID is available
+  </p>
+)}
+
 
           <InputField icon={<FiCalendar />} placeholder="Date of Birth"
             value={dob} readOnly />
