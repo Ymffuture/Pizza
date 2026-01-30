@@ -137,7 +137,7 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
   <div
     className={`${
       t.visible ? "animate-custom-enter" : "animate-custom-leave"
-    } max-w-md w-full bg-white/10 dark:bg-[#111] rounded-xl pointer-events-auto flex ring-1 ring-black/10 dark:ring-white/10 dark:text-black `}
+    } max-w-md w-full bg-white dark:bg-[#111] rounded-xl pointer-events-auto flex dark:ring-white/10 dark:text-black `}
   >
     {/* LEFT SIDE */}
     <div className="flex-1 w-0 p-4">
@@ -156,12 +156,12 @@ const countryData = COUNTRY_NAMES[data.sys.country] || {
     flex-1
     rounded-xl
     p-4
-    shadow-lg
+    
     Dark:text-white text-black 
   "
 >
   {/* Title */}
-  <p className="text-sm font-semibold tracking-wide text-gray-500 dark:text-white uppercase">
+  <p className="text-sm font-semibold bg-white tracking-wide text-gray-500 dark:text-white uppercase">
     Weather Update
   </p>
 
