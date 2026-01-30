@@ -304,6 +304,11 @@ useEffect(() => {
     });
     setErrors(fieldErrors);
   }
+      
+if (emailExists || idExists) {
+  toast.error("ID number or email already exists");
+  return;
+}
 
   // 2. Backend responded (business logic errors)
   else if (err.response) {
@@ -425,9 +430,30 @@ useEffect(() => {
   readOnly
 />
 
-          <InputField icon={<FiMail />} placeholder="Email Address"
-            value={formData.email} error={errors.email}
-            onChange={(v) => handleChange("email", v)} />
+          <InputField
+  icon={<FiMail />}
+  placeholder="Email Address"
+  value={formData.email}
+  error={errors.email || (emailExists && "Email already used")}
+  onChange={(v) => {
+    setEmailExists(false);
+    handleChange("email", v);
+  }}
+/>
+
+{checkingEmail && (
+  <p className="text-xs text-gray-400">Checking email…</p>
+)}
+
+{!checkingEmail &&
+  formData.email &&
+  !errors.email &&
+  !emailExists && (
+    <p className="text-green-600 text-xs flex gap-1 items-center">
+      <FiCheckCircle /> Email is available
+    </p>
+)}
+
 <InputField
   icon={<FiPhone />}
   placeholder="Phone Number"
