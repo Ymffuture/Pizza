@@ -411,7 +411,7 @@ if (idExists || emailExists) {
   <p className="text-xs text-gray-400">Checking ID…</p>
 )}
 
-{!checkingId && formData.idNumber.length === 13 && !errors.idNumber && (
+{!checkingId && formData.idNumber.length === 13 && !errors.idNumber && !idExists &&(
   <p className="text-green-600 text-xs flex gap-1">
     <FiCheckCircle /> ID is available
   </p>
