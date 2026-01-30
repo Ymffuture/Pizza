@@ -124,8 +124,7 @@ const [checkingEmail, setCheckingEmail] = useState(false);
 const [idExists, setIdExists] = useState(false);
 const [emailExists, setEmailExists] = useState(false);
 
-  const debouncedId = useDebounce(formData.idNumber);
-const debouncedEmail = useDebounce(formData.email);
+
 
 useEffect(() => {
   const checkId = async () => {
@@ -218,6 +217,11 @@ useEffect(() => {
     // doc5: null,
   });
 
+  
+  const debouncedId = useDebounce(formData.idNumber);
+const debouncedEmail = useDebounce(formData.email);
+
+  
   const formRef = useRef(null);
 
   /* ---------------------------------------------------
