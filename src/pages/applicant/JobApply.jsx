@@ -110,6 +110,38 @@ phone: z.string().min(10).optional(),
   }),
 });
 
+function InlineLoader({ label = "Checking…" }) {
+  return (
+    <div className="flex items-center gap-2 text-xs text-gray-400">
+      {/* Spinner */}
+      <span className="w-3 h-3 rounded-full border-2 border-gray-300 border-t-gray-500 animate-spin" />
+
+      {/* Text */}
+      <span>{label}</span>
+
+      {/* Flashing line */}
+      <span className="relative w-10 h-[2px] bg-gray-300 overflow-hidden rounded">
+        <span className="absolute inset-0 bg-gray-500 animate-pulse" />
+      </span>
+    </div>
+  );
+}
+function InlineLoader({ label = "Checking…" }) {
+  return (
+    <div className="flex items-center gap-2 text-xs text-gray-400">
+      {/* Spinner */}
+      <span className="w-3 h-3 rounded-full border-2 border-gray-300 border-t-gray-500 animate-spin" />
+
+      {/* Text */}
+      <span>{label}</span>
+
+      {/* Flashing line */}
+      <span className="relative w-10 h-[2px] bg-gray-300 overflow-hidden rounded">
+        <span className="absolute inset-0 bg-gray-500 animate-pulse" />
+      </span>
+    </div>
+  );
+}
 
 /* ---------------------------------------------------
    MAIN COMPONENT
@@ -407,9 +439,8 @@ if (idExists || emailExists) {
   }}
 />
 
-{checkingId && (
-  <p className="text-xs text-gray-400">Checking ID…</p>
-)}
+{checkingId && <InlineLoader label="Checking ID" />}
+
 
 {!checkingId && formData.idNumber.length === 13 && !errors.idNumber && !idExists &&(
   <p className="text-green-600 text-xs flex gap-1">
@@ -438,9 +469,8 @@ if (idExists || emailExists) {
   }}
 />
 
-{checkingEmail && (
-  <p className="text-xs text-gray-400">Checking email…</p>
-)}
+{checkingId && <InlineLoader label="Checking Email" />}
+
 
 {!checkingEmail &&
   formData.email &&
