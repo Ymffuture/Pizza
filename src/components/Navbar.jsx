@@ -24,35 +24,92 @@ import Dashboard from './dashboard/Dashboard';
 
 
 const menu = {
-  
-    items: [
-      {
-        key: "1",
-        label: (
-          <Link to="/dashboard">
-            Dashboard
-          </Link>
-        ),
-      },
-      {
-        key: "2",
-        label: (
-           <Link to="/weather">
-           Weather
-          </Link>
-        ),
-      },
-      {
-        key: "3",
-        label: (
-          <Link to="/signup">
-            Sign up
-          </Link>
-        ),
-      },
-    ]
-  
-  };
+  items: [
+    {
+      key: "home",
+      label: <Link to="/">Home</Link>,
+    },
+    {
+      key: "apply",
+      label: <Link to="/apply">Apply</Link>,
+    },
+    {
+      key: "dashboard",
+      label: <Link to="/dashboard">Dashboard</Link>,
+    },
+    {
+      key: "blog",
+      label: <Link to="/dashboard/blog">Blog</Link>,
+    },
+    {
+      key: "tickets",
+      label: <Link to="/ticket">Tickets</Link>,
+    },
+    {
+      key: "server",
+      label: <Link to="/server-api">Server / API</Link>,
+    },
+    {
+      key: "weather",
+      label: <Link to="/weather">Weather</Link>,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "contact",
+      label: <Link to="/contact">Contact</Link>,
+    },
+    {
+      key: "signup",
+      label: <Link to="/signup">Sign up / Login</Link>,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "cloudinary",
+      label: (
+        <a href="https://cloudinary.com" target="_blank" rel="noopener noreferrer">
+          Cloudinary
+        </a>
+      ),
+    },
+    {
+      key: "mongodb",
+      label: (
+        <a href="https://mongodb.com" target="_blank" rel="noopener noreferrer">
+          MongoDB
+        </a>
+      ),
+    },
+    {
+      key: "github",
+      label: (
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+      ),
+    },
+    {
+      key: "vercel",
+      label: (
+        <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">
+          Vercel
+        </a>
+      ),
+    },
+    {
+      key: "supabase",
+      label: (
+        <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">
+          Supabase
+        </a>
+      ),
+    },
+  ],
+};
+
 // ----------------------
 // SEARCH DATA SOURCE
 // ----------------------
