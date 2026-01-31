@@ -1,131 +1,29 @@
-import { useState, useRef, useEffect} from "react";
-import { z } from "zod";
+import { useState, useRef, useEffect } from "react";
 import { api } from "../../api";
-import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
-import {Helmet} from "react-helmet" ;
+import { Helmet } from "react-helmet";
 import {
-  FiUser,
-  FiMail,
-  FiCalendar,
-  FiMapPin,
-  FiBriefcase,
-  FiUpload,
-  FiPhone, 
+  FiUser,
+  FiMail,
+  FiCalendar,
+  FiMapPin,
+  FiBriefcase,
+  FiPhone,
+  FiCheckCircle,
 } from "react-icons/fi";
-import Loader from "./Loader" 
 
-/* ---------------------------------------------------
-   FILE CONSTRAINTS
---------------------------------------------------- */
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ACCEPTED_FILE_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
+import Loader from "./Loader";
+import {
+  jobApplySchema,
+  isValidSouthAfricanID,
+  useDebounce,
+} from "./jobApply.utils";
 
-/* ---------------------------------------------------
-   SOUTH AFRICAN ID VALIDATION
---------------------------------------------------- */
-function isValidSouthAfricanID(id) {
-  if (!/^\d{13}$/.test(id)) return false;
+import {
+  InputField,
+  FileField,
+  InlineLoader,
+} from "./JobApplyFields";
 
-  const year = parseInt(id.slice(0, 2), 10);
-  const month = parseInt(id.slice(2, 4), 10);
-  const day = parseInt(id.slice(4, 6), 10);
-
-  const fullYear =
-    year <= new Date().getFullYear() % 100 ? 2000 + year : 1900 + year;
-  const date = new Date(fullYear, month - 1, day);
-
-  if (
-    date.getFullYear() !== fullYear ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
-    return false;
-  }
-
-  const citizenship = parseInt(id[10], 10);
-  if (![0, 1].includes(citizenship)) return false;
-
-  let sum = 0;
-  let alternate = false;
-  for (let i = id.length - 1; i >= 0; i--) {
-    let n = parseInt(id[i], 10);
-    if (alternate) {
-      n *= 2;
-      if (n > 9) n -= 9;
-    }
-    sum += n;
-    alternate = !alternate;
-  }
-
-  return sum % 10 === 0;
-}
-
-function useDebounce(value, delay = 500) {
-  const [debounced, setDebounced] = useState(value);
-
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-
-  return debounced;
-      }
-/* ---------------------------------------------------
-   ZOD SCHEMA
---------------------------------------------------- */
-const fileSchema = z
-  .instanceof(File, { message: "File is required" })
-  .refine((file) => file.size <= MAX_FILE_SIZE, "File must be under 5MB")
-  .refine(
-    (file) => ACCEPTED_FILE_TYPES.includes(file.type),
-    "Only PDF or Word documents are allowed"
-  );
-
-const jobApplySchema = z.object({
-  firstName: z.string().min(4, "First name is required"),
-  lastName: z.string().min(2, "Last name is required"),
-  idNumber: z.string().refine(isValidSouthAfricanID, {
-    message: "Invalid South African ID number",
-  }),
-  email: z.string().email("Invalid email address"),
-  location: z.string().min(6, "Location is required"),
-  qualification: z.string().min(2, "Qualification is required"),
-  experience: z.string().min(1, "Experience is required"),
-  currentRole: z.string().optional(),
-  portfolio: z.string().optional(),
-phone: z.string().min(10).optional(),
-
-  cv: fileSchema,
-  doc1: z.instanceof(File).optional(),
-  doc2: z.instanceof(File).optional(),
-
-  consent: z.literal(true, {
-    errorMap: () => ({
-      message: "You must accept the Terms & Privacy Policy",
-    }),
-  }),
-});
-
-function InlineLoader({ label = "Checking…" }) {
-  return (
-    <div className="flex items-center gap-2 text-xs text-gray-400">
-      {/* Spinner */}
-      <span className="w-3 h-3 rounded-full border-2 border-gray-300 border-t-gray-500 animate-spin" />
-
-      {/* Text */}
-      <span>{label}</span>
-
-      {/* Flashing line */}
-      <span className="relative w-10 h-[2px] bg-gray-300 overflow-hidden rounded">
-        <span className="absolute inset-0 bg-gray-500 animate-pulse" />
-      </span>
-    </div>
-  );
-}
 
 /* ---------------------------------------------------
    MAIN COMPONENT
@@ -569,49 +467,3 @@ if (idExists || emailExists) {
 /* ---------------------------------------------------
    INPUT COMPONENTS
 --------------------------------------------------- */
-function InputField({
-  icon,
-  value,
-  onChange,
-  placeholder,
-  type = "text",
-  error,
-  readOnly = false,
-}) {
-  return (
-    <div className="space-y-1">
-      <div
-        className={`flex items-center gap-2 rounded-2xl px-3 h-11 bg-gray-50 dark:bg-gray-700 ${
-          error ? "ring-1 ring-red-600/10" : ""
-        }`}
-      >
-        {icon && <span className="text-gray-400">{icon}</span>}
-        <input
-          type={type}
-          value={value}
-          readOnly={readOnly}
-          onChange={(e) => onChange?.(e.target.value)}
-          placeholder={placeholder}
-          className="flex-1 bg-transparent outline-none text-sm"
-        />
-      </div>
-      {error && <p className="text-red-600 flex gap-2 text-xs"> <FiAlertCircle size={18} /> {error}</p>}
-    </div>
-  );
-}
-
-function FileField({ label, error, onChange }) {
-  return (
-    <div className="space-y-1">
-      <label className="text-sm text-gray-500 flex items-center gap-2">
-        <FiUpload /> {label}
-      </label>
-      <input
-        type="file"
-        onChange={(e) => onChange(e.target.files?.[0])}
-        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700"
-      />
-      {error && <p className="text-red-700 bg-red-600/10 flex gap-2 p-2 rounded text-xs"> <FiAlertCircle size={18} /> {error}</p>}
-    </div>
-  );
-}
