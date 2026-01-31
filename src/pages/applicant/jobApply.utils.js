@@ -63,7 +63,7 @@ export function useDebounce(value, delay = 500) {
   }, [value, delay]);
 
   return debounced;
-}
+      }
 
 /* ---------------------------------------------------
    ZOD SCHEMA
@@ -88,10 +88,12 @@ export const jobApplySchema = z.object({
   experience: z.string().min(1, "Experience is required"),
   currentRole: z.string().optional(),
   portfolio: z.string().optional(),
-  phone: z.string().min(10).optional(),
+phone: z.string().min(10).optional(),
+
   cv: fileSchema,
   doc1: z.instanceof(File).optional(),
   doc2: z.instanceof(File).optional(),
+
   consent: z.literal(true, {
     errorMap: () => ({
       message: "You must accept the Terms & Privacy Policy",
