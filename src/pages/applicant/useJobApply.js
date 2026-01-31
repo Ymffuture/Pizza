@@ -6,6 +6,7 @@ import {
   isValidSouthAfricanID,
   useDebounce,
 } from "./jobApply.utils";
+import { sendApplicationEmail } from "./emailService";
 
 export function useJobApply() {
   const formRef = useRef(null);
@@ -61,6 +62,8 @@ export function useJobApply() {
             idNumber: "An application already exists for this ID",
           }));
         }
+      } catch (err) {
+        console.error(err);
       } finally {
         setCheckingId(false);
       }
@@ -88,6 +91,8 @@ export function useJobApply() {
             email: "An application already exists for this email",
           }));
         }
+      } catch (err) {
+        console.error(err);
       } finally {
         setCheckingEmail(false);
       }
@@ -105,7 +110,10 @@ export function useJobApply() {
       jobApplySchema.pick({ [key]: true }).parse({ [key]: value });
       setErrors((p) => ({ ...p, [key]: undefined }));
     } catch (err) {
-      setErrors((p) => ({ ...p, [key]: err.errors?.[0]?.message }));
+      setErrors((p) => ({
+        ...p,
+        [key]: err.errors?.[0]?.message,
+      }));
     }
 
     if (key === "idNumber" && /^\d{6}/.test(value)) {
@@ -124,6 +132,8 @@ export function useJobApply() {
           gender: genderDigits <= 4999 ? "Female" : "Male",
         }));
       }
+    } else if (key === "idNumber") {
+      setDob("");
     }
   };
 
@@ -138,19 +148,60 @@ export function useJobApply() {
       jobApplySchema.parse(formData);
 
       const data = new FormData();
-      Object.entries(formData).forEach(([k, v]) => v && data.append(k, v));
+      Object.entries(formData).forEach(([k, v]) => {
+        if (v) data.append(k, v);
+      });
 
+      /* ---- BACKEND SUBMIT ---- */
       await api.post("/application/apply", data);
 
+      /* ---- EMAIL AFTER SUCCESS ---- */
+      const uploadedFiles = [
+        formData.cv?.name,
+        formData.doc1?.name,
+        formData.doc2?.name,
+      ]
+        .filter(Boolean)
+        .join(", ");
+
+      try {
+        await sendApplicationEmail({
+          email: formData.email,
+          fullName: `${formData.firstName} ${formData.lastName}`,
+          status: "Submitted",
+          files: uploadedFiles || "No files uploaded",
+        });
+      } catch (emailErr) {
+        console.warn("EmailJS failed:", emailErr);
+      }
+
       setMessage("Application submitted successfully!");
-      setFormData((p) =>
-        Object.fromEntries(Object.keys(p).map((k) => [k, ""]))
-      );
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        idNumber: "",
+        email: "",
+        phone: "",
+        location: "",
+        qualification: "",
+        experience: "",
+        currentRole: "",
+        portfolio: "",
+        gender: "",
+        consent: false,
+        cv: null,
+        doc1: null,
+        doc2: null,
+      });
+
       setDob("");
     } catch (err) {
       if (err instanceof z.ZodError) {
         const fieldErrors = {};
-        err.errors.forEach((e) => (fieldErrors[e.path[0]] = e.message));
+        err.errors.forEach((e) => {
+          fieldErrors[e.path[0]] = e.message;
+        });
         setErrors(fieldErrors);
       } else {
         setErrors({ global: "Application failed. Try again." });
