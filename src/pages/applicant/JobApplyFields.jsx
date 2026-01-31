@@ -38,11 +38,7 @@ export function InputField({
           className="flex-1 bg-transparent outline-none text-sm"
         />
       </div>
-      {error && (
-        <p className="text-red-600 flex gap-2 text-xs">
-          <FiAlertCircle size={18} /> {error}
-        </p>
-      )}
+      {error && <p className="text-red-600 flex gap-2 text-xs"> <FiAlertCircle size={18} /> {error}</p>}
     </div>
   );
 }
@@ -58,11 +54,7 @@ export function FileField({ label, error, onChange }) {
         onChange={(e) => onChange(e.target.files?.[0])}
         className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700"
       />
-      {error && (
-        <p className="text-red-700 bg-red-600/10 flex gap-2 p-2 rounded text-xs">
-          <FiAlertCircle size={18} /> {error}
-        </p>
-      )}
+      {error && <p className="text-red-700 bg-red-600/10 flex gap-2 p-2 rounded text-xs"> <FiAlertCircle size={18} /> {error}</p>}
     </div>
   );
 }
