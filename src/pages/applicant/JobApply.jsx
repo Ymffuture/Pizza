@@ -9,7 +9,7 @@ import {
   FiPhone,
   FiCheckCircle,
 } from "react-icons/fi";
-
+import { FaExclamationTriangle } from 'react-icons/fa';
 import Loader from "./Loader";
 import {
   jobApplySchema,
@@ -212,7 +212,7 @@ export default function JobApply() {
 
   {errors.consent && (
     <p className="text-red-500 text-xs flex gap-2">
-      <FiAlertCircle size={14} /> {errors.consent}
+      <FaExclamationTriangle  size={14} /> {errors.consent}
     </p>
   )}
 </div>
