@@ -23,6 +23,13 @@ export default function ApplicantLayout() {
             icon={<FiClock />}
             label="Application Status"
           />
+
+          
+          <NavItem
+            to="/Subject-to-register"
+            icon={""}
+            label="our Subjects" 
+          />
         </nav>
       </motion.header>
 
