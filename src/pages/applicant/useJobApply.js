@@ -70,12 +70,15 @@ export function useJobApply() {
     };
 
     checkId();
-  }, [debouncedId]);
+  }, [debouncedId, isValidSouthAfricanID]);
 
   /* ---------------- EMAIL CHECK ---------------- */
   useEffect(() => {
     const checkEmail = async () => {
-      if (!z.string().email().safeParse(debouncedEmail).success) return;
+      const emailSchema = z.string().email();
+
+      if (!emailSchema.safeParse(debouncedEmail).success) return;
+
 
       try {
         setCheckingEmail(true);
@@ -103,7 +106,13 @@ export function useJobApply() {
 
   /* ---------------- CHANGE HANDLER ---------------- */
   const handleChange = (key, value) => {
-    setFormData((p) => ({ ...p, [key]: value }));
+    const normalizedValue =
+  key === "firstName" || key === "lastName"
+    ? formatName(value)
+    : value;
+
+setFormData((p) => ({ ...p, [key]: normalizedValue }));
+
     setMessage("");
 
     try {
@@ -149,8 +158,10 @@ export function useJobApply() {
 
       const data = new FormData();
       Object.entries(formData).forEach(([k, v]) => {
-        if (v) data.append(k, v);
-      });
+  if (v !== null && v !== undefined && v !== "") {
+    data.append(k, v);
+  }
+});
 
       /* ---- BACKEND SUBMIT ---- */
       await api.post("/application/apply", data);
@@ -163,14 +174,30 @@ export function useJobApply() {
       ]
         .filter(Boolean)
         .join(", ");
+      
+const formatName = (name = "") => {
+  return name
+    .trim()
+    .toLowerCase()
+    .split(" ")
+    .map(
+      (word) =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+    )
+    .join(" ");
+};
 
       try {
-        await sendApplicationEmail({
-          email: formData.email,
-          fullName: `${formData.firstName} ${formData.lastName}`,
-          status: "Submitted",
-          files: uploadedFiles || "No files uploaded",
-        });
+        const formattedFullName = `${formatName(formData.firstName)} ${formatName(
+  formData.lastName
+)}`.trim();
+
+await sendApplicationEmail({
+  email: formData.email,
+  fullName: formattedFullName,
+  status: "Submitted",
+  files: uploadedFiles || "No files uploaded",
+});
       } catch (emailErr) {
         console.warn("EmailJS failed:", emailErr);
       }
