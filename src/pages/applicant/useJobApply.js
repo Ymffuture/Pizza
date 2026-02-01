@@ -146,7 +146,10 @@ setFormData((p) => ({ ...p, [key]: normalizedValue }));
     setMessage("");
 
     try {
-      jobApplySchema.pick({ [key]: true }).parse({ [key]: value });
+      jobApplySchema
+  .pick({ [key]: true })
+  .parse({ [key]: normalizedValue });
+
       setErrors((p) => ({ ...p, [key]: undefined }));
     } catch (err) {
       setErrors((p) => ({
