@@ -8,6 +8,12 @@ import {
 } from "./jobApply.utils";
 import { sendApplicationEmail } from "./emailService";
 
+const normalizeIdNumber = (value = "") => {
+  return value
+    .replace(/\s+/g, "")      // remove ALL spaces
+    .replace(/[^0-9]/g, "");  // remove anything that is NOT a digit
+};
+
 const normalizeEmail = (email = "") => {
   return email
     .trim()                 // remove leading/trailing spaces
@@ -132,6 +138,7 @@ const { formatName } = useNameFormatter();
   /* ---------------- CHANGE HANDLER ---------------- */
   const handleChange = (key, value) => {
     let normalizedValue = value;
+let normalizedValue = value;
 
 if (key === "firstName" || key === "lastName") {
   normalizedValue = formatName(value);
@@ -141,9 +148,13 @@ if (key === "email") {
   normalizedValue = normalizeEmail(value);
 }
 
-setFormData((p) => ({ ...p, [key]: normalizedValue }));
+if (key === "idNumber") {
+  normalizedValue = normalizeIdNumber(value);
+}
 
-    setMessage("");
+setFormData((p) => ({ ...p, [key]: normalizedValue }));
+setMessage("");
+
 
     try {
       jobApplySchema
@@ -157,18 +168,18 @@ setFormData((p) => ({ ...p, [key]: normalizedValue }));
         [key]: err.errors?.[0]?.message,
       }));
     }
-
-    if (key === "idNumber" && /^\d{6}/.test(value)) {
-      const year = value.slice(0, 2);
-      const month = value.slice(2, 4);
-      const day = value.slice(4, 6);
+    
+if (key === "idNumber" && /^\d{6}/.test(normalizedValue)) {
+  const year = normalizedValue.slice(0, 2);
+  const month = normalizedValue.slice(2, 4);
+  const day = normalizedValue.slice(4, 6);
       const prefix =
         parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
 
       setDob(`${prefix}${year}-${month}-${day}`);
 
-      if (value.length >= 10) {
-        const genderDigits = parseInt(value.slice(6, 10), 10);
+      if (normalizedValue.length >= 10) {
+  const genderDigits = parseInt(normalizedValue.slice(6, 10), 10);
         setFormData((p) => ({
           ...p,
           gender: genderDigits <= 4999 ? "Female" : "Male",
