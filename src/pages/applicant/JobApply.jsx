@@ -84,6 +84,9 @@ export default function JobApply() {
   icon={<FiCalendar />}
   placeholder="ID Number"
   value={formData.idNumber}
+  inputMode="numeric"
+  pattern="[0-9]*"
+  maxLength={13}
   error={errors.idNumber || (idExists && "ID already used") }
   onChange={(v) => {
     setIdExists(false);
