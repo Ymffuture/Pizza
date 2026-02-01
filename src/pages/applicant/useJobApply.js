@@ -8,6 +8,12 @@ import {
 } from "./jobApply.utils";
 import { sendApplicationEmail } from "./emailService";
 
+const normalizeEmail = (email = "") => {
+  return email
+    .trim()                 // remove leading/trailing spaces
+    .toLowerCase()          // standardize case
+    .replace(/\s+/g, "");  // remove ANY spaces inside the string
+};
 
 export const useNameFormatter = () => {
   const formatName = (name = "") => {
@@ -125,10 +131,15 @@ const { formatName } = useNameFormatter();
 
   /* ---------------- CHANGE HANDLER ---------------- */
   const handleChange = (key, value) => {
-    const normalizedValue =
-  key === "firstName" || key === "lastName"
-    ? formatName(value)
-    : value;
+    let normalizedValue = value;
+
+if (key === "firstName" || key === "lastName") {
+  normalizedValue = formatName(value);
+}
+
+if (key === "email") {
+  normalizedValue = normalizeEmail(value);
+}
 
 setFormData((p) => ({ ...p, [key]: normalizedValue }));
 
