@@ -1,5 +1,4 @@
-import { useState, useRef } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useState, useRef, useEffect } from "react";
 import { api } from "../../api";
 import { z } from "zod";
 import {
@@ -9,14 +8,14 @@ import {
 } from "./jobApply.utils";
 import { sendApplicationEmail } from "./emailService";
 
-/* ============ NORMALIZERS ============ */
+/* ===================== NORMALIZERS ===================== */
 const normalizeIdNumber = (value = "") =>
   value.replace(/\s+/g, "").replace(/[^0-9]/g, "");
 
 const normalizeEmail = (email = "") =>
   email.trim().toLowerCase().replace(/\s+/g, "");
 
-/* ============ NAME FORMATTER ============ */
+/* ===================== NAME FORMATTER (SINGLE SOURCE) ===================== */
 export const useNameFormatter = () => {
   const formatName = (name = "") =>
     name
@@ -30,41 +29,20 @@ export const useNameFormatter = () => {
   return { formatName };
 };
 
-/* ============ REACT QUERY FETCHERS ============ */
-const checkIdExists = async (idNumber) => {
-  const res = await api.get("/application/exists", {
-    params: { idNumber },
-  });
-  return res.data.exists;
-};
-
-const checkEmailExists = async (email) => {
-  const res = await api.get("/application/exists", {
-    params: { email },
-  });
-  return res.data.exists;
-};
-
-const submitApplication = async (formData) => {
-  const data = new FormData();
-
-  Object.entries(formData).forEach(([k, v]) => {
-    if (v !== undefined && v !== null) {
-      data.append(k, v);
-    }
-  });
-
-  return api.post("/application/apply", data);
-};
-
-/* ============ MAIN HOOK ============ */
+/* ===================== MAIN HOOK ===================== */
 export function useJobApply() {
   const formRef = useRef(null);
   const { formatName } = useNameFormatter();
 
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [dob, setDob] = useState("");
+
+  const [checkingId, setCheckingId] = useState(false);
+  const [checkingEmail, setCheckingEmail] = useState(false);
+  const [idExists, setIdExists] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -87,56 +65,168 @@ export function useJobApply() {
   const debouncedId = useDebounce(formData.idNumber, 500);
   const debouncedEmail = useDebounce(formData.email, 500);
 
-  /* ============ REACT QUERY: ID CHECK ============ */
-  const {
-    data: idExists = false,
-    isFetching: checkingId,
-  } = useQuery({
-    queryKey: ["check-id", debouncedId],
-    queryFn: () => checkIdExists(debouncedId),
-    enabled:
-      debouncedId.length === 13 &&
-      isValidSouthAfricanID(debouncedId),
-  });
+  /* ===================== ID EXISTENCE CHECK ===================== */
+  useEffect(() => {
+    const checkId = async () => {
+      if (debouncedId.length !== 13) return;
+      if (!isValidSouthAfricanID(debouncedId)) return;
 
-  /* ============ REACT QUERY: EMAIL CHECK ============ */
-  const {
-    data: emailExists = false,
-    isFetching: checkingEmail,
-  } = useQuery({
-    queryKey: ["check-email", debouncedEmail],
-    queryFn: () => checkEmailExists(debouncedEmail),
-    enabled: z.string().email().safeParse(debouncedEmail).success,
-  });
+      try {
+        setCheckingId(true);
+        const res = await api.get("/application/exists", {
+          params: { idNumber: debouncedId },
+        });
 
-  /* ============ MUTATION: SUBMIT APPLICATION ============ */
-  const {
-    mutateAsync: submit,
-    isLoading: loading,
-  } = useMutation({
-    mutationFn: submitApplication,
-    onSuccess: async (_, variables) => {
+        setIdExists(res.data.exists);
+
+        if (res.data.exists) {
+          setErrors((p) => ({
+            ...p,
+            idNumber: "An application already exists for this ID",
+          }));
+        }
+      } catch (err) {
+        console.error("ID check failed:", err);
+      } finally {
+        setCheckingId(false);
+      }
+    };
+
+    checkId();
+  }, [debouncedId]);
+
+  /* ===================== EMAIL EXISTENCE CHECK ===================== */
+  useEffect(() => {
+    const checkEmail = async () => {
+      const emailSchema = z.string().email();
+
+      if (!emailSchema.safeParse(debouncedEmail).success) return;
+
+      try {
+        setCheckingEmail(true);
+        const res = await api.get("/application/exists", {
+          params: { email: debouncedEmail },
+        });
+
+        setEmailExists(res.data.exists);
+
+        if (res.data.exists) {
+          setErrors((p) => ({
+            ...p,
+            email: "An application already exists for this email",
+          }));
+        }
+      } catch (err) {
+        console.error("Email check failed:", err);
+      } finally {
+        setCheckingEmail(false);
+      }
+    };
+
+    checkEmail();
+  }, [debouncedEmail]);
+
+  /* ===================== CHANGE HANDLER (CRITICAL FIX) ===================== */
+  const handleChange = (key, value) => {
+    let normalizedValue = value;
+
+    if (key === "firstName" || key === "lastName") {
+      normalizedValue = formatName(value);
+    }
+
+    if (key === "email") {
+      normalizedValue = normalizeEmail(value);
+    }
+
+    if (key === "idNumber") {
+      normalizedValue = normalizeIdNumber(value);
+    }
+
+    setFormData((prev) => ({ ...prev, [key]: normalizedValue }));
+    setMessage("");
+
+    // VALIDATE AFTER NORMALIZATION (FIXED)
+    try {
+      jobApplySchema.pick({ [key]: true }).parse({
+        [key]: normalizedValue,
+      });
+
+      setErrors((p) => ({ ...p, [key]: undefined }));
+    } catch (err) {
+      setErrors((p) => ({
+        ...p,
+        [key]: err.errors?.[0]?.message,
+      }));
+    }
+
+    /* --------- DERIVE DOB + GENDER FROM ID --------- */
+    if (key === "idNumber" && /^\d{6}/.test(normalizedValue)) {
+      const year = normalizedValue.slice(0, 2);
+      const month = normalizedValue.slice(2, 4);
+      const day = normalizedValue.slice(4, 6);
+
+      const prefix =
+        parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
+
+      setDob(`${prefix}${year}-${month}-${day}`);
+
+      if (normalizedValue.length >= 10) {
+        const genderDigits = parseInt(
+          normalizedValue.slice(6, 10),
+          10
+        );
+
+        setFormData((p) => ({
+          ...p,
+          gender: genderDigits <= 4999 ? "Female" : "Male",
+        }));
+      }
+    } else if (key === "idNumber") {
+      setDob("");
+    }
+  };
+
+  /* ===================== SUBMIT HANDLER (FULLY FIXED) ===================== */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrors({});
+    setMessage("");
+
+    try {
+      jobApplySchema.parse(formData);
+
+      const data = new FormData();
+
+      Object.entries(formData).forEach(([k, v]) => {
+        if (v !== undefined && v !== null) {
+          data.append(k, v);
+        }
+      });
+
+      await api.post("/application/apply", data);
+
       const uploadedFiles = [
-        variables.cv?.name,
-        variables.doc1?.name,
-        variables.doc2?.name,
+        formData.cv?.name,
+        formData.doc1?.name,
+        formData.doc2?.name,
       ]
         .filter(Boolean)
         .join(", ") || "No files uploaded";
 
       const formattedFullName = `${formatName(
-        variables.firstName
-      )} ${formatName(variables.lastName)}`.trim();
+        formData.firstName
+      )} ${formatName(formData.lastName)}`.trim();
 
       try {
         await sendApplicationEmail({
-          email: variables.email,
+          email: formData.email,
           fullName: formattedFullName,
           status: "Submitted",
           files: uploadedFiles,
         });
-      } catch (err) {
-        console.warn("Email failed:", err);
+      } catch (emailErr) {
+        console.warn("Email service failed:", emailErr);
       }
 
       setMessage("Application submitted successfully!");
@@ -160,83 +250,6 @@ export function useJobApply() {
       });
 
       setDob("");
-    },
-    onError: (err) => {
-      setErrors({ global: "Application failed. Try again." });
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-    },
-  });
-
-  /* ============ CHANGE HANDLER ============ */
-  const handleChange = (key, value) => {
-    let normalizedValue = value;
-
-    if (key === "firstName" || key === "lastName") {
-      normalizedValue = formatName(value);
-    }
-
-    if (key === "email") {
-      normalizedValue = normalizeEmail(value);
-    }
-
-    if (key === "idNumber") {
-      normalizedValue = normalizeIdNumber(value);
-    }
-
-    setFormData((prev) => ({ ...prev, [key]: normalizedValue }));
-    setMessage("");
-
-    try {
-      jobApplySchema.pick({ [key]: true }).parse({
-        [key]: normalizedValue,
-      });
-
-      setErrors((p) => ({ ...p, [key]: undefined }));
-    } catch (err) {
-      setErrors((p) => ({
-        ...p,
-        [key]: err.errors?.[0]?.message,
-      }));
-    }
-
-    /* DERIVE DOB + GENDER FROM ID */
-    if (key === "idNumber" && /^\d{6}/.test(normalizedValue)) {
-      const year = normalizedValue.slice(0, 2);
-      const month = normalizedValue.slice(2, 4);
-      const day = normalizedValue.slice(4, 6);
-
-      const prefix =
-        parseInt(year, 10) <= new Date().getFullYear() % 100
-          ? "20"
-          : "19";
-
-      setDob(`${prefix}${year}-${month}-${day}`);
-
-      if (normalizedValue.length >= 10) {
-        const genderDigits = parseInt(
-          normalizedValue.slice(6, 10),
-          10
-        );
-
-        setFormData((p) => ({
-          ...p,
-          gender: genderDigits <= 4999 ? "Female" : "Male",
-        }));
-      }
-    } else if (key === "idNumber") {
-      setDob("");
-    }
-  };
-
-  /* ============ SUBMIT HANDLER ============ */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrors({});
-    setMessage("");
-
-    try {
-      jobApplySchema.parse(formData);
-      await submit(formData);
     } catch (err) {
       if (err instanceof z.ZodError) {
         const fieldErrors = {};
@@ -247,6 +260,10 @@ export function useJobApply() {
       } else {
         setErrors({ global: "Application failed. Try again." });
       }
+
+      formRef.current?.scrollIntoView({ behavior: "smooth" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -263,5 +280,7 @@ export function useJobApply() {
     emailExists,
     handleChange,
     handleSubmit,
+    setIdExists,
+    setEmailExists,
   };
 }
