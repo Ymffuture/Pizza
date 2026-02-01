@@ -8,6 +8,25 @@ import {
 } from "./jobApply.utils";
 import { sendApplicationEmail } from "./emailService";
 
+
+export const useNameFormatter = () => {
+  const formatName = (name = "") => {
+    return name
+      .trim()
+      .toLowerCase()
+      .split(" ")
+      .filter(Boolean)
+      .map(
+        (word) =>
+          word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .join(" ");
+  };
+
+  return { formatName };
+};
+
+
 export function useJobApply() {
   const formRef = useRef(null);
 
@@ -20,7 +39,7 @@ export function useJobApply() {
   const [checkingEmail, setCheckingEmail] = useState(false);
   const [idExists, setIdExists] = useState(false);
   const [emailExists, setEmailExists] = useState(false);
-
+const { formatName } = useNameFormatter();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
