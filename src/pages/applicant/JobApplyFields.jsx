@@ -20,6 +20,9 @@ export function InputField({
   type = "text",
   error,
   readOnly = false,
+  inputMode,
+  pattern,
+  maxLength,
 }) {
   return (
     <div className="space-y-1">
@@ -35,13 +38,21 @@ export function InputField({
           readOnly={readOnly}
           onChange={(e) => onChange?.(e.target.value)}
           placeholder={placeholder}
+          inputMode={inputMode}
+          pattern={pattern}
+          maxLength={maxLength}
           className="flex-1 bg-transparent outline-none text-sm"
         />
       </div>
-      {error && <p className="text-red-600 flex gap-2 text-xs"> <FiAlertCircle size={18} /> {error}</p>}
+      {error && (
+        <p className="text-red-600 flex gap-2 text-xs">
+          <FiAlertCircle size={18} /> {error}
+        </p>
+      )}
     </div>
   );
 }
+
 
 export function FileField({ label, error, onChange }) {
   return (
