@@ -151,7 +151,7 @@ export default function JobApply() {
             value={formData.qualification} error={errors.qualification}
             onChange={(v) => handleChange("qualification", v)} />
 
-          <InputField icon={<FiBriefcase />} placeholder="Years of Experience"
+          <InputField icon={<FiBriefcase />} placeholder="School or Job application"
             value={formData.experience} error={errors.experience}
             onChange={(v) => handleChange("experience", v)} />
 
