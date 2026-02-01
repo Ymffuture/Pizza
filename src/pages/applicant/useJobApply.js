@@ -137,8 +137,8 @@ const { formatName } = useNameFormatter();
 
   /* ---------------- CHANGE HANDLER ---------------- */
   const handleChange = (key, value) => {
-    let normalizedValue = value;
-let normalizedValue = value;
+    
+  let normalizedValue = value;
 
 if (key === "firstName" || key === "lastName") {
   normalizedValue = formatName(value);
