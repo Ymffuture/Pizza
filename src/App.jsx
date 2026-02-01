@@ -48,6 +48,7 @@ const AdminTicket =lazy(() =>import("./pages/AdminTicket")) ;
 const ApplicantLayout =lazy(() =>import("./pages/applicant/ApplicantLayout")) ;
 import JobApply from "./pages/applicant/JobApply";
 import ApplicationStatus from "./pages/applicant/ApplicationStatus";
+import Subjects from "./pages/applicant/SubjectsPricingPage" ;
 import AdminApplications from "./pages/admin/AdminApplications";
 import CookieBanner from "./components/CookieBanner";
 
@@ -231,6 +232,7 @@ const App = () => {
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
+          <Route path="/Subject-to-register" element={<Subjects/>} />
         </Routes>
       </Suspense>
 <Toaster
