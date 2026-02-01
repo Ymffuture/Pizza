@@ -32,7 +32,7 @@ export default function SubjectsPricingPage() {
       0
     );
 
-    const discount = selected.length > 1 ? subtotal * 0.01 : 0;
+    const discount = selected.length > 1 ? subtotal * 0.03 : 0;
     const total = subtotal - discount;
 
     return { subtotal, discount, total };
@@ -75,7 +75,7 @@ export default function SubjectsPricingPage() {
       <div className="p-4 bg-gray-50 rounded-xl space-y-2">
         <p>Subtotal: <strong>R {subtotal.toFixed(2)}</strong></p>
         <p>
-          Discount (1%):{" "}
+          Discount (3%):{" "}
           <strong className="text-green-600">
             - R {discount.toFixed(2)}
           </strong>
@@ -87,7 +87,7 @@ export default function SubjectsPricingPage() {
 
       {selected.length > 1 && (
         <p className="text-sm text-green-600">
-          🎉 You qualify for a 1% bundle discount!
+          🎉 You qualify for a 3% bundle discount!
         </p>
       )}
     </div>
