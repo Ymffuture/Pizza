@@ -19,14 +19,14 @@ export default function ApplicantLayout() {
             label="Apply"
           />
           <NavItem
-            to="/apply/status"
+            to="/lessons"
             icon={<FiClock />}
-            label="Application Status"
+            label="Last lessons"
           />
 
           
           <NavItem
-            to="/Subject-to-register"
+            to="/lessons/subject-to-register"
             icon={""}
             label="our Subjects" 
           />
