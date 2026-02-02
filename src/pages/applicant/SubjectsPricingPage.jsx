@@ -72,7 +72,7 @@ export default function SubjectsPricingPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 dark:bg-gray-900/10 space-y-6 text-gray-900 dark:text-gray-100">
+    <div className="max-w-4xl mx-auto p-6 dark:bg-gray-900/10 pt-20 space-y-6 text-gray-900 dark:text-gray-100">
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold">School Subjects Pricing</h1>
