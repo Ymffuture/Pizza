@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiPlay, FiBook } from "react-icons/fi";
-
+import {Helmet} from "react-helmet" ;
 import { SUBJECT_VIDEOS } from "../data/subjectVideos";
 import VideoPlayer from "../components/VideoPlayer";
 
@@ -20,6 +20,12 @@ export default function SubjectVideosPage() {
   );
 
   return (
+
+    <>
+    <Helmet >
+    <title >Lessons </title>
+    </Helmet>
+    
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 pt-20">
       <div className="max-w-6xl mx-auto p-6 space-y-6">
         <h1 className="text-2xl font-semibold">
@@ -95,5 +101,6 @@ export default function SubjectVideosPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
