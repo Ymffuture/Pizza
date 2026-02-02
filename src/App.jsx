@@ -51,7 +51,8 @@ import ApplicationStatus from "./pages/applicant/ApplicationStatus";
 import Subjects from "./pages/applicant/SubjectsPricingPage" ;
 import AdminApplications from "./pages/admin/AdminApplications";
 import CookieBanner from "./components/CookieBanner";
-
+import SubjectsLayout from "./pages/SubjectsLayout" ;
+import SubjectVideosPage from "./pages/SubjectVideosPage" ;
 
 
 
@@ -193,11 +194,15 @@ const App = () => {
          <Route path="/faq" element={<FAQ />} />
          <Route path="/help" element={<HelpCenter />} />
 
+          <Route path="/lessons" element={<SubjectsLayout />}>
+          <Route index element={<SubjectVideosPage />} />
+         <Route path="/Subject-to-register" element={<Subjects/>} />
+          </Route>
+
           <Route path="/apply" element={<ApplicantLayout />}>
           <Route index element={<JobApply />} />
           <Route path="status" element={<ApplicationStatus />} />
         </Route>
-
         {/* Admin Routes */}
         <Route
           path="/admin/applications"
@@ -232,7 +237,7 @@ const App = () => {
 
           {/* 404 */}
           <Route path="*" element={<NotFound />} />
-          <Route path="/Subject-to-register" element={<Subjects/>} />
+     
         </Routes>
       </Suspense>
 <Toaster
