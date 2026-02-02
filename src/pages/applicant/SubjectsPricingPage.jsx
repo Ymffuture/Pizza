@@ -16,7 +16,7 @@ const SUBJECT_LABELS = {
   lifeScience: "Life Sciences",
 };
 
-const LOGO_URL = "https://swiftmeta.vercel.app/apple-touch-icon.png"; // <-- replace with your real logo path
+const LOGO_URL = "/apple-touch-icon.png"; // <-- replace with your real logo path
 const APPLY_LINK = "/apply";  // <-- change to your real route
 
 const calculatePrice = (selected) => {
