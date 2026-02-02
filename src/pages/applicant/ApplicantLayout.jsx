@@ -26,7 +26,7 @@ export default function ApplicantLayout() {
 
           
           <NavItem
-            to="/Subject-to-register"
+            to="/lessons/subject-to-register" 
             icon={""}
             label="our Subjects" 
           />
