@@ -16,7 +16,7 @@ const SUBJECT_LABELS = {
   lifeScience: "Life Sciences",
 };
 
-const LOGO_URL = "/apple-touch-icon.png"; // <-- replace with your real logo path
+const LOGO_URL = "https://swiftmeta.vercel.app/apple-touch-icon.png"; // <-- replace with your real logo path
 const APPLY_LINK = "/apply";  // <-- change to your real route
 
 const calculatePrice = (selected) => {
@@ -72,7 +72,7 @@ export default function SubjectsPricingPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 dark:text-gray-900/10 space-y-6 text-gray-900 dark:text-gray-100">
+    <div className="max-w-4xl mx-auto p-6 dark:bg-gray-900/10 space-y-6 text-gray-900 dark:text-gray-100">
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold">School Subjects Pricing</h1>
