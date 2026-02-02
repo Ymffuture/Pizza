@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiPlay, FiBook, FiChevronDown } from "react-icons/fi";
 import { Helmet } from "react-helmet";
@@ -9,6 +9,8 @@ export default function SubjectVideosPage() {
   const [activeSubject, setActiveSubject] = useState("mathematics");
   const [activeTopicIndex, setActiveTopicIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(6);
+
+  const scrollRef = useRef(null);
 
   const subject = useMemo(
     () => SUBJECT_VIDEOS[activeSubject],
@@ -26,6 +28,14 @@ export default function SubjectVideosPage() {
   );
 
   const hasMore = visibleCount < subject.topics.length;
+
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+
+    if (scrollTop + clientHeight >= scrollHeight - 40 && hasMore) {
+      setVisibleCount((prev) => prev + 6);
+    }
+  };
 
   return (
     <>
@@ -47,7 +57,8 @@ export default function SubjectVideosPage() {
                 onClick={() => {
                   setActiveSubject(key);
                   setActiveTopicIndex(0);
-                  setVisibleCount(6); // reset when changing subject
+                  setVisibleCount(6);
+                  scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 className={`px-4 py-2 rounded-lg border whitespace-nowrap transition ${
                   activeSubject === key
@@ -62,16 +73,22 @@ export default function SubjectVideosPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* TOPIC LIST (LEFT PANEL) */}
+            {/* SCROLLABLE TOPIC PANEL */}
             <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl">
               <h2 className="font-semibold mb-3">
                 Topics — {subject.label}
               </h2>
 
-              <div className="space-y-2">
+              <div
+                ref={scrollRef}
+                onScroll={handleScroll}
+                className="h-[520px] overflow-y-auto pr-2 space-y-2 custom-scrollbar"
+              >
                 {visibleTopics.map((topic, i) => (
-                  <button
+                  <motion.button
                     key={topic.id}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
                     onClick={() => setActiveTopicIndex(i)}
                     className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 transition ${
                       i === activeTopicIndex
@@ -81,11 +98,11 @@ export default function SubjectVideosPage() {
                   >
                     <FiPlay />
                     {topic.title}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
 
-              {/* LOAD MORE BUTTON */}
+              {/* Fallback Load More Button */}
               {hasMore && (
                 <motion.button
                   whileTap={{ scale: 0.97 }}
@@ -97,7 +114,7 @@ export default function SubjectVideosPage() {
               )}
             </div>
 
-            {/* VIDEO PLAYER (RIGHT PANEL) */}
+            {/* VIDEO PLAYER */}
             <div className="md:col-span-2 space-y-4">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -110,7 +127,6 @@ export default function SubjectVideosPage() {
                     {activeTopic.title}
                   </h2>
 
-                  {/* NEW: DESCRIPTION */}
                   {activeTopic.description && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                       {activeTopic.description}
