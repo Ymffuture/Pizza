@@ -196,7 +196,7 @@ const App = () => {
 
           <Route path="/lessons" element={<SubjectsLayout />}>
           <Route index element={<SubjectVideosPage />} />
-         <Route path="/Subject-to-register" element={<Subjects/>} />
+         <Route path="Subject-to-register" element={<Subjects/>} />
           </Route>
 
           <Route path="/apply" element={<ApplicantLayout />}>
