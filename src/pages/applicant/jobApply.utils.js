@@ -101,3 +101,11 @@ phone: z.string().min(10).optional(),
     }),
   }),
 });
+
+     .refine(
+    (data) => Boolean(data.cv || data.doc1 || data.doc2),
+    {
+      message: "Please upload at least one document (CV or other)",
+      path: ["cv"], // shows error under CV field in UI
+    }
+  );
