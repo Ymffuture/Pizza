@@ -89,9 +89,12 @@ export const jobApplySchema = z
     currentRole: z.string().min(2, "Current role required"),
     portfolio: z.string().optional(),
     gender: z.string().optional(),
+     
     consent: z.literal(true, {
-      errorMap: () => ({ message: "You must consent" }),
+    errorMap: () => ({
+      message: "You must accept the Terms & Privacy Policy",
     }),
+
 
     // FILES → individually optional
     cv: z.instanceof(File).nullable().optional(),
