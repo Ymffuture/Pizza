@@ -90,9 +90,10 @@ export const jobApplySchema = z.object({
   portfolio: z.string().optional(),
 phone: z.string().min(10).optional(),
 
-  cv: fileSchema,
+    cv: fileSchema.optional(),
   doc1: z.instanceof(File).optional(),
   doc2: z.instanceof(File).optional(),
+
 
   consent: z.literal(true, {
     errorMap: () => ({
