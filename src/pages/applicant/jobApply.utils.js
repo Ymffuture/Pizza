@@ -90,17 +90,16 @@ export const jobApplySchema = z.object({
   portfolio: z.string().optional(),
 phone: z.string().min(10).optional(),
 
-    cv: fileSchema.optional(),
-  doc1: z.instanceof(File).optional(),
-  doc2: z.instanceof(File).optional(),
-
+cv: z.instanceof(File).nullable().optional(),
+    doc1: z.instanceof(File).nullable().optional(),
+    doc2: z.instanceof(File).nullable().optional(),
 
   consent: z.literal(true, {
     errorMap: () => ({
       message: "You must accept the Terms & Privacy Policy",
     }),
   }),
-});
+})
 
      .refine(
     (data) => Boolean(data.cv || data.doc1 || data.doc2),
