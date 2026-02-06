@@ -63,7 +63,7 @@ export function useDebounce(value, delay = 500) {
   }, [value, delay]);
 
   return debounced;
-      }
+}
 
 /* ---------------------------------------------------
    ZOD SCHEMA
@@ -75,6 +75,12 @@ export const fileSchema = z
     (file) => ACCEPTED_FILE_TYPES.includes(file.type),
     "Only PDF or Word documents are allowed"
   );
+
+export const optionalFileSchema = z.union([
+  z.null(),
+  z.undefined(),
+  fileSchema,  // Applies size and type refines only if a File is provided
+]);
 
 export const jobApplySchema = z.object({
   firstName: z.string().min(4, "First name is required"),
@@ -88,11 +94,11 @@ export const jobApplySchema = z.object({
   experience: z.string().min(1, "Experience is required"),
   currentRole: z.string().optional(),
   portfolio: z.string().optional(),
-phone: z.string().min(10).optional(),
+  phone: z.string().min(10).optional(),
 
-cv: z.instanceof(File).nullable().optional(),
-    doc1: z.instanceof(File).nullable().optional(),
-    doc2: z.instanceof(File).nullable().optional(),
+  cv: optionalFileSchema,
+  doc1: optionalFileSchema,
+  doc2: optionalFileSchema,
 
   consent: z.literal(true, {
     errorMap: () => ({
@@ -100,11 +106,10 @@ cv: z.instanceof(File).nullable().optional(),
     }),
   }),
 })
-
-     .refine(
-    (data) => Boolean(data.cv || data.doc1 || data.doc2),
-    {
-      message: "Please upload at least one document (CV or other)",
-      path: ["cv"], // shows error under CV field in UI
-    }
-  );
+.refine(
+  (data) => Boolean(data.cv instanceof File || data.doc1 instanceof File || data.doc2 instanceof File),
+  {
+    message: "Please upload at least one document (CV or other)",
+    path: ["cv"], // Shows error under CV field in UI
+  }
+);
