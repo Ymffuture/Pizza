@@ -33,7 +33,7 @@ const services = [
 ];
 
 const Menu = () => {
-  const [images, setImages] = useState(Array(16).fill(null));
+  const [images, setImages] = useState(Array(8).fill(null));
 
   useEffect(() => {
     const fetchImages = async () => {
