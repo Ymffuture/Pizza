@@ -42,7 +42,7 @@ const Menu = () => {
           axios.get(
             `https://api.unsplash.com/photos/random?query=${encodeURIComponent(
               kw
-            )}&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw`
+            )}&client_id=kt2NR0af478-kDVaZJ4HL2etjIyY6QENxE7iMWDtT3Y`
           )
         );
 
