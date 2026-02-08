@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { FaWallet } from "react-icons/fa";
+import { createPortal } from "react-dom";
 
 const BUY_ME_A_COFFEE_URL = "https://www.buymeacoffee.com/ymffuture";
 
@@ -36,7 +39,67 @@ const MenuCardSkeleton = () => {
 };
 
 /* ----------------------------------
-   Menu Card
+   Reusable Modal (PORTAL + A11Y)
+---------------------------------- */
+
+const Modal = ({ title, children, onClose }) => {
+  useEffect(() => {
+    const onEsc = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onEsc);
+
+    // Prevent background scroll
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onEsc);
+      document.body.style.overflow = "auto";
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4"
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="
+          bg-white dark:bg-zinc-900
+          border border-gray-200 dark:border-zinc-700
+          rounded-3xl shadow-2xl
+          max-w-md w-full p-6
+        "
+      >
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          {title}
+        </h2>
+
+        {children}
+
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={onClose}
+            className="
+              px-4 py-2 rounded-xl
+              bg-gray-100 dark:bg-zinc-800
+              text-gray-700 dark:text-gray-300
+              hover:bg-red-500 hover:text-white
+              transition
+            "
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+/* ----------------------------------
+   Main Menu Card
 ---------------------------------- */
 
 const MenuCard = ({
@@ -50,8 +113,19 @@ const MenuCard = ({
   const [infoOpen, setInfoOpen] = useState(false);
   const [payOpen, setPayOpen] = useState(false);
 
+  // Safe window.open (works with SSR)
   const openPayment = () => {
-    window.open(BUY_ME_A_COFFEE_URL, "_blank", "noopener,noreferrer");
+    if (typeof window === "undefined") return;
+
+    const newTab = window.open(
+      BUY_ME_A_COFFEE_URL,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+    if (!newTab) {
+      alert("Pop-up blocked. Please allow pop-ups.");
+    }
   };
 
   if (loading) return <MenuCardSkeleton />;
@@ -62,7 +136,7 @@ const MenuCard = ({
       <div
         className="
           group relative
-           dark:bg-zinc-900/80
+          dark:bg-zinc-900/80
           backdrop-blur-xl
           border border-gray-200/60 dark:border-zinc-700
           rounded-3xl overflow-hidden
@@ -171,7 +245,7 @@ const MenuCard = ({
       {/* PAYMENT MODAL */}
       {payOpen && (
         <Modal
-          title={`Purchase: ${name.slice(0, 12)}...`}
+          title={`Purchase: ${name?.slice(0, 12) ?? "Item"}...`}
           onClose={() => setPayOpen(false)}
         >
           <div className="text-center space-y-4">
@@ -202,51 +276,4 @@ const MenuCard = ({
   );
 };
 
-/* ----------------------------------
-   Reusable Modal
----------------------------------- */
-
-const Modal = ({ title, children, onClose }) => {
-  useEffect(() => {
-    const onEsc = (e) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onEsc);
-    return () => window.removeEventListener("keydown", onEsc);
-  }, [onClose]);
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md px-4">
-      <div
-        className="
-          bg-white dark:bg-zinc-900
-          border border-gray-200 dark:border-zinc-700
-          rounded-3xl shadow-2xl
-          max-w-md w-full p-6
-          animate-scaleIn
-        "
-      >
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-          {title}
-        </h2>
-
-        {children}
-
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={onClose}
-            className="
-              px-4 py-2 rounded-xl
-              bg-gray-100 dark:bg-zinc-800
-              text-gray-700 dark:text-gray-300
-              hover:bg-red-500 hover:text-white
-              transition
-            "
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default MenuCard;
+export default React.memo(MenuCard);
