@@ -32,22 +32,33 @@ const services = [
   { id: 8, name: "Custom Web Application", tag: "New", price: "R999", description: "Fully custom web systems and dashboards." },
 ];
 
+// Move this to .env in real apps:
+// VITE_UNSPLASH_KEY or NEXT_PUBLIC_UNSPLASH_KEY
+const UNSPLASH_KEY = "vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw";
+
 const Menu = () => {
   const [images, setImages] = useState(Array(8).fill(null));
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // ✅ Guard for SSR
+    if (typeof window === "undefined") return;
+
     const fetchImages = async () => {
       try {
         const requests = keywords.map((kw) =>
           axios.get(
             `https://api.unsplash.com/photos/random?query=${encodeURIComponent(
               kw
-            )}&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw`
-          )
+            )}&client_id=${UNSPLASH_KEY}`
+          ).catch(() => null) // 🔥 Prevent total failure
         );
 
         const responses = await Promise.all(requests);
-        const imgList = responses.map((res) => res.data.urls.regular);
+
+        const imgList = responses.map((res) =>
+          res?.data?.urls?.regular || "https://via.placeholder.com/600x400"
+        );
 
         localStorage.setItem("cachedImages", JSON.stringify(imgList));
         localStorage.setItem("lastFetchTime", Date.now().toString());
@@ -55,6 +66,8 @@ const Menu = () => {
         setImages(imgList);
       } catch (error) {
         console.error("Unsplash Error:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -62,8 +75,13 @@ const Menu = () => {
     const cachedImages = localStorage.getItem("cachedImages");
     const sevenDays = 7 * 24 * 60 * 60 * 1000;
 
-    if (lastFetch && cachedImages && Date.now() - lastFetch < sevenDays) {
+    if (
+      lastFetch &&
+      cachedImages &&
+      Date.now() - Number(lastFetch) < sevenDays
+    ) {
       setImages(JSON.parse(cachedImages));
+      setLoading(false);
     } else {
       fetchImages();
     }
@@ -90,7 +108,7 @@ const Menu = () => {
       <Swiper
         effect="cube"
         grabCursor
-        loop
+        loop={!loading}   // ✅ Avoid loop while loading
         centeredSlides
         navigation
         pagination={{ clickable: true }}
@@ -108,7 +126,7 @@ const Menu = () => {
             <MenuCard
               {...service}
               image={images[index] ?? "https://via.placeholder.com/600x400"}
-              loading={!images[index]}
+              loading={loading}
             />
           </SwiperSlide>
         ))}
