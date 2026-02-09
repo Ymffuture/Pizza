@@ -20,7 +20,7 @@ export default function HelpCenter() {
         />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-16 text-gray-900 dark:text-white">
+      <div className="min-h-screen dark:bg-gray-900 px-6 py-16 text-gray-900 dark:text-white">
         <div className="mx-auto max-w-5xl space-y-12">
 
           {/* HEADER */}
@@ -76,7 +76,7 @@ function HelpCard({ icon, title, description, to }) {
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 300 }}
-      className="rounded-2xl bg-white dark:bg-gray-800 p-6 shadow hover:shadow-lg"
+      className="rounded-2xl dark:bg-gray-800 p-6 hover:shadow-lg"
     >
       <div className="space-y-4">
         <div className="text-3xl text-blue-600">{icon}</div>
