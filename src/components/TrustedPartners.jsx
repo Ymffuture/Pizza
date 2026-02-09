@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Cloudinary from "../assets/partners/Cloudinary.png";
 import MongoDB from "../assets/partners/MongoDB.png";
 import Gemini from "../assets/partners/Gemini.png";
-import RenderLogo from "../assets/partners/umuzi.png";
+import RenderLogo from "../assets/partners/emailjs_logo.png";
 import NodeLogo from "../assets/partners/wethinkcode.png";
 import GitHubLogo from "../assets/partners/GitHub.png";
 import VercelLogo from "../assets/partners/Vercel.png";
@@ -31,11 +31,11 @@ const partners = [
 const TrustedPartners = () => {
   const settings = {
     infinite: true,
-    speed: 6000,
+    speed: 4000,
     autoplay: true,
     autoplaySpeed: 0,
     cssEase: "linear",
-    slidesToShow: 5,
+    slidesToShow: 4,
     slidesToScroll: 1,
     arrows: false,
     pauseOnHover: true,
