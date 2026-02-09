@@ -9,9 +9,9 @@ import MongoDB from "../assets/partners/MongoDB.png";
 import Gemini from "../assets/partners/Gemini.png";
 import RenderLogo from "../assets/partners/emailjs_logo.png";
 import NodeLogo from "../assets/partners/wethinkcode.png";
-import GitHubLogo from "../assets/partners/GitHub.png";
+import GitHubLogo from "../assets/partners/github-logo-vector.png";
 import VercelLogo from "../assets/partners/Vercel.png";
-import SupabaseLogo from "../assets/partners/supabase.jpg";
+import SupabaseLogo from "../assets/partners/Supabase_Logo.png";
 import NetlifyLogo from "../assets/partners/Netlify.png";
 import TailwindLogo from "../assets/partners/Tailwindcss.png";
 
