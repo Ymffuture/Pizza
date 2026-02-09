@@ -14,7 +14,7 @@ import { Helmet } from "react-helmet";
 
 const Terms = () => {
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-black py-16 px-4">
+    <main className="min-h-screen dark:bg-black py-16 px-4">
       <Helmet>
         <title>Terms & Conditions | SwiftMeta</title>
         <meta
