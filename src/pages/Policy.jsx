@@ -14,7 +14,7 @@ import { Helmet } from "react-helmet";
 
 const Policy = () => {
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-black py-16 px-4">
+    <main className="min-h-screen dark:bg-black py-16 px-4">
       <Helmet>
         <title>Privacy Policy | SwiftMeta</title>
         <meta
@@ -23,7 +23,7 @@ const Policy = () => {
         />
       </Helmet>
 
-      <div className="max-w-4xl mx-auto bg-white/80 dark:bg-white/5 backdrop-blur-xl dark:border-white/10 p-8 md:p-12 rounded-3xl shadow-xl">
+      <div className="max-w-4xl mx-auto bg-white/80 dark:bg-white/5 backdrop-blur-xl dark:border-white/10 p-8 md:p-12 rounded-3xl">
         {/* Header */}
         <header className="mb-10">
           <h1 className="text-4xl font-semibold flex items-center gap-3 text-gray-900 dark:text-white">
@@ -173,6 +173,39 @@ const Policy = () => {
             </p>
           </div>
         </Section>
+<Section
+  icon={<RefreshCw className="text-purple-600" />}
+  title="7. Data Retention"
+>
+  <p>
+    Personal information and application data are retained only for as long as
+    necessary to fulfil their purpose or meet legal and regulatory
+    requirements.
+  </p>
+
+  <p className="mt-2">
+    Where you have enrolled in or completed a class, course, or program through
+    SwiftMeta, your personal information and associated records will be
+    securely retained for a period of up to <strong>one (1) year</strong> after
+    the completion of the class.
+  </p>
+
+  <p className="mt-2">
+    After this one-year retention period, your personal data and related
+    records will be securely deleted or anonymised, unless:
+  </p>
+
+  <ul className="list-disc ml-6 space-y-2 mt-2">
+    <li>Retention is required by law or regulatory obligations;</li>
+    <li>There is an ongoing legal dispute, investigation, or audit; or</li>
+    <li>You have provided explicit consent for a longer retention period.</li>
+  </ul>
+
+  <p className="mt-2">
+    You may request the deletion of your personal information before this
+    period, subject to legal or contractual limitations.
+  </p>
+</Section>
 
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-black/5 dark:border-white/10 text-sm text-gray-600 dark:text-gray-400">
