@@ -117,8 +117,7 @@ const Policy = () => {
           title="5. POPIA Compliance & Your Rights"
         >
           <p>
-            SwiftMeta processes personal information in accordance with the
-            <strong> Protection of Personal Information Act (POPIA)</strong>.
+            SwiftMeta intends to process personal information in accordance with <strong> Protection of Personal Information Act (POPIA)</strong> principles.
           </p>
           <ul className="list-disc ml-6 space-y-2 mt-2">
             <li>Request access to personal data we hold about you.</li>
@@ -201,6 +200,11 @@ const Policy = () => {
             This Privacy Policy may be updated periodically. Continued use of
             SwiftMeta constitutes acceptance of the latest version.
           </p>
+          <p className="mt-2 text-xs text-gray-500">
+  SwiftMeta is currently in the process of formal business registration. These
+  policies reflect our intended legal and ethical standards upon registration.
+</p>
+
         </footer>
       </div>
     </main>
