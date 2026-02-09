@@ -23,7 +23,7 @@ const Terms = () => {
         />
       </Helmet>
 
-      <div className="max-w-4xl mx-auto bg-white/80 dark:bg-white/5 backdrop-blur-xl dark:border-white/10 p-8 md:p-12 rounded-3xl shadow-xl">
+      <div className="max-w-4xl mx-auto bg-white/80 dark:bg-white/5 backdrop-blur-xl dark:border-white/10 p-8 md:p-12 rounded-3xl">
         {/* Header */}
         <header className="mb-10">
           <h1 className="text-4xl font-semibold flex items-center gap-3 text-gray-900 dark:text-white">
