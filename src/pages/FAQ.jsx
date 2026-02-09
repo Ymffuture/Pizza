@@ -6,7 +6,7 @@ export default function FAQ() {
   return (
     <>
     <Helmet >
-      <title>FAQ - 2026/2027</title>
+      <title>FAQ - SwiftMeta</title>
       <script type="application/ld+json">
 {JSON.stringify({
   "@context": "https://schema.org",
@@ -23,7 +23,7 @@ export default function FAQ() {
 </script>
       </Helmet>
     
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-16 dark:text-white">
+    <div className="min-h-screen dark:bg-gray-900 px-6 py-16 dark:text-white">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
