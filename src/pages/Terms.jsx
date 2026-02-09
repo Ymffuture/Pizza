@@ -166,6 +166,44 @@ const Terms = () => {
             the revised Terms.
           </p>
         </Section>
+<Section
+  icon={<UserCheck className="text-red-600" />}
+  title="9. Identification, Risk, and Limitation of Responsibility"
+>
+  <p>
+    Certain services, engagements, or additional work may require the user to
+    provide valid identification, including but not limited to a South African
+    ID number or other acceptable proof of identity.
+  </p>
+
+  <p className="mt-2">
+    If a user refuses or fails to provide the required identification,
+    SwiftMeta reserves the right to decline, suspend, or terminate further
+    services, applications, or additional work at its sole discretion.
+  </p>
+
+  <p className="mt-2">
+    The user acknowledges that providing false, incomplete, or withheld
+    information may create legal, security, or operational risks.
+  </p>
+
+  <p className="mt-2">
+    SwiftMeta and its representatives shall not be held liable for any loss,
+    harm, legal consequences, or personal risk arising from:
+  </p>
+
+  <ul className="list-disc ml-6 space-y-2 mt-2">
+    <li>The user’s refusal to provide proper identification.</li>
+    <li>Misrepresentation or omission of required personal information.</li>
+    <li>Any actions, disputes, or incidents resulting from incomplete or inaccurate data provided by the user.</li>
+  </ul>
+
+  <p className="mt-2">
+    By proceeding to use SwiftMeta’s services, the user agrees that all risks
+    associated with non-compliance, refusal, or misrepresentation rest solely
+    with the user, and not with SwiftMeta or its personnel.
+  </p>
+</Section>
 
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-black/5 dark:border-white/10 text-sm text-gray-600 dark:text-gray-400">
