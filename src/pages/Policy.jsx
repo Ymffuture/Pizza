@@ -143,37 +143,6 @@ const Policy = () => {
 
         {/* Section 7 */}
         <Section
-          icon={<RefreshCw className="text-purple-600" />}
-          title="7. Data Retention"
-        >
-          <p>
-            Personal information and application data are retained only for as
-            long as necessary to fulfil their purpose or meet legal
-            requirements.
-          </p>
-          <p className="mt-2">
-            Data may be securely deleted after defined retention periods.
-          </p>
-        </Section>
-
-        {/* Section 8 */}
-        <Section
-          icon={<Mail className="text-blue-600" />}
-          title="8. Contact Information"
-        >
-          <p>
-            For privacy-related questions, data requests, or concerns, please
-            contact us:
-          </p>
-
-          <div className="mt-4 p-4 rounded-2xl bg-gray-100 dark:bg-white/10 border border-black/5 dark:border-white/10">
-            <p className="font-medium text-gray-900 dark:text-white">Email</p>
-            <p className="text-gray-700 dark:text-gray-300">
-              famacloud.ai@gmail.com
-            </p>
-          </div>
-        </Section>
-<Section
   icon={<RefreshCw className="text-purple-600" />}
   title="7. Data Retention"
 >
@@ -206,6 +175,25 @@ const Policy = () => {
     period, subject to legal or contractual limitations.
   </p>
 </Section>
+
+        {/* Section 8 */}
+        <Section
+          icon={<Mail className="text-blue-600" />}
+          title="8. Contact Information"
+        >
+          <p>
+            For privacy-related questions, data requests, or concerns, please
+            contact us:
+          </p>
+
+          <div className="mt-4 p-4 rounded-2xl bg-gray-100 dark:bg-white/10 border border-black/5 dark:border-white/10">
+            <p className="font-medium text-gray-900 dark:text-white">Email</p>
+            <p className="text-gray-700 dark:text-gray-300">
+              famacloud.ai@gmail.com
+            </p>
+          </div>
+        </Section>
+
 
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-black/5 dark:border-white/10 text-sm text-gray-600 dark:text-gray-400">
