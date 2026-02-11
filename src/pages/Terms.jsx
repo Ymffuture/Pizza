@@ -204,6 +204,36 @@ const Terms = () => {
     with the user, and not with SwiftMeta or its personnel.
   </p>
 </Section>
+<Section
+  icon={<AlertTriangle className="text-red-600" />}
+  title="10. Safety, Risk, and Application Compliance"
+>
+  <p>
+    Where an application is incomplete, inaccurate, or has not been fully
+    submitted (including missing or unverified identification documents),
+    SwiftMeta reserves the right to modify, postpone, relocate, or suspend any
+    scheduled work, engagement, or service at any time and within a reasonable
+    range deemed necessary for safety and operational purposes.
+  </p>
+
+  <p className="mt-2">
+    By using the platform and engaging with SwiftMeta services, the user
+    acknowledges that SwiftMeta and its tutors, employees, or representatives
+    shall not be held responsible for any personal risk, harm, or safety-related
+    concerns arising from the user’s failure to complete the required
+    application process or provide valid identification.
+  </p>
+
+  <p className="mt-2">
+    Users are responsible for ensuring that all required information is fully
+    and truthfully provided prior to any service delivery, engagement, or
+    tutoring session.
+  </p>
+  <p className="mt-2">
+  The class duration is strictly limited to 90 minutes and will not be extended beyond this time.
+</p>
+
+</Section>
 
         {/* Footer */}
         <footer className="mt-12 pt-6 border-t border-black/5 dark:border-white/10 text-sm text-gray-600 dark:text-gray-400">
