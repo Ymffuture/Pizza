@@ -161,14 +161,34 @@ export function useJobApply() {
 
     /* --------- DERIVE DOB + GENDER FROM ID --------- */
     if (key === "idNumber" && /^\d{6}/.test(normalizedValue)) {
-      const year = normalizedValue.slice(0, 2);
-      const month = normalizedValue.slice(2, 4);
-      const day = normalizedValue.slice(4, 6);
+  const year = normalizedValue.slice(0, 2);
+  const month = normalizedValue.slice(2, 4);
+  const day = normalizedValue.slice(4, 6);
 
-      const prefix =
-        parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
+  const currentYear = new Date().getFullYear() % 100;
+  const prefix = parseInt(year, 10) <= currentYear ? "20" : "19";
 
-      setDob(`${prefix}${year}-${month}-${day}`);
+  const monthNum = parseInt(month, 10);
+  const dayNum = parseInt(day, 10);
+  const fullYear = parseInt(`${prefix}${year}`, 10);
+
+  // Basic range check first
+  const isValidMonth = monthNum >= 1 && monthNum <= 12;
+  const isValidDay = dayNum >= 1 && dayNum <= 31;
+
+  if (isValidMonth && isValidDay) {
+    // Real calendar validation
+    const testDate = new Date(fullYear, monthNum - 1, dayNum);
+
+    const isRealDate =
+      testDate.getFullYear() === fullYear &&
+      testDate.getMonth() === monthNum - 1 &&
+      testDate.getDate() === dayNum;
+
+    if (isRealDate) {
+      setDob(
+        `${fullYear}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
+      );
 
       if (normalizedValue.length >= 10) {
         const genderDigits = parseInt(
@@ -181,10 +201,20 @@ export function useJobApply() {
           gender: genderDigits <= 4999 ? "Female" : "Male",
         }));
       }
-    } else if (key === "idNumber") {
+    } else {
+      // Decline invalid calendar dates (e.g. Feb 30)
       setDob("");
+      console.warn("Invalid calendar date in ID number");
     }
-  };
+  } else {
+    // Decline invalid month/day range
+    setDob("");
+    console.warn("Invalid month or day in ID number");
+  }
+} else if (key === "idNumber") {
+  setDob("");
+}
+
 
   /* ===================== SUBMIT HANDLER (FULLY FIXED) ===================== */
   const handleSubmit = async (e) => {
