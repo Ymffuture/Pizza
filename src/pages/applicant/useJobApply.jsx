@@ -214,7 +214,7 @@ export function useJobApply() {
 } else if (key === "idNumber") {
   setDob("");
 }
-
+  } 
 
   /* ===================== SUBMIT HANDLER (FULLY FIXED) ===================== */
   const handleSubmit = async (e) => {
