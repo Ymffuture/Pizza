@@ -247,6 +247,17 @@ export function useJobApply() {
       const formattedFullName = `${formatName(
         formData.firstName
       )} ${formatName(formData.lastName)}`.trim();
+      
+      const verification = await api.post("/verify-id", {
+  idNumber: formData.idNumber,
+});
+
+if (!verification.data.valid) {
+  setErrors({ idNumber: "ID failed official verification" });
+  setLoading(false);
+  return;
+}
+
 
       try {
         await sendApplicationEmail({
