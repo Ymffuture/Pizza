@@ -10,10 +10,10 @@ import {
 } from "react-icons/fi";
 
 const SUBJECT_PRICES = {
-  mathematics: 320,
-  mathLit: 280,
-  physics: 320,
-  lifeScience: 250,
+  mathematics: 350,
+  mathLit: 320,
+  physics: 350,
+  lifeScience: 300,
 };
 
 const SUBJECT_LABELS = {
@@ -32,7 +32,7 @@ const calculatePrice = (selected) => {
     0
   );
 
-  const discount = selected.length > 1 ? subtotal * 0.03 : 0;
+  const discount = selected.length > 1 ? subtotal * 0.02 : 0;
   const total = subtotal - discount;
 
   return { subtotal, discount, total };
@@ -163,7 +163,7 @@ export default function SubjectsPricingPage() {
                 exit={{ opacity: 0, y: -5 }}
                 className="text-green-600"
               >
-                Discount (3%): - R {discount.toFixed(2)}
+                Discount (2%): - R {discount.toFixed(2)}
               </motion.p>
             )}
           </AnimatePresence>
