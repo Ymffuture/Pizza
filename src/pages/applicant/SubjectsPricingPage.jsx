@@ -6,7 +6,6 @@ import {
   FiCopy,
   FiPrinter,
   FiArrowLeft,
-  FiSearch,
   FiChevronDown,
 } from "react-icons/fi";
 import { FaWhatsapp, FaFacebook } from "react-icons/fa";
@@ -37,20 +36,14 @@ const SUBJECT_INFO = {
   },
 };
 
-const LOGO_URL = "/apple-touch-icon.png";
 const APPLY_LINK = "/apply";
 
-/* -------------------------
-   30% PRICE INCREASE LOGIC
--------------------------- */
+/* 30% PRICE INCREASE AFTER JUNE 30 */
 const getAdjustedPrice = (base) => {
   const now = new Date();
-  const juneEnd = new Date(now.getFullYear(), 5, 30); // June 30
+  const juneEnd = new Date(now.getFullYear(), 5, 30);
 
-  if (now > juneEnd) {
-    return base * 1.3; // 30% increase
-  }
-
+  if (now > juneEnd) return base * 1.3;
   return base;
 };
 
@@ -83,7 +76,7 @@ export default function SubjectsPricingPage() {
     [selected]
   );
 
-  const shareText = `📚 SwiftMeta Quote
+  const shareText = `SwiftMeta Quote
 Subjects: ${selected.map((s) => SUBJECT_INFO[s].label).join(", ")}
 Total: R ${total.toFixed(2)}
 Apply here: ${window.location.origin}${APPLY_LINK}`;
@@ -99,11 +92,31 @@ Apply here: ${window.location.origin}${APPLY_LINK}`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black pt-20 dark:text-white">
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black pt-20 dark:text-white print:bg-white print:text-black print:pt-0">
+      
+      {/* PRINT STYLES */}
+      <style>
+        {`
+          @media print {
+            body {
+              margin: 0;
+            }
+            .no-print {
+              display: none !important;
+            }
+            .print-container {
+              width: 100%;
+              max-width: 100%;
+              padding: 40px;
+            }
+          }
+        `}
+      </style>
+
+      <div className="max-w-4xl mx-auto p-6 space-y-6 print-container">
 
         {/* HEADER */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center no-print">
           <h1 className="text-3xl font-semibold tracking-tight">
             Subjects & Pricing
           </h1>
@@ -117,12 +130,12 @@ Apply here: ${window.location.origin}${APPLY_LINK}`;
         </div>
 
         {/* PRICE NOTICE */}
-        <div className="text-sm text-red-500 font-medium">
+        <div className="text-sm text-red-500 font-medium no-print">
           ⚠ Prices increase by 30% after June 30.
         </div>
 
         {/* SUBJECT GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 no-print">
           {Object.keys(BASE_PRICES).map((key) => {
             const adjusted = getAdjustedPrice(BASE_PRICES[key]);
             const isSelected = selected.includes(key);
@@ -131,10 +144,10 @@ Apply here: ${window.location.origin}${APPLY_LINK}`;
               <motion.div
                 key={key}
                 whileHover={{ scale: 1.02 }}
-                className={`relative p-5 rounded-2xl border backdrop-blur-xl cursor-pointer transition-all duration-300
+                className={`p-5 rounded-2xl border cursor-pointer transition-all
                 ${
                   isSelected
-                    ? "border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.6)]"
+                    ? "border-blue-500 shadow-lg"
                     : "border-gray-200 dark:border-gray-700"
                 }`}
                 onClick={() => toggleSubject(key)}
@@ -151,7 +164,6 @@ Apply here: ${window.location.origin}${APPLY_LINK}`;
                   )}
                 </div>
 
-                {/* Apple Style Dropdown */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -168,7 +180,7 @@ Apply here: ${window.location.origin}${APPLY_LINK}`;
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="overflow-hidden text-sm text-gray-600 dark:text-gray-400 mt-2"
+                      className="overflow-hidden text-sm text-gray-600 mt-2"
                     >
                       {SUBJECT_INFO[key].description}
                     </motion.div>
@@ -183,27 +195,54 @@ Apply here: ${window.location.origin}${APPLY_LINK}`;
           })}
         </div>
 
-        {/* SUMMARY */}
-        <motion.div
-          layout
-          className="p-6 bg-white/60 dark:bg-gray-800/60 rounded-2xl backdrop-blur-xl shadow-xl"
-        >
-          <p>Subtotal: <strong>R {subtotal.toFixed(2)}</strong></p>
-          {selected.length > 1 && (
-            <p className="text-green-600">
-              Discount (2%): - R {discount.toFixed(2)}
+        {/* PRINTABLE QUOTE SECTION */}
+        {selected.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mt-6">
+            
+            <h2 className="text-2xl font-semibold mb-4">
+              SwiftMeta Tuition Quote
+            </h2>
+
+            <div className="space-y-2">
+              {selected.map((subject) => (
+                <div
+                  key={subject}
+                  className="flex justify-between border-b pb-2"
+                >
+                  <span>{SUBJECT_INFO[subject].label}</span>
+                  <span>
+                    R {getAdjustedPrice(BASE_PRICES[subject]).toFixed(2)}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 space-y-1">
+              <p>
+                Subtotal: <strong>R {subtotal.toFixed(2)}</strong>
+              </p>
+              {selected.length > 1 && (
+                <p className="text-green-600">
+                  Discount (2%): - R {discount.toFixed(2)}
+                </p>
+              )}
+              <p className="text-xl font-semibold mt-2">
+                Total: R {total.toFixed(2)}
+              </p>
+            </div>
+
+            <p className="mt-6 text-sm text-gray-500">
+              This quote is valid at the time of generation. 
+              Apply online to confirm registration.
             </p>
-          )}
-          <p className="text-xl font-semibold mt-2">
-            Total: R {total.toFixed(2)}
-          </p>
-        </motion.div>
+          </div>
+        )}
 
         {/* ACTIONS */}
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 no-print">
           <button
             onClick={() => navigator.clipboard.writeText(shareText)}
-            className="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-700"
+            className="px-4 py-2 rounded-xl bg-gray-200 flex gap-2"
           >
             <FiCopy /> Copy
           </button>
@@ -224,11 +263,12 @@ Apply here: ${window.location.origin}${APPLY_LINK}`;
 
           <button
             onClick={() => window.print()}
-            className="px-4 py-2 rounded-xl bg-black text-white"
+            className="px-4 py-2 rounded-xl bg-black text-white flex gap-2"
           >
             <FiPrinter /> Print
           </button>
         </div>
+
       </div>
     </div>
   );
