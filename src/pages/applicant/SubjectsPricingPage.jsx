@@ -99,7 +99,7 @@ Apply here: ${window.location.origin}${APPLY_LINK}`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black pt-20">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black pt-20 dark:text-white">
       <div className="max-w-4xl mx-auto p-6 space-y-6">
 
         {/* HEADER */}
