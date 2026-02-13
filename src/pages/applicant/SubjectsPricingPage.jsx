@@ -7,28 +7,56 @@ import {
   FiPrinter,
   FiArrowLeft,
   FiSearch,
+  FiChevronDown,
 } from "react-icons/fi";
+import { FaWhatsapp, FaFacebook } from "react-icons/fa";
 
-const SUBJECT_PRICES = {
+const BASE_PRICES = {
   mathematics: 350,
   mathLit: 320,
   physics: 350,
   lifeScience: 300,
 };
 
-const SUBJECT_LABELS = {
-  mathematics: "Mathematics",
-  mathLit: "Mathematical Literacy",
-  physics: "Physics",
-  lifeScience: "Life Sciences",
+const SUBJECT_INFO = {
+  mathematics: {
+    label: "Mathematics",
+    description: "Advanced algebra, calculus, trigonometry & exam preparation.",
+  },
+  mathLit: {
+    label: "Mathematical Literacy",
+    description: "Practical maths for real-world financial and daily use.",
+  },
+  physics: {
+    label: "Physics",
+    description: "Mechanics, electricity, waves & problem-solving mastery.",
+  },
+  lifeScience: {
+    label: "Life Sciences",
+    description: "Biology, genetics, ecology & scientific reasoning.",
+  },
 };
 
 const LOGO_URL = "/apple-touch-icon.png";
 const APPLY_LINK = "/apply";
 
+/* -------------------------
+   30% PRICE INCREASE LOGIC
+-------------------------- */
+const getAdjustedPrice = (base) => {
+  const now = new Date();
+  const juneEnd = new Date(now.getFullYear(), 5, 30); // June 30
+
+  if (now > juneEnd) {
+    return base * 1.3; // 30% increase
+  }
+
+  return base;
+};
+
 const calculatePrice = (selected) => {
   const subtotal = selected.reduce(
-    (sum, subject) => sum + SUBJECT_PRICES[subject],
+    (sum, subject) => sum + getAdjustedPrice(BASE_PRICES[subject]),
     0
   );
 
@@ -40,7 +68,7 @@ const calculatePrice = (selected) => {
 
 export default function SubjectsPricingPage() {
   const [selected, setSelected] = useState([]);
-  const [searchSlip, setSearchSlip] = useState("");
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   const toggleSubject = (key) => {
     setSelected((prev) =>
@@ -55,167 +83,151 @@ export default function SubjectsPricingPage() {
     [selected]
   );
 
-  const handlePrint = () => {
-    window.print();
+  const shareText = `📚 SwiftMeta Quote
+Subjects: ${selected.map((s) => SUBJECT_INFO[s].label).join(", ")}
+Total: R ${total.toFixed(2)}
+Apply here: ${window.location.origin}${APPLY_LINK}`;
+
+  const handleShareWhatsApp = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`);
   };
 
-  const handleCopy = async () => {
-    const lines = [
-      "📚 School Subjects Quote",
-      "",
-      "Subjects Selected:",
-      ...selected.map(
-        (s) => `- ${SUBJECT_LABELS[s]}: R${SUBJECT_PRICES[s]}`
-      ),
-      "",
-      `Subtotal: R${subtotal.toFixed(2)}`,
-      `Discount: -R${discount.toFixed(2)}`,
-      `Total: R${total.toFixed(2)}`,
-      "",
-      `Apply here: ${window.location.origin}${APPLY_LINK}`,
-    ];
-
-    await navigator.clipboard.writeText(lines.join("\n"));
-    alert("Copied to clipboard!");
+  const handleShareFacebook = () => {
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${window.location.origin}${APPLY_LINK}`
+    );
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 pt-20">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-black pt-20">
       <div className="max-w-4xl mx-auto p-6 space-y-6">
+
         {/* HEADER */}
-        <div className="flex justify-between items-center print:hidden">
-          <h1 className="text-2xl font-semibold">
-            School Subjects Pricing
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Subjects & Pricing
           </h1>
 
           <a
             href={APPLY_LINK}
             className="flex items-center gap-2 text-blue-500 hover:underline"
           >
-            <FiArrowLeft /> Back to Apply
+            <FiArrowLeft /> Apply
           </a>
         </div>
 
-        {/* SEARCH SLIP / INVOICE SECTION */}
-        <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl print:hidden">
-          <label className="block text-sm mb-2">
-            Search your Slip / Invoice
-          </label>
-          <div className="flex items-center gap-2 border rounded-lg p-2 bg-white dark:bg-gray-700">
-            <FiSearch />
-            <input
-              type="text"
-              placeholder="Enter slip or invoice number..."
-              value={searchSlip}
-              onChange={(e) => setSearchSlip(e.target.value)}
-              className="w-full bg-transparent outline-none"
-            />
-          </div>
+        {/* PRICE NOTICE */}
+        <div className="text-sm text-red-500 font-medium">
+          ⚠ Prices increase by 30% after June 30.
         </div>
 
         {/* SUBJECT GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 print:hidden">
-          {Object.keys(SUBJECT_PRICES).map((key) => (
-            <motion.div
-              key={key}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => toggleSubject(key)}
-              className={`p-4 rounded-xl border cursor-pointer transition ${
-                selected.includes(key)
-                  ? "bg-blue-50 dark:bg-blue-900/20 border-blue-400"
-                  : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <FiBook />
-                  <span className="font-medium">
-                    {SUBJECT_LABELS[key]}
-                  </span>
-                </div>
-                {selected.includes(key) && (
-                  <FiCheckCircle className="text-blue-600" />
-                )}
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {Object.keys(BASE_PRICES).map((key) => {
+            const adjusted = getAdjustedPrice(BASE_PRICES[key]);
+            const isSelected = selected.includes(key);
 
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                R {SUBJECT_PRICES[key]}
-              </p>
-            </motion.div>
-          ))}
+            return (
+              <motion.div
+                key={key}
+                whileHover={{ scale: 1.02 }}
+                className={`relative p-5 rounded-2xl border backdrop-blur-xl cursor-pointer transition-all duration-300
+                ${
+                  isSelected
+                    ? "border-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.6)]"
+                    : "border-gray-200 dark:border-gray-700"
+                }`}
+                onClick={() => toggleSubject(key)}
+              >
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <FiBook />
+                    <span className="font-medium">
+                      {SUBJECT_INFO[key].label}
+                    </span>
+                  </div>
+                  {isSelected && (
+                    <FiCheckCircle className="text-blue-600" />
+                  )}
+                </div>
+
+                {/* Apple Style Dropdown */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenDropdown(openDropdown === key ? null : key);
+                  }}
+                  className="flex items-center gap-1 text-sm text-gray-500 mt-2"
+                >
+                  Details <FiChevronDown />
+                </button>
+
+                <AnimatePresence>
+                  {openDropdown === key && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden text-sm text-gray-600 dark:text-gray-400 mt-2"
+                    >
+                      {SUBJECT_INFO[key].description}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <p className="mt-3 font-semibold">
+                  R {adjusted.toFixed(2)}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* PRICE SUMMARY (ON SCREEN) */}
+        {/* SUMMARY */}
         <motion.div
           layout
-          className="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl space-y-2 print:hidden"
+          className="p-6 bg-white/60 dark:bg-gray-800/60 rounded-2xl backdrop-blur-xl shadow-xl"
         >
-          <motion.p layout>
-            Subtotal: <strong>R {subtotal.toFixed(2)}</strong>
-          </motion.p>
-
-          <AnimatePresence>
-            {selected.length > 1 && (
-              <motion.p
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                className="text-green-600"
-              >
-                Discount (2%): - R {discount.toFixed(2)}
-              </motion.p>
-            )}
-          </AnimatePresence>
-
-          <motion.p layout className="text-lg font-semibold">
+          <p>Subtotal: <strong>R {subtotal.toFixed(2)}</strong></p>
+          {selected.length > 1 && (
+            <p className="text-green-600">
+              Discount (2%): - R {discount.toFixed(2)}
+            </p>
+          )}
+          <p className="text-xl font-semibold mt-2">
             Total: R {total.toFixed(2)}
-          </motion.p>
+          </p>
         </motion.div>
 
-        {/* ACTION BUTTONS */}
-        <div className="flex gap-4 print:hidden">
+        {/* ACTIONS */}
+        <div className="flex flex-wrap gap-4">
           <button
-            onClick={handleCopy}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-700"
+            onClick={() => navigator.clipboard.writeText(shareText)}
+            className="px-4 py-2 rounded-xl bg-gray-200 dark:bg-gray-700"
           >
-            <FiCopy /> Copy Details
+            <FiCopy /> Copy
           </button>
 
           <button
-            onClick={handlePrint}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white"
+            onClick={handleShareWhatsApp}
+            className="px-4 py-2 rounded-xl bg-green-500 text-white flex items-center gap-2"
           >
-            <FiPrinter /> Print Quote
+            <FaWhatsapp /> WhatsApp
           </button>
-        </div>
 
-        {/* ✅ CLEAN PRINTABLE RECEIPT (ONLY THIS SHOWS WHEN PRINTING) */}
-        <div className="hidden print:block print:bg-white print:text-black">
-          <div className="flex items-center gap-4 border-b pb-4 mb-4">
-            <img src={LOGO_URL} alt="logo" className="h-10" />
-            <h2 className="text-xl font-semibold">Subject Quote</h2>
-          </div>
+          <button
+            onClick={handleShareFacebook}
+            className="px-4 py-2 rounded-xl bg-blue-600 text-white flex items-center gap-2"
+          >
+            <FaFacebook /> Facebook
+          </button>
 
-          <p className="mb-2 font-medium">Subjects Selected:</p>
-          <ul className="mb-4 list-disc pl-5">
-            {selected.map((s) => (
-              <li key={s}>
-                {SUBJECT_LABELS[s]} — R {SUBJECT_PRICES[s]}
-              </li>
-            ))}
-          </ul>
-
-          <p>Subtotal: R {subtotal.toFixed(2)}</p>
-          <p>Discount: - R {discount.toFixed(2)}</p>
-          <p className="font-semibold">
-            Total: R {total.toFixed(2)}
-          </p>
-
-          <p className="mt-4">
-            Apply here: {window.location.origin}
-            {APPLY_LINK}
-          </p>
+          <button
+            onClick={() => window.print()}
+            className="px-4 py-2 rounded-xl bg-black text-white"
+          >
+            <FiPrinter /> Print
+          </button>
         </div>
       </div>
     </div>
