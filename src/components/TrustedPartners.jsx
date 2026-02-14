@@ -12,7 +12,7 @@ import NodeLogo from "../assets/partners/wethinkcode.png";
 import GitHubLogo from "../assets/partners/github-logo-vector.png";
 import VercelLogo from "../assets/partners/Vercel.png";
 import SupabaseLogo from "../assets/partners/Supabase_Logo.png";
-import NetlifyLogo from "../assets/partners/Netlify.png";
+import NetlifyLogo from "../assets/partners/checkid-logo.png";
 import TailwindLogo from "../assets/partners/Tailwindcss.png";
 
 const partners = [
