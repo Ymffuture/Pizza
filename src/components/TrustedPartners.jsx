@@ -19,12 +19,12 @@ const partners = [
   { name: "Cloudinary", href: "https://cloudinary.com", logo: Cloudinary },
   { name: "MongoDB", href: "https://mongodb.com", logo: MongoDB },
   { name: "Gemini AI", href: "https://gemini.google.com", logo: Gemini },
-  { name: "Render", href: "https://render.com", logo: RenderLogo },
-  { name: "Node.js", href: "https://nodejs.org", logo: NodeLogo },
+  { name: "Emailjs", href: "https://emailjs.com", logo: RenderLogo },
+  { name: "wethinkcode ", href: "https://wethinkcode.co.za", logo: NodeLogo },
   { name: "GitHub", href: "https://github.com", logo: GitHubLogo },
   { name: "Vercel", href: "https://vercel.com", logo: VercelLogo },
   { name: "Supabase", href: "https://supabase.com", logo: SupabaseLogo },
-  { name: "Netlify", href: "https://netlify.com", logo: NetlifyLogo },
+  { name: "Check ID SA", href: "https://checkid.co.za", logo: NetlifyLogo },
   { name: "TailwindCSS", href: "https://tailwindcss.com", logo: TailwindLogo },
 ];
 
