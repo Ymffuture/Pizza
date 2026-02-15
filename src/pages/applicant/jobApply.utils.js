@@ -66,35 +66,55 @@ export function useDebounce(value, delay = 500) {
 }
 
 /* ---------------------------------------------------
-   ZOD SCHEMA
+   ZOD SCHEMA - FIXED VERSION
 --------------------------------------------------- */
 export const fileSchema = z
   .instanceof(File, { message: "File is required" })
-  .refine((file) => file.size <= MAX_FILE_SIZE, "File must be under 5MB")
+  .refine((file) => file.size <= MAX_FILE_SIZE, {
+    message: "File must be under 5MB",
+  })
   .refine(
     (file) => ACCEPTED_FILE_TYPES.includes(file.type),
-    "Only PDF or Word documents are allowed"
+    { message: "Only PDF or Word documents are allowed" }
   );
 
-export const jobApplySchema = z.object({
-  firstName: z.string().min(4, "First name is required"),
-  lastName: z.string().min(2, "Last name is required"),
-  idNumber: z.string().refine(isValidSouthAfricanID, {
-    message: "Invalid South African ID number",
-  }),
-  email: z.string().email("Invalid email address"),
-  location: z.string().min(6, "Location is required"),
-  qualification: z.string().min(2, "Qualification is required"),
-  experience: z.string().min(1, "Experience is required"),
-  currentRole: z.string().optional(),
-  portfolio: z.string().optional(),
-  phone: z.string().min(10).optional(),
-  cv: fileSchema,
-  doc1: z.instanceof(File).optional(),
-  doc2: z.instanceof(File).optional(),
-  consent: z.literal(true, {
-    errorMap: () => ({
-      message: "You must accept the Terms & Privacy Policy",
+// Allows null/undefined (no file) OR a valid file
+const optionalFileSchema = z.union([z.null(), z.undefined(), fileSchema]);
+
+export const jobApplySchema = z
+  .object({
+    firstName: z.string().min(4, "First name is required"),
+    lastName: z.string().min(2, "Last name is required"),
+    idNumber: z.string().refine(isValidSouthAfricanID, {
+      message: "Invalid South African ID number",
     }),
-  }),
-});
+    email: z.string().email("Invalid email address"),
+    location: z.string().min(6, "Location is required"),
+    qualification: z.string().min(2, "Qualification is required"),
+    experience: z.string().min(1, "Experience is required"),
+    currentRole: z.string().optional(),
+    portfolio: z.string().optional(),
+    phone: z.string().min(10).optional(),
+
+    // All files are optional but validated when uploaded
+    cv: optionalFileSchema,
+    doc1: optionalFileSchema,
+    doc2: optionalFileSchema,
+
+    consent: z.literal(true, {
+      errorMap: () => ({
+        message: "You must accept the Terms & Privacy Policy",
+      }),
+    }),
+  })
+  // 🔥 At least one document required
+  .refine(
+    (data) =>
+      data.cv instanceof File ||
+      data.doc1 instanceof File ||
+      data.doc2 instanceof File,
+    {
+      message: "Please upload at least one document (CV or supporting document)",
+      path: ["cv"], // Shows error under the CV field in your form
+    }
+  );
