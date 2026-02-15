@@ -237,11 +237,7 @@ export function useJobApply() {
       });
     
 
-    await api.post("/application/apply", data, {
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-});
+    await api.post("/application/apply", data)
 
       const uploadedFiles = [
         formData.cv?.name,
