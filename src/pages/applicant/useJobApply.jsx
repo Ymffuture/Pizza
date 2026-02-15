@@ -243,7 +243,11 @@ if (!verification.data.valid) {
   setLoading(false);
   return;
 }
-      await api.post("/application/apply", data);
+    await api.post("/application/apply", data, {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
 
       const uploadedFiles = [
         formData.cv?.name,
