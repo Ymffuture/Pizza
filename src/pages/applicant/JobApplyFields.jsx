@@ -74,7 +74,7 @@ export function InputField({
 // FileField — optional tooltip on label
 export function FileField({ label, error, onChange, tooltip }) {
   const labelContent = tooltip ? (
-    <Tooltip title={tooltip} placement="right">
+    <Tooltip title={tooltip} placement="topLeft" color="#202124">
       <span className="flex items-center gap-1">
         {label}
         <span className="text-blue-500 text-xs font-medium cursor-help">(i)</span>
