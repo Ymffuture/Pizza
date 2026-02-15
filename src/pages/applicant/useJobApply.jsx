@@ -235,15 +235,7 @@ export function useJobApply() {
           data.append(k, v);
         }
       });
-      const verification = await api.post("/verify-id", {
-  idNumber: formData.idNumber,
-});
-
-if (!verification.data.valid) {
-  setErrors({ idNumber: "ID failed official verification" });
-  setLoading(false);
-  return;
-}
+    
 
     await api.post("/application/apply", data, {
   headers: {
