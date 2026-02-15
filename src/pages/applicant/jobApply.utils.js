@@ -63,58 +63,46 @@ export function useDebounce(value, delay = 500) {
   }, [value, delay]);
 
   return debounced;
-}
+      }
 
 /* ---------------------------------------------------
-   ZOD SCHEMA - FIXED VERSION
+   ZOD SCHEMA
 --------------------------------------------------- */
 export const fileSchema = z
   .instanceof(File, { message: "File is required" })
-  .refine((file) => file.size <= MAX_FILE_SIZE, {
-    message: "File must be under 5MB",
-  })
+  .refine((file) => file.size <= MAX_FILE_SIZE, "File must be under 5MB")
   .refine(
     (file) => ACCEPTED_FILE_TYPES.includes(file.type),
-    { message: "Only PDF or Word documents are allowed" }
+    "Only PDF or Word documents are allowed"
   );
-
-// Allows null/undefined (no file) OR a valid file
-const optionalFileSchema = z.union([z.null(), z.undefined(), fileSchema]);
 
 export const jobApplySchema = z
   .object({
-    firstName: z.string().min(4, "First name is required"),
+    firstName: z.string().min(2, "First name is required"),
     lastName: z.string().min(2, "Last name is required"),
-    idNumber: z.string().refine(isValidSouthAfricanID, {
-      message: "Invalid South African ID number",
-    }),
-    email: z.string().email("Invalid email address"),
-    location: z.string().min(6, "Location is required"),
-    qualification: z.string().min(2, "Qualification is required"),
-    experience: z.string().min(1, "Experience is required"),
-    currentRole: z.string().optional(),
+    idNumber: z.string().length(13, "ID must be 13 digits"),
+    email: z.string().email("Invalid email"),
+    phone: z.string().min(10, "Phone required"),
+    location: z.string().min(3, "Location required"),
+    qualification: z.string().min(2, "Qualification required"),
+    experience: z.string().min(1, "Experience required"),
+    currentRole: z.string().min(2, "Current role required"),
     portfolio: z.string().optional(),
-    phone: z.string().min(10).optional(),
-
-    // All files are optional but validated when uploaded
-    cv: optionalFileSchema,
-    doc1: optionalFileSchema,
-    doc2: optionalFileSchema,
-
+    gender: z.string().optional(),
     consent: z.literal(true, {
-      errorMap: () => ({
-        message: "You must accept the Terms & Privacy Policy",
-      }),
+      errorMap: () => ({ message: "You must consent" }),
     }),
+
+    // FILES → individually optional
+    cv: z.instanceof(File).nullable().optional(),
+    doc1: z.instanceof(File).nullable().optional(),
+    doc2: z.instanceof(File).nullable().optional(),
   })
-  // 🔥 At least one document required
+  // 🔥 KEY PART: “at least one file”
   .refine(
-    (data) =>
-      data.cv instanceof File ||
-      data.doc1 instanceof File ||
-      data.doc2 instanceof File,
+    (data) => Boolean(data.cv || data.doc1 || data.doc2),
     {
-      message: "Please upload at least one document (CV or supporting document)",
-      path: ["cv"], // Shows error under the CV field in your form
+      message: "Please upload at least one document (CV or other)",
+      path: ["cv"], // shows error under CV field in UI
     }
   );
