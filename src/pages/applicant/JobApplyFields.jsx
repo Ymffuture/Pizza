@@ -1,4 +1,9 @@
+// JobApplyFields.jsx
+import { Tooltip } from 'antd';
+import 'antd/dist/reset.css'; // ← add this once in your app (index.js / main.jsx / App.jsx)
+
 import { FiAlertCircle, FiCheckCircle, FiUpload } from "react-icons/fi";
+
 
 export function InlineLoader({ label = "Checking…" }) {
   return (
@@ -12,6 +17,8 @@ export function InlineLoader({ label = "Checking…" }) {
   );
 }
 
+
+
 export function InputField({
   icon,
   value,
@@ -23,15 +30,16 @@ export function InputField({
   inputMode,
   pattern,
   maxLength,
+  tooltip,           // ← NEW PROP
 }) {
   return (
     <div className="space-y-1">
       <div
-        className={`flex items-center gap-2 rounded-2xl px-3 h-11 bg-gray-50 dark:bg-gray-700 ${
-          error ? "ring-1 ring-red-600/10" : ""
-        }`}
+        className={`flex items-center gap-2 rounded-2xl px-3 h-11 bg-gray-50 dark:bg-gray-700 relative
+          ${error ? "ring-1 ring-red-600/10" : ""}`}
       >
         {icon && <span className="text-gray-400">{icon}</span>}
+
         <input
           type={type}
           value={value}
@@ -41,11 +49,23 @@ export function InputField({
           inputMode={inputMode}
           pattern={pattern}
           maxLength={maxLength}
-          className="flex-1 bg-transparent outline-none text-sm"
+          className="flex-1 bg-transparent outline-none text-sm pr-8" // ← added pr-8 for tooltip space
         />
+
+        {/* Tooltip indicator */}
+        {tooltip && (
+          <Tooltip title={tooltip} placement="topRight" color="#1f2937">
+            <span 
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-help text-sm font-semibold"
+            >
+              ?
+            </span>
+          </Tooltip>
+        )}
       </div>
+
       {error && (
-        <p className="text-red-600 flex gap-2 text-xs">
+        <p className="text-red-600 flex gap-2 text-xs mt-1">
           <FiAlertCircle size={18} /> {error}
         </p>
       )}
@@ -53,19 +73,34 @@ export function InputField({
   );
 }
 
+// FileField — optional tooltip on label
+export function FileField({ label, error, onChange, tooltip }) {
+  const labelContent = tooltip ? (
+    <Tooltip title={tooltip} placement="right">
+      <span className="flex items-center gap-1">
+        {label}
+        <span className="text-blue-500 text-xs font-medium cursor-help">(i)</span>
+      </span>
+    </Tooltip>
+  ) : (
+    label
+  );
 
-export function FileField({ label, error, onChange }) {
   return (
     <div className="space-y-1">
       <label className="text-sm text-gray-500 flex items-center gap-2">
-        <FiUpload /> {label}
+        <FiUpload /> {labelContent}
       </label>
       <input
         type="file"
         onChange={(e) => onChange(e.target.files?.[0])}
-        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700"
+        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:bg-gray-100 file:text-gray-700 file:border-0 file:text-sm hover:file:bg-gray-200"
       />
-      {error && <p className="text-red-700 bg-red-600/10 flex gap-2 p-2 rounded text-xs"> <FiAlertCircle size={18} /> {error}</p>}
+      {error && (
+        <p className="text-red-700 bg-red-600/10 flex gap-2 p-2 rounded text-xs mt-1">
+          <FiAlertCircle size={18} /> {error}
+        </p>
+      )}
     </div>
   );
 }
