@@ -116,15 +116,7 @@ export function useJobApply() {
             email: "An application already exists for this email",
           }));
         }
-const verification = await api.post("/verify-id", {
-  idNumber: formData.idNumber,
-});
 
-if (!verification.data.valid) {
-  setErrors({ idNumber: "ID failed official verification" });
-  setLoading(false);
-  return;
-}
         
       } catch (err) {
         console.error("Email check failed:", err);
@@ -243,7 +235,15 @@ if (!verification.data.valid) {
           data.append(k, v);
         }
       });
-      
+      const verification = await api.post("/verify-id", {
+  idNumber: formData.idNumber,
+});
+
+if (!verification.data.valid) {
+  setErrors({ idNumber: "ID failed official verification" });
+  setLoading(false);
+  return;
+}
 
     await api.post("/application/apply", data, {
   headers: {
