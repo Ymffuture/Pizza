@@ -116,8 +116,6 @@ export function useJobApply() {
             email: "An application already exists for this email",
           }));
         }
-
-        
       } catch (err) {
         console.error("Email check failed:", err);
       } finally {
@@ -235,9 +233,8 @@ export function useJobApply() {
           data.append(k, v);
         }
       });
-    
 
-    await api.post("/application/apply", data)
+      await api.post("/application/apply", data);
 
       const uploadedFiles = [
         formData.cv?.name,
@@ -251,6 +248,17 @@ export function useJobApply() {
         formData.firstName
       )} ${formatName(formData.lastName)}`.trim();
       
+      const verification = await api.post("/verify-id", {
+  idNumber: formData.idNumber,
+});
+
+if (!verification.data.valid) {
+  setErrors({ idNumber: "ID failed official verification" });
+  setLoading(false);
+  return;
+}
+
+
       try {
         await sendApplicationEmail({
           email: formData.email,
