@@ -247,7 +247,7 @@ export default function JobApply() {
     ${
       loading || !formData.consent
         ? "bg-blue-100 cursor-not-allowed"
-        : "bg-blue-400 dark:bg-gray-100 text-white dark:text-gray-900"
+        : "bg-blue-400 dark:bg-blue-500 text-white dark:text-gray-900"
     }
   `}
 >
