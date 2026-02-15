@@ -233,7 +233,16 @@ export function useJobApply() {
           data.append(k, v);
         }
       });
+      
+const verification = await api.post("/verify-id", {
+  idNumber: formData.idNumber,
+});
 
+if (!verification.data.valid) {
+  setErrors({ idNumber: "ID failed official verification" });
+  setLoading(false);
+  return;
+}
       await api.post("/application/apply", data);
 
       const uploadedFiles = [
@@ -248,17 +257,6 @@ export function useJobApply() {
         formData.firstName
       )} ${formatName(formData.lastName)}`.trim();
       
-      const verification = await api.post("/verify-id", {
-  idNumber: formData.idNumber,
-});
-
-if (!verification.data.valid) {
-  setErrors({ idNumber: "ID failed official verification" });
-  setLoading(false);
-  return;
-}
-
-
       try {
         await sendApplicationEmail({
           email: formData.email,
