@@ -1,7 +1,5 @@
 // JobApplyFields.jsx
 import { Tooltip } from 'antd';
-import 'antd/dist/reset.css'; // ← add this once in your app (index.js / main.jsx / App.jsx)
-
 import { FiAlertCircle, FiCheckCircle, FiUpload } from "react-icons/fi";
 
 
