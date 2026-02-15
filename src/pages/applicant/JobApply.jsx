@@ -80,20 +80,14 @@ export default function JobApply() {
             value={formData.lastName} error={errors.lastName}
             onChange={(v) => handleChange("lastName", v)} />
 
-<InputField
+          <InputField
   icon={<FiCalendar />}
   placeholder="ID Number"
   value={formData.idNumber}
-  tooltip={
-    <>
-      South African 13-digit ID number<br />
-      Format: YYMMDDSSSSCAZ
-    </>
-  }
   inputMode="numeric"
   pattern="[0-9]*"
   maxLength={13}
-  error={errors.idNumber || (idExists && "This ID is already registered")}
+  error={errors.idNumber || (idExists && "ID already used") }
   onChange={(v) => {
     setIdExists(false);
     handleChange("idNumber", v);
@@ -123,8 +117,7 @@ export default function JobApply() {
   icon={<FiMail />}
   placeholder="Email Address"
   value={formData.email}
-  tooltip="Must be a valid email you actively check — we will send confirmation and status updates here"
-  error={errors.email || (emailExists && "Email is already in use")}
+  error={errors.email || (emailExists && "Email already used")}
   onChange={(v) => {
     setEmailExists(false);
     handleChange("email", v);
@@ -154,52 +147,36 @@ export default function JobApply() {
             value={formData.location} error={errors.location}
             onChange={(v) => handleChange("location", v)} />
 
-          <InputField
-  icon={<FiBriefcase />}
-  placeholder="Highest Qualification"
-  tooltip="Examples: Grade 12 / Matric, N4/N5/N6, Diploma, Degree, Certificate, etc."
-  value={formData.qualification}
-  error={errors.qualification}
-  onChange={(v) => handleChange("qualification", v)}
-/>
+          <InputField icon={<FiBriefcase />} placeholder="Highest Qualification"
+            value={formData.qualification} error={errors.qualification}
+            onChange={(v) => handleChange("qualification", v)} />
 
-<InputField
-  icon={<FiBriefcase />}
-  placeholder="School or Job application"
-  tooltip={
-    <>
-      <strong>Students:</strong> current school + grade/year<br />
-      <strong>Job seekers:</strong> your main tech stack / years of experience / role you're targeting
-    </>
-  }
-  value={formData.experience}
-  error={errors.experience}
-  onChange={(v) => handleChange("experience", v)}
-/>
+          <InputField icon={<FiBriefcase />} placeholder="School or Job application"
+            value={formData.experience} error={errors.experience}
+            onChange={(v) => handleChange("experience", v)} />
+
           {/* Documents */}
           <div className="space-y-3">
   {/* CV */}
-  
   <FileField
-  label="Curriculum Vitae (Required)"
-  tooltip="PDF preferred • Max 8 MB • Include contact info & relevant projects"
-  error={errors.cv}
-  onChange={(f) => handleChange("cv", f)}
-/>
+    label="Curriculum Vitae (Required)"
+    error={errors.cv}
+    onChange={(f) => handleChange("cv", f)}
+  />
 
-<FileField
-  label="Matric Certificate / Latest School Report"
-  tooltip="PDF or clear image • Max 5 MB"
-  error={errors.doc1}
-  onChange={(f) => handleChange("doc1", f)}
-/>
+  {/* Matric / Past Report */}
+  <FileField
+    label="Matric Certificate / Latest School Report"
+    error={errors.doc1}
+    onChange={(f) => handleChange("doc1", f)}
+  />
 
-<FileField
-  label="Certified ID Copy"
-  tooltip="Must be certified by SAPS / Commissioner of Oaths • Clear scan/photo • Max 5 MB"
-  error={errors.doc2}
-  onChange={(f) => handleChange("doc2", f)}
-/>
+  {/* ID Copy */}
+  <FileField
+    label="Certified ID Copy"
+    error={errors.doc2}
+    onChange={(f) => handleChange("doc2", f)}
+  />
 </div>
 
 <div className="space-y-1">
@@ -246,8 +223,8 @@ export default function JobApply() {
   className={`w-full h-11 rounded-2xl font-medium transition flex items-center justify-center
     ${
       loading || !formData.consent
-        ? "bg-blue-100 cursor-not-allowed"
-        : "bg-blue-400 dark:bg-blue-500 text-white dark:text-gray-900"
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-black dark:bg-gray-100 text-white dark:text-gray-900"
     }
   `}
 >
