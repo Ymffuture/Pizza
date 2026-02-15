@@ -76,12 +76,6 @@ export const fileSchema = z
     "Only PDF or Word documents are allowed"
   );
 
-export const optionalFileSchema = z.union([
-  z.null(),
-  z.undefined(),
-  fileSchema,  // Applies size and type refines only if a File is provided
-]);
-
 export const jobApplySchema = z.object({
   firstName: z.string().min(4, "First name is required"),
   lastName: z.string().min(2, "Last name is required"),
@@ -95,15 +89,12 @@ export const jobApplySchema = z.object({
   currentRole: z.string().optional(),
   portfolio: z.string().optional(),
   phone: z.string().min(10).optional(),
-
-  cv: optionalFileSchema,
-  doc1: optionalFileSchema,
-  doc2: optionalFileSchema,
-
+  cv: fileSchema,
+  doc1: z.instanceof(File).optional(),
+  doc2: z.instanceof(File).optional(),
   consent: z.literal(true, {
     errorMap: () => ({
       message: "You must accept the Terms & Privacy Policy",
     }),
   }),
-})
-
+});
