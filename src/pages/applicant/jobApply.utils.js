@@ -106,10 +106,4 @@ export const jobApplySchema = z.object({
     }),
   }),
 })
-.refine(
-  (data) => Boolean(data.cv instanceof File || data.doc1 instanceof File || data.doc2 instanceof File),
-  {
-    message: "Please upload at least one document (CV or other)",
-    path: ["cv"], // Shows error under CV field in UI
-  }
-);
+
