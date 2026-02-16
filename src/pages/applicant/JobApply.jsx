@@ -246,8 +246,8 @@ export default function JobApply() {
   className={`w-full h-11 rounded-2xl font-medium transition flex items-center justify-center
     ${
       loading || !formData.consent
-        ? "bg-blue-100 cursor-not-allowed"
-        : "bg-blue-400 dark:bg-gray-100 text-white dark:text-gray-900"
+        ? "bg-red-100 cursor-not-allowed"
+        : "bg-black dark:bg-gray-200 text-white dark:text-gray-900"
     }
   `}
 >
