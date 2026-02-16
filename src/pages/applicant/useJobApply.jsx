@@ -304,7 +304,7 @@ export function useJobApply() {
         setErrors(fieldErrors);
       } else {
         console.error("Submit error:", err);
-        setErrors({ global: "Application failed. Please try again." });
+        setErrors({ global: "Application failed. Please try again." }, err);
       }
 
       formRef.current?.scrollIntoView({ behavior: "smooth" });
