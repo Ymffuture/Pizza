@@ -84,6 +84,8 @@ export function useJobApply() {
             ...p,
             idNumber: "An application already exists for this ID",
           }));
+        } else {
+          setErrors((p) => ({ ...p, idNumber: undefined }));
         }
       } catch (err) {
         console.error("ID check failed:", err);
@@ -115,6 +117,8 @@ export function useJobApply() {
             ...p,
             email: "An application already exists for this email",
           }));
+        } else {
+          setErrors((p) => ({ ...p, email: undefined }));
         }
       } catch (err) {
         console.error("Email check failed:", err);
@@ -126,7 +130,7 @@ export function useJobApply() {
     checkEmail();
   }, [debouncedEmail]);
 
-  /* ===================== CHANGE HANDLER (CRITICAL FIX) ===================== */
+  /* ===================== CHANGE HANDLER ===================== */
   const handleChange = (key, value) => {
     let normalizedValue = value;
 
@@ -142,51 +146,76 @@ export function useJobApply() {
       normalizedValue = normalizeIdNumber(value);
     }
 
+    // Update form data
     setFormData((prev) => ({ ...prev, [key]: normalizedValue }));
     setMessage("");
 
-    // VALIDATE AFTER NORMALIZATION (FIXED)
+    // Real-time field validation
     try {
       jobApplySchema.pick({ [key]: true }).parse({
         [key]: normalizedValue,
       });
-
       setErrors((p) => ({ ...p, [key]: undefined }));
     } catch (err) {
-      setErrors((p) => ({
-        ...p,
-        [key]: err.errors?.[0]?.message,
-      }));
+      if (err instanceof z.ZodError) {
+        setErrors((p) => ({
+          ...p,
+          [key]: err.errors?.[0]?.message,
+        }));
+      }
     }
 
     /* --------- DERIVE DOB + GENDER FROM ID --------- */
-    if (key === "idNumber" && /^\d{6}/.test(normalizedValue)) {
-      const year = normalizedValue.slice(0, 2);
-      const month = normalizedValue.slice(2, 4);
-      const day = normalizedValue.slice(4, 6);
+    if (key === "idNumber") {
+      if (/^\d{6}/.test(normalizedValue)) {
+        const year = normalizedValue.slice(0, 2);
+        const month = normalizedValue.slice(2, 4);
+        const day = normalizedValue.slice(4, 6);
 
-      const prefix =
-        parseInt(year, 10) <= new Date().getFullYear() % 100 ? "20" : "19";
+        const currentYear = new Date().getFullYear() % 100;
+        const prefix = parseInt(year, 10) <= currentYear ? "20" : "19";
 
-      setDob(`${prefix}${year}-${month}-${day}`);
+        const monthNum = parseInt(month, 10);
+        const dayNum = parseInt(day, 10);
+        const fullYear = parseInt(`${prefix}${year}`, 10);
 
-      if (normalizedValue.length >= 10) {
-        const genderDigits = parseInt(
-          normalizedValue.slice(6, 10),
-          10
-        );
+        const isValidMonth = monthNum >= 1 && monthNum <= 12;
+        const isValidDay = dayNum >= 1 && dayNum <= 31;
 
-        setFormData((p) => ({
-          ...p,
-          gender: genderDigits <= 4999 ? "Female" : "Male",
-        }));
+        if (isValidMonth && isValidDay) {
+          const testDate = new Date(fullYear, monthNum - 1, dayNum);
+
+          const isRealDate =
+            testDate.getFullYear() === fullYear &&
+            testDate.getMonth() === monthNum - 1 &&
+            testDate.getDate() === dayNum;
+
+          if (isRealDate) {
+            setDob(
+              `${fullYear}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
+            );
+
+            if (normalizedValue.length >= 10) {
+              const genderDigits = parseInt(
+                normalizedValue.slice(6, 10),
+                10
+              );
+              setFormData((p) => ({
+                ...p,
+                gender: genderDigits <= 4999 ? "Female" : "Male",
+              }));
+            }
+            return; // Exit early
+          }
+        }
       }
-    } else if (key === "idNumber") {
+
+      // Invalid or incomplete ID → clear DOB
       setDob("");
     }
   };
 
-  /* ===================== SUBMIT HANDLER (FULLY FIXED) ===================== */
+  /* ===================== SUBMIT HANDLER (FIXED) ===================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -194,18 +223,31 @@ export function useJobApply() {
     setMessage("");
 
     try {
+      // 1. Full schema validation
       jobApplySchema.parse(formData);
 
-      const data = new FormData();
+      // 2. Official ID verification (moved BEFORE submission)
+      const verification = await api.post("/verify-id", {
+        idNumber: formData.idNumber,
+      });
 
+      if (!verification.data.valid) {
+        setErrors({ idNumber: "ID failed official verification" });
+        return; // Stop here
+      }
+
+      // 3. Prepare FormData
+      const data = new FormData();
       Object.entries(formData).forEach(([k, v]) => {
         if (v !== undefined && v !== null) {
           data.append(k, v);
         }
       });
 
+      // 4. Submit application
       await api.post("/application/apply", data);
 
+      // 5. Prepare email data
       const uploadedFiles = [
         formData.cv?.name,
         formData.doc1?.name,
@@ -218,6 +260,7 @@ export function useJobApply() {
         formData.firstName
       )} ${formatName(formData.lastName)}`.trim();
 
+      // 6. Send confirmation email
       try {
         await sendApplicationEmail({
           email: formData.email,
@@ -229,8 +272,10 @@ export function useJobApply() {
         console.warn("Email service failed:", emailErr);
       }
 
+      // 7. Success
       setMessage("Application submitted successfully!");
 
+      // 8. Reset form
       setFormData({
         firstName: "",
         lastName: "",
@@ -258,7 +303,8 @@ export function useJobApply() {
         });
         setErrors(fieldErrors);
       } else {
-        setErrors({ global: "Application failed. Try again." });
+        console.error("Submit error:", err);
+        setErrors({ global: "Application failed. Please try again." });
       }
 
       formRef.current?.scrollIntoView({ behavior: "smooth" });
