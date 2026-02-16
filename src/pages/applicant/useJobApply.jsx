@@ -227,14 +227,32 @@ export function useJobApply() {
       jobApplySchema.parse(formData);
 
       // 2. Official ID verification (moved BEFORE submission)
-      const verification = await api.post("/verify-id", {
-        idNumber: formData.idNumber,
-      });
+      try {
+  const verification = await api.post("/verify-id", {
+    idNumber: formData.idNumber.trim(), // small extra safety
+  });
 
-      if (!verification.data.valid) {
-        setErrors({ idNumber: "ID failed official verification" });
-        return; // Stop here
-      }
+  if (verification.data?.valid !== true) {
+    setErrors({
+      idNumber:
+        verification.data?.message ||
+        "ID number could not be verified. Please check and try again.",
+    });
+    return;
+  }
+
+  // continue with file upload, application submission...
+} catch (err) {
+  console.error("ID verification failed:", err);
+
+  const message =
+    err.response?.data?.message ||
+    err.message ||
+    "Unable to verify ID right now. Please try again later.";
+
+  setErrors({ idNumber: message });
+  return;
+}
 
       // 3. Prepare FormData
       const data = new FormData();
