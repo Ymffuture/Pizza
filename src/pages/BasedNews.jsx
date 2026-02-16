@@ -22,7 +22,7 @@ export default function NewsPage() {
 
       setArticles(data.articles);
     } catch (err) {
-      setError("Failed to load news.");
+      setError("Webpage: Failed to load news.");
     } finally {
       setLoading(false);
     }
