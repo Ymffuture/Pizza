@@ -8,7 +8,7 @@ import { Tooltip } from "antd";
 import { Helmet } from "react-helmet";
 import { createPortal } from "react-dom";
 import { renderMiniViewHTML } from "../utils/MiniView";
-
+import BasedNews from "./BasedNews" ;
 /* ======================
    HELPERS
 ====================== */
@@ -548,6 +548,8 @@ if (loading) {
           </AnimatePresence>,
           document.body
         )}
+
+       <BasedNews />
     </section>
   );
 };
