@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import NewsCard from "./NewsCard";
 
-const API_URL = "http://localhost:5000/api/news";
+const API_URL = "https://swiftmeta.onrender.com/api/news";
 
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
