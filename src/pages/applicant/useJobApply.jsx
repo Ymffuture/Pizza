@@ -296,19 +296,44 @@ export function useJobApply() {
 
       setDob("");
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        const fieldErrors = {};
-        err.errors.forEach((e) => {
-          fieldErrors[e.path[0]] = e.message;
-        });
-        setErrors(fieldErrors);
-      } else {
-        console.error("Submit error:", err);
-        setErrors({ global: "Application failed. Please try again." }, err);
-      }
+  console.error("FULL ERROR OBJECT:", err);
 
-      formRef.current?.scrollIntoView({ behavior: "smooth" });
-    } finally {
+  if (err instanceof z.ZodError) {
+    const fieldErrors = {};
+    err.errors.forEach((e) => {
+      fieldErrors[e.path[0]] = e.message;
+    });
+    setErrors(fieldErrors);
+  } else {
+    if (err.response) {
+      // Backend responded with an error status
+      console.error("Backend Status:", err.response.status);
+      console.error("Backend Data:", err.response.data);
+
+      setErrors({
+        global:
+          err.response.data.message ||
+          JSON.stringify(err.response.data),
+      });
+    } else if (err.request) {
+      // Request was made but no response
+      console.error("No response received:", err.request);
+
+      setErrors({
+        global: "Server not responding. Check backend.",
+      });
+    } else {
+      // Something else happened
+      console.error("Unknown error:", err.message);
+
+      setErrors({
+        global: err.message,
+      });
+    }
+  }
+
+  formRef.current?.scrollIntoView({ behavior: "smooth" });
+} finally {
       setLoading(false);
     }
   };
