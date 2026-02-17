@@ -8,6 +8,7 @@ import {
   FiBriefcase,
   FiPhone,
   FiCheckCircle,
+   FiX, 
 } from "react-icons/fi";
 import { FaExclamationTriangle } from 'react-icons/fa';
 import Loader from "./Loader";
@@ -67,7 +68,7 @@ export default function JobApply() {
         
         
         {errors.global && (
-          <p className="text-red-600 bg-red-400/10 p-6 p-2 rounded-xl text-sm">{errors.global}</p>
+          <p className="text-red-600 bg-red-400/10 p-6 p-2 rounded-xl text-sm flex gap-2"><FiX className="text-gray-600" size={20} /> {errors.global}</p>
         )}
         {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl p-6 flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
@@ -181,7 +182,7 @@ export default function JobApply() {
   {/* CV */}
   
   <FileField
-  label="Curriculum Vitae (Required)"
+  label="Curriculum Vitae"
   tooltip="PDF preferred • Max 8 MB • Include contact info & relevant projects"
   error={errors.cv}
   onChange={(f) => handleChange("cv", f)}
@@ -195,7 +196,7 @@ export default function JobApply() {
 />
 
 <FileField
-  label="Certified ID Copy"
+  label="Copy of your ID"
   tooltip="Must be certified by SAPS / Commissioner of Oaths • Clear scan/photo • Max 5 MB"
   error={errors.doc2}
   onChange={(f) => handleChange("doc2", f)}
