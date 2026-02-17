@@ -1,6 +1,8 @@
 // JobApplyFields.jsx
 import { Tooltip } from 'antd';
 import { FiAlertCircle, FiCheckCircle, FiUpload } from "react-icons/fi";
+import { Info } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 
 
 export function InlineLoader({ label = "Checking…" }) {
@@ -77,7 +79,7 @@ export function FileField({ label, error, onChange, tooltip }) {
     <Tooltip title={tooltip} placement="topLeft" color="#202124">
       <span className="flex items-center gap-1">
         {label}
-        <span className="text-blue-500 text-xs font-medium cursor-help">(i)</span>
+        <span className="text-blue-500 text-xs font-medium cursor-help"><HelpCircle /></span>
       </span>
     </Tooltip>
   ) : (
