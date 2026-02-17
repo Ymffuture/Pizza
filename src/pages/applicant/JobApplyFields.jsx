@@ -79,7 +79,7 @@ export function FileField({ label, error, onChange, tooltip }) {
     <Tooltip title={tooltip} placement="topLeft" color="#202124">
       <span className="flex items-center gap-1">
         {label}
-        <span className="text-blue-500 text-xs font-medium cursor-help"><HelpCircle /></span>
+        <span className="text-blue-500 shadow-lg 1cursor-help"><HelpCircle size={14} /></span>
       </span>
     </Tooltip>
   ) : (
