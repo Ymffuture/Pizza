@@ -8,7 +8,7 @@ import {
   FiBriefcase,
   FiPhone,
   FiCheckCircle,
-   FiX, 
+   FiXCircle, 
 } from "react-icons/fi";
 import { FaExclamationTriangle } from 'react-icons/fa';
 import Loader from "./Loader";
@@ -68,7 +68,7 @@ export default function JobApply() {
         
         
         {errors.global && (
-          <p className="text-red-600 bg-red-400/10 p-6 p-2 rounded-xl text-sm flex gap-2"><FiX className="text-gray-600" size={20} /> {errors.global}</p>
+          <p className="text-red-600 bg-red-400/10 p-6 p-2 rounded-xl text-sm flex gap-2"><FiXCircle className="text-gray-600" size={20} /> {errors.global}</p>
         )}
         {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl p-6 flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
