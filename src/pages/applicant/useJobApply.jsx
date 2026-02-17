@@ -338,7 +338,7 @@ export function useJobApply() {
       console.error("No response received:", err.request);
 
       setErrors({
-        global: "Server not responding. Check backend.",
+        global: "Server not responding. Check your network connection.",
       });
     } else {
       // Something else happened
