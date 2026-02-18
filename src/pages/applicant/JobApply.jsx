@@ -57,7 +57,7 @@ export default function JobApply() {
       </Helmet>
       <div
         ref={formRef}
-        className="w-full max-w-3xl p-8"
+        className="w-full max-w-3xl"
       >
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
           Application (Developer / DoE) 
