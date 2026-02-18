@@ -35,7 +35,7 @@ export function InputField({
   return (
     <div className="space-y-1">
       <div
-        className={`flex items-center gap-2 rounded-2xl px-3 h-11 bg-gray-50 dark:bg-gray-700 relative
+        className={`flex items-center gap-2 rounded-xl px-2 py-8 h-18 bg-gray-50 dark:bg-gray-700 relative
           ${error ? "ring-1 ring-red-600/10" : ""}`}
       >
         {icon && <span className="text-gray-400">{icon}</span>}
