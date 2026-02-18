@@ -63,7 +63,7 @@ export default function JobApply() {
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
           Application (Developer / DoE) 
         </h1>
-         <Loader2 fullScreen/>
+         {loading? <Loader2 fullScreen/>:""} 
    <p className="text-black dark:text-white p-2 rounded-xl text-sm">This form will be in our system for 3 months for next application cycle </p>
 
 <p className="text-gray-600 dark:text-gray-300 p-2 rounded-xl text-sm">This form will act as Agreement between SwiftMeta and the applicant</p>
