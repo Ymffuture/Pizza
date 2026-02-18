@@ -244,10 +244,10 @@ export default function JobApply() {
           <button
   type="submit"
   disabled={loading || !formData.consent}
-  className={`w-full h-11 rounded-2xl font-medium transition flex items-center justify-center
+  className={`w-full h-11 rounded-xl p-6 font-medium transition flex items-center justify-center
     ${
       loading || !formData.consent
-        ? "bg-red-100 cursor-not-allowed"
+        ? "bg-gray-400 cursor-not-allowed"
         : "bg-black dark:bg-gray-200 text-white dark:text-gray-900"
     }
   `}
