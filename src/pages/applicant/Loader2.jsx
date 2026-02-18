@@ -1,8 +1,8 @@
 import React from "react";
 
 const AppleSpinner = ({
-  size = 32,
-  color = "rgba(0,122,255,0.4)",
+  size = 40,
+  color = "rgba(0,122,255,0.6)",
   fullScreen = false,
 }) => {
   const bars = Array.from({ length: 12 });
@@ -11,10 +11,12 @@ const AppleSpinner = ({
     <div
       role="status"
       aria-label="Loading"
-      className={fullScreen ? "spinner-wrapper fullscreen" : "spinner-wrapper"}
-      style={{ width: size, height: size }}
+      className={`spinner-wrapper ${fullScreen ? "fullscreen" : ""}`}
     >
-      <div className="apple-spinner" style={{ width: size, height: size }}>
+      <div
+        className="apple-spinner"
+        style={{ width: size, height: size }}
+      >
         {bars.map((_, index) => {
           const rotate = index * 30;
           const delay = -(index * 0.1);
@@ -26,24 +28,41 @@ const AppleSpinner = ({
                 transform: `rotate(${rotate}deg) translateY(-${size}px)`,
                 animationDelay: `${delay}s`,
                 background: color,
-                boxShadow: `0 0 4px ${color}`,
+                boxShadow: `0 0 6px ${color}`,
               }}
             />
           );
         })}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .spinner-wrapper {
           display: flex;
           justify-content: center;
           align-items: center;
         }
 
+        /* 🔥 Fullscreen Overlay */
         .fullscreen {
-          height: 100vh;
-          width: 100vw;
-          background: #fff;
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+
+          background: rgba(255, 255, 255, 0.25);
+          animation: fadeIn 0.25s ease-out;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .fullscreen {
+            background: rgba(0, 0, 0, 0.4);
+          }
         }
 
         .apple-spinner {
@@ -54,21 +73,22 @@ const AppleSpinner = ({
           position: absolute;
           top: 50%;
           left: 50%;
-          width: ${size * 0.17}px;
-          height: ${size * 0.62}px;
-          border-radius: 3px;
+          width: ${size * 0.18}px;
+          height: ${size * 0.6}px;
+          border-radius: 4px;
           transform-origin: center ${size * 0.12}px;
           opacity: 0;
           animation: appleFade 1.2s linear infinite;
         }
 
         @keyframes appleFade {
-          0% {
-            opacity: 1;
-          }
-          100% {
-            opacity: 0.15;
-          }
+          0% { opacity: 1; }
+          100% { opacity: 0.15; }
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
       `}</style>
     </div>
