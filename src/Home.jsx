@@ -22,31 +22,17 @@ const Home = () => {
       {/* Above the fold */}
       <Hero />
       <Process />
-
+      <Chat />
       {/* Below the fold */}
       <LazySection height={400}>
         <Feed />
       </LazySection>
-
-      <LazySection height={400}>
-        <Menu />
-      </LazySection>
-
+      <Menu />
       <LazySection height={300}>
         <Testimonial />
       </LazySection>
-
-      <LazySection height={300}>
-        <GetApp />
-      </LazySection>
-
-      <LazySection height={300}>
-        <>
-          <Newsletter />
-          <Chat />
-        </>
-      </LazySection>
-
+      <GetApp />
+      <Newsletter />
       <TrustedPartners />
     </>
   );
