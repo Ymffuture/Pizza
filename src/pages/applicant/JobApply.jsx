@@ -50,17 +50,17 @@ export default function JobApply() {
 
 
   return (
-    <div className="min-h-screen flex justify-center w-full dark:text-white">
+    <div className="min-h-screen flex justify-center dark:text-white">
 
       <Helmet >
-      <title >Apply - Math/science or MERN </title>
+      <title >Apply - Math/science or MERN stack </title>
       </Helmet>
       <div
         ref={formRef}
         className="w-full max-w-3xl p-8"
       >
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-          Job / School Application (Developer / DoE) 
+          Application (Developer / DoE) 
         </h1>
    <p className="text-black dark:text-white p-2 rounded-xl text-sm">This form will be in our system for 3 months for next application cycle </p>
 
@@ -68,7 +68,7 @@ export default function JobApply() {
         
         
         {errors.global && (
-          <p className="text-red-600 bg-red-400/10 p-6 p-2 rounded-xl text-sm flex gap-2"><FiXCircle className="text-gray-600" size={20} /> {errors.global}</p>
+          <p className="text-red-600 bg-red-400/10 p-6 p-2 rounded-xl text-sm flex gap-2"><FiXCircle className="text-gray-600" size={28} /> {errors.global}</p>
         )}
         {message && <p className="text-green-700 bg-green-500/10 text-sm p-2 rounded-xl p-6 flex gap-2"> <FiCheckCircle size={18}/> {message}</p>}
 
