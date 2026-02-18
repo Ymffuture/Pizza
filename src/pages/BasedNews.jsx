@@ -22,7 +22,7 @@ export default function NewsPage() {
 
       setArticles(data.articles || []);
     } catch (err) {
-      setError("Webpage: Failed to load news.");
+      setError("Failed to load news.");
     } finally {
       setLoading(false);
     }
@@ -33,64 +33,77 @@ export default function NewsPage() {
   }, [fetchNews]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6 sm:px-12 font-[Segoe UI]">
-      {/* Header */}
-      <h1 className="text-4xl font-semibold text-gray-900 mb-8 text-center">
-        📰 Latest News
-      </h1>
+    <div className="min-h-screen bg-[#F3F2F1] py-12 px-6 font-sans">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <h1 className="text-3xl font-semibold text-[#323130] mb-10">
+          Latest News
+        </h1>
 
-      {/* Search Section */}
-      <div className="flex justify-center mb-8">
-        <div className="flex space-x-4 bg-white p-4 rounded-xl shadow-sm">
-          <input
-            type="text"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Search topic..."
-            className="px-4 py-2 rounded-lg border border-gray-300 focus:border-[#0078D4] focus:ring-2 focus:ring-[#0078D4] transition-all duration-200 w-64"
-          />
+        {/* Search Panel */}
+        <div className="bg-white/80 backdrop-blur-md border border-[#E1DFDD] rounded-xl p-6 shadow-sm mb-10">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <input
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="Search topic..."
+              className="flex-1 px-4 py-2 rounded-md border border-[#8A8886] focus:border-[#0F6CBD] focus:ring-2 focus:ring-[#0F6CBD]/40 outline-none transition"
+            />
+
+            <button
+              onClick={() => setPage(1)}
+              className="px-6 py-2 rounded-md bg-[#0F6CBD] text-white font-medium hover:bg-[#115EA3] transition shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0F6CBD]/40"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center py-20">
+            <div className="w-8 h-8 border-4 border-[#0F6CBD] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+
+        {/* Error */}
+        {error && (
+          <div className="text-red-600 bg-red-50 border border-red-200 p-4 rounded-md mb-6">
+            {error}
+          </div>
+        )}
+
+        {/* News Grid */}
+        {!loading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {articles.map((article) => (
+              <NewsCard key={article.id} article={article} />
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        <div className="flex justify-center items-center gap-6 mt-14">
           <button
-            onClick={() => setPage(1)}
-            className="px-4 py-2 bg-[#0078D4] text-white rounded-lg hover:bg-[#106EBE] transition-colors duration-200 shadow-sm"
+            disabled={page === 1}
+            onClick={() => setPage((prev) => prev - 1)}
+            className="px-5 py-2 rounded-md border border-[#8A8886] text-[#323130] hover:bg-[#EDEBE9] transition disabled:opacity-40"
           >
-            Search
+            Previous
+          </button>
+
+          <span className="text-[#605E5C] font-medium">
+            Page {page}
+          </span>
+
+          <button
+            onClick={() => setPage((prev) => prev + 1)}
+            className="px-5 py-2 rounded-md border border-[#8A8886] text-[#323130] hover:bg-[#EDEBE9] transition"
+          >
+            Next
           </button>
         </div>
-      </div>
-
-      {/* Loading / Error */}
-      {loading && (
-        <p className="text-center text-gray-500 text-lg animate-pulse">
-          Loading news...
-        </p>
-      )}
-      {error && <p className="text-center text-red-500">{error}</p>}
-
-      {/* News Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {articles.map((article) => (
-          <NewsCard key={article.id} article={article} />
-        ))}
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-center items-center mt-10 space-x-6">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage((prev) => prev - 1)}
-          className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-
-        <span className="text-gray-700 font-medium">Page {page}</span>
-
-        <button
-          onClick={() => setPage((prev) => prev + 1)}
-          className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors duration-200"
-        >
-          Next
-        </button>
       </div>
     </div>
   );
