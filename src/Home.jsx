@@ -1,90 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { Skeleton, Row, Col, Card } from "antd";
+import React, { lazy } from "react";
+import ScrollToTop from "./components/ScrollToTop";
 import Hero from "./components/Hero";
 import Process from "./components/Process";
-import Menu from "./components/Menu";
-import Testimonial from "./components/Testimonial";
-import GetApp from "./components/GetApp";
-import Newsletter from "./components/Newsletter";
-import Feed from "./pages/Feed" ;
-import Chat from "./layouts/GeminiAssistant" ;
-import ScrollToTop from "./components/ScrollToTop";
-import TrustedPartners from "./components/TrustedPartners" ;
-const LazyLoadOnView = ({ children }) => {
-  const ref = React.useRef();
-  const [isVisible, setIsVisible] = React.useState(false);
+import TrustedPartners from "./components/TrustedPartners";
 
-  React.useEffect(() => {
-    if (isVisible) return;
+import LazySection from "./components/LazySection";
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [isVisible]);
-
-  return <div ref={ref}>{isVisible ? children : null}</div>;
-};
+// Lazy load heavy sections
+const Feed = lazy(() => import("./pages/Feed"));
+const Menu = lazy(() => import("./components/Menu"));
+const Testimonial = lazy(() => import("./components/Testimonial"));
+const GetApp = lazy(() => import("./components/GetApp"));
+const Newsletter = lazy(() => import("./components/Newsletter"));
+const Chat = lazy(() => import("./layouts/GeminiAssistant"));
 
 const Home = () => {
-  const [navbarLoading, setNavbarLoading] = useState(true);
-  const [menuLoading, setMenuLoading] = useState(true);
-
-  useEffect(() => {
-    const navbarTimer = setTimeout(() => setNavbarLoading(false), 3000);
-    const menuTimer = setTimeout(() => setMenuLoading(false), 3000);
-
-    return () => {
-      clearTimeout(navbarTimer);
-      clearTimeout(menuTimer);
-    };
-  }, []);
-
   return (
     <>
-      <ScrollToTop/>
+      <ScrollToTop />
+
+      {/* Above the fold */}
       <Hero />
-      <Process /> 
-      <LazyLoadOnView>
-        <Feed/>
-      </LazyLoadOnView>
-      {/* Menu Skeleton */}
-      <div className="px-5 lg:px-14 py-10">
-        {menuLoading ? (
-          <Row gutter={[16, 16]}>
-            {[...Array(1)].map((_, idx) => (
-              <Col xs={24} sm={12} md={12} lg={6} key={idx}>
-                <Card>
-                  <Skeleton.Image style={{ width: "100%", height: "100%" }} active />
-                  <Skeleton active paragraph={{ rows: 4 }} />
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <Menu />
-        )}
-      </div>
-       <Testimonial />
+      <Process />
+
+      {/* Below the fold */}
+      <LazySection height={400}>
+        <Feed />
+      </LazySection>
+
+      <LazySection height={400}>
+        <Menu />
+      </LazySection>
+
+      <LazySection height={300}>
+        <Testimonial />
+      </LazySection>
+
+      <LazySection height={300}>
         <GetApp />
-      <LazyLoadOnView>   
-        <Newsletter />
-        <Chat/>
-      </LazyLoadOnView>
-      <TrustedPartners/>
+      </LazySection>
+
+      <LazySection height={300}>
+        <>
+          <Newsletter />
+          <Chat />
+        </>
+      </LazySection>
+
+      <TrustedPartners />
     </>
   );
 };
 
-export default Home; 
+export default React.memo(Home);
