@@ -52,8 +52,8 @@ const AppleSpinner = ({
           justify-content: center;
           align-items: center;
 
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
 
           background: rgba(255, 255, 255, 0.25);
           animation: fadeIn 0.25s ease-out;
