@@ -33,26 +33,29 @@ export default function NewsPage() {
   }, [fetchNews]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6 sm:px-12">
+    <div className="min-h-screen bg-gray-50 py-12 px-6 sm:px-12 font-[Segoe UI]">
+      {/* Header */}
       <h1 className="text-4xl font-semibold text-gray-900 mb-8 text-center">
         📰 Latest News
       </h1>
 
-      {/* Search */}
-      <div className="flex justify-center mb-8 space-x-4">
-        <input
-          type="text"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="Search topic..."
-          className="px-4 py-2 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200 w-64"
-        />
-        <button
-          onClick={() => setPage(1)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors duration-200 shadow-md"
-        >
-          Search
-        </button>
+      {/* Search Section */}
+      <div className="flex justify-center mb-8">
+        <div className="flex space-x-4 bg-white p-4 rounded-xl shadow-sm">
+          <input
+            type="text"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="Search topic..."
+            className="px-4 py-2 rounded-lg border border-gray-300 focus:border-[#0078D4] focus:ring-2 focus:ring-[#0078D4] transition-all duration-200 w-64"
+          />
+          <button
+            onClick={() => setPage(1)}
+            className="px-4 py-2 bg-[#0078D4] text-white rounded-lg hover:bg-[#106EBE] transition-colors duration-200 shadow-sm"
+          >
+            Search
+          </button>
+        </div>
       </div>
 
       {/* Loading / Error */}
@@ -75,7 +78,7 @@ export default function NewsPage() {
         <button
           disabled={page === 1}
           onClick={() => setPage((prev) => prev - 1)}
-          className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+          className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Previous
         </button>
@@ -84,7 +87,7 @@ export default function NewsPage() {
 
         <button
           onClick={() => setPage((prev) => prev + 1)}
-          className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors duration-200"
+          className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors duration-200"
         >
           Next
         </button>
