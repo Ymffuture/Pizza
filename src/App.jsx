@@ -46,13 +46,30 @@ const CreateTicket =lazy(() =>import("./pages/CreateTicket")) ;
 const TrackTicket =lazy(() =>import("./pages/TrackTicket")) ;
 const AdminTicket =lazy(() =>import("./pages/AdminTicket")) ;
 const ApplicantLayout =lazy(() =>import("./pages/applicant/ApplicantLayout")) ;
-import JobApply from "./pages/applicant/JobApply";
-import ApplicationStatus from "./pages/applicant/ApplicationStatus";
-import Subjects from "./pages/applicant/SubjectsPricingPage" ;
-import AdminApplications from "./pages/admin/AdminApplications";
-import CookieBanner from "./components/CookieBanner";
-import SubjectsLayout from "./pages/SubjectsLayout" ;
-import SubjectVideosPage from "./pages/SubjectVideosPage" ;
+
+const JobApply = lazy(() =>
+  import("./pages/applicant/JobApply")
+);
+
+const ApplicationStatus = lazy(() =>
+  import("./pages/applicant/ApplicationStatus")
+);
+
+const Subjects = lazy(() =>
+  import("./pages/applicant/SubjectsPricingPage")
+);
+
+const AdminApplications = lazy(() =>
+  import("./pages/admin/AdminApplications")
+);
+
+const SubjectsLayout = lazy(() =>
+  import("./pages/SubjectsLayout")
+);
+
+const SubjectVideosPage = lazy(() =>
+  import("./pages/SubjectVideosPage")
+);
 
 
 
@@ -126,7 +143,7 @@ const Loader = () => (
   </circle>
 </svg>
     <p className="text-gray-500 dark:text-gray-400 mt-3 text-sm tracking-wide animate-fadeIn">
-      
+      ...
     </p>
   </div>
 );
@@ -144,7 +161,7 @@ const App = () => {
   const [navbarLoading, setNavbarLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setNavbarLoading(false), 800);
+    setTimeout(() => setNavbarLoading(false), 300);
   }, []);
 
   useEffect(() => {
@@ -159,17 +176,17 @@ const App = () => {
     
     
     </Helmet>
+    {navbarLoading ? (
+        <Skeleton active paragraph={{ rows: 1}} />
+      ) : (
+        <CookieBanner />
+      )} 
     
-    <CookieBanner />
     <Router>
       
       <ScrollToTop />
-      {navbarLoading ? (
-        <Skeleton active paragraph={{ rows: 1}} />
-      ) : (
-        <Navbar />
-      )}
 
+     <Navbar />
       <Suspense fallback={<Loader />}>
         <Routes>
           {/* PUBLIC */}
