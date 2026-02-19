@@ -215,6 +215,17 @@ export function useJobApply() {
     }
   };
 
+  
+const handlePhoneChange = (value) => {
+  // Remove non-digits
+  const numeric = value.replace(/\D/g, "");
+
+  // Limit to 10 digits
+  const limited = numeric.slice(0, 10);
+
+  handleChange("phone", limited);
+};
+
   /* ===================== SUBMIT HANDLER (FIXED) ===================== */
   const handleSubmit = async (e) => {
     e.preventDefault();
