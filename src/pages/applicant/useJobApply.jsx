@@ -382,5 +382,6 @@ const handlePhoneChange = (value) => {
     handleSubmit,
     setIdExists,
     setEmailExists,
+    handlePhoneChange, 
   };
 }
