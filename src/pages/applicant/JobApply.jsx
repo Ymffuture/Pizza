@@ -47,6 +47,7 @@ export default function JobApply() {
     handleSubmit,
     setIdExists,
     setEmailExists,
+     handlePhoneChange, 
   } = useJobApply();
 
 
@@ -150,8 +151,11 @@ export default function JobApply() {
   icon={<FiPhone />}
   placeholder="Phone Number"
   value={formData.phone}
-  onChange={(v) => handleChange("phone", v)}
+  onChange={handlePhoneChange}
+  inputMode="numeric"
+  maxLength={10}
 />
+
 
           <InputField icon={<FiMapPin />} placeholder="Location"
             value={formData.location} error={errors.location}
