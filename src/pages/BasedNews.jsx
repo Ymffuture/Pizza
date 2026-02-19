@@ -3,6 +3,7 @@ import axios from "axios";
 import NewsCard from "./NewsCard";
 
 const API_URL = "https://swiftmeta.onrender.com/api/news";
+const PAGE_SIZE = 8;
 
 export default function NewsPage() {
   const [articles, setArticles] = useState([]);
@@ -10,37 +11,51 @@ export default function NewsPage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [total, setTotal] = useState(0);
 
-  const fetchNews = useCallback(async () => {
+  const fetchNews = useCallback(async (signal) => {
     try {
       setLoading(true);
       setError("");
 
       const { data } = await axios.get(API_URL, {
-        params: { keyword, page },
+        params: {
+          q: keyword,
+          page,
+          max: PAGE_SIZE,
+        },
+        signal,
       });
 
       setArticles(data.articles || []);
+      setTotal(data.totalArticles || 0);
     } catch (err) {
-      setError("Failed to load news.");
+      if (!axios.isCancel(err)) {
+        setError("Failed to load news.");
+      }
     } finally {
       setLoading(false);
     }
   }, [keyword, page]);
 
   useEffect(() => {
-    fetchNews();
+    const controller = new AbortController();
+    fetchNews(controller.signal);
+
+    return () => controller.abort();
   }, [fetchNews]);
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
     <div className="min-h-screen bg-[#F3F2F1] py-12 px-6 font-sans">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+
         <h1 className="text-3xl font-semibold text-[#323130] mb-10">
           Latest News
         </h1>
 
-        {/* Search Panel */}
+        {/* Search */}
         <div className="bg-white/80 backdrop-blur-md border border-[#E1DFDD] rounded-xl p-6 shadow-sm mb-10">
           <div className="flex flex-col sm:flex-row gap-4">
             <input
@@ -53,14 +68,14 @@ export default function NewsPage() {
 
             <button
               onClick={() => setPage(1)}
-              className="px-6 py-2 rounded-md bg-[#0F6CBD] text-white font-medium hover:bg-[#115EA3] transition shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0F6CBD]/40"
+              className="px-6 py-2 rounded-md bg-[#0F6CBD] text-white font-medium hover:bg-[#115EA3] transition shadow-sm"
             >
               Search
             </button>
           </div>
         </div>
 
-        {/* Loading State */}
+        {/* Loading */}
         {loading && (
           <div className="flex justify-center py-20">
             <div className="w-8 h-8 border-4 border-[#0F6CBD] border-t-transparent rounded-full animate-spin"></div>
@@ -74,36 +89,39 @@ export default function NewsPage() {
           </div>
         )}
 
-        {/* News Grid */}
+        {/* Articles */}
         {!loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {articles.map((article) => (
-              <NewsCard key={article.id} article={article} />
+              <NewsCard key={article.url} article={article} />
             ))}
           </div>
         )}
 
         {/* Pagination */}
-        <div className="flex justify-center items-center gap-6 mt-14">
-          <button
-            disabled={page === 1}
-            onClick={() => setPage((prev) => prev - 1)}
-            className="px-5 py-2 rounded-md border border-[#8A8886] text-[#323130] hover:bg-[#EDEBE9] transition disabled:opacity-40"
-          >
-            Previous
-          </button>
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-6 mt-14">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage((prev) => prev - 1)}
+              className="px-5 py-2 rounded-md border border-[#8A8886] hover:bg-[#EDEBE9] transition disabled:opacity-40"
+            >
+              Previous
+            </button>
 
-          <span className="text-[#605E5C] font-medium">
-            Page {page}
-          </span>
+            <span className="text-[#605E5C] font-medium">
+              Page {page} of {totalPages}
+            </span>
 
-          <button
-            onClick={() => setPage((prev) => prev + 1)}
-            className="px-5 py-2 rounded-md border border-[#8A8886] text-[#323130] hover:bg-[#EDEBE9] transition"
-          >
-            Next
-          </button>
-        </div>
+            <button
+              disabled={page >= totalPages}
+              onClick={() => setPage((prev) => prev + 1)}
+              className="px-5 py-2 rounded-md border border-[#8A8886] hover:bg-[#EDEBE9] transition disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
