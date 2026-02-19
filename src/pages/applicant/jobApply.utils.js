@@ -88,7 +88,9 @@ export const jobApplySchema = z.object({
   experience: z.string().min(1, "Experience is required"),
   currentRole: z.string().optional(),
   portfolio: z.string().optional(),
-phone: z.string().min(10).optional(),
+phone: z
+  .string()
+  .regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
 
   cv: fileSchema,
   doc1: z.instanceof(File).optional(),
