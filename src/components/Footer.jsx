@@ -261,14 +261,11 @@ const StarBackground = () => (
         <div>
           <h2 className="flex items-center gap-3 text-2xl mb-4">
   <img
-    src="/new.jpeg"
+    src="/newname.jpeg"
     alt="SwiftMeta Logo"
     className="w-8 h-8 object-contain"
   />
-  <span>
-    <span className="text-blue-500">Swift</span>
-    <span className="text-gray-900 dark:text-white">Meta</span>
-  </span>
+  
 </h2>
 
           <p className="text-gray-700 dark:text-gray-400">
