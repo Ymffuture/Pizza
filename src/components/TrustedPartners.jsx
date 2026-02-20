@@ -8,7 +8,7 @@ import Cloudinary from "../assets/partners/Cloudinary.png";
 import MongoDB from "../assets/partners/MongoDB.png";
 import Gemini from "../assets/partners/Gemini.png";
 import RenderLogo from "../assets/partners/emailjs_logo.png";
-import NodeLogo from "../assets/partners/wethinkcode.png";
+import NodeLogo from "../assets/partners/new.jpeg";
 import GitHubLogo from "../assets/partners/github-logo-vector.png";
 import VercelLogo from "../assets/partners/Vercel.png";
 import SupabaseLogo from "../assets/partners/Supabase_Logo.png";
@@ -20,7 +20,7 @@ const partners = [
   { name: "MongoDB", href: "https://mongodb.com", logo: MongoDB },
   { name: "Gemini AI", href: "https://gemini.google.com", logo: Gemini },
   { name: "Emailjs", href: "https://emailjs.com", logo: RenderLogo },
-  { name: "wethinkcode ", href: "https://wethinkcode.co.za", logo: NodeLogo },
+  { name: "SwiftMeta", href: "https://swiftmeta.vercel.app/about", logo: NodeLogo },
   { name: "GitHub", href: "https://github.com", logo: GitHubLogo },
   { name: "Vercel", href: "https://vercel.com", logo: VercelLogo },
   { name: "Supabase", href: "https://supabase.com", logo: SupabaseLogo },
