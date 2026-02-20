@@ -174,7 +174,7 @@ const Navbar = () => {
     
      <div
   onClick={() => navigate("/")}
-  className="cursor-pointer select-none flex items-center max-w-[160px] md:max-w-none gap-2"
+  className="cursor-pointer select-none flex items-center max-w-[160px] md:max-w-none gap-1"
 
 
       aria-label="swiftMeta home"
@@ -182,7 +182,7 @@ const Navbar = () => {
        <img
   src="/new.jpeg"
   alt="SwiftMeta"
-  className="w-8 h-8 object-contain"
+  className="w-10 h-10 object-contain"
 />
       <svg
         width="170"
