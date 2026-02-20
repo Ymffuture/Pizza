@@ -263,7 +263,7 @@ const StarBackground = () => (
   <img
     src="/newname.jpeg"
     alt="SwiftMeta Logo"
-    className="w-8 h-8 object-contain"
+    className="w-32 h-auto"
   />
   
 </h2>
