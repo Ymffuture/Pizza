@@ -259,10 +259,17 @@ const StarBackground = () => (
       <div className="max-w-7xl mx-auto py-16 px-6 lg:px-20 grid md:grid-cols-4 gap-10">
         {/* Brand */}
         <div>
-          <h2 className="text-2xl mb-4">
-            <span className="text-blue-500">Swift</span>
-            <span className="text-gray-900 dark:text-white">Meta</span>
-          </h2>
+          <h2 className="flex items-center gap-3 text-2xl mb-4">
+  <img
+    src="/new.jpeg"
+    alt="SwiftMeta Logo"
+    className="w-8 h-8 object-contain"
+  />
+  <span>
+    <span className="text-blue-500">Swift</span>
+    <span className="text-gray-900 dark:text-white">Meta</span>
+  </span>
+</h2>
 
           <p className="text-gray-700 dark:text-gray-400">
             Building modern, responsive websites that elevate your brand and
