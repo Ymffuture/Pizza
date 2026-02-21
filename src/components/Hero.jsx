@@ -56,12 +56,18 @@ const Hero = () => {
     }
     fetchImage();
   }, []);
-
+const StarBackground = () => (
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+      <style>{`@keyframes moveStars {from { transform: translate3d(0,0,0);} to { transform: translate3d(-600px,-300px,0);} }`}</style>
+      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(9, 97, 248, 0.9) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)', backgroundSize: '490px 160px, 80px 90px', opacity: 0.3, animation: 'moveStars 150s linear infinite' }} />
+      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px)', backgroundSize: '140px 140px', opacity: 0.2, animation: 'moveStars 220s linear infinite' }} />
+    </div>
+  );
   return (
     <section className="bg-white dark:bg-[#0A0A0D] text-black dark:text-white
       min-h-[90vh] flex flex-col-reverse lg:flex-row items-center justify-center
       px-4 md:px-10 lg:px-16 gap-14 pt-24 transition-colors duration-300 relative overflow-hidden">
-
+<StarBackground/>
       {/* Floating code icons in background */}
       {/* TOP ROW */}
 <FaCode className="absolute text-blue-500/20 text-6xl top-8 left-8 animate-bounce-slow" />
