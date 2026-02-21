@@ -371,6 +371,14 @@ const StarBackground = () => (
         News
       </Link>
     </li>
+    <li>
+    <Link
+  to="/pay-donation"
+  className="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors duration-200 shadow-sm hover:shadow"
+>
+  Donate
+</Link> 
+    </li>
   </ul>
 </div>
 
