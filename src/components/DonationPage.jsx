@@ -2,10 +2,16 @@ import React from "react";
 
 export default function DonationPage() {
   const paymentLink = "https://paystack.shop/pay/donate-swiftmeta";
-
+const StarBackground = () => (
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+      <style>{`@keyframes moveStars {from { transform: translate3d(0,0,0);} to { transform: translate3d(-600px,-300px,0);} }`}</style>
+      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(9, 97, 248, 0.9) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px)', backgroundSize: '490px 160px, 80px 90px', opacity: 0.3, animation: 'moveStars 150s linear infinite' }} />
+      <div style={{ position: 'absolute', width: '200%', height: '200%', backgroundImage: 'radial-gradient(rgba(255,255,255,0.6) 1px, transparent 1px)', backgroundSize: '140px 140px', opacity: 0.2, animation: 'moveStars 220s linear infinite' }} />
+    </div>
+  );
   return (
     <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-500">
-
+<StarBackground/>
       {/* Hero Section */}
       <section className="px-6 pt-28 pb-20 text-center max-w-5xl mx-auto">
         <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6">
