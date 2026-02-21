@@ -5,7 +5,7 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 import { FaWallet } from "react-icons/fa";
 import { createPortal } from "react-dom";
 
-const BUY_ME_A_COFFEE_URL = "https://www.buymeacoffee.com/ymffuture";
+const BUY_ME_A_COFFEE_URL = "https://paystack.shop/pay/swiftmeta-pay";
 
 /* ----------------------------------
    Skeleton Loader
