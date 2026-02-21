@@ -182,7 +182,7 @@ const Navbar = () => {
        <img
   src="/new.jpeg"
   alt="SwiftMeta"
-  className="w-16 h-16 object-contain"
+  className="w-12 h-12 object-contain"
 />
       <svg
         width="170"
