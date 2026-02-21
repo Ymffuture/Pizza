@@ -299,19 +299,9 @@ const StarBackground = () => (
             >
               <FaXTwitter />
             </a>
-            {/*
-            <a
-              href="https://www.linkedin.com/in/kgomotsonkosi-l"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-blue-600 transition"
-            >
-              <FaLinkedinIn />
-            </a>
-            */} 
+            
           </div>
-        </div>
-<Link 
+          <Link 
   to="/pay-donation"
   className={`
     inline-flex items-center justify-center 
@@ -330,6 +320,8 @@ const StarBackground = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
   </svg>
 </Link
+        </div>
+
         {/* Company Links */}
         <div>
   <h3 className="text-lg font-semibold mb-4">Company</h3>
@@ -421,68 +413,6 @@ const StarBackground = () => (
           </ul>
         </div>
 
-        {/* WEATHER WIDGET 
-        <div
-          id="weatherBox"
-          className="text-center flex flex-col items-center justify-center"
-        >
-          <h3 className="text-lg font-semibold text-gray-600">Today's Weather</h3>
-
-          {loadingWeather ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-gray-500 dark:text-gray-400 text-sm"
-            >
-              <LoadingSVG />
-            </motion.div>
-          ) : !weather ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex flex-col items-center"
-            >
-              <ErrorSVG />
-              <p className="text-red-500 dark:text-red-400 mt-2">
-                Weather unavailable
-              </p>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex flex-col items-center gap-2"
-            >
-              <img
-                src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-                className="w-16 h-16"
-                alt="Weather icon"
-              />
-              <div className="flex flex-col items-center gap-2">
-  
-  <div className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-gray-100">
-    
-    <span>{weather.temp}°C</span>
-  </div>
-
-  
-  <div className="flex items-center gap-2 capitalize text-gray-600 dark:text-gray-400">
-    <CloudIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
-    <span>{weather.desc}</span>
-  </div>
-
-  
-  <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-    <MapPinIcon className="w-5 h-5 text-red-500" />
-    <span>{weather.city}</span>
-  </div>
-                
-</div>
-
-            </motion.div>
-          )}
-        </div>
-        */} 
       </div>
 
       {/* Bottom */}
