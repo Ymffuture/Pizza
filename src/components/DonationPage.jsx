@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function DonationPage() {
-  const paymentLink = "https://paystack.shop/pay/swiftmeta-pay";
+  const paymentLink = "https://paystack.shop/pay/donate-swiftmeta";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-6">
