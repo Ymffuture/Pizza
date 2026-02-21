@@ -60,7 +60,7 @@ const Subjects = lazy(() => import("./pages/applicant/SubjectsPricingPage"));
 const AdminApplications = lazy(() => import("./pages/admin/AdminApplications"));
 const SubjectsLayout = lazy(() => import("./pages/SubjectsLayout"));
 const SubjectVideosPage = lazy(() => import("./pages/SubjectVideosPage"));
-const Pay =lazy(() =>import("./components/Pay")) ;
+const DonationPage =lazy(() =>import("./components/Pay")) ;
 /* ============================= */
 /* ========= LOADER ============ */
 /* ============================= */
@@ -185,7 +185,7 @@ const App = () => {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/help" element={<HelpCenter />} />
             <Route path="/news" element={<News />} />
-            <Route path="/pay" element={<Pay />} />
+            <Route path="/payment" element={<DonationPage />} />
 
             {/* Lessons */}
             <Route path="/lessons" element={<SubjectsLayout />}>
