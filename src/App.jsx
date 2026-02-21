@@ -185,7 +185,7 @@ const App = () => {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/help" element={<HelpCenter />} />
             <Route path="/news" element={<News />} />
-            <Route path="/pay" element={<DonationPage />} />
+            <Route path="/pay-donation" element={<DonationPage />} />
 
             {/* Lessons */}
             <Route path="/lessons" element={<SubjectsLayout />}>
