@@ -133,7 +133,7 @@ const Navbar = () => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
-  const phoneNumber = "27847776308";
+  const phoneNumber = "27653935339";
   const message = "Hello! I’m interested in building a website with you.";
 
   // WhatsApp handler
@@ -174,7 +174,7 @@ const Navbar = () => {
     
      <div
   onClick={() => navigate("/")}
-  className="cursor-pointer select-none flex items-center max-w-[160px] md:max-w-none gap-1"
+  className="cursor-pointer select-none flex items-center max-w-[160px] md:max-w-none"
 
 
       aria-label="swiftMeta home"
@@ -182,7 +182,7 @@ const Navbar = () => {
        <img
   src="/new.jpeg"
   alt="SwiftMeta"
-  className="w-10 h-10 object-contain"
+  className="w-16 h-16 object-contain"
 />
       <svg
         width="170"
@@ -215,7 +215,7 @@ const Navbar = () => {
           fill="url(#swiftGradient)"
           fontSize="64"
           fontWeight="700"
-          letterSpacing="0.2"
+          letterSpacing="0.1"
           style={{
             fontFamily:
               "Inter, system-ui, -apple-system, BlinkMacSystemFont",
@@ -227,12 +227,12 @@ const Navbar = () => {
 
         {/* Meta (same word, visual contrast) */}
         <text
-          x="158"
+          x="156"
           y="70"
           fill="currentColor"
           fontSize="64"
           fontWeight="600"
-          letterSpacing="0.2"
+          letterSpacing="0.1"
           style={{
             fontFamily:
               "Space Grotesk, system-ui, -apple-system, BlinkMacSystemFont",
