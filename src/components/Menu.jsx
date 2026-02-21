@@ -88,7 +88,7 @@ const Menu = () => {
   }, []);
 
   return (
-    <section className="relative section-glow py-20 transition-colors duration-300">
+    <section className="relative py-20 transition-colors duration-300">
       {/* Header */}
       <div className="text-center mb-14 space-y-3">
         <p className="uppercase tracking-widest text-sm text-cyan-500 font-semibold">
