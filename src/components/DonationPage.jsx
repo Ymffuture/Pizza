@@ -4,31 +4,111 @@ export default function DonationPage() {
   const paymentLink = "https://paystack.shop/pay/donate-swiftmeta";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-6">
-      <div className="bg-white shadow-xl rounded-2xl p-10 max-w-lg w-full text-center">
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-100 transition-colors duration-500">
 
-        <h1 className="text-3xl font-semibold text-gray-900 mb-4">
-          Support SwiftMeta
+      {/* Hero Section */}
+      <section className="px-6 pt-28 pb-20 text-center max-w-5xl mx-auto">
+        <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6">
+          Support the Future of Learning
         </h1>
 
-        <p className="text-gray-600 mb-8">
-          Your donation helps us continue building educational tools,
-          software projects, and learning opportunities for students and developers.
+        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          SwiftMeta is building a modern ecosystem for web development,
+          mathematics, and science education. Your support helps us create
+          high-quality learning tools, mentorship programs, and real-world
+          opportunities for students and developers.
         </p>
 
-        <a
-          href={paymentLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block w-full py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition duration-200"
-        >
-          Donate Now
-        </a>
+        <div className="mt-10">
+          <a
+            href={paymentLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-black dark:bg-white text-white dark:text-black text-lg font-medium transition-all duration-300 hover:scale-105 hover:opacity-90"
+          >
+            Donate Securely
+          </a>
 
-        <p className="text-sm text-gray-400 mt-6">
-          Secure payments powered by Paystack
-        </p>
-      </div>
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+            Secure payment powered by Paystack
+          </p>
+        </div>
+      </section>
+
+      {/* Why Donate Section */}
+      <section className="px-6 py-24 border-t border-gray-200 dark:border-gray-800">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-16">
+
+          <div>
+            <h3 className="text-xl font-semibold mb-4">
+              Educational Innovation
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              We develop structured learning systems combining React,
+              backend engineering, mathematics logic, and applied science
+              to help learners gain industry-ready skills.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold mb-4">
+              Access & Opportunity
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Donations allow us to support students who cannot afford
+              premium learning platforms and give them access to structured,
+              high-quality resources.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold mb-4">
+              Sustainable Growth
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Your contribution helps us maintain infrastructure,
+              expand programs, and continuously improve the SwiftMeta
+              ecosystem for long-term impact.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Transparency Section */}
+      <section className="px-6 py-24 bg-gray-50 dark:bg-[#0f0f0f] border-t border-gray-200 dark:border-gray-800">
+        <div className="max-w-4xl mx-auto text-center">
+
+          <h2 className="text-3xl font-semibold mb-6">
+            Transparency & Trust
+          </h2>
+
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
+            Every donation directly supports educational development,
+            platform maintenance, and new program creation. We are committed
+            to responsible growth, transparency, and building long-term value
+            for learners and contributors.
+          </p>
+
+          <div className="mt-12">
+            <a
+              href={paymentLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-12 py-4 rounded-full bg-blue-600 text-white text-lg font-medium transition-all duration-300 hover:bg-blue-700 hover:scale-105"
+            >
+              Contribute Now
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Footer Note */}
+      <footer className="px-6 py-16 text-center text-sm text-gray-500 dark:text-gray-500 border-t border-gray-200 dark:border-gray-800">
+        © {new Date().getFullYear()} SwiftMeta. Empowering developers through structured education.
+      </footer>
+
     </div>
   );
 }
