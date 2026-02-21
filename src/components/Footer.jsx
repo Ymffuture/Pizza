@@ -311,7 +311,25 @@ const StarBackground = () => (
             */} 
           </div>
         </div>
-
+<Link 
+  to="/pay-donation"
+  className={`
+    inline-flex items-center justify-center 
+    px-5 py-2.5 
+    text-sm font-medium tracking-wide
+    text-white bg-gradient-to-r from-rose-500 to-pink-600 
+    hover:from-rose-600 hover:to-pink-700 
+    focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-offset-2
+    rounded-full shadow-md hover:shadow-lg 
+    transition-all duration-200
+  `}
+>
+  <span>Donate Now</span>
+  {/* Optional: heart / giving icon */}
+  <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>
+</Link
         {/* Company Links */}
         <div>
   <h3 className="text-lg font-semibold mb-4">Company</h3>
@@ -371,28 +389,7 @@ const StarBackground = () => (
         News
       </Link>
     </li>
-    <li>
   
-<Link 
-  to="/pay-donation"
-  className={`
-    inline-flex items-center justify-center 
-    px-5 py-2.5 
-    text-sm font-medium tracking-wide
-    text-white bg-gradient-to-r from-rose-500 to-pink-600 
-    hover:from-rose-600 hover:to-pink-700 
-    focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-offset-2
-    rounded-full shadow-md hover:shadow-lg 
-    transition-all duration-200 pt-6
-  `}
->
-  <span>Donate Now</span>
-  {/* Optional: heart / giving icon */}
-  <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-  </svg>
-</Link>
-    </li>
   </ul>
 </div>
 
