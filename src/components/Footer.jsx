@@ -29,42 +29,39 @@ const Footer = () => {
   }
 
   navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      try {
-        const { latitude, longitude} = pos.coords;
+  async (pos) => {
+    const { latitude, longitude } = pos.coords;
 
-        const res = await api.get("/weather", {
-  params: {
-    lat: latitude,
-    lon: longitude,
+    try {
+      const res = await api.get("/", {  // <-- baseURL must be /api/weather
+        params: { lat: latitude, lon: longitude },
+      });
+
+      const data = res.data;
+
+      const weatherInfo = {
+        temp: data.temp,       // backend already rounds
+        feelsLike: data.feelsLike,
+        city: data.city,
+        country: data.country,
+        desc: data.desc,
+        icon: data.icon,
+      };
+
+      setWeather(weatherInfo);
+      setLoadingWeather(false);
+      localStorage.setItem("footerWeather", JSON.stringify(weatherInfo));
+      localStorage.setItem("footerWeatherDate", new Date().toDateString());
+    } catch (err) {
+      console.error("Weather fetch error:", err);
+      setLoadingWeather(false);
+    }
   },
-});
-
-        // ✅ FIX: Axios already parses JSON
-        const data = res.data;
-
-        const weatherInfo = {
-          temp: Math.round(data.main.temp),
-          feelsLike: Math.round(data.main.feels_like),
-          city: data.name,
-          country: data.sys.country,
-          desc: data.weather[0].description,
-          icon: data.weather[0].icon,
-        };
-
-        setWeather(weatherInfo);
-        setLoadingWeather(false);
-
-        localStorage.setItem("footerWeather", JSON.stringify(weatherInfo));
-        localStorage.setItem("footerWeatherDate", today);
-
-      } catch (err) {
-        console.error(err);
-        setLoadingWeather(false);
-      }
-    },
-    () => setLoadingWeather(false)
-  );
+  (err) => {
+    console.error("Geolocation error:", err);
+    setLoadingWeather(false);
+  }
+);
 }, []);
 
         const StarBackground = () => (
