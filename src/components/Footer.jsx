@@ -31,11 +31,14 @@ const Footer = () => {
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
       try {
-        const { lat, lon} = pos.coords;
+        const { latitude, longitude} = pos.coords;
 
-        const res = await api.get(
-          `/weather?lat=${lat}&lon=${lon}`
-        );
+        const res = await api.get("/weather", {
+  params: {
+    lat: latitude,
+    lon: longitude,
+  },
+});
 
         // ✅ FIX: Axios already parses JSON
         const data = res.data;
