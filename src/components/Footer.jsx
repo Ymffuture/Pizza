@@ -33,7 +33,7 @@ const Footer = () => {
     const { latitude, longitude } = pos.coords;
 
     try {
-      const res = await api.get("/", {  // <-- baseURL must be /api/weather
+      const res = await api.get("/weather", {  // <-- baseURL must be /api/weather
         params: { lat: latitude, lon: longitude },
       });
 
