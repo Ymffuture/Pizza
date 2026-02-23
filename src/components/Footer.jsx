@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaFacebookF, FaGithub } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import gsap from "gsap";
+import { api } from "../api";
 import toast from "react-hot-toast";
 import { WiThermometer, WiCloudy } from "react-icons/wi";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -32,11 +33,9 @@ const Footer = () => {
         try {
           const { latitude, longitude } = pos.coords;
 
-          const res = await fetch(
-  `/weather?lat=${latitude}&lon=${longitude}`
-);
+          const res = await api.get(`/weather?lat=${latitude}&lon=${longitude}`);
 
-const data = await res.json();
+           const data = await res.json();
 
           
 
