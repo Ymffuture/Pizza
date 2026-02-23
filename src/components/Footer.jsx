@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { FaFacebookF, FaGithub } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import gsap from "gsap";
-import { api } from "../api";
 import toast from "react-hot-toast";
 import { WiThermometer, WiCloudy } from "react-icons/wi";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -13,56 +12,54 @@ const Footer = () => {
   const [loadingWeather, setLoadingWeather] = useState(true);
 
   useEffect(() => {
-  const el = document.querySelector("#weatherBox");
-  if (el) {
-    gsap.from(el, { opacity: 0, scale: 0.9, duration: 0.8 });
-  }
-
-  const cached = localStorage.getItem("footerWeather");
-  const cachedDate = localStorage.getItem("footerWeatherDate");
-  const today = new Date().toDateString();
-
-  if (cached && cachedDate === today) {
-    setWeather(JSON.parse(cached));
-    setLoadingWeather(false);
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-  async (pos) => {
-    const { latitude, longitude } = pos.coords;
-
-    try {
-      const res = await api.get("/weather", {  // <-- baseURL must be /api/weather
-        params: { lat: latitude, lon: longitude },
-      });
-
-      const data = res.data;
-
-      const weatherInfo = {
-        temp: data.temp,       // backend already rounds
-        feelsLike: data.feelsLike,
-        city: data.city,
-        country: data.country,
-        desc: data.desc,
-        icon: data.icon,
-      };
-
-      setWeather(weatherInfo);
-      setLoadingWeather(false);
-      localStorage.setItem("footerWeather", JSON.stringify(weatherInfo));
-      localStorage.setItem("footerWeatherDate", new Date().toDateString());
-    } catch (err) {
-      console.error("Weather fetch error:", err);
-      setLoadingWeather(false);
+    const el = document.querySelector("#weatherBox");
+    if (el) {
+      gsap.from(el, { opacity: 0, scale: 0.9, duration: 0.8 });
     }
-  },
-  (err) => {
-    console.error("Geolocation error:", err);
-    setLoadingWeather(false);
-  }
-);
-}, []);
+
+    const cached = localStorage.getItem("footerWeather");
+    const cachedDate = localStorage.getItem("footerWeatherDate");
+    const today = new Date().toDateString();
+
+    if (cached && cachedDate === today) {
+      setWeather(JSON.parse(cached));
+      setLoadingWeather(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+
+          const res = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=378c0d8b5246ceb52c1c6c6899b3446e&units=metric`
+          );
+
+          const data = await res.json();
+
+          const weatherInfo = {
+            temp: Math.round(data.main.temp),
+            feelsLike: Math.round(data.main.feels_like),
+            city: data.name,
+            country: data.sys.country,
+            desc: data.weather[0].description,
+            icon: data.weather[0].icon,
+          };
+
+          setWeather(weatherInfo);
+          setLoadingWeather(false);
+
+          localStorage.setItem("footerWeather", JSON.stringify(weatherInfo));
+          localStorage.setItem("footerWeatherDate", today);
+
+        } catch (err) {
+          setLoadingWeather(false);
+        }
+      },
+      () => setLoadingWeather(false)
+    );
+  }, []);
 
         const StarBackground = () => (
     <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
