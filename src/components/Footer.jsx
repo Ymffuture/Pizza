@@ -33,7 +33,7 @@ const Footer = () => {
           const { latitude, longitude } = pos.coords;
 
           const res = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=YOUR_KEY&units=metric`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=378c0d8b5246ceb52c1c6c6899b3446e&units=metric`
           );
 
           const data = await res.json();
