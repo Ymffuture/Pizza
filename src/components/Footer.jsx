@@ -157,8 +157,12 @@ const Footer = () => {
         © {new Date().getFullYear()} SwiftMeta (Pty) Ltd — All rights reserved.
         <br />
         <span className="text-gray-600">
-          {weather?.country} · {weather?.city}
-        </span>
+  {loadingWeather
+    ? "Detecting location..."
+    : weather
+    ? `${weather.country} · ${weather.city}`
+    : "Location unavailable"}
+</span>
       </div>
     </footer>
   );
