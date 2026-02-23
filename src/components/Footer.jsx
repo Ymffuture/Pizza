@@ -33,7 +33,7 @@ const Footer = () => {
           const { latitude, longitude } = pos.coords;
 
           const res = await fetch(
-  `/api/weather?lat=${latitude}&lon=${longitude}`
+  `/weather?lat=${latitude}&lon=${longitude}`
 );
 
 const data = await res.json();
