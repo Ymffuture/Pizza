@@ -337,7 +337,7 @@ export default function BlogHome() {
               />
               <div 
                 className="flex-1 bg-gray-100 dark:bg-[#3a3b3c] hover:bg-gray-200 dark:hover:bg-[#4e4f50] rounded-full px-4 py-2.5 cursor-pointer transition-colors"
-                onClick={() => nav("/dashboard/blog/create")}
+                onClick={() => nav("/dashboard/blog/new")}
               >
                 <span className="text-gray-500 dark:text-gray-400 text-sm">What's on your mind?</span>
               </div>
@@ -384,7 +384,7 @@ export default function BlogHome() {
                           size={40}
                           src={post.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
                           className="cursor-pointer border-2 border-transparent hover:border-blue-500 transition-all"
-                          onClick={() => nav(`/profile/${post.author?._id}`)}
+                          onClick={() => nav(`/posts/${post.author?._id}`)}
                         />
                       </Tooltip>
                       
@@ -392,7 +392,7 @@ export default function BlogHome() {
                         <div className="flex items-center gap-1.5">
                           <h3 
                             className="font-semibold text-[15px] text-gray-900 dark:text-white hover:underline cursor-pointer"
-                            onClick={() => nav(`/profile/${post.author?._id}`)}
+                            onClick={() => nav(`/posts/${post.author?._id}`)}
                           >
                             {post.author?.name || "Anonymous"}
                           </h3>
