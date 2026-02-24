@@ -384,7 +384,7 @@ export default function BlogHome() {
                           size={40}
                           src={post.author?.avatar || "https://swiftmeta.vercel.app/pp.jpeg"}
                           className="cursor-pointer border-2 border-transparent hover:border-blue-500 transition-all"
-                          onClick={() => nav(`/posts/${post.author?._id}`)}
+                          onClick={() => nav(`/dashboard/blog/posts/${post.author?._id}`)}
                         />
                       </Tooltip>
                       
@@ -392,7 +392,7 @@ export default function BlogHome() {
                         <div className="flex items-center gap-1.5">
                           <h3 
                             className="font-semibold text-[15px] text-gray-900 dark:text-white hover:underline cursor-pointer"
-                            onClick={() => nav(`/posts/${post.author?._id}`)}
+                            onClick={() => nav(`/dashboard/blog/posts/${post.author?._id}`)}
                           >
                             {post.author?.name || "Anonymous"}
                           </h3>
