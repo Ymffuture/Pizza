@@ -35,7 +35,7 @@ import {
 import dayjs from "dayjs";
 import { Helmet } from "react-helmet";
 import { Tooltip, Badge, Button, Select, Switch, Tabs, notification } from "antd";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "../../../hooks/useTheme";
 
 // Custom hook for keyboard shortcuts
 const useKeyboardShortcuts = (shortcuts) => {
