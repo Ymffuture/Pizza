@@ -251,7 +251,7 @@ export default function Feed() {
           <button
             onClick={() => {
               toast.dismiss(t.id);
-              window.location.href = "/login";
+              window.location.href = "/dashboard/blog";
             }}
             className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-sm font-semibold hover:shadow-lg transition-all"
           >
@@ -361,7 +361,7 @@ export default function Feed() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-black flex items-center justify-center">
+      <div className="bg-gray-50 dark:bg-black flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin" />
