@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
   Home,
   Search,
@@ -8,347 +8,577 @@ import {
   Factory,
   ServerCog,
   LogIn,
-  Send, 
+  Send,
+  Sparkles,
+  Zap,
+  TrendingUp,
+  Command,
+  X,
+  ChevronRight,
+  ExternalLink,
+  MessageCircle,
 } from "lucide-react";
-
-import { FaWhatsapp, FaGithub, FaLinkedin, FaDiscord } from "react-icons/fa";
+import { 
+  FaWhatsapp, 
+  FaGithub, 
+  FaLinkedin, 
+  FaDiscord,
+  FaTwitter 
+} from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle";
-// import GeminiAssistant from "../layouts/GeminiAssistant";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { MoreHorizontal, Ticket, LayoutDashboard, Phone} from "lucide-react";
-import { Dropdown, Menu } from "antd";
-import Dashboard from './dashboard/Dashboard';
-
-
-
-const menu = {
-  items: [
-    {
-      key: "home",
-      label: <Link to="/">Home</Link>,
-    },
-    {
-      key: "apply",
-      label: <Link to="/apply">Apply</Link>,
-    },
-    {
-      key: "dashboard",
-      label: <Link to="/dashboard">Dashboard</Link>,
-    },
-    {
-      key: "blog",
-      label: <Link to="/dashboard/blog">Blog</Link>,
-    },
-    {
-      key: "tickets",
-      label: <Link to="/ticket">Tickets</Link>,
-    },
-    {
-      key: "server",
-      label: <Link to="/server-api">Server / API</Link>,
-    },
-    {
-      key: "weather",
-      label: <Link to="/weather">Weather</Link>,
-    },
-    {
-      type: "divider",
-    },
-    {
-      key: "contact",
-      label: <Link to="/contact">Contact</Link>,
-    },
-    {
-      key: "signup",
-      label: <Link to="/signup">Sign up / Login</Link>,
-    },
-    {
-      type: "divider",
-    },
-    {
-      key: "cloudinary",
-      label: (
-        <a href="https://cloudinary.com" target="_blank" rel="noopener noreferrer">
-          Cloudinary
-        </a>
-      ),
-    },
-    {
-      key: "mongodb",
-      label: (
-        <a href="https://mongodb.com" target="_blank" rel="noopener noreferrer">
-          MongoDB
-        </a>
-      ),
-    },
-    {
-      key: "github",
-      label: (
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-          GitHub
-        </a>
-      ),
-    },
-    {
-      key: "vercel",
-      label: (
-        <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">
-          Vercel
-        </a>
-      ),
-    },
-    {
-      key: "supabase",
-      label: (
-        <a href="https://supabase.com" target="_blank" rel="noopener noreferrer">
-          Supabase
-        </a>
-      ),
-    },
-  ],
-};
+import { 
+  MoreHorizontal, 
+  Ticket, 
+  LayoutDashboard, 
+  Phone,
+  Menu,
+  User,
+  Settings,
+  LogOut,
+  BookOpen,
+  Cloud,
+  Database,
+  Code2
+} from "lucide-react";
+import { 
+  Dropdown, 
+  Tooltip, 
+  Badge, 
+  Input, 
+  Empty, 
+  Tag,
+  Divider,
+  Button,
+  Avatar
+} from "antd";
+import ThemeToggle from "./ThemeToggle";
 
 // ----------------------
-// SEARCH DATA SOURCE
+// ENHANCED SEARCH DATA
 // ----------------------
 const searchData = [
-  { title: "Home", url: "/" },
-  { title: "Dashboard", url: "/dashboard" },
-  { title: "Sign in", url: "/signup" },
-  { title: "Blog", url: "/dashboard/blog" },
-  { title: "Cloudinary", url: "https://cloudinary.com" },
-  { title: "MongoDB", url: "https://mongodb.com" },
-  { title: "Gemini AI", url: "https://gemini.google.com" },
-  { title: "Render", url: "https://render.com" },
-  { title: "Node.js", url: "https://nodejs.org" },
-  { title: "GitHub", url: "https://github.com" },
-  { title: "Vercel", url: "https://vercel.com" },
-  { title: "Supabase", url: "https://supabase.com" },
+  { 
+    title: "Home", 
+    url: "/", 
+    icon: <Home size={16} />,
+    category: "Main",
+    description: "Return to homepage",
+    hot: true 
+  },
+  { 
+    title: "Apply Now", 
+    url: "/apply", 
+    icon: <Send size={16} />,
+    category: "Actions",
+    description: "Start your application",
+    hot: true,
+    color: "blue"
+  },
+  { 
+    title: "Dashboard", 
+    url: "/dashboard", 
+    icon: <LayoutDashboard size={16} />,
+    category: "Portal",
+    description: "Manage your account",
+    hot: false 
+  },
+  { 
+    title: "Blog", 
+    url: "/dashboard/blog", 
+    icon: <BookOpen size={16} />,
+    category: "Content",
+    description: "Latest articles & news",
+    hot: false 
+  },
+  { 
+    title: "Tickets", 
+    url: "/ticket", 
+    icon: <Ticket size={16} />,
+    category: "Support",
+    description: "Get help & support",
+    hot: false 
+  },
+  { 
+    title: "Server / API", 
+    url: "/server-api", 
+    icon: <ServerCog size={16} />,
+    category: "Developers",
+    description: "API documentation",
+    hot: false 
+  },
+  { 
+    title: "Contact", 
+    url: "/contact", 
+    icon: <MessageCircle size={16} />,
+    category: "Support",
+    description: "Get in touch",
+    hot: false 
+  },
+  { 
+    title: "Weather", 
+    url: "/weather", 
+    icon: <Cloud size={16} />,
+    category: "Tools",
+    description: "Local weather info",
+    hot: false 
+  },
+  { 
+    title: "Cloudinary", 
+    url: "https://cloudinary.com", 
+    icon: <Cloud size={16} />,
+    category: "External",
+    description: "Media management",
+    external: true 
+  },
+  { 
+    title: "MongoDB", 
+    url: "https://mongodb.com", 
+    icon: <Database size={16} />,
+    category: "External",
+    description: "Database service",
+    external: true 
+  },
+  { 
+    title: "GitHub", 
+    url: "https://github.com", 
+    icon: <Code2 size={16} />,
+    category: "External",
+    description: "Code repository",
+    external: true 
+  },
+  { 
+    title: "Vercel", 
+    url: "https://vercel.com", 
+    icon: <Zap size={16} />,
+    category: "External",
+    description: "Deployment platform",
+    external: true 
+  },
+  { 
+    title: "Supabase", 
+    url: "https://supabase.com", 
+    icon: <Database size={16} />,
+    category: "External",
+    description: "Backend as a service",
+    external: true 
+  },
+];
+
+// ----------------------
+// NAVIGATION CONFIG
+// ----------------------
+const mainNavItems = [
+  { key: "home", icon: Home, label: "Home", path: "/", tooltip: "Return to homepage" },
+  { key: "dashboard", icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", tooltip: "Your personal dashboard" },
+  { key: "blog", icon: BookOpen, label: "Blog", path: "/dashboard/blog", tooltip: "Read our latest articles" },
+  { key: "contact", icon: MessageCircle, label: "Contact", path: "/contact", tooltip: "Get in touch with us" },
+];
+
+const resourceMenuItems = [
+  {
+    key: "apply",
+    icon: <Send size={16} className="text-blue-500" />,
+    label: <Link to="/apply" className="font-medium">Apply Now</Link>,
+    description: "Start your journey with us",
+  },
+  {
+    key: "tickets",
+    icon: <Ticket size={16} className="text-orange-500" />,
+    label: <Link to="/ticket">Support Tickets</Link>,
+    description: "Get help when you need it",
+  },
+  {
+    key: "server",
+    icon: <ServerCog size={16} className="text-purple-500" />,
+    label: <Link to="/server-api">Server / API</Link>,
+    description: "Developer documentation",
+  },
+  {
+    key: "weather",
+    icon: <Cloud size={16} className="text-cyan-500" />,
+    label: <Link to="/weather">Weather</Link>,
+    description: "Check local weather",
+  },
+  { type: "divider" },
+  {
+    key: "external",
+    label: <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">External Resources</span>,
+    disabled: true,
+  },
+  {
+    key: "cloudinary",
+    icon: <ExternalLink size={14} />,
+    label: (
+      <a href="https://cloudinary.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+        Cloudinary <ExternalLink size={12} className="opacity-50" />
+      </a>
+    ),
+  },
+  {
+    key: "mongodb",
+    icon: <ExternalLink size={14} />,
+    label: (
+      <a href="https://mongodb.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+        MongoDB <ExternalLink size={12} className="opacity-50" />
+      </a>
+    ),
+  },
+  {
+    key: "github",
+    icon: <ExternalLink size={14} />,
+    label: (
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+        GitHub <ExternalLink size={12} className="opacity-50" />
+      </a>
+    ),
+  },
+  {
+    key: "vercel",
+    icon: <ExternalLink size={14} />,
+    label: (
+      <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+        Vercel <ExternalLink size={12} className="opacity-50" />
+      </a>
+    ),
+  },
+  {
+    key: "supabase",
+    icon: <ExternalLink size={14} />,
+    label: (
+      <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+        Supabase <ExternalLink size={12} className="opacity-50" />
+      </a>
+    ),
+  },
+];
+
+// ----------------------
+// SOCIAL LINKS
+// ----------------------
+const socialLinks = [
+  { icon: FaXTwitter, href: "https://x.com/@futureFBG96", label: "Twitter / X", color: "hover:text-black dark:hover:text-white" },
+  { icon: FaGithub, href: "https://github.com/Ymffuture", label: "GitHub", color: "hover:text-gray-900 dark:hover:text-white" },
+  { icon: FaDiscord, href: "https://discord.gg/54ZcWjguQ", label: "Discord", color: "hover:text-indigo-500" },
+  { icon: FaWhatsapp, href: "#", label: "WhatsApp", color: "hover:text-green-500", onClick: true },
+  { icon: FaLinkedin, href: "#", label: "LinkedIn", color: "hover:text-blue-600" },
 ];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const phoneNumber = "27653935339";
-  const message = "Hello! I’m interested in building a website with you.";
+  const message = "Hello! I'm interested in building a website with you.";
 
   // WhatsApp handler
-  const handleWhatsAppRedirect = () => {
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
+  const handleWhatsAppRedirect = useCallback(() => {
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
-  };
+  }, []);
 
   // ----------------------
-  // LIVE DESKTOP SEARCH
+  // SMART SEARCH WITH GROUPING
   // ----------------------
-  const results = useMemo(() => {
+  const searchResults = useMemo(() => {
     if (!query.trim()) return [];
-    return searchData.filter((item) =>
-      item.title.toLowerCase().includes(query.toLowerCase())
+    
+    const filtered = searchData.filter((item) =>
+      item.title.toLowerCase().includes(query.toLowerCase()) ||
+      item.description?.toLowerCase().includes(query.toLowerCase())
     );
+
+    // Group by category
+    const grouped = filtered.reduce((acc, item) => {
+      const cat = item.category || "Other";
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(item);
+      return acc;
+    }, {});
+
+    return grouped;
   }, [query]);
 
-  // ----------------------
-  // WEATHER DRAWER PLACEHOLDER
-  // ----------------------
-  const handleWeather = () => {
-    alert("TODO: Connect this to your Footer.jsx weather drawer");
-  };
+  const hasResults = Object.keys(searchResults).length > 0;
+
+  // Handle search item click
+  const handleSearchClick = useCallback((item) => {
+    if (item.external || item.url.startsWith("http")) {
+      window.open(item.url, "_blank");
+    } else {
+      navigate(item.url);
+    }
+    setQuery("");
+    setIsSearchFocused(false);
+  }, [navigate]);
+
+  // Keyboard shortcut for search
+  const handleSearchKeyDown = useCallback((e) => {
+    if (e.key === "Enter" && hasResults) {
+      const firstCategory = Object.values(searchResults)[0];
+      if (firstCategory?.[0]) {
+        handleSearchClick(firstCategory[0]);
+      }
+    }
+    if (e.key === "Escape") {
+      setIsSearchFocused(false);
+      setQuery("");
+    }
+  }, [hasResults, searchResults, handleSearchClick]);
 
   return (
     <>
       {/* DESKTOP NAVBAR */}
-      <header className="fixed top-0 w-full z-50 bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl shadow-sm">
-       <div className="max-w-7xl mx-auto flex items-center justify-between px-3 py-2">
-
-
-          {/* LOGO */}
-   
-
-    
-     <div
-  onClick={() => navigate("/")}
-  className="cursor-pointer select-none flex items-center max-w-[160px] md:max-w-none"
-
-
-      aria-label="swiftMeta home"
-    >
-       <img
-  src="/new.jpeg"
-  alt="SwiftMeta"
-  className="w-12 h-12 object-contain"
-/>
-      <svg
-        width="170"
-        height="48"
-        viewBox="0 0 460 100"
-        xmlns="http://www.w3.org/2000/svg"
-        className="transition-transform duration-300 hover:scale-[1.03]"
+      <motion.header 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="fixed top-0 w-full z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm"
       >
-        <defs>
-          {/* Gradient for swift */}
-          <linearGradient id="swiftGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#38BDF8" />
-            <stop offset="100%" stopColor="#2563EB" />
-          </linearGradient>
-
-          {/* Soft glow */}
-          <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="2" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* swift */}
-        <text
-          x="0"
-          y="70"
-          fill="url(#swiftGradient)"
-          fontSize="64"
-          fontWeight="700"
-          letterSpacing="0.1"
-          style={{
-            fontFamily:
-              "Inter, system-ui, -apple-system, BlinkMacSystemFont",
-          }}
-          filter="url(#softGlow)"
-        >
-          Swift
-        </text>
-
-        {/* Meta (same word, visual contrast) */}
-        <text
-          x="156"
-          y="70"
-          fill="currentColor"
-          fontSize="64"
-          fontWeight="600"
-          letterSpacing="0.1"
-          style={{
-            fontFamily:
-              "Space Grotesk, system-ui, -apple-system, BlinkMacSystemFont",
-          }}
-          className="text-gray-600 dark:text-gray-200"
-        >
-          Meta
-        </text>
-      </svg>
-       
-
-    </div>
-  
-  
-
-          {/* DESKTOP LIVE SEARCH */}
-          <div className="hidden md:flex flex-col relative w-full max-w-xl mx-6">
-            <div className="flex items-center bg-white dark:bg-gray-800 px-4 py-2 rounded-full shadow">
-              <Search size={18} className="text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search Navigation links"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="ml-7 w-full bg-transparent p-2 outline-none text-sm dark:text-white"
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+          
+          {/* LOGO */}
+          <Tooltip title="SwiftMeta Home" placement="bottom">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => navigate("/")}
+              className="cursor-pointer select-none flex items-center gap-3"
+            >
+              <Avatar 
+                src="/new.jpeg" 
+                size={40} 
+                className="border-2 border-blue-500/20"
               />
-            </div>
-
-            {/* SEARCH RESULTS DROPDOWN */}
-            {results.length > 0 && (
-              <div className="absolute top-14 left-0 w-full bg-white dark:bg-gray-800 shadow-lg rounded-xl py-2">
-                {results.map((item, i) => (
-                  <div
-                    key={i}
-                    className="px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
-                    onClick={() => {
-                      if (item.url.startsWith("http")) {
-                        window.open(item.url, "_blank");
-                      } else {
-                        navigate(item.url);
-                      }
-                      setQuery("");
-                    }}
-                  >
-                    {item.title}
-                  </div>
-                ))}
+              <div className="hidden sm:block">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  SwiftMeta
+                </h1>
+                <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">AI-Powered Solutions</p>
               </div>
-            )}
+            </motion.div>
+          </Tooltip>
+
+          {/* DESKTOP SMART SEARCH */}
+          <div className="hidden md:flex flex-col relative flex-1 max-w-xl mx-8">
+            <Tooltip title="Press ⌘K to search" placement="bottom">
+              <div className={`
+                flex items-center bg-gray-100 dark:bg-gray-800 px-4 py-2.5 rounded-xl 
+                border-2 transition-all duration-300
+                ${isSearchFocused 
+                  ? "border-blue-500 shadow-lg shadow-blue-500/20 bg-white dark:bg-gray-800" 
+                  : "border-transparent hover:bg-white dark:hover:bg-gray-700"
+                }
+              `}>
+                <Search size={18} className="text-gray-400 mr-3" />
+                <input
+                  type="text"
+                  placeholder="Search anything... (⌘K)"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                  onKeyDown={handleSearchKeyDown}
+                  className="flex-1 bg-transparent outline-none text-sm dark:text-white placeholder-gray-400"
+                />
+                {query && (
+                  <button 
+                    onClick={() => setQuery("")}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors"
+                  >
+                    <X size={14} className="text-gray-400" />
+                  </button>
+                )}
+                <kbd className="hidden lg:inline-block ml-2 px-2 py-0.5 text-xs bg-gray-200 dark:bg-gray-700 rounded text-gray-500 dark:text-gray-400">
+                  ⌘K
+                </kbd>
+              </div>
+            </Tooltip>
+
+            {/* ENHANCED SEARCH DROPDOWN */}
+            <AnimatePresence>
+              {isSearchFocused && query.trim() && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden max-h-[400px] overflow-y-auto"
+                >
+                  {!hasResults ? (
+                    <Empty 
+                      image={Empty.PRESENTED_IMAGE_SIMPLE} 
+                      description="No results found"
+                      className="py-8"
+                    />
+                  ) : (
+                    <div className="py-2">
+                      {Object.entries(searchResults).map(([category, items]) => (
+                        <div key={category}>
+                          <div className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                            {category}
+                          </div>
+                          {items.map((item, idx) => (
+                            <motion.div
+                              key={idx}
+                              whileHover={{ x: 4 }}
+                              onClick={() => handleSearchClick(item)}
+                              className="px-4 py-3 mx-2 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-3 group"
+                            >
+                              <div className={`
+                                p-2 rounded-lg 
+                                ${item.color === 'blue' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}
+                              `}>
+                                {item.icon}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-gray-900 dark:text-white">
+                                    {item.title}
+                                  </span>
+                                  {item.hot && (
+                                    <Tag color="red" className="text-xs">HOT</Tag>
+                                  )}
+                                  {item.external && (
+                                    <ExternalLink size={12} className="text-gray-400" />
+                                  )}
+                                </div>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                  {item.description}
+                                </p>
+                              </div>
+                              <ChevronRight size={16} className="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </motion.div>
+                          ))}
+                          <Divider className="my-2" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* RIGHT ACTIONS */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            
+            {/* MAIN NAV ICONS */}
+            <nav className="hidden md:flex items-center gap-1">
+              {mainNavItems.map((item) => (
+                <Tooltip key={item.key} title={item.tooltip} placement="bottom">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate(item.path)}
+                    className={`
+                      p-2.5 rounded-xl transition-all relative
+                      ${location.pathname === item.path 
+                        ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30" 
+                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-500"
+                      }
+                    `}
+                  >
+                    <item.icon size={20} />
+                    {location.pathname === item.path && (
+                      <motion.div
+                        layoutId="nav-indicator"
+                        className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full"
+                      />
+                    )}
+                  </motion.button>
+                </Tooltip>
+              ))}
 
-            {/* DESKTOP ICON NAVIGATION */}
-            <nav className="hidden md:flex items-center gap-5">
+              {/* RESOURCES DROPDOWN */}
+              <Tooltip title="More resources" placement="bottom">
+                <Dropdown 
+                  menu={{ items: resourceMenuItems }} 
+                  placement="bottomRight"
+                  arrow
+                  trigger={["click"]}
+                >
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-2.5 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-blue-500 transition-all"
+                  >
+                    <MoreHorizontal size={20} />
+                  </motion.button>
+                </Dropdown>
+              </Tooltip>
+            </nav>
 
-  {/* HOME ICON */}
+            <Divider type="vertical" className="hidden md:block h-6 bg-gray-300 dark:bg-gray-600" />
 
-
-  {/* THREE DOTS MENU */}
-  <Dropdown menu={menu} trigger={["click"]}>
-    <MoreHorizontal
-      size={28}
-      className="cursor-pointer hover:text-blue-500 dark:text-white"
-    />
-  </Dropdown>
-
- <Home
-    onClick={() => navigate("/")}
-    size={22}
-    className="cursor-pointer hover:text-blue-500 dark:text-white"
-  />
-</nav>
-
-            {/* WhatsApp CTA */}
-            <button
-              onClick={handleWhatsAppRedirect}
-              className="hidden md:flex items-center text-green-500 hover:text-green-600 px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 cursor-pointer"
-            >
-              <FaWhatsapp size={18} />
-            </button>
-
-            {/* Theme Toggle */}
-            <div className="hidden md:block cursor-pointer">
-              <ThemeToggle />
-            </div>
-            {/*<GeminiAssistant />*/} 
-            {/* Mobile Hamburger */}
-            <button
-              className="md:hidden p-2 rounded-full border-amber-50 flex justify-end"
-              onClick={() => setMenuOpen(true)}
-            >
-              <svg
-                className="h-7 w-7 dark:text-white cursor-pointer flex "
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.1"
-                viewBox="0 0 24 24"
+            {/* QUICK ACTIONS */}
+            <Tooltip title="Contact via WhatsApp" placement="bottom">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleWhatsAppRedirect}
+                className="hidden md:flex p-2.5 rounded-xl text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all"
               >
-                <path d="M4 6h14M4 12h10M4 18h12" strokeLinecap="round" />
-              </svg>
-            </button>
+                <Badge dot color="green">
+                  <FaWhatsapp size={20} />
+                </Badge>
+              </motion.button>
+            </Tooltip>
+
+            <Tooltip title="Toggle theme" placement="bottom">
+              <div className="hidden md:block p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
+                <ThemeToggle />
+              </div>
+            </Tooltip>
+
+            {/* USER MENU (placeholder) */}
+            <Tooltip title="Account" placement="bottom">
+              <Dropdown
+                menu={{
+                  items: [
+                    { key: "profile", icon: <User size={16} />, label: "Profile" },
+                    { key: "settings", icon: <Settings size={16} />, label: "Settings" },
+                    { type: "divider" },
+                    { key: "logout", icon: <LogOut size={16} />, label: "Sign out", danger: true },
+                  ],
+                }}
+                placement="bottomRight"
+                arrow
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="hidden md:flex w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 items-center justify-center cursor-pointer text-white font-semibold text-sm"
+                >
+                  SM
+                </motion.div>
+              </Dropdown>
+            </Tooltip>
+
+            {/* MOBILE MENU BUTTON */}
+            <Tooltip title="Menu" placement="bottom">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setMenuOpen(true)}
+                className="md:hidden p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              >
+                <Menu size={24} />
+              </motion.button>
+            </Tooltip>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* -------------------------------------------------------- */}
-      {/* MOBILE MENU DRAWER */}
+      {/* MOBILE MENU DRAWER - RICH UI */}
       {/* -------------------------------------------------------- */}
       <AnimatePresence>
         {menuOpen && (
           <>
             {/* BACKDROP */}
             <motion.div
-              className="fixed inset-0 bg-black/40 z-40"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -357,168 +587,160 @@ const Navbar = () => {
 
             {/* DRAWER */}
             <motion.div
-              className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 rounded-t-3xl shadow-xl p-6 z-50"
+              className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 rounded-t-3xl shadow-2xl z-50 max-h-[85vh] overflow-hidden flex flex-col"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
-              transition={{ type: "spring", stiffness: 130 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
             >
+              {/* DRAG HANDLE */}
+              <div className="w-full flex justify-center pt-3 pb-1">
+                <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full" />
+              </div>
+
               {/* HEADER */}
-              <div className="flex items-center justify-between mb-4">
-                {/* <GeminiAssistant /> */}
-                <h2 className="text-xl text-blue-500 dark:text-gray-400">...</h2>
-                <button
-                  className="p-2 dark:text-gray-400"
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+                <div className="flex items-center gap-3">
+                  <Avatar src="/new.jpeg" size={40} />
+                  <div>
+                    <h2 className="font-bold text-gray-900 dark:text-white">SwiftMeta</h2>
+                    <p className="text-xs text-gray-500">Menu</p>
+                  </div>
+                </div>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setMenuOpen(false)}
+                  className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500"
                 >
-                  ✖
-                </button>
+                  <X size={20} />
+                </motion.button>
               </div>
 
-              {/* MOBILE SEARCH (non-live) */}
-              <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg flex items-center gap-3 mb-5">
-                <Search size={18} />
-                <input
-                  placeholder="Search (opens result)"
-                  className="bg-transparent w-full outline-none dark:text-white"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      const found = results[0];
-                      if (found) {
-                        if (found.url.startsWith("http")) {
-                          window.open(found.url, "_blank");
-                        } else {
-                          navigate(found.url);
-                        }
-                      }
-                      setMenuOpen(false);
-                    }
-                  }}
-                  onChange={(e) => setQuery(e.target.value)}
-                />
+              {/* SEARCH */}
+              <div className="px-6 py-4">
+                <div className="flex items-center bg-gray-100 dark:bg-gray-800 px-4 py-3 rounded-2xl">
+                  <Search size={18} className="text-gray-400 mr-3" />
+                  <input
+                    placeholder="Search..."
+                    className="flex-1 bg-transparent outline-none dark:text-white"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                </div>
               </div>
 
-              {/* LINKS */}
-              <nav className="flex flex-col gap-3 mb-6">
-  {/* APPLY – PRIMARY CTA */}
-  <Link
-    to="/apply"
-    onClick={() => setMenuOpen(false)}
-    className="
-      relative flex items-center gap-3 p-3 rounded-xl
-      bg-gradient-to-r from-blue-600 to-indigo-600
-      text-white font-semibold
-      shadow-lg shadow-blue-600/30
-      hover:scale-[1.02] hover:shadow-indigo-600/40
-      transition-all
-    "
-  >
-    <span className="absolute inset-0 rounded-xl ring-2 ring-blue-400/50 animate-pulse" />
-    <Send size={18} />
-    <span>Apply Now</span>
-  </Link>
+              {/* SCROLLABLE CONTENT */}
+              <div className="flex-1 overflow-y-auto px-6 pb-6">
+                
+                {/* QUICK ACTIONS GRID */}
+                <div className="grid grid-cols-4 gap-3 mb-6">
+                  {[
+                    { icon: Home, label: "Home", path: "/", color: "bg-blue-500" },
+                    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", color: "bg-purple-500" },
+                    { icon: Send, label: "Apply", path: "/apply", color: "bg-green-500" },
+                    { icon: Ticket, label: "Tickets", path: "/ticket", color: "bg-orange-500" },
+                  ].map((item) => (
+                    <motion.button
+                      key={item.label}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        navigate(item.path);
+                        setMenuOpen(false);
+                      }}
+                      className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-gray-50 dark:bg-gray-800 active:scale-95 transition-all"
+                    >
+                      <div className={`w-12 h-12 ${item.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}>
+                        <item.icon size={24} />
+                      </div>
+                      <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{item.label}</span>
+                    </motion.button>
+                  ))}
+                </div>
 
-  {/* OTHER LINKS */}
-  {[
-    { name: "Home", href: "/", icon: <Home size={18} /> },
-    { name: "Tickets", href: "/ticket", icon: <Ticket size={18} /> },
-    { name: "Contact", href: "/contact", icon: <Phone size={18} /> },
-    { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} /> },
-    { name: "Server/API", href: "/server-api", icon: <ServerCog size={18} /> },
-  ].map((item) => (
-    <Link
-      key={item.name}
-      to={item.href}
-      onClick={() => setMenuOpen(false)}
-      className="
-        flex items-center gap-3 p-3 rounded-xl
-        bg-gray-100 dark:bg-gray-800
-        text-gray-800 dark:text-white
-        hover:bg-gray-200 dark:hover:bg-gray-700
-        transition-colors
-      "
-    >
-      {item.icon}
-      <span>{item.name}</span>
-    </Link>
-  ))}
-</nav>
+                {/* MAIN LINKS */}
+                <div className="space-y-2 mb-6">
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Navigation</h3>
+                  {[
+                    { name: "Blog", path: "/dashboard/blog", icon: BookOpen, desc: "Latest articles" },
+                    { name: "Contact", path: "/contact", icon: MessageCircle, desc: "Get in touch" },
+                    { name: "Server/API", path: "/server-api", icon: ServerCog, desc: "Developer docs" },
+                    { name: "Weather", path: "/weather", icon: Cloud, desc: "Local forecast" },
+                  ].map((item) => (
+                    <motion.div
+                      key={item.name}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        navigate(item.path);
+                        setMenuOpen(false);
+                      }}
+                      className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 transition-all"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-white dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400">
+                        <item.icon size={20} />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-gray-900 dark:text-white">{item.name}</h4>
+                        <p className="text-xs text-gray-500">{item.desc}</p>
+                      </div>
+                      <ChevronRight size={16} className="text-gray-400" />
+                    </motion.div>
+                  ))}
+                </div>
 
+                {/* EXTERNAL LINKS */}
+                <div className="space-y-2 mb-6">
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Resources</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { name: "Cloudinary", url: "https://cloudinary.com", color: "text-blue-500" },
+                      { name: "MongoDB", url: "https://mongodb.com", color: "text-green-500" },
+                      { name: "GitHub", url: "https://github.com", color: "text-gray-900 dark:text-white" },
+                      { name: "Vercel", url: "https://vercel.com", color: "text-black dark:text-white" },
+                    ].map((item) => (
+                      <a
+                        key={item.name}
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+                      >
+                        <span className={item.color}>{item.name}</span>
+                        <ExternalLink size={12} className="text-gray-400" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
 
-              {/* THEME */}
-              <div className="flex items-center gap-3 mb-5 dark:text-gray-400">
-                <ThemeToggle /> Theme
+                {/* DONATE CTA */}
+                <motion.a
+                  href="/pay-donation"
+                  whileTap={{ scale: 0.98 }}
+                  className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-600 text-white font-semibold shadow-lg shadow-rose-500/25 mb-6"
+                >
+                  <span>Support Us</span>
+                  <span>❤️</span>
+                </motion.a>
+
+                {/* SOCIAL LINKS */}
+                <div className="flex items-center justify-center gap-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                  {socialLinks.map((social) => (
+                    <motion.a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileTap={{ scale: 0.9 }}
+                      onClick={social.onClick ? handleWhatsAppRedirect : undefined}
+                      className={`p-3 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 ${social.color} transition-all`}
+                    >
+                      <social.icon size={20} />
+                    </motion.a>
+                  ))}
+                </div>
               </div>
-<Link 
-  to="/pay-donation"
-  className={`
-    inline-flex items-center justify-center 
-    px-5 py-2.5 
-    text-sm font-medium tracking-wide
-    text-white bg-gradient-to-r from-rose-500 to-pink-600 
-    hover:from-rose-600 hover:to-pink-700 
-    focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-offset-2
-    rounded-full shadow-md hover:shadow-lg 
-    transition-all duration-200
-  `}
->
-  <span>Donate Now</span>
-  {/* Optional: heart / giving icon */}
-  <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-  </svg>
-</Link>
-              {/* SOCIAL ICONS */}
-  
 
-<div className="flex items-center justify-center gap-5">
-  {/* X / Twitter */}
-  <a
-    href="https://x.com/@futureFBG96"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="transition transform hover:scale-110"
-    aria-label="X / Twitter"
-  >
-    <FaXTwitter size={20} className="dark:text-white" />
-  </a>
-
-  {/* Instagram */}
-
-  {/* LinkedIn */}
-
-  {/* GitHub */}
-  <a
-    href="https://github.com/Ymffuture"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="transition transform hover:scale-110"
-    aria-label="GitHub"
-  >
-    <FaGithub size={20} className="dark:text-gray-200" />
-  </a>
-
-  {/* Discord */}
-  <a
-    href="https://discord.gg/54ZcWjguQ"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="transition transform hover:scale-110"
-    aria-label="Discord"
-  >
-    <FaDiscord size={20} className="dark:text-indigo-400" />
-  </a>
-
-  {/* WhatsApp */}
-  <button
-    onClick={handleWhatsAppRedirect}
-    className="transition transform hover:scale-110"
-    aria-label="WhatsApp"
-  >
-    <FaWhatsapp size={20} className="dark:text-green-600" />
-  </button>
-</div>
-
+              {/* BOTTOM SAFE AREA */}
+              <div className="h-6 bg-white dark:bg-gray-900" />
             </motion.div>
           </>
         )}
