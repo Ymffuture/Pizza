@@ -11,13 +11,12 @@ import {
 } from "react-icons/fa";
 import { 
   Quote, 
-  Sparkles, 
-  Verified,
+  Sparkles,
   ThumbsUp,
   MessageCircle
 } from "lucide-react";
 import axios from "axios";
-import { Badge, Tooltip, Avatar } from "antd";
+import { Tooltip } from "antd";
 
 // Enhanced data with more realistic diversity
 const namesData = [
@@ -78,12 +77,18 @@ const testimonialTexts = [
   }
 ];
 
+const statsData = [
+  { value: "4.9/5", label: "Average Rating", icon: FaStar },
+  { value: "10K+", label: "Happy Customers", icon: MessageCircle },
+  { value: "98%", label: "Would Recommend", icon: ThumbsUp },
+];
+
 // Animated background component
 const ParticleBackground = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {[...Array(20)].map((_, i) => (
       <motion.div
-        key={i}
+        key={`particle-${i}`}
         className="absolute w-2 h-2 rounded-full bg-blue-500/20"
         style={{
           left: `${Math.random() * 100}%`,
@@ -104,24 +109,47 @@ const ParticleBackground = () => (
   </div>
 );
 
+// Animation variants with direction support
+const cardVariants = {
+  enter: (direction) => ({
+    x: direction > 0 ? 100 : -100,
+    opacity: 0,
+    scale: 0.95,
+    filter: "blur(4px)"
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    filter: "blur(0px)"
+  },
+  exit: (direction) => ({
+    zIndex: 0,
+    x: direction < 0 ? 100 : -100,
+    opacity: 0,
+    scale: 0.95,
+    filter: "blur(4px)"
+  })
+};
+
 // Individual testimonial card
-const TestimonialCard = ({ data, isActive }) => {
-  if (!data) return null;
+const TestimonialCard = ({ data, isActive, direction }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  
+  if (!data) return null;
   
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-      animate={{ 
-        opacity: isActive ? 1 : 0.3, 
-        y: isActive ? 0 : 20,
-        scale: isActive ? 1 : 0.9,
-        filter: isActive ? 'blur(0px)' : 'blur(2px)'
-      }}
-      transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-      className="relative w-full max-w-4xl mx-auto px-4"
+      custom={direction}
+      variants={cardVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+      className="relative w-full max-w-4xl mx-auto px-4 absolute inset-0 flex items-center justify-center"
     >
-      <div className="relative bg-white dark:bg-gray-900/80 backdrop-blur-2xl rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+      <div className="relative bg-white dark:bg-gray-900/80 backdrop-blur-2xl rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden w-full">
         
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
@@ -137,7 +165,7 @@ const TestimonialCard = ({ data, isActive }) => {
           <div className="flex items-center gap-1 mb-6">
             {[...Array(5)].map((_, i) => (
               <motion.div
-                key={i}
+                key={`star-${i}`}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.1 }}
@@ -149,15 +177,9 @@ const TestimonialCard = ({ data, isActive }) => {
                 )}
               </motion.div>
             ))}
-            <Badge 
-              count={`${data.rating}.0`} 
-              style={{ 
-                backgroundColor: '#fbbf24', 
-                color: '#000',
-                fontWeight: 'bold',
-                marginLeft: '8px'
-              }} 
-            />
+            <div className="ml-2 px-2 py-0.5 rounded bg-yellow-400 text-black text-xs font-bold">
+              {data.rating}.0
+            </div>
           </div>
 
           {/* Testimonial Text */}
@@ -165,7 +187,7 @@ const TestimonialCard = ({ data, isActive }) => {
             <FaQuoteLeft className="absolute -top-2 -left-4 text-blue-500/30 text-xl" />
             <p className="text-xl md:text-2xl text-gray-800 dark:text-gray-200 leading-relaxed mb-6 pl-4">
               "{data.text.split(data.highlight).map((part, i, arr) => (
-                <span key={i}>
+                <span key={`text-part-${i}`}>
                   {part}
                   {i < arr.length - 1 && (
                     <span className="text-blue-600 dark:text-blue-400 font-semibold bg-blue-100 dark:bg-blue-900/30 px-1 rounded">
@@ -187,18 +209,21 @@ const TestimonialCard = ({ data, isActive }) => {
           {/* Author Info */}
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className="relative">
+              <div className="relative w-16 h-16">
                 {!imageLoaded && (
-                  <div className="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                  <div className="absolute inset-0 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
                 )}
-                <Avatar
+                <img
                   src={data.avatar}
-                  size={64}
-                  className={`border-2 border-white dark:border-blue-500 shadow-lg transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  alt={data.name}
                   onLoad={() => setImageLoaded(true)}
+                  onError={() => setImageLoaded(true)}
+                  className={`w-16 h-16 rounded-full object-cover border-2 border-white dark:border-blue-500 shadow-lg transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                 />
                 <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900">
-                  <Verified size={14} className="text-white" />
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-white">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
                 </div>
               </div>
               
@@ -244,8 +269,9 @@ const CustomDots = ({ total, current, onChange }) => (
   <div className="flex items-center justify-center gap-2 mt-8">
     {Array.from({ length: total }).map((_, i) => (
       <motion.button
-        key={i}
+        key={`dot-${i}`}
         onClick={() => onChange(i)}
+        aria-label={`Go to testimonial ${i + 1}`}
         className={`h-2 rounded-full transition-all duration-300 ${
           i === current 
             ? 'w-8 bg-blue-500' 
@@ -261,6 +287,7 @@ const CustomDots = ({ total, current, onChange }) => (
 const Testimonial = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const sectionRef = useRef(null);
@@ -268,15 +295,15 @@ const Testimonial = () => {
   
   // Auto-advance timer
   useEffect(() => {
-  if (!testimonials.length) return;
+    if (!testimonials.length) return;
 
-  const timer = setInterval(() => {
-    setDirection(1);
-    setActiveIndex((prev) => (prev + 1) % testimonials.length);
-  }, 6000);
+    const timer = setInterval(() => {
+      setDirection(1);
+      setActiveIndex((prev) => (prev + 1) % testimonials.length);
+    }, 6000);
 
-  return () => clearInterval(timer);
-}, [testimonials.length]);
+    return () => clearInterval(timer);
+  }, [testimonials.length]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -285,33 +312,43 @@ const Testimonial = () => {
         const shuffledNames = [...namesData].sort(() => 0.5 - Math.random()).slice(0, 5);
         const shuffledTexts = [...testimonialTexts].sort(() => 0.5 - Math.random()).slice(0, 5);
 
-        // Fetch avatars
-        const avatarPromises = shuffledNames.map(() =>
-          axios.get(
-            "https://api.unsplash.com/photos/random?query=professional+headshot&client_id=vKvUZ1Wv3ez0cdcjK-d9KMB8_wPVRLNQaC2P8FVssaw"
-          ).catch(() => null)
-        );
-
-        const responses = await Promise.all(avatarPromises);
-        const avatars = responses.map((res, i) => 
-  res?.data?.urls?.small || 
-  `https://ui-avatars.com/api/?name=${encodeURIComponent(shuffledNames[i]?.name)}&background=random`
-);
+        // Fetch avatars - use environment variable for API key
+        const apiKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
+        let avatars = [];
+        
+        if (apiKey) {
+          const avatarPromises = shuffledNames.map(() =>
+            axios.get(
+              `https://api.unsplash.com/photos/random?query=professional+headshot&client_id=${apiKey}`
+            ).catch(() => null)
+          );
+          const responses = await Promise.all(avatarPromises);
+          avatars = responses.map((res, i) => 
+            res?.data?.urls?.small || 
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(shuffledNames[i]?.name)}&background=random`
+          );
+        } else {
+          // Fallback if no API key
+          avatars = shuffledNames.map((person) => 
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name)}&background=random&size=128`
+          );
+        }
 
         const compiled = shuffledNames.map((person, i) => ({
-          id: i,
+          id: `testimonial-${i}-${Date.now()}`, // Stable unique ID
           ...person,
           ...shuffledTexts[i],
           avatar: avatars[i],
-          rating: 5, // All 5 stars for premium feel
+          rating: 5,
         }));
 
         setTestimonials(compiled);
-      } catch (error) {
-        console.error("Error:", error);
+      } catch (err) {
+        console.error("Error:", err);
+        setError("Failed to load testimonials");
         // Fallback to generated avatars
         const fallback = namesData.slice(0, 5).map((person, i) => ({
-          id: i,
+          id: `fallback-${i}`,
           ...person,
           ...testimonialTexts[i],
           avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name)}&background=random&size=128`,
@@ -327,20 +364,21 @@ const Testimonial = () => {
   }, []);
 
   const handlePrev = () => {
-  if (!testimonials.length) return;
-  setDirection(-1);
-  setActiveIndex((prev) =>
-    (prev - 1 + testimonials.length) % testimonials.length
-  );
-};
+    if (!testimonials.length) return;
+    setDirection(-1);
+    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
 
-const handleNext = () => {
-  if (!testimonials.length) return;
-  setDirection(1);
-  setActiveIndex((prev) =>
-    (prev + 1) % testimonials.length
-  );
-};
+  const handleNext = () => {
+    if (!testimonials.length) return;
+    setDirection(1);
+    setActiveIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const handleDotClick = (index) => {
+    setDirection(index > activeIndex ? 1 : -1);
+    setActiveIndex(index);
+  };
 
   return (
     <section 
@@ -375,7 +413,7 @@ const handleNext = () => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
               Innovators
             </span>
-            Worldwide
+            {" "}Worldwide
           </h2>
 
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -390,12 +428,11 @@ const handleNext = () => {
           transition={{ delay: 0.2 }}
           className="flex flex-wrap justify-center gap-8 mb-16"
         >
-          {[
-            { value: "4.9/5", label: "Average Rating", icon: FaStar },
-            { value: "10K+", label: "Happy Customers", icon: MessageCircle },
-            { value: "98%", label: "Would Recommend", icon: ThumbsUp },
-          ].map((stat, idx) => (
-            <div key={idx} className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700">
+          {statsData.map((stat) => (
+            <div 
+              key={stat.label} 
+              className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
+            >
               <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
                 <stat.icon size={20} />
               </div>
@@ -409,6 +446,12 @@ const handleNext = () => {
 
         {/* Testimonial Carousel */}
         <div className="relative">
+          {error && (
+            <div className="text-red-500 text-center py-4 mb-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+              {error}
+            </div>
+          )}
+          
           {loading ? (
             <div className="flex justify-center py-20">
               <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
@@ -416,16 +459,16 @@ const handleNext = () => {
           ) : (
             <>
               {/* Main Display */}
-              <div className="relative h-[500px] flex items-center justify-center">
+              <div className="relative min-h-[400px] md:min-h-[500px] flex items-center justify-center">
                 <AnimatePresence mode="wait" custom={direction}>
                   {testimonials[activeIndex] && (
-  <TestimonialCard 
-    key={activeIndex}
-    data={testimonials[activeIndex]}
-    isActive={true}
-    index={activeIndex}
-  />
-)}
+                    <TestimonialCard 
+                      key={testimonials[activeIndex].id}
+                      data={testimonials[activeIndex]}
+                      isActive={true}
+                      direction={direction}
+                    />
+                  )}
                 </AnimatePresence>
               </div>
 
@@ -435,6 +478,7 @@ const handleNext = () => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handlePrev}
+                  aria-label="Previous testimonial"
                   className="p-3 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-lg"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -445,13 +489,14 @@ const handleNext = () => {
                 <CustomDots 
                   total={testimonials.length} 
                   current={activeIndex} 
-                  onChange={setActiveIndex}
+                  onChange={handleDotClick}
                 />
 
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handleNext}
+                  aria-label="Next testimonial"
                   className="p-3 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-lg"
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -464,16 +509,22 @@ const handleNext = () => {
               <div className="flex justify-center gap-3 mt-8">
                 {testimonials.map((t, i) => (
                   <motion.button
-                    key={i}
+                    key={`thumb-${t.id}`}
                     whileHover={{ scale: 1.1 }}
-                    onClick={() => setActiveIndex(i)}
+                    onClick={() => handleDotClick(i)}
+                    aria-label={`View ${t.name}'s testimonial`}
                     className={`relative w-12 h-12 rounded-full overflow-hidden border-2 transition-all ${
                       i === activeIndex 
                         ? 'border-blue-500 ring-2 ring-blue-500/30' 
                         : 'border-gray-300 dark:border-gray-600 opacity-50 hover:opacity-100'
                     }`}
                   >
-                    <img src={t.avatar} alt={t.name} className="w-full h-full object-cover" />
+                    <img 
+                      src={t.avatar} 
+                      alt={t.name} 
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
                   </motion.button>
                 ))}
               </div>
