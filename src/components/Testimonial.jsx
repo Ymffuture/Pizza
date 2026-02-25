@@ -1,261 +1,190 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { 
-  FaStar, 
-  FaRegStar, 
-  FaQuoteLeft, 
-  FaQuoteRight,
-  FaCheckCircle,
-  FaShieldAlt,
-  FaGlobe
-} from "react-icons/fa";
-import { 
   Quote, 
+  Star, 
+  ChevronLeft, 
+  ChevronRight, 
   Sparkles,
-  ThumbsUp,
-  MessageCircle
+  Verified,
+  TrendingUp,
+  Users
 } from "lucide-react";
+import { Tooltip, Badge, Avatar, Rate, Skeleton } from "antd";
 import axios from "axios";
-import { Tooltip } from "antd";
 
-// Enhanced data with more realistic diversity
-const namesData = [
-  { name: "Thabo Mokoena", role: "Startup Founder", location: "Johannesburg, SA" },
-  { name: "Amina Adebayo", role: "UX Designer", location: "Lagos, Nigeria" },
-  { name: "Kwame Osei", role: "Product Manager", location: "Accra, Ghana" },
-  { name: "Zuri Ndlovu", role: "Marketing Director", location: "Cape Town, SA" },
-  { name: "Chidi Okonkwo", role: "Tech Lead", location: "Abuja, Nigeria" },
-  { name: "Liam Chen", role: "Freelance Developer", location: "Singapore" },
-  { name: "Sofia Ramirez", role: "Creative Director", location: "Barcelona, Spain" },
-  { name: "Noah Patel", role: "E-commerce Owner", location: "Mumbai, India" },
-  { name: "Isabella Müller", role: "Brand Strategist", location: "Berlin, Germany" },
-  { name: "Mateo Ivanov", role: "Software Engineer", location: "Sofia, Bulgaria" },
-  { name: "Aria Singh", role: "Content Creator", location: "Toronto, Canada" },
-  { name: "Lucas Dubois", role: "Consultant", location: "Paris, France" },
-];
-
-const testimonialTexts = [
+// Enhanced testimonial data with roles and companies
+const testimonialData = [
   {
+    id: 1,
+    name: "Thabo Mokoena",
+    role: "CEO",
+    company: "TechStart SA",
     text: "SwiftMeta transformed our digital presence completely. The AI-powered design suggestions saved us weeks of work, and the final result exceeded all expectations.",
-    highlight: "AI-powered design",
-    metric: "3x faster delivery"
+    rating: 5,
+    metric: "3x faster launch",
+    verified: true,
   },
   {
-    text: "I've tried dozens of website builders, but nothing comes close to SwiftMeta's intuitive interface. It's like having a professional designer at your fingertips.",
-    highlight: "intuitive interface",
-    metric: "Zero coding needed"
+    id: 2,
+    name: "Amina Adebayo",
+    role: "Product Designer",
+    company: "Creative Labs",
+    text: "The customization tools are incredibly intuitive. I built a complete design system without writing code, and my team loves the consistency across all pages.",
+    rating: 5,
+    metric: "50+ components",
+    verified: true,
   },
   {
-    text: "The performance optimization is unreal. Our site loads in under 2 seconds now, and our conversion rate jumped by 40% within the first month.",
-    highlight: "performance optimization",
-    metric: "40% conversion boost"
+    id: 3,
+    name: "Kwame Osei",
+    role: "Founder",
+    company: "GreenEnergy NG",
+    text: "From concept to live site in 48 hours. The AI assistant understood our brand instantly and generated layouts that felt uniquely ours.",
+    rating: 5,
+    metric: "48h delivery",
+    verified: true,
   },
   {
-    text: "From concept to launch in 48 hours. SwiftMeta's templates are not just beautiful—they're strategically designed for maximum impact.",
-    highlight: "48-hour launch",
-    metric: "100% uptime"
+    id: 4,
+    name: "Zuri Ndlovu",
+    role: "Marketing Director",
+    company: "ShopAfrica",
+    text: "Our conversion rates jumped 40% after the redesign. The smart analytics integration gives us insights we never had before.",
+    rating: 5,
+    metric: "+40% conversions",
+    verified: true,
   },
   {
-    text: "The real-time collaboration features are game-changing. Our remote team can now build and iterate together seamlessly, no matter where we are.",
-    highlight: "real-time collaboration",
-    metric: "50+ team members"
+    id: 5,
+    name: "Chidi Okonkwo",
+    role: "CTO",
+    company: "FinTech Solutions",
+    text: "Finally, a platform that understands technical requirements while keeping things simple. The code export feature is a game-changer for our team.",
+    rating: 5,
+    metric: "99.9% uptime",
+    verified: true,
   },
   {
-    text: "SwiftMeta's responsive design is flawless. Every device, every screen size—our brand looks perfect everywhere. That's priceless for our reputation.",
-    highlight: "flawless responsive",
-    metric: "All devices supported"
+    id: 6,
+    name: "Liam Chen",
+    role: "Startup Advisor",
+    company: "Venture Capital Asia",
+    text: "I recommend SwiftMeta to every portfolio company. It's the fastest way to establish professional credibility online.",
+    rating: 5,
+    metric: "12 startups",
+    verified: true,
   },
-  {
-    text: "Customer support that actually understands development. When we had questions, experts—not bots—helped us solve complex issues within minutes.",
-    highlight: "expert support",
-    metric: "< 5 min response"
-  },
-  {
-    text: "The analytics dashboard gives us insights we never had before. We can see exactly how users interact with our site and optimize accordingly.",
-    highlight: "advanced analytics",
-    metric: "Real-time data"
-  }
 ];
 
-const statsData = [
-  { value: "4.9/5", label: "Average Rating", icon: FaStar },
-  { value: "10K+", label: "Happy Customers", icon: MessageCircle },
-  { value: "98%", label: "Would Recommend", icon: ThumbsUp },
-];
+// Animated counter component
+const AnimatedCounter = ({ value, suffix = "" }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
 
-// Animated background component
-const ParticleBackground = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {[...Array(20)].map((_, i) => (
-      <motion.div
-        key={`particle-${i}`}
-        className="absolute w-2 h-2 rounded-full bg-blue-500/20"
-        style={{
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-        }}
-        animate={{
-          y: [0, -30, 0],
-          opacity: [0.2, 0.5, 0.2],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 3 + Math.random() * 2,
-          repeat: Infinity,
-          delay: Math.random() * 2,
-        }}
-      />
-    ))}
-  </div>
-);
+  useEffect(() => {
+    if (!isInView) return;
+    
+    const numValue = parseInt(value.replace(/\D/g, ''));
+    const duration = 2000;
+    const steps = 60;
+    const increment = numValue / steps;
+    let current = 0;
 
-// Animation variants with direction support
-const cardVariants = {
-  enter: (direction) => ({
-    x: direction > 0 ? 100 : -100,
-    opacity: 0,
-    scale: 0.95,
-    filter: "blur(4px)"
-  }),
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    filter: "blur(0px)"
-  },
-  exit: (direction) => ({
-    zIndex: 0,
-    x: direction < 0 ? 100 : -100,
-    opacity: 0,
-    scale: 0.95,
-    filter: "blur(4px)"
-  })
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= numValue) {
+        setCount(numValue);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+
+    return () => clearInterval(timer);
+  }, [isInView, value]);
+
+  return (
+    <span ref={ref}>
+      {count}{suffix}
+    </span>
+  );
 };
 
 // Individual testimonial card
 const TestimonialCard = ({ data, isActive, direction }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  
-  if (!data) return null;
-  
   return (
     <motion.div
-      custom={direction}
-      variants={cardVariants}
-      initial="enter"
-      animate="center"
-      exit="exit"
-      transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-      className="relative w-full max-w-4xl mx-auto px-4 absolute inset-0 flex items-center justify-center"
+      initial={{ opacity: 0, x: direction * 100, scale: 0.9 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      exit={{ opacity: 0, x: -direction * 100, scale: 0.9 }}
+      transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+      className={`
+        relative w-full max-w-4xl mx-auto
+        ${isActive ? 'z-10' : 'z-0'}
+      `}
     >
-      <div className="relative bg-white dark:bg-gray-900/80 backdrop-blur-2xl rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden w-full">
+      {/* Main Card */}
+      <div className="relative bg-white dark:bg-gray-900/50 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
         
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 pointer-events-none" />
+        {/* Background Gradient */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         
-        {/* Quote decoration */}
-        <div className="absolute top-6 left-8 text-blue-500/10 dark:text-blue-400/10">
-          <Quote size={120} />
+        {/* Quote Icon */}
+        <div className="absolute top-6 left-6 w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+          <Quote className="text-white" size={24} />
         </div>
-        
+
         {/* Content */}
-        <div className="relative z-10">
+        <div className="relative pt-8">
           {/* Rating */}
-          <div className="flex items-center gap-1 mb-6">
-            {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={`star-${i}`}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                {i < data.rating ? (
-                  <FaStar className="text-yellow-400 text-lg" />
-                ) : (
-                  <FaRegStar className="text-gray-300 text-lg" />
-                )}
-              </motion.div>
-            ))}
-            <div className="ml-2 px-2 py-0.5 rounded bg-yellow-400 text-black text-xs font-bold">
-              {data.rating}.0
-            </div>
+          <div className="flex items-center gap-2 mb-6">
+            <Rate 
+              disabled 
+              defaultValue={data.rating} 
+              className="text-yellow-400 text-sm"
+            />
+            <Badge 
+              count="VERIFIED" 
+              style={{ 
+                backgroundColor: '#10b981',
+                fontSize: '10px',
+                fontWeight: 'bold'
+              }}
+              icon={<Verified size={10} />}
+            />
           </div>
 
           {/* Testimonial Text */}
-          <blockquote className="relative">
-            <FaQuoteLeft className="absolute -top-2 -left-4 text-blue-500/30 text-xl" />
-            <p className="text-xl md:text-2xl text-gray-800 dark:text-gray-200 leading-relaxed mb-6 pl-4">
-              "{data.text.split(data.highlight).map((part, i, arr) => (
-                <span key={`text-part-${i}`}>
-                  {part}
-                  {i < arr.length - 1 && (
-                    <span className="text-blue-600 dark:text-blue-400 font-semibold bg-blue-100 dark:bg-blue-900/30 px-1 rounded">
-                      {data.highlight}
-                    </span>
-                  )}
-                </span>
-              ))}"
-            </p>
-            <FaQuoteRight className="absolute -bottom-2 -right-4 text-blue-500/30 text-xl" />
+          <blockquote className="text-xl md:text-2xl lg:text-3xl text-gray-800 dark:text-gray-100 font-medium leading-relaxed mb-8">
+            "{data.text}"
           </blockquote>
-
-          {/* Metric Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-medium mb-8">
-            <ThumbsUp size={16} />
-            {data.metric}
-          </div>
 
           {/* Author Info */}
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className="relative w-16 h-16">
-                {!imageLoaded && (
-                  <div className="absolute inset-0 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse" />
-                )}
-                <img
-                  src={data.avatar}
-                  alt={data.name}
-                  onLoad={() => setImageLoaded(true)}
-                  onError={() => setImageLoaded(true)}
-                  className={`w-16 h-16 rounded-full object-cover border-2 border-white dark:border-blue-500 shadow-lg transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                />
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-white">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </div>
-              </div>
-              
+              <Avatar
+                size={64}
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`}
+                className="border-2 border-blue-500/30"
+              />
               <div>
-                <h4 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <h4 className="font-bold text-gray-900 dark:text-white text-lg">
                   {data.name}
-                  <Tooltip title="Verified Customer">
-                    <FaCheckCircle className="text-blue-500 text-sm" />
-                  </Tooltip>
                 </h4>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{data.role}</p>
-                <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
-                  <Globe size={12} />
-                  {data.location}
-                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {data.role} at <span className="text-blue-500">{data.company}</span>
+                </p>
               </div>
             </div>
 
-            {/* Trust indicators */}
-            <div className="flex items-center gap-3 text-xs text-gray-400">
-              <Tooltip title="Identity Verified">
-                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <FaShieldAlt size={12} className="text-green-500" />
-                  <span>Verified</span>
-                </div>
-              </Tooltip>
-              <Tooltip title="Purchased Service">
-                <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <FaCheckCircle size={12} className="text-blue-500" />
-                  <span>Customer</span>
-                </div>
-              </Tooltip>
+            {/* Metric Badge */}
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20">
+              <TrendingUp size={16} className="text-blue-500" />
+              <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                {data.metric}
+              </span>
             </div>
           </div>
         </div>
@@ -264,133 +193,83 @@ const TestimonialCard = ({ data, isActive, direction }) => {
   );
 };
 
-// Navigation dots
-const CustomDots = ({ total, current, onChange }) => (
-  <div className="flex items-center justify-center gap-2 mt-8">
-    {Array.from({ length: total }).map((_, i) => (
-      <motion.button
-        key={`dot-${i}`}
-        onClick={() => onChange(i)}
-        aria-label={`Go to testimonial ${i + 1}`}
-        className={`h-2 rounded-full transition-all duration-300 ${
-          i === current 
-            ? 'w-8 bg-blue-500' 
-            : 'w-2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
-        }`}
-        whileHover={{ scale: 1.2 }}
-        whileTap={{ scale: 0.9 }}
-      />
-    ))}
-  </div>
-);
+// Stats bar component
+const StatsBar = () => {
+  const stats = [
+    { value: 500, suffix: "+", label: "Happy Clients", icon: Users },
+    { value: 98, suffix: "%", label: "Satisfaction Rate", icon: Star },
+    { value: 4.9, suffix: "/5", label: "Average Rating", icon: Sparkles },
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mt-12">
+      {stats.map((stat, idx) => (
+        <motion.div
+          key={idx}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: idx * 0.1 }}
+          viewport={{ once: true }}
+          className="text-center p-4 rounded-2xl bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-gray-200 dark:border-gray-800"
+        >
+          <div className="flex justify-center mb-2">
+            <stat.icon size={20} className="text-blue-500" />
+          </div>
+          <div className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+            <AnimatedCounter value={stat.value.toString()} suffix={stat.suffix} />
+          </div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">{stat.label}</div>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
 
 const Testimonial = () => {
-  const [testimonials, setTestimonials] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  
-  // Auto-advance timer
-  useEffect(() => {
-    if (!testimonials.length) return;
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
 
-    const timer = setInterval(() => {
+  // Auto-advance
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    
+    const interval = setInterval(() => {
       setDirection(1);
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
+      setCurrentIndex((prev) => (prev + 1) % testimonialData.length);
     }, 6000);
 
-    return () => clearInterval(timer);
-  }, [testimonials.length]);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Shuffle and select 5 testimonials
-        const shuffledNames = [...namesData].sort(() => 0.5 - Math.random()).slice(0, 5);
-        const shuffledTexts = [...testimonialTexts].sort(() => 0.5 - Math.random()).slice(0, 5);
-
-        // Fetch avatars - use environment variable for API key
-        const apiKey = process.env.REACT_APP_UNSPLASH_ACCESS_KEY;
-        let avatars = [];
-        
-        if (apiKey) {
-          const avatarPromises = shuffledNames.map(() =>
-            axios.get(
-              `https://api.unsplash.com/photos/random?query=professional+headshot&client_id=${apiKey}`
-            ).catch(() => null)
-          );
-          const responses = await Promise.all(avatarPromises);
-          avatars = responses.map((res, i) => 
-            res?.data?.urls?.small || 
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(shuffledNames[i]?.name)}&background=random`
-          );
-        } else {
-          // Fallback if no API key
-          avatars = shuffledNames.map((person) => 
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name)}&background=random&size=128`
-          );
-        }
-
-        const compiled = shuffledNames.map((person, i) => ({
-          id: `testimonial-${i}-${Date.now()}`, // Stable unique ID
-          ...person,
-          ...shuffledTexts[i],
-          avatar: avatars[i],
-          rating: 5,
-        }));
-
-        setTestimonials(compiled);
-      } catch (err) {
-        console.error("Error:", err);
-        setError("Failed to load testimonials");
-        // Fallback to generated avatars
-        const fallback = namesData.slice(0, 5).map((person, i) => ({
-          id: `fallback-${i}`,
-          ...person,
-          ...testimonialTexts[i],
-          avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(person.name)}&background=random&size=128`,
-          rating: 5,
-        }));
-        setTestimonials(fallback);
-      } finally {
-        setLoading(false);
+  const navigate = useCallback((newDirection) => {
+    setDirection(newDirection);
+    setCurrentIndex((prev) => {
+      if (newDirection === 1) {
+        return (prev + 1) % testimonialData.length;
       }
-    };
-
-    fetchData();
+      return prev === 0 ? testimonialData.length - 1 : prev - 1;
+    });
+    setIsAutoPlaying(false);
+    // Resume autoplay after 10s of inactivity
+    setTimeout(() => setIsAutoPlaying(true), 10000);
   }, []);
 
-  const handlePrev = () => {
-    if (!testimonials.length) return;
-    setDirection(-1);
-    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const handleNext = () => {
-    if (!testimonials.length) return;
-    setDirection(1);
-    setActiveIndex((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const handleDotClick = (index) => {
-    setDirection(index > activeIndex ? 1 : -1);
-    setActiveIndex(index);
-  };
+  const currentTestimonial = testimonialData[currentIndex];
 
   return (
     <section 
-      ref={sectionRef}
-      className="relative py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-[#0a0a0d] dark:via-[#111] dark:to-[#0a0a0d] overflow-hidden"
+      ref={containerRef}
+      className="relative py-24 bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 overflow-hidden"
     >
-      {/* Background Effects */}
-      <ParticleBackground />
-      
-      {/* Gradient orbs */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+      {/* Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:60px_60px]" />
+      </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -402,137 +281,83 @@ const Testimonial = () => {
           <motion.div
             initial={{ scale: 0 }}
             animate={isInView ? { scale: 1 } : {}}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-sm font-medium mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 text-blue-600 text-sm font-medium mb-6"
           >
-            <Sparkles size={16} className="animate-pulse" />
-            <span>Trusted by 10,000+ Creators</span>
+            <Sparkles size={16} />
+            <span>Trusted by Industry Leaders</span>
           </motion.div>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
-            Loved by{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
-              Innovators
-            </span>
-            {" "}Worldwide
+            What Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">Clients Say</span>
           </h2>
-
+          
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Real stories from real people who transformed their digital presence with SwiftMeta.
+            Real stories from real people who transformed their digital presence with SwiftMeta
           </p>
         </motion.div>
 
-        {/* Stats Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-8 mb-16"
-        >
-          {statsData.map((stat) => (
-            <div 
-              key={stat.label} 
-              className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
-            >
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
-                <stat.icon size={20} />
-              </div>
-              <div>
-                <div className="text-xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
-                <div className="text-xs text-gray-500">{stat.label}</div>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-
-        {/* Testimonial Carousel */}
-        <div className="relative">
-          {error && (
-            <div className="text-red-500 text-center py-4 mb-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              {error}
-            </div>
-          )}
-          
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
-            </div>
-          ) : (
-            <>
-              {/* Main Display */}
-              <div className="relative min-h-[400px] md:min-h-[500px] flex items-center justify-center">
-                <AnimatePresence mode="wait" custom={direction}>
-                  {testimonials[activeIndex] && (
-                    <TestimonialCard 
-                      key={testimonials[activeIndex].id}
-                      data={testimonials[activeIndex]}
-                      isActive={true}
-                      direction={direction}
-                    />
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Navigation */}
-              <div className="flex items-center justify-center gap-4 mt-8">
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handlePrev}
-                  aria-label="Previous testimonial"
-                  className="p-3 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-lg"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M15 18l-6-6 6-6" />
-                  </svg>
-                </motion.button>
-
-                <CustomDots 
-                  total={testimonials.length} 
-                  current={activeIndex} 
-                  onChange={handleDotClick}
-                />
-
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleNext}
-                  aria-label="Next testimonial"
-                  className="p-3 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-lg"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 18l6-6-6-6" />
-                  </svg>
-                </motion.button>
-              </div>
-
-              {/* Thumbnail Previews */}
-              <div className="flex justify-center gap-3 mt-8">
-                {testimonials.map((t, i) => (
-                  <motion.button
-                    key={`thumb-${t.id}`}
-                    whileHover={{ scale: 1.1 }}
-                    onClick={() => handleDotClick(i)}
-                    aria-label={`View ${t.name}'s testimonial`}
-                    className={`relative w-12 h-12 rounded-full overflow-hidden border-2 transition-all ${
-                      i === activeIndex 
-                        ? 'border-blue-500 ring-2 ring-blue-500/30' 
-                        : 'border-gray-300 dark:border-gray-600 opacity-50 hover:opacity-100'
-                    }`}
-                  >
-                    <img 
-                      src={t.avatar} 
-                      alt={t.name} 
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </motion.button>
-                ))}
-              </div>
-            </>
-          )}
+        {/* Main Testimonial Display */}
+        <div className="relative min-h-[400px] flex items-center justify-center">
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
+            <TestimonialCard
+              key={currentIndex}
+              data={currentTestimonial}
+              isActive={true}
+              direction={direction}
+            />
+          </AnimatePresence>
         </div>
 
-        {/* Trust Badges */}
+        {/* Navigation */}
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <Tooltip title="Previous">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => navigate(-1)}
+              className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors"
+            >
+              <ChevronLeft size={24} />
+            </motion.button>
+          </Tooltip>
+
+          {/* Dots */}
+          <div className="flex gap-2">
+            {testimonialData.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setDirection(idx > currentIndex ? 1 : -1);
+                  setCurrentIndex(idx);
+                  setIsAutoPlaying(false);
+                }}
+                className={`
+                  w-2 h-2 rounded-full transition-all duration-300
+                  ${idx === currentIndex 
+                    ? 'w-8 bg-blue-500' 
+                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
+                  }
+                `}
+              />
+            ))}
+          </div>
+
+          <Tooltip title="Next">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => navigate(1)}
+              className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors"
+            >
+              <ChevronRight size={24} />
+            </motion.button>
+          </Tooltip>
+        </div>
+
+        {/* Stats */}
+        <StatsBar />
+
+        {/* Trust Indicators */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -540,16 +365,16 @@ const Testimonial = () => {
           className="mt-16 flex flex-wrap justify-center gap-6 text-sm text-gray-500 dark:text-gray-400"
         >
           <div className="flex items-center gap-2">
-            <FaShieldAlt className="text-green-500" />
+            <Verified size={16} className="text-green-500" />
             <span>Verified Reviews</span>
           </div>
           <div className="flex items-center gap-2">
-            <FaGlobe className="text-blue-500" />
-            <span>Global Community</span>
+            <Users size={16} className="text-blue-500" />
+            <span>From Real Customers</span>
           </div>
           <div className="flex items-center gap-2">
-            <FaCheckCircle className="text-purple-500" />
-            <span>No Fake Testimonials</span>
+            <TrendingUp size={16} className="text-purple-500" />
+            <span>Proven Results</span>
           </div>
         </motion.div>
       </div>
