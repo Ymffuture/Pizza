@@ -110,7 +110,7 @@ const TicketCard = ({ ticket, onReply, message, setMessage, isLoading }) => {
       className="bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden"
     >
       {/* Header */}
-      <div className="relative p-6 bg-gradient-to-br from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800 border-b border-neutral-200 dark:border-neutral-800">
+      <div className="relative p-6 bg-gradient-to-br from-neutral-50 to-white dark:from-neutral-900 dark:to-neutral-800 border-b border-neutral-200 dark:border-neutral-800 pt-20" >
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
         
         <div className="flex items-start justify-between">
