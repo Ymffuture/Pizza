@@ -230,7 +230,7 @@ const FileUploadZone = ({ label, tooltip, error, onChange, accept = ".pdf,.doc,.
 
   return (
     <motion.div
-      className={`relative p-6 rounded-2xl border-2 border-dashed transition-all duration-300 ${
+      className={`relative p-6 rounded-2xl border-2 border-dashed transition-all duration-300 dark:text-white ${
         isDragOver 
           ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 scale-[1.02]" 
           : fileName 
@@ -400,7 +400,7 @@ export default function JobApply() {
   const completedSections = sections.filter(s => s.isComplete).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-950 dark:to-blue-950/20 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 dark:from-gray-950 dark:to-blue-950/20 pb-20 dark:text-white">
       <Helmet>
         <title>Apply - Developer / Education Position</title>
       </Helmet>
