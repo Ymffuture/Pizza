@@ -374,7 +374,7 @@ export default function Feed() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 py-12">
+    <div className="bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900 py-12">
       <div className="max-w-7xl mx-auto px-4">
         
         {/* Header */}
