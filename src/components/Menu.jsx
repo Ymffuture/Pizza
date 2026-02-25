@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import {Link} from "react-router-dom" 
 import axios from "axios";
 import { 
   ShoppingCart, 
@@ -485,7 +486,11 @@ const Menu = () => {
             className="h-12 px-8 text-base font-medium"
             icon={<ArrowRight size={18} />}
           >
-            Request Custom Quote
+          <Link
+          to="/contact" 
+          >
+          Request Custom Quote
+          </Link>  
           </Button>
         </motion.div>
       </div>
