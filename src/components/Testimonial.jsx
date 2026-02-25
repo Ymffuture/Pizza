@@ -267,12 +267,15 @@ const Testimonial = () => {
   
   // Auto-advance timer
   useEffect(() => {
-    const timer = setInterval(() => {
-      setDirection(1);
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [testimonials.length]);
+  if (!testimonials.length) return;
+
+  const timer = setInterval(() => {
+    setDirection(1);
+    setActiveIndex((prev) => (prev + 1) % testimonials.length);
+  }, 6000);
+
+  return () => clearInterval(timer);
+}, [testimonials.length]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -407,12 +410,14 @@ const Testimonial = () => {
               {/* Main Display */}
               <div className="relative h-[500px] flex items-center justify-center">
                 <AnimatePresence mode="wait" custom={direction}>
-                  <TestimonialCard 
-                    key={activeIndex}
-                    data={testimonials[activeIndex]}
-                    isActive={true}
-                    index={activeIndex}
-                  />
+                  {testimonials[activeIndex] && (
+  <TestimonialCard 
+    key={activeIndex}
+    data={testimonials[activeIndex]}
+    isActive={true}
+    index={activeIndex}
+  />
+)}
                 </AnimatePresence>
               </div>
 
