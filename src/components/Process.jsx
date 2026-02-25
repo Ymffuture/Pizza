@@ -90,7 +90,7 @@ const ProcessCard = ({ step, index, isActive, totalSteps }) => {
         {/* Content */}
         <div className="relative z-10">
           {/* Step number badge */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-6 dark:text-white">
             <Badge 
               count={`0${index + 1}`}
               style={{ 
