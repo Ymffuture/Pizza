@@ -229,7 +229,7 @@ const PartnerCard = ({ partner, index }) => {
             <motion.img
               src={partner.logo}
               alt={partner.name}
-              className="max-w-full max-h-full object-contain opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300 dark:opacity-50 dark:group-hover:opacity-100"
+              className="max-w-full max-h-full object-contain opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-300 dark:opacity-70 dark:invert dark:group-hover:opacity-100"
               animate={isHovered ? { scale: 1.1, rotate: [0, -5, 5, 0] } : { scale: 1 }}
               transition={{ duration: 0.3 }}
             />
