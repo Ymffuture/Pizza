@@ -105,7 +105,8 @@ const ParticleBackground = () => (
 );
 
 // Individual testimonial card
-const TestimonialCard = ({ data, isActive, index }) => {
+const TestimonialCard = ({ data, isActive }) => {
+  if (!data) return null;
   const [imageLoaded, setImageLoaded] = useState(false);
   
   return (
@@ -292,9 +293,10 @@ const Testimonial = () => {
         );
 
         const responses = await Promise.all(avatarPromises);
-        const avatars = responses.map((res) => 
-          res?.data?.urls?.small || `https://ui-avatars.com/api/?name=${encodeURIComponent(shuffledNames[0]?.name)}&background=random`
-        );
+        const avatars = responses.map((res, i) => 
+  res?.data?.urls?.small || 
+  `https://ui-avatars.com/api/?name=${encodeURIComponent(shuffledNames[i]?.name)}&background=random`
+);
 
         const compiled = shuffledNames.map((person, i) => ({
           id: i,
@@ -325,14 +327,20 @@ const Testimonial = () => {
   }, []);
 
   const handlePrev = () => {
-    setDirection(-1);
-    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  if (!testimonials.length) return;
+  setDirection(-1);
+  setActiveIndex((prev) =>
+    (prev - 1 + testimonials.length) % testimonials.length
+  );
+};
 
-  const handleNext = () => {
-    setDirection(1);
-    setActiveIndex((prev) => (prev + 1) % testimonials.length);
-  };
+const handleNext = () => {
+  if (!testimonials.length) return;
+  setDirection(1);
+  setActiveIndex((prev) =>
+    (prev + 1) % testimonials.length
+  );
+};
 
   return (
     <section 
