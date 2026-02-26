@@ -69,32 +69,3 @@ function NavItem({ to, icon, label }) {
     </NavLink>
   );
 }
-
-      to={to}
-      className={({ isActive }) =>
-        `relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors
-        ${
-          isActive
-            ? "text-black dark:text-white"
-            : "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
-        }`
-      }
-    >
-      {({ isActive }) => (
-        <>
-          <span className="text-lg">{icon}</span>
-          <span>{label}</span>
-
-          {/* Active underline (Apple-style subtle indicator) */}
-          {isActive && (
-            <motion.span
-              layoutId="nav-indicator"
-              className="absolute inset-x-2 -bottom-1 h-0.5 rounded-full bg-black dark:bg-white"
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-          )}
-        </>
-      )}
-    </NavLink>
-  );
-}
