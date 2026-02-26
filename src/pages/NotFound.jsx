@@ -180,11 +180,16 @@ const GlitchText = ({ text }) => {
 
 export default function NotFound() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState([
+    { name: "Home", path: "/", icon: Home },
+    { name: "Dashboard", path: "/dashboard", icon: Compass },
+    { name: "Blog", path: "dashboard/blog", icon: Sparkles },
+    { name: "Contact", path: "/contact", icon: MessageCircle },
+  ]);
   const [suggestions] = useState([
     { name: "Home", path: "/", icon: Home },
     { name: "Dashboard", path: "/dashboard", icon: Compass },
-    { name: "Blog", path: "/blog", icon: Sparkles },
+    { name: "Blog", path: "dashboard/blog", icon: Sparkles },
     { name: "Contact", path: "/contact", icon: MessageCircle },
   ]);
 
@@ -259,7 +264,7 @@ export default function NotFound() {
                 <Search className="text-gray-400 mr-3" size={20} />
                 <input
                   type="text"
-                  placeholder="Search for pages..."
+                  placeholder="Search for pages... (not working) "
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="flex-1 bg-transparent text-white placeholder-gray-500 outline-none"
