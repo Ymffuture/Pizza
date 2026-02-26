@@ -605,7 +605,7 @@ PRICING:
 
             <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-500 dark:text-gray-400">
               <p>SwiftMeta Tuition Services • Quote generated on {new Date().toLocaleDateString()}</p>
-              <p className="mt-1">Questions? Contact us at support@swiftmeta.com</p>
+              <p className="mt-1">Questions? Contact us at famacloud.ai@gmail.com</p>
             </div>
           </motion.div>
         )}
