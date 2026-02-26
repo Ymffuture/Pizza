@@ -15,7 +15,7 @@ export default function ApplicantLayout() {
         <div className="max-w-5xl mx-auto">
           <nav className="bg-white/70 dark:bg-[#1a1a1a]/70 backdrop-blur-xl border border-white/20 dark:border-white/5 rounded-2xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)] px-2 py-2 flex items-center gap-1">
             <NavItem to="/apply" icon={<FiFileText size={18} />} label="Apply" />
-            <NavItem to="/apply/status" icon={<FiClock size={18} />} label="Last Lessons" />
+            <NavItem to="/apply/status" icon={<FiClock size={18} />} label="Track application" />
             <NavItem to="/lessons/subject-to-register" icon={<FiLayers size={18} />} label="Our Subjects" />
           </nav>
         </div>
