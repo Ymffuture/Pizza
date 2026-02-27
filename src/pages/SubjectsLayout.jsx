@@ -4,7 +4,7 @@ import { FiFileText, FiClock, FiLayers } from "react-icons/fi";
 
 export default function ApplicantLayout() {
   return (
-    <div className="min-h-screen bg-[#fafafa] dark:bg-[#0a0a0a] pt-24 transition-colors duration-500">
+    <div className="min-h-screen bg-[#fafafa] dark:bg-[#0a0a0a] transition-colors duration-500">
       {/* Glassmorphism Navigation */}
       <motion.header
         initial={{ y: -20, opacity: 0 }}
