@@ -26,11 +26,11 @@ export default function DonationPage() {
 
   // Account details for direct transfers
   const accountDetails = {
-    bank: "First Bank of Nigeria",
+    bank: "Capitec ",
     accountName: "SwiftMeta Educational Initiative",
-    accountNumber: "3067894521",
-    swiftCode: "FBNINGLA",
-    currency: "NGN (₦) & USD ($)",
+    accountNumber: "1641466659",
+    swiftCode: "CSMT",
+    currency: "ZAR",
     referenceNote: "Donation - [Your Name]"
   };
 
@@ -570,16 +570,16 @@ export default function DonationPage() {
               <li className="flex items-center gap-2">
                 <Mail size={14} />
                 <a href="mailto:donate@swiftmeta.org" className="hover:text-gray-900 dark:hover:text-white transition-colors">
-                  donate@swiftmeta.org
+                  famacloud.ai@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={14} />
-                <span>+234 801 234 5678</span>
+                <span>+27 63 441 4863</span>
               </li>
               <li className="flex items-center gap-2">
                 <Globe size={14} />
-                <span>Lagos, Nigeria</span>
+                <span>South Africa, johannesburg south </span>
               </li>
             </ul>
           </div>
