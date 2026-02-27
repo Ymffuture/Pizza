@@ -4,7 +4,7 @@ import { LuMoonStar } from "react-icons/lu";
 
 const ThemeToggle = () => {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("theme") || "dark"; // Default to dark
+    return localStorage.getItem("theme") || "light"; // Default to light 
   });
 
   useEffect(() => {
