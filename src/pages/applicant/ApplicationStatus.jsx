@@ -14,7 +14,7 @@ import {
 } from "react-icons/fi";
 import { api } from "../../api";
 import { Helmet } from "react-helmet";
-
+import Loader from "./Loader";
 /* ------------------------------------
    Status Config
 ------------------------------------ */
@@ -210,7 +210,7 @@ export default function ApplicationStatus() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-8"
+          className="space-y-4 pt-28"
         >
           {/* Header */}
           <div className="text-center space-y-2">
@@ -258,7 +258,7 @@ export default function ApplicationStatus() {
                 className="w-full py-4 rounded-2xl bg-black dark:bg-white text-white dark:text-black font-semibold hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 dark:border-black/30 border-t-white dark:border-t-black rounded-full animate-spin" />
+                  <Loader />
                 ) : (
                   <>
                     <FiSearch size={20} />
