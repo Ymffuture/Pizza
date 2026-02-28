@@ -228,7 +228,7 @@ const completed = progress === 100;
           <p className="text-gray-500 dark:text-gray-400">
             Minimum pass mark: 50%
           </p>
-          <Link to="/math" className="text-gray-400 bg-blue-500" >Math Quiz</Link> 
+          <Link to="/mathq" className="bg-blue-400/15 text-blue-600 dark:text-blue-400" >Math Quiz</Link> 
         </header>
 
         {/* Email Verification */}
