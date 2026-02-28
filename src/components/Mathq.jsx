@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from "react";
 import quizData from "../data/grade11-math.json";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Grade11MathQuiz() {
+export default function Mathq() {
 
   const questions = useMemo(() => quizData.questions, []);
 
