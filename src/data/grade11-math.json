@@ -2,7 +2,7 @@
   "title": "Grade 10–11 Mathematics Mixed Quiz – Financial Maths, Algebra & Trigonometry",
   "totalQuestions": 25,
   "questions": [
-    // Financial Mathematics – Levels 1 to 7 (7 questions)
+    
     {
       "id": 1,
       "question": "Calculate the simple interest earned on R2 000 invested at 5% p.a. for 3 years.",
@@ -53,7 +53,7 @@
       "explanation": "Using annuity formula approximation or calculator: ≈ R498 per month"
     },
 
-    // Algebra – Levels 1 to 7 (9 questions – mix of equations & inequalities)
+  
     {
       "id": 8,
       "question": "Solve for x: 3x – 7 = 11",
@@ -118,7 +118,7 @@
       "explanation": "ax – cx = d – b → x(a–c) = d–b"
     },
 
-    // Trigonometry – Levels 1 to 7 (9 questions)
+    
     {
       "id": 17,
       "question": "In a right triangle, if opposite = 3 and hypotenuse = 5, sin θ = ?",
