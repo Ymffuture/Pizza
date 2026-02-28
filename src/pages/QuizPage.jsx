@@ -12,7 +12,7 @@ import { sendEmail } from "../utils/sendEmail";
 import quizzes from "../data/quizzes.json";
 import QuizQuestion from "../components/QuizQuestion";
 import { submitQuiz, requestVerification } from "../services/quizService";
-
+import {Link} from "react-router-dom" ;
 /* ======================
    ERROR HANDLER (DEBUG FRIENDLY)
 ====================== */
