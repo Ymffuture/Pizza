@@ -90,7 +90,7 @@ export default function DonationPage() {
       icon: CreditCard,
       color: "from-blue-600 to-blue-700",
       processingTime: "Instant",
-      fees: "1.5% + ₦100"
+      fees: "fees apply"
     },
     {
       id: "transfer",
@@ -113,8 +113,8 @@ export default function DonationPage() {
   ];
 
   const impactStats = [
-    { value: "500+", label: "Students Supported", icon: Heart },
-    { value: "50+", label: "Projects Funded", icon: Globe },
+    { value: "20+", label: "Students Supported", icon: Heart },
+    { value: "20+", label: "Projects Funded", icon: Globe },
     { value: "98%", label: "Satisfaction Rate", icon: CheckCircle2 },
     { value: "24/7", label: "Support Available", icon: Shield }
   ];
