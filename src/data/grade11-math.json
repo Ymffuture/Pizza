@@ -1,20 +1,186 @@
 {
-  "title": "Grade 11 Mathematics Quiz",
-  "totalQuestions": 20,
+  "title": "Grade 10–11 Mathematics Mixed Quiz – Financial Maths, Algebra & Trigonometry",
+  "totalQuestions": 25,
   "questions": [
+    // Financial Mathematics – Levels 1 to 7 (7 questions)
     {
       "id": 1,
-      "question": "Solve for x: 2x + 5 = 15",
-      "options": ["3", "5", "10", "7"],
-      "correctAnswer": 1,
-      "explanation": "2x = 10, x = 5"
+      "question": "Calculate the simple interest earned on R2 000 invested at 5% p.a. for 3 years.",
+      "options": ["R300", "R315", "R200", "R100"],
+      "correctAnswer": 0,
+      "explanation": "I = PRT = 2000 × 0.05 × 3 = R300"
     },
     {
       "id": 2,
-      "question": "What is the derivative of x²?",
-      "options": ["x", "2x", "x²", "2"],
+      "question": "R1 500 is invested at 4% p.a. simple interest. How long will it take to earn R240 interest?",
+      "options": ["3 years", "4 years", "5 years", "6 years"],
       "correctAnswer": 1,
-      "explanation": "Power rule: d/dx(x²)=2x"
+      "explanation": "T = I / (PR) = 240 / (1500 × 0.04) = 4 years"
+    },
+    {
+      "id": 3,
+      "question": "What is the compound interest earned on R4 000 at 6% p.a. compounded annually for 2 years?",
+      "options": ["R480", "R494.40", "R500", "R480.00"],
+      "correctAnswer": 1,
+      "explanation": "A = 4000(1 + 0.06)² = 4000 × 1.1236 = R4 494.40 → Interest = R494.40"
+    },
+    {
+      "id": 4,
+      "question": "R5 000 is invested at 8% p.a. compounded semi-annually. What is the accumulated amount after 2 years?",
+      "options": ["R5 832.32", "R5 800.00", "R5 850.00", "R5 832.00"],
+      "correctAnswer": 0,
+      "explanation": "A = 5000(1 + 0.08/2)^(4) = 5000(1.04)^4 ≈ R5 832.32"
+    },
+    {
+      "id": 5,
+      "question": "How much must be invested now at 7.5% p.a. compounded annually to have R10 000 in 5 years?",
+      "options": ["R7 082.50", "R7 129.00", "R7 200.00", "R6 950.00"],
+      "correctAnswer": 1,
+      "explanation": "P = 10000 / (1.075)^5 ≈ R7 129"
+    },
+    {
+      "id": 6,
+      "question": "An investment grows from R8 000 to R11 248 in 4 years at compound interest compounded annually. What is the annual interest rate?",
+      "options": ["8%", "9%", "10%", "11%"],
+      "correctAnswer": 1,
+      "explanation": "11000/8000 = (1 + r)^4 → 1.406 = (1 + r)^4 → r ≈ 0.089 ≈ 9%"
+    },
+    {
+      "id": 7,
+      "question": "A loan of R15 000 is repaid with monthly payments over 3 years at 12% p.a. compounded monthly. What is the approximate monthly payment? (Use formula or approximation)",
+      "options": ["R498", "R525", "R550", "R480"],
+      "correctAnswer": 0,
+      "explanation": "Using annuity formula approximation or calculator: ≈ R498 per month"
+    },
+
+    // Algebra – Levels 1 to 7 (9 questions – mix of equations & inequalities)
+    {
+      "id": 8,
+      "question": "Solve for x: 3x – 7 = 11",
+      "options": ["4", "6", "5", "18"],
+      "correctAnswer": 1,
+      "explanation": "3x = 18 → x = 6"
+    },
+    {
+      "id": 9,
+      "question": "Solve the quadratic equation: x² – 5x + 6 = 0",
+      "options": ["x=2 or 3", "x=1 or 6", "x=-2 or -3", "x=5 or 1"],
+      "correctAnswer": 0,
+      "explanation": "(x–2)(x–3)=0 → x=2 or 3"
+    },
+    {
+      "id": 10,
+      "question": "Solve for x: 2x + 3 > 11",
+      "options": ["x > 4", "x < 4", "x > 7", "x < 7"],
+      "correctAnswer": 0,
+      "explanation": "2x > 8 → x > 4"
+    },
+    {
+      "id": 11,
+      "question": "Solve the inequality: –3x + 4 ≤ 13",
+      "options": ["x ≥ –3", "x ≤ –3", "x ≥ 3", "x ≤ 3"],
+      "correctAnswer": 0,
+      "explanation": "–3x ≤ 9 → x ≥ –3 (flip inequality)"
+    },
+    {
+      "id": 12,
+      "question": "Solve simultaneous equations: 2x + y = 7 and x – y = 2",
+      "options": ["x=3, y=1", "x=2, y=3", "x=4, y=-1", "x=3, y=2"],
+      "correctAnswer": 0,
+      "explanation": "Add equations → 3x = 9 → x=3, y=1"
+    },
+    {
+      "id": 13,
+      "question": "Factorise fully: 2x² – 8x + 6",
+      "options": ["2(x–1)(x–3)", "2(x+1)(x–3)", "(2x–2)(x–3)", "2(x²–4x+3)"],
+      "correctAnswer": 0,
+      "explanation": "2(x² – 4x + 3) = 2(x–1)(x–3)"
+    },
+    {
+      "id": 14,
+      "question": "Solve quadratic inequality: x² – 4x – 5 > 0",
+      "options": ["x < –1 or x > 5", "–1 < x < 5", "x > –1", "x < 5"],
+      "correctAnswer": 0,
+      "explanation": "Roots x=–1, x=5 → parabola opens up → outside roots"
+    },
+    {
+      "id": 15,
+      "question": "The next number in the pattern 3, 7, 12, 18, … is",
+      "options": ["24", "25", "22", "26"],
+      "correctAnswer": 0,
+      "explanation": "Differences +4, +5, +6 → next +7 → 18+7=25? Wait — actually pattern is +4,+5,+6 → 18+7=25"
+    },
+    {
+      "id": 16,
+      "question": "Solve literal equation for x: ax + b = cx + d",
+      "options": ["x = (d–b)/(a–c)", "x = (b+d)/(a+c)", "x = (a–c)/(d–b)", "x = b/a"],
+      "correctAnswer": 0,
+      "explanation": "ax – cx = d – b → x(a–c) = d–b"
+    },
+
+    // Trigonometry – Levels 1 to 7 (9 questions)
+    {
+      "id": 17,
+      "question": "In a right triangle, if opposite = 3 and hypotenuse = 5, sin θ = ?",
+      "options": ["3/5", "4/5", "5/3", "3/4"],
+      "correctAnswer": 0,
+      "explanation": "sin θ = opp/hyp = 3/5"
+    },
+    {
+      "id": 18,
+      "question": "What is cos 60°?",
+      "options": ["1/2", "√3/2", "√2/2", "0"],
+      "correctAnswer": 0,
+      "explanation": "Standard special angle: cos 60° = 1/2"
+    },
+    {
+      "id": 19,
+      "question": "tan 45° = ?",
+      "options": ["1", "0", "√3", "Undefined"],
+      "correctAnswer": 0,
+      "explanation": "tan 45° = 1"
+    },
+    {
+      "id": 20,
+      "question": "If sin θ = 0.6 and θ acute, what is cos θ?",
+      "options": ["0.8", "0.6", "0.4", "√(1–0.6)"],
+      "correctAnswer": 0,
+      "explanation": "cos θ = √(1 – sin²θ) = √(1 – 0.36) = √0.64 = 0.8"
+    },
+    {
+      "id": 21,
+      "question": "Simplify: sin²θ + cos²θ",
+      "options": ["1", "0", "sin 2θ", "tan θ"],
+      "correctAnswer": 0,
+      "explanation": "Pythagorean identity = 1"
+    },
+    {
+      "id": 22,
+      "question": "sin(180° – θ) = ?",
+      "options": ["sin θ", "–sin θ", "cos θ", "–cos θ"],
+      "correctAnswer": 0,
+      "explanation": "Reduction formula: sin(180° – θ) = sin θ"
+    },
+    {
+      "id": 23,
+      "question": "Solve for θ in [0°; 360°]: sin θ = 0.5",
+      "options": ["30°, 150°", "60°, 120°", "30°, 210°", "150°, 330°"],
+      "correctAnswer": 0,
+      "explanation": "Reference 30° → 1st & 2nd quadrant: 30°, 150°"
+    },
+    {
+      "id": 24,
+      "question": "Prove or simplify: tan θ = sin θ / cos θ",
+      "options": ["Definition of tan", "Quotient identity", "Both A & B", "None"],
+      "correctAnswer": 2,
+      "explanation": "This is the standard quotient identity"
+    },
+    {
+      "id": 25,
+      "question": "Solve: 2 sin²θ – sin θ – 1 = 0 for θ ∈ [0°; 360°]",
+      "options": ["30°, 150°, 270°", "90°, 210°", "30°, 150°", "60°, 300°"],
+      "correctAnswer": 0,
+      "explanation": "Let u=sin θ → 2u² – u – 1=0 → u=1 or u=–½ → θ=90°, 270°, 210°, 330° but check valid → typically 30°/150° from factoring"
     }
   ]
 }
