@@ -9,100 +9,103 @@ import {
   Code2,
   Terminal,
   HelpCircle,
-  AlertCircle
+  AlertCircle,
+  X
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer";
+import { useState, useEffect } from "react";
 
-// Server Maintenance Alert Component
-const ServerMaintenanceAlert = ({ onDismiss }) => {
-  const [progress, setProgress] = useState(0);
-  
+// Service Alert Banner Component
+const ServiceAlert = ({ onDismiss }) => {
+  const [progress, setProgress] = useState(100);
+  const [isVisible, setIsVisible] = useState(true);
+
   useEffect(() => {
-    // Simulated progress for visual effect
+    // Simulate progress bar for visual effect
     const interval = setInterval(() => {
-      setProgress(p => (p >= 90 ? 90 : p + Math.random() * 15));
-    }, 2000);
+      setProgress(p => Math.max(0, p - 0.5));
+    }, 100);
+    
     return () => clearInterval(interval);
   }, []);
+
+  if (!isVisible) return null;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-red-500/10 border border-amber-500/30 p-4 mb-6"
+      className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50 to-red-50 dark:from-amber-900/20 dark:via-orange-900/20 dark:to-red-900/20 border border-amber-200 dark:border-amber-800 p-4 mb-6 shadow-lg"
     >
-      {/* Animated background pulse */}
-      <div className="absolute inset-0 bg-amber-500/5 animate-pulse" />
-      
       {/* Progress bar at top */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-amber-500/20">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-amber-200 dark:bg-amber-800">
         <motion.div 
           className="h-full bg-gradient-to-r from-amber-500 to-orange-500"
-          initial={{ width: 0 }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.5 }}
+          style={{ width: `${progress}%` }}
         />
       </div>
 
       <div className="relative flex items-start gap-4">
+        {/* Animated Icon */}
         <div className="flex-shrink-0">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center animate-bounce-slow">
+          <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center animate-pulse">
             <Server className="w-6 h-6 text-amber-600 dark:text-amber-400" />
           </div>
         </div>
         
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-bold text-amber-900 dark:text-amber-100 flex items-center gap-2">
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="font-bold text-amber-900 dark:text-amber-100 flex items-center gap-2 text-base">
               <Wrench className="w-4 h-4" />
-              Server Maintenance in Progress
+              Service Temporarily Unavailable
             </h3>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white animate-pulse">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500 text-white animate-pulse">
               LIVE
             </span>
           </div>
           
-          <p className="text-sm text-amber-800 dark:text-amber-200/80 mb-3 leading-relaxed">
-            Our platform is currently experiencing technical difficulties. 
-            Our <strong>best developers</strong> are actively working to resolve this.
-            Some features may be temporarily unavailable.
+          <p className="text-sm text-amber-800 dark:text-amber-200/90 mb-3 leading-relaxed">
+            Our quiz service is currently experiencing technical difficulties. 
+            Our <strong>best developers</strong> are actively working to restore full functionality. 
+            We apologize for any inconvenience caused.
           </p>
           
-          <div className="flex flex-wrap items-center gap-3 text-xs text-amber-700 dark:text-amber-300/70">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-amber-700 dark:text-amber-300/80">
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              Estimated fix: <strong>2-4 hours</strong>
+              Estimated resolution: <strong>2-4 hours</strong>
             </span>
-            <span className="w-1 h-1 rounded-full bg-amber-400" />
             <span className="flex items-center gap-1.5">
               <AlertCircle className="w-3.5 h-3.5" />
               Status: <strong>Investigating</strong>
             </span>
           </div>
           
+          {/* Team indicator */}
           <div className="mt-3 flex items-center gap-2">
             <div className="flex -space-x-2">
-              {[1,2,3].map(i => (
-                <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-white dark:border-gray-900 flex items-center justify-center text-[8px] text-white font-bold">
-                  {String.fromCharCode(64 + i)}
+              {['K', 'S', 'M'].map((initial, i) => (
+                <div 
+                  key={i} 
+                  className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-white dark:border-gray-900 flex items-center justify-center text-[10px] text-white font-bold"
+                >
+                  {initial}
                 </div>
               ))}
             </div>
             <span className="text-xs text-amber-600 dark:text-amber-400">
-              3 engineers on it
+              3 senior engineers assigned
             </span>
           </div>
         </div>
         
+        {/* Dismiss button */}
         <button 
-          onClick={onDismiss}
-          className="flex-shrink-0 p-1.5 rounded-lg hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 transition-colors"
+          onClick={() => setIsVisible(false)}
+          className="flex-shrink-0 p-1.5 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-800 text-amber-600 dark:text-amber-400 transition-colors"
         >
-          <span className="sr-only">Dismiss</span>
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <X className="w-5 h-5" />
         </button>
       </div>
     </motion.div>
@@ -116,21 +119,21 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
   if (!q) return null;
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Server Maintenance Alert */}
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Service Alert Banner */}
       <AnimatePresence>
         {showAlert && (
-          <ServerMaintenanceAlert onDismiss={() => setShowAlert(false)} />
+          <ServiceAlert onDismiss={() => setShowAlert(false)} />
         )}
       </AnimatePresence>
 
-      {/* Question Header with Smart Badge */}
+      {/* Question Header */}
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
           <HelpCircle className="w-5 h-5 text-white" />
         </div>
         <div className="flex-1">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 mb-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 mb-2">
             <Code2 className="w-3 h-3" />
             {q.type?.toUpperCase() || "QUESTION"}
           </span>
@@ -140,14 +143,14 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
         </div>
       </div>
 
-      {/* Code Block with Enhanced Styling */}
+      {/* Code Block */}
       {q.code && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative group rounded-2xl overflow-hidden bg-[#282c34] shadow-2xl shadow-black/20"
+          className="relative group rounded-2xl overflow-hidden bg-[#282c34] shadow-2xl shadow-black/20 border border-gray-700/50"
         >
-          {/* Mac-style window header */}
+          {/* Mac-style header */}
           <div className="flex items-center justify-between px-4 py-3 bg-[#21252b] border-b border-white/5">
             <div className="flex items-center gap-2">
               <div className="flex gap-1.5">
@@ -156,14 +159,13 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
                 <div className="w-3 h-3 rounded-full bg-green-500/80" />
               </div>
               <span className="ml-3 text-xs font-mono text-gray-400 uppercase tracking-wider">
-                {q.language || "code"}
+                {q.language || "javascript"}
               </span>
             </div>
-            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="text-xs text-gray-500">Read-only</span>
-            </div>
+            <span className="text-xs text-gray-500">Read-only</span>
           </div>
           
+          {/* Code with horizontal scroll */}
           <div className="overflow-x-auto custom-scrollbar">
             <SyntaxHighlighter
               language={q.language || "javascript"}
@@ -173,7 +175,8 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
                 padding: "1.25rem",
                 background: "transparent",
                 fontSize: "0.875rem",
-                lineHeight: "1.7"
+                lineHeight: "1.7",
+                minWidth: "100%"
               }}
               showLineNumbers={true}
               lineNumberStyle={{
@@ -186,11 +189,6 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
               {q.code}
             </SyntaxHighlighter>
           </div>
-          
-          {/* Gradient fade for long code */}
-          {q.code.length > 200 && !isExpanded && (
-            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#282c34] to-transparent pointer-events-none" />
-          )}
         </motion.div>
       )}
 
@@ -268,19 +266,13 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
                       />
                     )}
                   </div>
-                  
-                  {/* Hover arrow */}
-                  <ChevronRight className={`
-                    flex-shrink-0 w-5 h-5 transition-all
-                    ${isSelected ? "text-indigo-500 translate-x-0 opacity-100" : "text-gray-300 -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"}
-                  `} />
                 </motion.button>
               );
             })}
           </div>
         )}
 
-        {/* Text Input for Output Questions */}
+        {/* Text Input */}
         {q.type === "output" && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -306,19 +298,14 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
                 font-mono text-sm
               "
             />
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-              <kbd className="hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded bg-gray-100 dark:bg-gray-700 text-xs text-gray-500 dark:text-gray-400 font-sans">
-                ↵ Enter
-              </kbd>
-            </div>
           </motion.div>
         )}
 
         {/* Error State */}
         {!q.type && (
           <motion.div 
-            initial={{ shake: 0 }}
-            animate={{ shake: [0, -10, 10, -10, 10, 0] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 flex items-start gap-3"
           >
             <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
@@ -349,13 +336,6 @@ export default function QuizQuestion({ q, selected, onAnswer }) {
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: rgba(255, 255, 255, 0.2);
-        }
-        @keyframes bounce-slow {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
-        }
-        .animate-bounce-slow {
-          animation: bounce-slow 2s infinite;
         }
       `}</style>
     </div>
