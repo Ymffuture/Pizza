@@ -26,7 +26,7 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Admin = lazy(() => import("./pages/Admin"));
 const OnlyAdmin = lazy(() => import("./pages/OnlyAdmin"));
 const News = lazy(() => import("./pages/News"));
-
+const Mathq =lazy(() =>import("./components/Mathq"));
 const Weather = lazy(() => import("./components/WeatherPage"));
 const Policy = lazy(() => import("./pages/Policy"));
 const Terms = lazy(() => import("./pages/Terms"));
@@ -186,6 +186,7 @@ const App = () => {
             <Route path="/help" element={<HelpCenter />} />
             <Route path="/news" element={<News />} />
             <Route path="/pay-donation" element={<DonationPage />} />
+            <Route path="/mathq" element={<Mathq />} />
 
             {/* Lessons */}
             <Route path="/lessons" element={<SubjectsLayout />}>
