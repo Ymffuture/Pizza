@@ -98,7 +98,7 @@ const ConnectionStatusSVG = ({ status, onHide }) => {
       initial={{ opacity: 0, y: -20, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -20, scale: 0.9 }}
-      className="fixed top-0 right-4 z-[60] flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-xl border shadow-2xl"
+      className="fixed top-[30%] right-4 z-[60] flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-xl border shadow-2xl"
       style={{ 
         backgroundColor: config.bg,
         borderColor: config.border,
