@@ -12,7 +12,7 @@ import {
   AlertCircle,
   X
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 
 // Service Alert Banner Component
