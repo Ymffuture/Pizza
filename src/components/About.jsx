@@ -40,7 +40,7 @@ export default function About() {
 
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Hero Header */}
-        <header className={`mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <header className={`mb-12 transition-all pt-16 duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-sky-500 animate-spin-slow" />
             <span className="text-sm font-medium text-sky-600 dark:text-sky-400 uppercase tracking-wider">
