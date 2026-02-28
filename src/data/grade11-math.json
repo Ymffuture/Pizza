@@ -1,0 +1,20 @@
+{
+  "title": "Grade 11 Mathematics Quiz",
+  "totalQuestions": 20,
+  "questions": [
+    {
+      "id": 1,
+      "question": "Solve for x: 2x + 5 = 15",
+      "options": ["3", "5", "10", "7"],
+      "correctAnswer": 1,
+      "explanation": "2x = 10, x = 5"
+    },
+    {
+      "id": 2,
+      "question": "What is the derivative of x²?",
+      "options": ["x", "2x", "x²", "2"],
+      "correctAnswer": 1,
+      "explanation": "Power rule: d/dx(x²)=2x"
+    }
+  ]
+}
