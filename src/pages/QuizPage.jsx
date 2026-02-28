@@ -224,10 +224,11 @@ const completed = progress === 100;
 
         {/* Header */}
         <header>
-          <h1 className="text-3xl flex gap-2 font-semibold">Coding Assessment Or <Link to="/math" >Math Quiz</Link></h1>
+          <h1 className="text-3xl flex gap-2 font-semibold">Coding Assessment</h1>
           <p className="text-gray-500 dark:text-gray-400">
             Minimum pass mark: 50%
           </p>
+          <Link to="/math" className="text-gray-400 bg-blue-500" >Math Quiz</Link> 
         </header>
 
         {/* Email Verification */}
