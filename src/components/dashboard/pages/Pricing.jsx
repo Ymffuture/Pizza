@@ -6,13 +6,13 @@ import {
   LogIn, 
   UserPlus, 
   MoreHorizontal,
-  Home,
+  Home as HomeIcon,
   ChevronRight,
   Sparkles,
   BookOpen,
   PenTool
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../../../layouts/lib/supabaseClient";
 import Home from "../../../components/BlogHome";
@@ -197,7 +197,7 @@ export default function BlogLayout() {
             <nav className="hidden md:flex items-center gap-1">
               <NavItem 
                 to="/dashboard/blog" 
-                icon={Home} 
+                icon={HomeIcon} 
                 label="Home" 
                 isActive={location.pathname === "/dashboard/blog"} 
               />
