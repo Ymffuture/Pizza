@@ -303,6 +303,10 @@ body {
   .print\\:block {
     display: block !important;
   }
+.no-print {
+display: block !important;
+} 
+
 }
 
 
