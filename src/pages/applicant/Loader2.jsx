@@ -286,4 +286,62 @@ const OrbitSpinner = ({ size, color, secondaryColor }) => {
               position: "absolute",
               left: "50%",
               top: "50%",
-              transformOrigin
+              transformOrigin: "left center",
+              opacity: 0.3,
+            }}
+          />
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+// Morphing shapes
+const MorphSpinner = ({ size, color, secondaryColor }) => (
+  <div className="morph-wrapper" style={{ width: size, height: size }}>
+    <motion.div
+      className="morph-shape"
+      animate={{
+        borderRadius: ["20%", "50%", "20%"],
+        rotate: [0, 180, 360],
+        scale: [1, 1.1, 1],
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      style={{
+        width: "100%",
+        height: "100%",
+        background: `linear-gradient(135deg, ${color}, ${secondaryColor})`,
+        boxShadow: `0 0 ${size * 0.4}px ${color}40, inset 0 0 ${size * 0.2}px rgba(255,255,255,0.2)`,
+      }}
+    />
+    <motion.div
+      className="morph-inner"
+      animate={{
+        rotate: [360, 0],
+        scale: [0.5, 0.8, 0.5],
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: 0.5
+      }}
+      style={{
+        position: "absolute",
+        top: "25%",
+        left: "25%",
+        width: "50%",
+        height: "50%",
+        borderRadius: "50%",
+        background: "rgba(255,255,255,0.3)",
+        backdropFilter: "blur(4px)",
+      }}
+    />
+  </div>
+);
+
+export default CoolSpinner;
