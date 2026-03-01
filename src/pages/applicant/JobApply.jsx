@@ -17,7 +17,7 @@ import {
   FiChevronRight,
   FiLock,
 } from "react-icons/fi";
-import Loader2 from "./Loader2";
+import {CoolSpinner} from "./Loader2";
 import { FaExclamationTriangle } from 'react-icons/fa';
 import Loader from "./Loader";
 import {
@@ -408,7 +408,9 @@ export default function JobApply() {
       <ProgressBar current={completedSections} total={sections.length} />
 
       {loading && <Loader2 fullScreen />}
- <Loader2 fullScreen />
+      
+ <CoolSpinner variant="morph" color="#AF52DE" secondaryColor="#5856D6" />
+      
       <div className="max-w-3xl mx-auto px-4 pt-12">
         {/* Header */}
         <motion.div 
