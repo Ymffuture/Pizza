@@ -17,7 +17,7 @@ import {
   FiChevronRight,
   FiLock,
 } from "react-icons/fi";
-import Loader2 from "./Loader2";
+import CoolSpinner from "./CoolSpinner";
 import { FaExclamationTriangle } from 'react-icons/fa';
 import Loader from "./Loader";
 import {
