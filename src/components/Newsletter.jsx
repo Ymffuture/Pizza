@@ -5,24 +5,32 @@ import React, {
   useCallback,
   useId,
   useMemo,
+  useState,
 } from "react";
 import emailjs from "@emailjs/browser";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, AlertCircle, TriangleAlert, Info} from "lucide-react";
-import { FiXCircle } from 'react-icons/fi';
-import { FaAddressBook, FaEdit, FaEnvelope, FaUserAlt, FaUserAltSlash } from "react-icons/fa";
-import { MdChatBubble } from "react-icons/md";
-import {Link} from "react-router-dom" ;
+import { 
+  CheckCircle, 
+  AlertCircle, 
+  TriangleAlert, 
+  Info,
+  Send,
+  Clock,
+  Mail,
+  User,
+  MessageSquare,
+  Ticket,
+  ArrowRight,
+  Sparkles
+} from "lucide-react";
+import {Link} from "react-router-dom";
+
 /* ----------------------------------
-   STATE MANAGEMENT (useReducer)
+   STATE MANAGEMENT
 ----------------------------------- */
 
 const initialState = {
-  form: {
-    name: "",
-    email: "",
-    message: "",
-  },
+  form: { name: "", email: "", message: "" },
   status: "idle",
   message: "",
   cooldown: 0,
@@ -53,436 +61,512 @@ function reducer(state, action) {
 }
 
 /* ----------------------------------
-   SVG LOADER (Accessible)
+   ENHANCED LOADER COMPONENTS
 ----------------------------------- */
-function Spinner() {
+
+const ModernSpinner = () => (
+  <div className="relative w-5 h-5">
+    <div className="absolute inset-0 rounded-full border-2 border-white/30" />
+    <div className="absolute inset-0 rounded-full border-2 border-white border-t-transparent animate-spin" />
+  </div>
+);
+
+const ProgressLiner = ({ isActive }) => {
+  if (!isActive) return null;
+  
   return (
-    <svg
-      className="h-5 w-5 animate-spin text-white"
-      viewBox="0 0 24 24"
-      aria-hidden
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-        fill="none"
+    <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100 dark:bg-gray-800 overflow-hidden">
+      <motion.div
+        className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+        initial={{ x: "-100%" }}
+        animate={{ x: "100%" }}
+        transition={{ 
+          repeat: Infinity, 
+          duration: 1.5, 
+          ease: "linear" 
+        }}
       />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-      />
-    </svg>
-  );
-}
-
-
-const Liner = ({
-  height = 3,
-  speed = 2,
-  color = "#1a73e8",
-  bgColor = "#e0e0e0",
-  className = "",
-}) => {
-  return (
-    <div
-      className={`absolute left-0 right-0 -top-4 flex justify-center ${className}`}
-    >
-      <svg
-        width="100%"
-        height="30"
-        viewBox="0 0 100 20"
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-        role="progressbar"
-        aria-busy="true"
-        className="max-w-full"
-      >
-        {/* Background line */}
-        <rect
-          x="0"
-          y="9"
-          width="100"
-          height={height}
-          fill={bgColor}
-        />
-
-        {/* Main animated bar */}
-        <rect y="9" height={height} fill={color}>
-          <animate
-            attributeName="x"
-            values="-40;100"
-            dur={`${speed}s`}
-            repeatCount="indefinite"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1"
-            keyTimes="0;1"
-          />
-          <animate
-            attributeName="width"
-            values="10;40;10"
-            dur={`${speed}s`}
-            repeatCount="indefinite"
-            keyTimes="0;0.5;1"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1;0.4 0 0.2 1"
-          />
-        </rect>
-
-        {/* Secondary glow trail */}
-        <rect y="9" height={height} fill={color} opacity="0.5">
-          <animate
-            attributeName="x"
-            values="-60;100"
-            dur={`${speed}s`}
-            begin="0.8s"
-            repeatCount="indefinite"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1"
-            keyTimes="0;1"
-          />
-          <animate
-            attributeName="width"
-            values="8;25;8"
-            dur={`${speed}s`}
-            begin="0.8s"
-            repeatCount="indefinite"
-            keyTimes="0;0.5;1"
-            calcMode="spline"
-            keySplines="0.4 0 0.2 1;0.4 0 0.2 1"
-          />
-        </rect>
-      </svg>
     </div>
   );
 };
 
+/* ----------------------------------
+   SMART INPUT COMPONENTS
+----------------------------------- */
+
+const SmartInput = ({ 
+  label, 
+  icon: Icon, 
+  type = "text", 
+  value, 
+  onChange, 
+  placeholder, 
+  delay = 0 
+}) => {
+  const id = useId();
+  const [isFocused, setIsFocused] = useState(false);
+  const hasValue = value.length > 0;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.4 }}
+      className="relative"
+    >
+      <label 
+        htmlFor={id} 
+        className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+      >
+        <div className={`p-1.5 rounded-lg transition-colors ${isFocused ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+          <Icon size={14} />
+        </div>
+        {label}
+      </label>
+      
+      <div className="relative group">
+        <input
+          id={id}
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder={placeholder}
+          className={`
+            w-full h-14 px-5 rounded-2xl
+            border-2 transition-all duration-300
+            bg-white dark:bg-gray-900/50
+            text-gray-900 dark:text-white
+            placeholder:text-gray-400
+            focus:outline-none
+            ${isFocused 
+              ? 'border-blue-500 shadow-lg shadow-blue-500/20' 
+              : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+            }
+            ${hasValue && !isFocused && 'border-green-200 dark:border-green-900/30'}
+          `}
+        />
+        
+        {/* Status indicator */}
+        <AnimatePresence>
+          {hasValue && (
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              className="absolute right-4 top-1/2 -translate-y-1/2"
+            >
+              <CheckCircle size={18} className="text-green-500" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  );
+};
+
+const SmartTextarea = ({ 
+  label, 
+  icon: Icon, 
+  value, 
+  onChange, 
+  placeholder, 
+  delay = 0 
+}) => {
+  const id = useId();
+  const [isFocused, setIsFocused] = useState(false);
+  const charCount = value.length;
+  const maxChars = 500;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.4 }}
+      className="relative"
+    >
+      <div className="flex items-center justify-between mb-2">
+        <label 
+          htmlFor={id} 
+          className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
+        >
+          <div className={`p-1.5 rounded-lg transition-colors ${isFocused ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+            <Icon size={14} />
+          </div>
+          {label}
+        </label>
+        <span className={`text-xs transition-colors ${charCount > maxChars ? 'text-red-500' : 'text-gray-400'}`}>
+          {charCount}/{maxChars}
+        </span>
+      </div>
+      
+      <textarea
+        id={id}
+        rows={5}
+        value={value}
+        onChange={(e) => onChange(e.target.value.slice(0, maxChars))}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        placeholder={placeholder}
+        className={`
+          w-full px-5 py-4 rounded-2xl
+          border-2 transition-all duration-300
+          bg-white dark:bg-gray-900/50
+          text-gray-900 dark:text-white
+          placeholder:text-gray-400
+          focus:outline-none resize-none
+          ${isFocused 
+            ? 'border-blue-500 shadow-lg shadow-blue-500/20' 
+            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+          }
+        `}
+      />
+      
+      {/* Progress bar for message length */}
+      <div className="mt-2 h-1 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+        <motion.div 
+          className={`h-full rounded-full ${charCount > maxChars * 0.8 ? 'bg-amber-500' : 'bg-blue-500'}`}
+          initial={{ width: 0 }}
+          animate={{ width: `${Math.min((charCount / maxChars) * 100, 100)}%` }}
+        />
+      </div>
+    </motion.div>
+  );
+};
 
 /* ----------------------------------
-   COMPONENT
+   ALERT COMPONENTS
+----------------------------------- */
+
+const CooldownAlert = ({ seconds }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    className="rounded-2xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 flex items-center gap-4"
+  >
+    <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-800/50 flex items-center justify-center flex-shrink-0">
+      <Clock className="w-6 h-6 text-amber-600 dark:text-amber-400 animate-pulse" />
+    </div>
+    <div className="flex-1">
+      <h4 className="font-semibold text-amber-900 dark:text-amber-100">Rate Limit Active</h4>
+      <p className="text-sm text-amber-700 dark:text-amber-300">
+        Please wait <strong>{formatTime(seconds)}</strong> before sending another message.
+        This helps us prevent spam and ensure quality responses.
+      </p>
+    </div>
+  </motion.div>
+);
+
+const StatusAlert = ({ status, message }) => {
+  const configs = {
+    success: {
+      icon: CheckCircle,
+      bg: "bg-emerald-50 dark:bg-emerald-900/20",
+      border: "border-emerald-200 dark:border-emerald-800",
+      text: "text-emerald-800 dark:text-emerald-200",
+      iconColor: "text-emerald-500"
+    },
+    error: {
+      icon: AlertCircle,
+      bg: "bg-red-50 dark:bg-red-900/20",
+      border: "border-red-200 dark:border-red-800",
+      text: "text-red-800 dark:text-red-200",
+      iconColor: "text-red-500"
+    }
+  };
+
+  const config = configs[status];
+  const Icon = config.icon;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      className={`rounded-2xl border p-4 flex items-start gap-3 ${config.bg} ${config.border}`}
+    >
+      <Icon className={`w-5 h-5 flex-shrink-0 mt-0.5 ${config.iconColor}`} />
+      <p className={`text-sm font-medium ${config.text}`}>{message}</p>
+    </motion.div>
+  );
+};
+
+/* ----------------------------------
+   MAIN COMPONENT
 ----------------------------------- */
 
 export default function Newsletter() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [isPending, startTransition] = useTransition();
+  const [focusedField, setFocusedField] = useState(null);
 
   const { form, status, message, cooldown } = state;
+  const isLoading = status === "loading" || isPending;
 
-  const hasTyped = form.name || form.email || form.message;
-  const showTypingWarning = hasTyped || cooldown > 0;
-
-  /* ----------------------------------
-     COOLDOWN INIT
-  ----------------------------------- */
+  // Initialize cooldown from localStorage
   useEffect(() => {
     const lastSent = localStorage.getItem("newsletter_last_sent");
     if (!lastSent) return;
+    
     const diff = Math.floor((Date.now() - Number(lastSent)) / 1000);
-    const remaining = 300 - diff;
-    if (remaining > 0) dispatch({ type: "SET_COOLDOWN", value: remaining });
+    const remaining = 300 - diff; // 5 minutes
+    
+    if (remaining > 0) {
+      dispatch({ type: "SET_COOLDOWN", value: remaining });
+    }
   }, []);
 
-  /* ----------------------------------
-     COOLDOWN TICK
-  ----------------------------------- */
+  // Countdown timer
   useEffect(() => {
     if (cooldown <= 0) return;
     const timer = setInterval(() => dispatch({ type: "TICK" }), 1000);
     return () => clearInterval(timer);
   }, [cooldown]);
 
-  /* ----------------------------------
-     HANDLERS
-  ----------------------------------- */
-
   const updateField = useCallback((field, value) => {
     dispatch({ type: "SET_FIELD", field, value });
   }, []);
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      if (cooldown > 0) return;
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    if (cooldown > 0) return;
 
-      if (!form.name) {
-        dispatch({ type: "ERROR", message: "Please fill in the name fields." });
-        return;
+    // Validation
+    if (!form.name.trim()) {
+      dispatch({ type: "ERROR", message: "Please enter your full name." });
+      return;
+    }
+    if (!form.email.trim() || !form.email.includes('@')) {
+      dispatch({ type: "ERROR", message: "Please enter a valid email address." });
+      return;
+    }
+    if (!form.message.trim()) {
+      dispatch({ type: "ERROR", message: "Please write a message before sending." });
+      return;
+    }
+
+    dispatch({ type: "LOADING" });
+
+    startTransition(async () => {
+      try {
+        await emailjs.send(
+          "service_kw38oux",
+          "template_etyg50k",
+          {
+            from_name: form.name,
+            from_email: form.email,
+            message: form.message,
+          },
+          "IolitXztFVvhZg6PX"
+        );
+
+        localStorage.setItem("newsletter_last_sent", Date.now().toString());
+        
+        dispatch({
+          type: "SUCCESS",
+          message: "✨ Message sent successfully! We'll get back to you soon.",
+        });
+        
+        dispatch({ type: "SET_COOLDOWN", value: 300 }); // 5 minutes
+      } catch (err) {
+        dispatch({
+          type: "ERROR",
+          message: "Failed to send message. Please check your connection and try again.",
+        });
       }
-      if (!form.email) {
-        dispatch({ type: "ERROR", message: "Please fill in the email fields." });
-        return;
-      }
-      if (!form.message) {
-        dispatch({ type: "ERROR", message: "Please fill in the message fields." });
-        return;
-      }
-
-      dispatch({ type: "LOADING" });
-
-      startTransition(async () => {
-        try {
-          await emailjs.send(
-            "service_kw38oux",
-            "template_etyg50k",
-            {
-              from_name: form.name,
-              from_email: form.email,
-              message: form.message,
-            },
-            "IolitXztFVvhZg6PX"
-          );
-
-          localStorage.setItem("newsletter_last_sent", Date.now().toString());
-
-          dispatch({
-            type: "SUCCESS",
-            message: "Message sent successfully. Thank you!",
-          });
-
-          dispatch({ type: "SET_COOLDOWN", value: 500 });
-        } catch {
-          dispatch({
-            type: "ERROR",
-            message: "Failed to send message. Please try again later.",
-          });
-        }
-      });
-    },
-    [form, cooldown]
-  );
-
-  /* ----------------------------------
-     DERIVED UI
-  ----------------------------------- */
+    });
+  }, [form, cooldown]);
 
   const buttonText = useMemo(() => {
-    if (status === "loading" || isPending) return "";
+    if (isLoading) return "Sending...";
     if (cooldown > 0) return `Wait ${formatTime(cooldown)}`;
-    return "Email Us";
-  }, [status, cooldown, isPending]);
+    return "Send Message";
+  }, [isLoading, cooldown]);
 
-  /* ----------------------------------
-     RENDER
-  ----------------------------------- */
+  const isFormValid = form.name && form.email && form.message;
 
   return (
-    <section className="dark:bg-black py-24" >
-    
-   
-
-      <div className="max-w-3xl mx-auto  px-8 py-16 rounded-[32px] dark:bg-white/5 backdrop-blur-xl border border-black/5 dark:border-white/10 relative overflow-hidden" >
-{(status === "loading" || isPending) && <Liner />}
-
-        <header className="text-center mb-10">
-          <p className="text-[16px] font-semibold uppercase tracking-widest text-gray-200">
-            Newsletter / Subscriptions / Contact Us
+    <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-black dark:via-gray-950 dark:to-black py-20 px-4">
+      <div className="max-w-2xl mx-auto">
+        
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-10"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-medium mb-4">
+            <Sparkles size={16} />
+            <span>Get in Touch</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            Let's Start a Conversation
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-lg mx-auto">
+            Have a project in mind or just want to say hello? We'd love to hear from you.
           </p>
-          <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
-            Stay Inspired
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
-            Thoughtful updates — delivered occasionally.
+        </motion.div>
+
+        {/* Main Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="relative bg-white dark:bg-gray-900/50 backdrop-blur-xl rounded-3xl shadow-2xl shadow-gray-200/50 dark:shadow-black/50 border border-gray-200 dark:border-gray-800 overflow-hidden"
+        >
+          <ProgressLiner isActive={isLoading} />
+          
+          <div className="p-8 sm:p-10 space-y-6">
+            
+            {/* Cooldown Alert */}
+            <AnimatePresence>
+              {cooldown > 0 && (
+                <CooldownAlert seconds={cooldown} />
+              )}
+            </AnimatePresence>
+
+            {/* Status Messages */}
+            <AnimatePresence mode="wait">
+              {message && (
+                <StatusAlert status={status} message={message} />
+              )}
+            </AnimatePresence>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <SmartInput
+                label="Full Name"
+                icon={User}
+                value={form.name}
+                onChange={(v) => updateField("name", v)}
+                placeholder="John Doe"
+                delay={0.1}
+              />
+              
+              <SmartInput
+                label="Email Address"
+                icon={Mail}
+                type="email"
+                value={form.email}
+                onChange={(v) => updateField("email", v)}
+                placeholder="john@example.com"
+                delay={0.2}
+              />
+              
+              <SmartTextarea
+                label="Your Message"
+                icon={MessageSquare}
+                value={form.message}
+                onChange={(v) => updateField("message", v)}
+                placeholder="Tell us about your project, ask a question, or just say hi..."
+                delay={0.3}
+              />
+
+              {/* Submit Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <button
+                  type="submit"
+                  disabled={isLoading || cooldown > 0 || !isFormValid}
+                  className={`
+                    w-full h-14 rounded-2xl text-base font-semibold
+                    flex items-center justify-center gap-3
+                    transition-all duration-300
+                    ${cooldown > 0 
+                      ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed' 
+                      : isLoading
+                        ? 'bg-blue-600 text-white cursor-wait'
+                        : isFormValid
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]'
+                          : 'bg-gray-200 dark:bg-gray-800 text-gray-400 cursor-not-allowed'
+                    }
+                  `}
+                >
+                  {isLoading ? (
+                    <>
+                      <ModernSpinner />
+                      <span>Sending...</span>
+                    </>
+                  ) : cooldown > 0 ? (
+                    <>
+                      <Clock size={18} />
+                      <span>{buttonText}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send Message</span>
+                      <Send size={18} className="transition-transform group-hover:translate-x-1" />
+                    </>
+                  )}
+                </button>
+              </motion.div>
+            </form>
+
+            {/* Divider */}
+            <div className="relative py-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200 dark:border-gray-800" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="px-4 bg-white dark:bg-gray-900 text-sm text-gray-500 dark:text-gray-400">
+                  Need faster support?
+                </span>
+              </div>
+            </div>
+
+            {/* Ticket CTA */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="rounded-2xl bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-800/50 p-6"
+            >
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                  <Ticket className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                    Create a Support Ticket
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    For technical issues, bug reports, or feature requests that need tracking.
+                  </p>
+                  <Link
+                    to="/ticket"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 text-white text-sm font-medium hover:bg-purple-700 transition-colors group"
+                  >
+                    Create Ticket
+                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+
+          </div>
+        </motion.div>
+
+        {/* Footer Info */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-8 text-center space-y-2"
+        >
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Typical response time: <span className="font-medium text-gray-700 dark:text-gray-300">24-48 hours</span>
           </p>
-        </header>
-
-        <AnimatePresence>
-          {showTypingWarning && (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="mb-6 rounded-xl px-4 py-3 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 flex gap-2"
-            >
-              <TriangleAlert size={22} />
-              One submission every 5 mins
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence mode="wait">
-          {message && (
-            <motion.div
-              key={status}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className={`mb-6 rounded-xl px-4 py-3 flex gap-2 ${
-                status === "success"
-                  ? "bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-600"
-                  : "bg-red-100 text-red-700/55 dark:bg-red-500/10 dark:text-red-600"
-              }`}
-            >
-              {status === "success" ? <CheckCircle size={22}/> : <FiXCircle size={22}/>}
-              {message}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <InputField
-            label="Full Name"
-            value={form.name}
-            onChange={(v) => updateField("name", v)}
-            placeholder="John Appleseed"
-            icon={ <FaUserAlt size={18} className='text-gray-600' />}
-         
-          />
-          <InputField
-            label="Email Address"
-            type="email"
-            value={form.email}
-            onChange={(v) => updateField("email", v)}
-            placeholder="you@icloud.com"
-            icon={ <FaEnvelope size={18} className='text-gray-600'/>}
-          />
-          <TextareaField
-            label="Message"
-            value={form.message}
-            onChange={(v) => updateField("message", v)}
-            placeholder="Write something thoughtful…"
-                 icon={ <MdChatBubble size={18} className='text-gray-600'/>}
-          />
-
-          <button
-            type="submit"
-            disabled={status === "loading" || cooldown > 0}
-            aria-busy={status === "loading"}
-            className="w-full h-12 rounded-2xl text-lg font-medium bg-gray-800 hover:bg-purple-700 dark:bg-gray-800 dark:hover:bg-gray-600 disabled:bg-gray-400 text-white transition flex items-center justify-center gap-2 cursor-pointer"
-          >
-            {(status === "loading" || isPending) && <Spinner />}
-            {buttonText}
-          </button>
-        </form>
-
-        {/* Divider */}
-<div className="relative my-8">
-  <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-white/10 to-transparent" />
-  <span className="absolute left-1/2 -translate-x-1/2 -top-3 px-3 text-xs text-gray-400 dark:text-gray-500 bg-white/5 dark:bg-black backdrop-blur-xl">
-    OR
-  </span>
-</div>
-
-{/* Create Ticket Section */}
-<motion.div
-  initial={{ opacity: 0, y: 12 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.4, ease: "easeOut" }}
-  className="
-    rounded-2xl
-    border border-black/10 dark:border-white/10
-    bg-white/60 dark:bg-white/5
-    backdrop-blur-md
-    p-5
-    space-y-3
-  "
->
-  <div className="flex items-start gap-3">
-    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600">
-      🎫
-    </div>
-
-    <div className="flex-1">
-      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-        Create a Support Ticket
-      </h3>
-      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-        Best for technical issues, bugs, or requests that need tracking and
-        faster follow-up.
-      </p>
-    </div>
-  </div>
-
-  <div className="flex items-center justify-between flex-wrap gap-3">
-    <p className="text-xs text-gray-500 dark:text-gray-500 flex gap-2">
-    <Info className="text-gray-600 dark:text-white" size={16} /> You’ll receive a ticket ID and status updates.
-    </p>
-<br/>
-    <Link
-      to="/ticket"
-      className="
-        inline-flex items-center gap-2
-        px-4 py-2
-        rounded-xl
-        text-sm font-medium
-        bg-purple-600 text-white
-        hover:bg-purple-700
-        transition
-        hover:scale-[1.03]
-        active:scale-100
-        shadow-sm
-      "
-    >
-      Create Ticket
-      <span aria-hidden>→</span>
-    </Link>
-  </div>
-</motion.div>
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            Protected by reCAPTCHA and subject to the Privacy Policy and Terms of Service.
+          </p>
+        </motion.div>
 
       </div>
     </section>
-  );
-}
-
-/* ----------------------------------
-   REUSABLE INPUTS
------------------------------------ */
-
-function InputField({ label, type = "text", value, onChange, placeholder,icon }) {
-  const id = useId();
-  return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300 flex gap-3">
-       {icon} {label}
-      </label>
-      <input
-        id={id}
-        
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className={`
-          w-full h-12 px-4 rounded-2xl
-          border border-black/10 dark:border-white/10
-          bg-white/80 dark:bg-white/5
-          text-gray-900 dark:text-white
-          placeholder:text-gray-400 dark:placeholder:text-gray-500
-          focus:ring-4 focus:ring-purple-500/30
-          outline-none transition 
-        `}
-      />
-    </div>
-  );
-}
-
-function TextareaField({ label, value, onChange, placeholder,icon }) {
-  const id = useId();
-  return (
-    <div className="space-y-2">
-      <label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-gray-300 flex gap-3">
-        {icon} {label}
-      </label>
-      <textarea
-        id={id}
-        rows={5}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="
-          w-full px-4 py-3 rounded-2xl
-          border border-black/10 dark:border-white/10
-          bg-white/80 dark:bg-white/5
-          text-gray-900 dark:text-white
-          placeholder:text-gray-400 dark:placeholder:text-gray-500
-          focus:ring-4 focus:ring-purple-500/30
-          outline-none transition resize-none
-        "
-      />
-    </div>
   );
 }
 
@@ -491,8 +575,7 @@ function TextareaField({ label, value, onChange, placeholder,icon }) {
 ----------------------------------- */
 
 function formatTime(sec) {
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor((sec % 3600) / 60);
+  const m = Math.floor(sec / 60);
   const s = sec % 60;
-  return `${h ? h + "h " : ""}${m}m ${s}s`;
+  return `${m}:${s.toString().padStart(2, '0')}`;
 }
