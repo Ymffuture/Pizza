@@ -412,7 +412,7 @@ export default function JobApply() {
   size={64}
   color="#FF3B30"
   secondaryColor="#FF9500"
-  text="Processing..."
+  text="Processing application"
 />}
       
       
