@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const CoolSpinner = ({
   size = 48,
-  variant = "apple", // "apple", "pulse", "orbit", "morph"
+  variant = "apple",
   color = "#007AFF",
   secondaryColor = "#5856D6",
   fullScreen = false,
@@ -28,9 +28,28 @@ const CoolSpinner = ({
     <div
       role="status"
       aria-label={text}
-      className={`spinner-container ${fullScreen ? "fullscreen" : ""}`}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        position: fullScreen ? "fixed" : "relative",
+        inset: fullScreen ? 0 : "auto",
+        zIndex: fullScreen ? 9999 : "auto",
+        backdropFilter: fullScreen ? "blur(8px) saturate(180%)" : "none",
+        WebkitBackdropFilter: fullScreen ? "blur(8px) saturate(180%)" : "none",
+        background: fullScreen ? "rgba(255, 255, 255, 0.7)" : "transparent",
+        animation: fullScreen ? "fadeIn 0.3s ease-out" : "none",
+      }}
     >
-      <div className="spinner-content">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "20px",
+        }}
+      >
         {renderSpinner()}
         
         {showText && (
@@ -38,256 +57,253 @@ const CoolSpinner = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="spinner-text"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              fontSize: "14px",
+              fontWeight: 500,
+              color: "#666",
+              letterSpacing: "0.5px",
+            }}
           >
-            <span className="text-gradient">{text}</span>
-            <span className="dots">
-              <span>.</span>
-              <span>.</span>
-              <span>.</span>
+            <span
+              style={{
+                background: `linear-gradient(135deg, ${color}, ${secondaryColor})`,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              {text}
+            </span>
+            <span style={{ display: "flex" }}>
+              <span style={dotStyle(0)}>.</span>
+              <span style={dotStyle(1)}>.</span>
+              <span style={dotStyle(2)}>.</span>
             </span>
           </motion.div>
         )}
       </div>
 
-      <style jsx>{`
-        .spinner-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        .fullscreen {
-          position: fixed;
-          inset: 0;
-          z-index: 9999;
-          backdrop-filter: blur(8px) saturate(180%);
-          -webkit-backdrop-filter: blur(8px) saturate(180%);
-          background: rgba(255, 255, 255, 0.7);
-          animation: fadeIn 0.3s ease-out;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .fullscreen {
-            background: rgba(0, 0, 0, 0.6);
-          }
-        }
-
-        .spinner-content {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 20px;
-        }
-
-        .spinner-text {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 14px;
-          font-weight: 500;
-          color: #666;
-          letter-spacing: 0.5px;
-        }
-
-        .text-gradient {
-          background: linear-gradient(135deg, ${color}, ${secondaryColor});
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .dots span {
-          animation: bounce 1.4s infinite ease-in-out both;
-          display: inline-block;
-        }
-
-        .dots span:nth-child(1) { animation-delay: -0.32s; }
-        .dots span:nth-child(2) { animation-delay: -0.16s; }
-
+      <style>{`
         @keyframes bounce {
           0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
           40% { transform: scale(1); opacity: 1; }
         }
-
+        
         @keyframes fadeIn {
           from { opacity: 0; transform: scale(0.95); }
           to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        
+        @media (prefers-color-scheme: dark) {
+          .spinner-fullscreen {
+            background: rgba(0, 0, 0, 0.6) !important;
+          }
         }
       `}</style>
     </div>
   );
 };
 
-// Apple-style radial spinner with gradient
+const dotStyle = (index) => ({
+  animation: "bounce 1.4s infinite ease-in-out both",
+  animationDelay: `${-0.32 + index * 0.16}s`,
+  display: "inline-block",
+});
+
+// Apple-style radial spinner - FIXED
 const AppleSpinnerCore = ({ size, color, secondaryColor }) => {
   const bars = 12;
-  const radius = size * 0.4;
-
+  
   return (
-    <div className="apple-wrapper" style={{ width: size, height: size }}>
+    <div
+      style={{
+        width: size,
+        height: size,
+        position: "relative",
+      }}
+    >
       {[...Array(bars)].map((_, i) => {
         const rotation = (i * 360) / bars;
-        const delay = (i * 0.1) - 1.2;
+        const delay = i * 0.1;
         
         return (
-          <motion.div
+          <div
             key={i}
-            className="apple-bar"
-            initial={{ opacity: 0.1, scale: 0.8 }}
-            animate={{ 
-              opacity: [0.1, 1, 0.1],
-              scale: [0.8, 1, 0.8]
-            }}
-            transition={{
-              duration: 1.2,
-              repeat: Infinity,
-              delay: delay,
-              ease: "easeInOut"
-            }}
             style={{
               position: "absolute",
-              width: size * 0.08,
-              height: size * 0.25,
-              borderRadius: size * 0.04,
-              background: `linear-gradient(180deg, ${color}, ${secondaryColor})`,
-              left: "50%",
               top: "50%",
-              marginLeft: -(size * 0.04),
-              marginTop: -(size * 0.125),
-              transformOrigin: `center ${radius}px`,
-              transform: `rotate(${rotation}deg) translateY(-${radius * 0.6}px)`,
-              boxShadow: `0 0 ${size * 0.15}px ${color}40`,
+              left: "50%",
+              width: size * 0.1,
+              height: size * 0.3,
+              marginLeft: -(size * 0.05),
+              marginTop: -(size * 0.15),
+              transformOrigin: "center center",
+              transform: `rotate(${rotation}deg) translateY(-${size * 0.25}px)`,
             }}
-          />
+          >
+            <motion.div
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: size * 0.02,
+                background: `linear-gradient(to bottom, ${color}, ${secondaryColor})`,
+                boxShadow: `0 0 ${size * 0.1}px ${color}60`,
+              }}
+              initial={{ opacity: 0.2 }}
+              animate={{ opacity: [0.2, 1, 0.2] }}
+              transition={{
+                duration: 1.2,
+                repeat: Infinity,
+                delay: delay,
+                ease: "easeInOut",
+              }}
+            />
+          </div>
         );
       })}
       
       {/* Center glow */}
-      <div 
-        className="center-glow"
+      <div
         style={{
           position: "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: size * 0.2,
-          height: size * 0.2,
+          width: size * 0.3,
+          height: size * 0.3,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${color}30, transparent)`,
-          filter: "blur(8px)",
+          background: `radial-gradient(circle, ${color}40, transparent)`,
+          filter: "blur(10px)",
         }}
       />
     </div>
   );
 };
 
-// Pulsing rings
+// Pulsing rings - FIXED
 const PulseSpinner = ({ size, color, secondaryColor }) => (
-  <div className="pulse-wrapper" style={{ width: size, height: size }}>
+  <div
+    style={{
+      width: size,
+      height: size,
+      position: "relative",
+    }}
+  >
     {[0, 1, 2].map((i) => (
       <motion.div
         key={i}
-        className="pulse-ring"
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: size * (0.6 + i * 0.2),
+          height: size * (0.6 + i * 0.2),
+          marginLeft: -(size * (0.3 + i * 0.1)),
+          marginTop: -(size * (0.3 + i * 0.1)),
+          borderRadius: "50%",
+          border: `${size * 0.03}px solid ${i === 0 ? color : secondaryColor}`,
+          opacity: 0.6 - (i * 0.2),
+        }}
         animate={{
           scale: [1, 1.5, 1.5],
-          opacity: [0.8, 0, 0],
+          opacity: [0.6 - (i * 0.2), 0, 0],
         }}
         transition={{
           duration: 2,
           repeat: Infinity,
           delay: i * 0.4,
-          ease: "easeOut"
-        }}
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: "50%",
-          border: `${size * 0.03}px solid ${i === 0 ? color : secondaryColor}`,
-          opacity: 0.8 - (i * 0.2),
+          ease: "easeOut",
         }}
       />
     ))}
+    
     <motion.div
-      className="pulse-core"
-      animate={{ scale: [1, 1.1, 1] }}
-      transition={{ duration: 1, repeat: Infinity }}
       style={{
         position: "absolute",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: size * 0.3,
-        height: size * 0.3,
+        width: size * 0.25,
+        height: size * 0.25,
         borderRadius: "50%",
         background: `linear-gradient(135deg, ${color}, ${secondaryColor})`,
-        boxShadow: `0 0 ${size * 0.3}px ${color}60`,
+        boxShadow: `0 0 ${size * 0.3}px ${color}80`,
       }}
+      animate={{ scale: [1, 1.2, 1] }}
+      transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
     />
   </div>
 );
 
-// Orbiting dots
+// Orbiting dots - FIXED
 const OrbitSpinner = ({ size, color, secondaryColor }) => {
-  const orbitRadius = size * 0.35;
+  const orbits = [
+    { radius: 0.35, speed: 3, size: 0.12, color: color },
+    { radius: 0.25, speed: 2, size: 0.1, color: secondaryColor },
+    { radius: 0.15, speed: 1.5, size: 0.08, color: color },
+  ];
   
   return (
-    <div className="orbit-wrapper" style={{ width: size, height: size }}>
+    <div
+      style={{
+        width: size,
+        height: size,
+        position: "relative",
+      }}
+    >
       {/* Orbit rings */}
-      <div 
-        className="orbit-ring-1"
-        style={{
-          position: "absolute",
-          inset: "10%",
-          borderRadius: "50%",
-          border: `1px solid ${color}20`,
-        }}
-      />
-      <div 
-        className="orbit-ring-2"
-        style={{
-          position: "absolute",
-          inset: "25%",
-          borderRadius: "50%",
-          border: `1px solid ${secondaryColor}20`,
-        }}
-      />
-      
-      {/* Orbiting dots */}
-      {[0, 1, 2].map((i) => (
-        <motion.div
-          key={i}
-          className="orbit-dot"
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: 2 + i * 0.5,
-            repeat: Infinity,
-            ease: "linear"
-          }}
+      {orbits.map((orbit, i) => (
+        <div
+          key={`ring-${i}`}
           style={{
             position: "absolute",
             top: "50%",
             left: "50%",
-            width: size * (0.15 - i * 0.02),
-            height: size * (0.15 - i * 0.02),
-            marginLeft: -(size * (0.075 - i * 0.01)),
-            marginTop: -(size * (0.075 - i * 0.01)),
+            transform: "translate(-50%, -50%)",
+            width: size * orbit.radius * 2,
+            height: size * orbit.radius * 2,
             borderRadius: "50%",
-            background: i % 2 === 0 ? color : secondaryColor,
-            boxShadow: `0 0 ${size * 0.2}px ${i % 2 === 0 ? color : secondaryColor}80`,
+            border: `1px solid ${orbit.color}20`,
+          }}
+        />
+      ))}
+      
+      {/* Orbiting dots */}
+      {orbits.map((orbit, i) => (
+        <motion.div
+          key={`dot-${i}`}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: size * orbit.size,
+            height: size * orbit.size,
+            marginLeft: -(size * orbit.size) / 2,
+            marginTop: -(size * orbit.size) / 2,
+          }}
+          animate={{ rotate: 360 }}
+          transition={{
+            duration: orbit.speed,
+            repeat: Infinity,
+            ease: "linear",
           }}
         >
-          <motion.div
+          <div
             style={{
-              width: orbitRadius * (1 - i * 0.2),
-              height: 2,
-              background: i % 2 === 0 ? color : secondaryColor,
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transformOrigin: "left center",
-              opacity: 0.3,
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              background: orbit.color,
+              boxShadow: `0 0 ${size * 0.15}px ${orbit.color}80`,
+              transform: `translateX(${size * orbit.radius}px)`,
             }}
           />
         </motion.div>
@@ -296,49 +312,57 @@ const OrbitSpinner = ({ size, color, secondaryColor }) => {
   );
 };
 
-// Morphing shapes
+// Morphing shapes - FIXED
 const MorphSpinner = ({ size, color, secondaryColor }) => (
-  <div className="morph-wrapper" style={{ width: size, height: size }}>
+  <div
+    style={{
+      width: size,
+      height: size,
+      position: "relative",
+    }}
+  >
     <motion.div
-      className="morph-shape"
-      animate={{
-        borderRadius: ["20%", "50%", "20%"],
-        rotate: [0, 180, 360],
-        scale: [1, 1.1, 1],
-      }}
-      transition={{
-        duration: 3,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-      style={{
-        width: "100%",
-        height: "100%",
-        background: `linear-gradient(135deg, ${color}, ${secondaryColor})`,
-        boxShadow: `0 0 ${size * 0.4}px ${color}40, inset 0 0 ${size * 0.2}px rgba(255,255,255,0.2)`,
-      }}
-    />
-    <motion.div
-      className="morph-inner"
-      animate={{
-        rotate: [360, 0],
-        scale: [0.5, 0.8, 0.5],
-      }}
-      transition={{
-        duration: 3,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: 0.5
-      }}
       style={{
         position: "absolute",
-        top: "25%",
-        left: "25%",
-        width: "50%",
-        height: "50%",
+        inset: 0,
+        background: `linear-gradient(135deg, ${color}, ${secondaryColor})`,
+        boxShadow: `0 0 ${size * 0.4}px ${color}50, inset 0 0 ${size * 0.2}px rgba(255,255,255,0.3)`,
+      }}
+      animate={{
+        borderRadius: ["30% 70% 70% 30% / 30% 30% 70% 70%", "70% 30% 30% 70% / 70% 70% 30% 30%", "30% 70% 70% 30% / 30% 30% 70% 70%"],
+        rotate: [0, 180, 360],
+        scale: [1, 1.05, 1],
+      }}
+      transition={{
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+    
+    <motion.div
+      style={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        width: size * 0.5,
+        height: size * 0.5,
+        marginLeft: -(size * 0.25),
+        marginTop: -(size * 0.25),
         borderRadius: "50%",
-        background: "rgba(255,255,255,0.3)",
+        background: "rgba(255,255,255,0.25)",
         backdropFilter: "blur(4px)",
+        border: "1px solid rgba(255,255,255,0.3)",
+      }}
+      animate={{
+        rotate: [360, 0],
+        scale: [0.8, 1, 0.8],
+      }}
+      transition={{
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: 0.5,
       }}
     />
   </div>
