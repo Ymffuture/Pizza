@@ -17,7 +17,7 @@ import {
   FiChevronRight,
   FiLock,
 } from "react-icons/fi";
-import {CoolSpinner} from "./Loader2";
+import Loader2 from "./Loader2";
 import { FaExclamationTriangle } from 'react-icons/fa';
 import Loader from "./Loader";
 import {
@@ -409,7 +409,7 @@ export default function JobApply() {
 
       {loading && <Loader2 fullScreen />}
       
- <CoolSpinner variant="morph" color="#AF52DE" secondaryColor="#5856D6" />
+ <Loader2 variant="morph" color="#AF52DE" secondaryColor="#5856D6" />
       
       <div className="max-w-3xl mx-auto px-4 pt-12">
         {/* Header */}
