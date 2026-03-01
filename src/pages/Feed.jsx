@@ -361,7 +361,7 @@ export default function Feed() {
 
   if (loading) {
     return (
-      <div className="bg-gray-50 dark:bg-black flex items-center justify-center">
+      <div className="h-full bg-gray-50 dark:bg-black flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin" />
