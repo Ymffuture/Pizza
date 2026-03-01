@@ -726,15 +726,34 @@ const NewsComponent = () => {
      HANDLERS
   ====================== */
   const openExternalReader = useCallback((article) => {
-    const reader = window.open("", "_blank", "width=420,height=640,noopener,noreferrer");
-    if (!reader) {
-      toast.error("Popup blocked. Please allow popups for this site.");
-      return;
-    }
-    reader.document.open();
-    reader.document.write(renderMiniViewHTML(article));
-    reader.document.close();
-  }, []);
+
+  // open popup immediately (avoids popup blockers)
+  const reader = window.open(
+    "",
+    "_blank",
+    "width=420,height=640,noopener,noreferrer"
+  );
+
+  if (!reader) {
+    toast.error("Popup blocked. Please allow popups.");
+    return;
+  }
+
+  // security hardening
+  reader.opener = null;
+
+  // optional title fallback
+  reader.document.title = article.title || "Reader";
+
+  // generate html
+  const html = renderMiniViewHTML(article);
+
+  // write html
+  reader.document.open();
+  reader.document.write(html);
+  reader.document.close();
+
+}, []);
 
   /* ======================
      RENDER STATES
