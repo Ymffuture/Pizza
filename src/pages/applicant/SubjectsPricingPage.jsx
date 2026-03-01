@@ -183,7 +183,7 @@ Contact us to secure your spot!`;
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8 no-print"
+          className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8 no-print pt-24"
         >
           <div className="flex items-center gap-4">
             <img 
