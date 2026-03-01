@@ -408,7 +408,7 @@ export default function JobApply() {
       <ProgressBar current={completedSections} total={sections.length} />
 
       {loading && <Loader2 fullScreen />}
-
+ <Loader2 fullScreen />
       <div className="max-w-3xl mx-auto px-4 pt-12">
         {/* Header */}
         <motion.div 
