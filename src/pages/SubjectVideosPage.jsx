@@ -162,7 +162,7 @@ export default function SubjectVideosPage() {
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+            className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pt-20"
           >
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
