@@ -407,13 +407,14 @@ export default function JobApply() {
 
       <ProgressBar current={completedSections} total={sections.length} />
 
-      {loading && <CoolSpinner />}
-      
- <CoolSpinner 
-  fullScreen={true} 
-  text="Processing" 
+      {loading && <CoolSpinner 
+  fullScreen={true}
   size={64}
-/>
+  color="#FF3B30"
+  secondaryColor="#FF9500"
+  text="Processing..."
+/>}
+      
       
       <div className="max-w-3xl mx-auto px-4 pt-12">
         {/* Header */}
