@@ -237,7 +237,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative text-white overflow-hidden">
+    <footer className="relative text-white overflow-hidden no-print">
       <StarBackground />
       
       {/* AI Grid Overlay */}
