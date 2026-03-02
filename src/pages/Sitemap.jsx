@@ -98,7 +98,7 @@ const Sitemap = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header Section */}
-        <div className="mb-12 space-y-6">
+        <div className="mb-12 space-y-6 pt-16">
           <div className="flex items-center gap-3 text-indigo-400 mb-2">
             <Network className="w-5 h-5" />
             <span className="text-sm font-medium tracking-wider uppercase">Architecture</span>
