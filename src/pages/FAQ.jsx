@@ -57,7 +57,7 @@ export default function FAQ() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-4xl mx-auto"
+          className="max-w-4xl mx-auto pt-16"
         >
           {/* Header Section */}
           <motion.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
