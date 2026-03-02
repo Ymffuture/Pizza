@@ -252,7 +252,7 @@ const Sitemap = () => {
         <div className="mt-16 pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4" />
-            <span>Pretoria, South Africa</span>
+            <span>Johannesburg, South Africa</span>
           </div>
           
           <div className="flex items-center gap-6">
@@ -261,7 +261,7 @@ const Sitemap = () => {
               className="flex items-center gap-2 hover:text-slate-300 transition-colors"
             >
               <ExternalLink className="w-3 h-3" />
-              support@swiftmeta.co.za
+              famacloud.ai@gmail.com 
             </a>
             <span>© {new Date().getFullYear()} SwiftMeta</span>
           </div>
