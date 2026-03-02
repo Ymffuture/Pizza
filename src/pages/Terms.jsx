@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet";
 import { Scale, FileText } from "lucide-react";
 
 const Terms = () => {
-  const lastUpdated = "March 2, 2026";
+  const lastUpdated = "February 15, 2026";
 
   return (
     <main className="min-h-screen bg-white dark:bg-black py-12 px-4 sm:px-6">
@@ -322,12 +322,12 @@ const Terms = () => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <p className="font-medium text-gray-900 dark:text-white">SwiftMeta (Pty) Ltd</p>
-              <p>Registration Number: [Insert Company Reg]</p>
+              <p>Registration Number: pending</p>
             </div>
             <div className="text-left sm:text-right">
               <p>Questions regarding these Terms?</p>
               <a href="mailto:legal@swiftmeta.co.za" className="text-indigo-600 dark:text-indigo-400 hover:underline">
-                legal@swiftmeta.co.za
+                famacloud.ai@gmail.com
               </a>
             </div>
           </div>
