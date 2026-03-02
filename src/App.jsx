@@ -52,7 +52,7 @@ const HelpCenter = lazy(() => import("./pages/HelpCenter"));
 const CreateTicket = lazy(() => import("./pages/CreateTicket"));
 const TrackTicket = lazy(() => import("./pages/TrackTicket"));
 const AdminTicket = lazy(() => import("./pages/AdminTicket"));
-
+const Sitemap = lazy(() =>import("./pages/Sitemap"));
 const ApplicantLayout = lazy(() => import("./pages/applicant/ApplicantLayout"));
 const JobApply = lazy(() => import("./pages/applicant/JobApply"));
 const ApplicationStatus = lazy(() => import("./pages/applicant/ApplicationStatus"));
@@ -187,7 +187,7 @@ const App = () => {
             <Route path="/news" element={<News />} />
             <Route path="/pay-donation" element={<DonationPage />} />
             <Route path="/mathq" element={<Mathq />} />
-
+            <Route path="/sitemap" element={<Sitemap />} />
             {/* Lessons */}
             <Route path="/lessons" element={<SubjectsLayout />}>
               <Route index element={<SubjectVideosPage />} />
