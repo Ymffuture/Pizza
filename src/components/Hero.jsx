@@ -360,7 +360,7 @@ const Hero = () => {
               className="flex gap-8 mt-12 pt-8 border-t border-white/10"
             >
               {[
-                { value: "50+", label: "Projects", icon: Zap },
+                { value: "11+", label: "Projects", icon: Zap },
                 { value: "99%", label: "Satisfaction", icon: BsPatchCheckFill },
                 { value: "24/7", label: "Support", icon: MdSpeed },
               ].map((stat, idx) => (
