@@ -109,7 +109,7 @@ const GetApp = () => {
                     <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 border-2 border-white dark:border-[#0a0a0a]" />
                   ))}
                 </div>
-                <span>Join 10K+ users</span>
+                <span>Join 7+ users</span>
               </div>
             </div>
           </div>
