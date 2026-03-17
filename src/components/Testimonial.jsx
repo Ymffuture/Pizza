@@ -196,9 +196,9 @@ const TestimonialCard = ({ data, isActive, direction }) => {
 // Stats bar component
 const StatsBar = () => {
   const stats = [
-    { value: 500, suffix: "+", label: "Happy Clients", icon: Users },
+    { value: 11, suffix: "+", label: "Happy Clients", icon: Users },
     { value: 98, suffix: "%", label: "Satisfaction Rate", icon: Star },
-    { value: 4.9, suffix: "/5", label: "Average Rating", icon: Sparkles },
+    { value: 4.5, suffix: "/5", label: "Average Rating", icon: Sparkles },
   ];
 
   return (
