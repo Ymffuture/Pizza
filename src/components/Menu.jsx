@@ -387,7 +387,7 @@ const Menu = () => {
           className="flex flex-wrap justify-center gap-8 mb-12"
         >
           {[
-            { value: "500+", label: "Projects Delivered" },
+            { value: "5+", label: "Projects Delivered" },
             { value: "98%", label: "Client Satisfaction" },
             { value: "24/7", label: "Support Available" },
             { value: "7 Days", label: "Money Back Guarantee" },
